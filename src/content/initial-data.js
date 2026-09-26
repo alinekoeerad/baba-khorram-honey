@@ -1,8 +1,5 @@
 /**
  * Initial Static Data Source for Persian Honey Board Homepage
- * Conforms to HomepageData schema defined in src/types/index.ts
- *
- * This content is prepared to be backed by a database / CMS API in future phases.
  */
 
 export const initialHomepageData = {
@@ -120,7 +117,10 @@ export const initialHomepageData = {
     "title": "شاهکار بی‌نظیر<br>طبیعت",
     "subtitle": "تغذیه اصیل، طعمی تکرارنشدنی و سرشار از انرژی طلایی برای زندگی روزمره",
     "images": [
-      "images/hero-1.jpg"
+      "images/hero-1.jpg",
+      "images/hero-2.jpg",
+      "images/hero-3.jpg",
+      "images/hero-4.jpg"
     ],
     "isActive": true
   },

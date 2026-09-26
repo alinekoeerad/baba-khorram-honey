@@ -1,6 +1,6 @@
 /**
  * Application Controller & Bootstrapper (Production Audited)
- * Orchestrates Components, Data Services, Touch/Keyboard Interactions, and Dynamic RTL Carousel with Pagination Dots
+ * Orchestrates Components, Data Services, Hero Multi-Image Slideshow, Touch/Keyboard RTL Carousel with Dynamic Pagination Dots
  */
 
 import { homepageService } from './services/HomepageService.js';
@@ -25,6 +25,7 @@ class App {
       autoDirection: 1,
       isPaused: false
     };
+    this.heroInterval = null;
   }
 
   async init() {
@@ -35,14 +36,14 @@ class App {
       this.data = await this.service.loadHomepage();
       this.render();
       this.bindEvents();
+      this.initHeroSlideshow();
       this.initCarousel();
       this.injectStructuredData();
-      // Re-bind cookie consent in case render() re-created the DOM elements
+      // Re-bind cookie consent in case render() re-created DOM elements
       this.initCookieConsent();
     } catch (error) {
       console.error('App initialization failed:', error);
       this.handleGlobalError(error);
-      // Ensure cookie consent still functions even if main app threw an error
       this.initCookieConsent();
     }
   }
@@ -51,7 +52,7 @@ class App {
     const root = document.getElementById('app-root');
     if (!root) return;
 
-    // Render modular components: Header begins at Y=0 (with overlay Utility Bar), followed by main and footer
+    // Header begins at Y=0 (with overlay Utility Bar), followed by main content and footer
     root.innerHTML = `
       ${renderHeader(this.data.settings, this.data.navigation, this.data.utilityNav)}
       <main id="main-content" role="main" tabindex="-1">
@@ -170,6 +171,32 @@ class App {
   }
 
   /**
+   * Hero Multi-Image Slideshow with Calm Crossfade Animation
+   */
+  initHeroSlideshow() {
+    try {
+      const images = document.querySelectorAll('.hero-bg-image');
+      if (images.length <= 1) return;
+
+      // Respect prefers-reduced-motion
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return;
+      }
+
+      let currentHeroIdx = 0;
+      if (this.heroInterval) clearInterval(this.heroInterval);
+
+      this.heroInterval = setInterval(() => {
+        images[currentHeroIdx].classList.remove('active');
+        currentHeroIdx = (currentHeroIdx + 1) % images.length;
+        images[currentHeroIdx].classList.add('active');
+      }, 6000);
+    } catch (err) {
+      console.warn('Hero slideshow init error:', err);
+    }
+  }
+
+  /**
    * Independent, resilient cookie consent handler with full try/catch
    */
   initCookieConsent() {
@@ -187,7 +214,7 @@ class App {
         storedConsent = window.__nhb_cookie_consent || null;
       }
 
-      // Check in-memory fallback as well
+      // Check in-memory fallback
       if (!storedConsent && typeof window !== 'undefined' && window.__nhb_cookie_consent) {
         storedConsent = window.__nhb_cookie_consent;
       }
@@ -269,16 +296,16 @@ class App {
     // Dynamically measure step size to support any viewport and padding perfectly
     const getCardStep = () => {
       const card = container.querySelector('.recipe-card');
-      if (!card) return 344;
+      if (!card) return 365;
       const style = window.getComputedStyle(container);
-      const gap = parseFloat(style.gap) || 24;
+      const gap = parseFloat(style.gap) || 20;
       return card.offsetWidth + gap;
     };
 
     const getVisibleCardsCount = () => {
-      if (!viewport) return 3;
+      if (!viewport) return 4;
       const step = getCardStep();
-      return Math.max(1, Math.round(viewport.offsetWidth / step));
+      return Math.max(1, Math.floor(viewport.offsetWidth / step));
     };
 
     const getMaxSlides = () => {
@@ -340,7 +367,7 @@ class App {
       nextBtn.addEventListener('click', () => slide(1));
     }
 
-    // Auto-advance every 4.5 seconds
+    // Auto-advance every 5 seconds
     const startAutoPlay = () => {
       if (!this.carouselState.autoInterval) {
         this.carouselState.autoInterval = setInterval(() => {
@@ -353,7 +380,7 @@ class App {
             this.carouselState.autoDirection = 1;
           }
           updatePosition();
-        }, 4500);
+        }, 5000);
       }
     };
 
@@ -394,7 +421,6 @@ class App {
       const touchEndX = e.changedTouches[0].screenX;
       const diffX = touchEndX - touchStartX;
       if (Math.abs(diffX) > 40) {
-        // In RTL, swiping right (diffX > 0) moves next, swiping left (diffX < 0) moves prev
         if (diffX > 0) {
           slide(1);
         } else {

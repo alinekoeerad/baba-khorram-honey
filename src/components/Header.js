@@ -1,6 +1,9 @@
 /**
  * Header Component (Visual Match with honey.com)
- * Contains Overlay Utility Bar (Industry & Partners at physical Top-Right), Logo, Navigation, Search Drawer, and Mobile Menu
+ * Layout:
+ * - Physical Left: National Honey Board Logo
+ * - Center / Main Area: Horizontal Navigation & Search
+ * - Physical Top-Right: Independent Overlay Hanging "Industry & Partners" Control
  */
 
 import { renderUtilityBar } from './UtilityBar.js';
@@ -45,26 +48,29 @@ export function renderHeader(settings, navigation, utilityNav = null) {
 
   return `
     <header class="main-header" role="banner">
-      <!-- Industry & Partners Hanging Overlay (Physical Top-Right Edge) -->
-      ${utilityNav ? renderUtilityBar(utilityNav) : ''}
-
-      <div class="container-wide header-inner">
-        <!-- Brand Logo -->
+      <!-- 1. Main Header Layout (Starts at Y=0, spans header width) -->
+      <div class="header-inner container-wide">
+        <!-- Physical Left: National Honey Board Logo -->
         <a href="index.html" class="brand-logo" aria-label="${brandFa} - ${brandEn}">
-          <svg class="brand-logo-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M12 2L4 6.5V17.5L12 22L20 17.5V6.5L12 2ZM12 4.3L18 7.7V16.3L12 19.7L6 16.3V7.7L12 4.3ZM12 7L8 9.3V14.7L12 17L16 14.7V9.3L12 7Z"/>
-          </svg>
+          <img 
+            src="images/homepage-footer-logo@2x.png" 
+            alt="${brandFa}" 
+            class="brand-logo-img" 
+            width="175" 
+            height="56"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          >
           <div class="brand-title-wrap">
             <span class="brand-name">${brandFa}</span>
             <span class="brand-subtitle">${brandEn}</span>
           </div>
         </a>
 
-        <!-- Desktop Navigation -->
+        <!-- Center / Main Area: Navigation Links & Search Icon -->
         <nav class="desktop-nav" aria-label="منوی اصلی">
           <ul class="nav-menu">
             ${navLinksHTML}
-            <li class="nav-item">
+            <li class="nav-item nav-item-search">
               <button 
                 class="search-btn" 
                 id="searchToggleBtn" 
@@ -81,6 +87,9 @@ export function renderHeader(settings, navigation, utilityNav = null) {
           </ul>
         </nav>
 
+        <!-- Right Side Reserved Space (Ensures overlay never collides with nav) -->
+        <div class="header-right-spacer" aria-hidden="true"></div>
+
         <!-- Mobile Menu Toggle Button -->
         <button 
           class="mobile-menu-btn" 
@@ -96,6 +105,9 @@ export function renderHeader(settings, navigation, utilityNav = null) {
           </svg>
         </button>
       </div>
+
+      <!-- 2. Independent Hanging Overlay: Industry & Partners (Physical Top-Right Edge) -->
+      ${utilityNav ? renderUtilityBar(utilityNav) : ''}
 
       <!-- Expandable Search Drawer -->
       <div class="search-drawer" id="searchDrawer" role="search" aria-hidden="true">

@@ -1,7 +1,7 @@
 /**
  * Main Production Stylesheet - Persian Honey Board (شورای ملی عسل)
  * Pixel-faithful recreation of https://honey.com/ in Persian RTL
- * Visual Correction Pass: Exact Reference Behavior & Aesthetics
+ * Visual Correction Pass: Header Alignment, Hero Crossfade, and Proportional 600px Recipe Cards
  */
 
 :root {
@@ -94,12 +94,12 @@ button {
   background: transparent;
 }
 
-/* Page Geometry: 1280px wide container for header/carousel/footer, 1152px for focused feature content */
+/* Page Geometry: 1440px wide container for desktop breathing room, 1152px for focused feature content */
 .container-wide {
   width: 100%;
-  max-width: 1280px;
+  max-width: 1440px;
   margin-inline: auto;
-  padding-inline: 24px;
+  padding-inline: 32px;
 }
 
 .container {
@@ -185,7 +185,10 @@ button {
 .pill-btn-wild-willow { color: var(--honey-wild-willow); }
 
 /* ==========================================================================
-   1. Main Header (Starts at Y=0, Flat, Integrated Honey Texture)
+   1. Main Header & Navigation Architecture (Reference Composition)
+   - Physical Left: Logo
+   - Center / Main Area: Navigation Links & Search
+   - Physical Top-Right: Independent Overlay Hanging Control
    ========================================================================== */
 .main-header {
   background-color: #F59E0B;
@@ -201,35 +204,35 @@ button {
   position: sticky;
   top: 0;
   z-index: 110;
-  box-shadow: none; /* Flat and integrated with honey texture */
+  box-shadow: none;
   width: 100%;
 }
 
 .header-inner {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: flex-start;
   height: 80px;
+  position: relative;
+  direction: ltr; /* Layout anchor: Left logo, center nav, right spacer */
 }
 
+/* Brand Logo (Physical Left) */
 .brand-logo {
   display: flex;
   align-items: center;
   gap: 12px;
   color: #FFFFFF;
   flex-shrink: 0;
+  direction: rtl; /* RTL typography inside brand block */
 }
 
-.brand-logo-icon {
-  width: 46px;
-  height: 46px;
-  fill: #FFFFFF;
-  transition: transform 0.4s ease;
-  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.25));
-}
-
-.brand-logo:hover .brand-logo-icon {
-  transform: rotate(15deg);
+.brand-logo-img {
+  height: 52px;
+  width: auto;
+  max-width: 175px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
 }
 
 .brand-title-wrap {
@@ -238,11 +241,12 @@ button {
 }
 
 .brand-name {
-  font-size: 1.45rem;
+  font-size: 1.4rem;
   font-weight: 900;
   line-height: 1.2;
   letter-spacing: -0.3px;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  white-space: nowrap;
 }
 
 .brand-subtitle {
@@ -250,36 +254,53 @@ button {
   font-weight: 600;
   opacity: 0.95;
   letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
+/* Desktop Navigation (Center/Main Area) */
 .desktop-nav {
   display: flex;
   align-items: center;
+  margin-inline: auto; /* Centered in available space */
+  direction: rtl;
 }
 
 .nav-menu {
   display: flex;
   align-items: center;
   list-style: none;
+  gap: 0;
 }
 
 .nav-item {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+}
+
+/* Thin vertical white separators matching reference */
+.nav-item:not(:last-child)::after {
+  content: '';
+  display: inline-block;
+  width: 1.5px;
+  height: 18px;
+  background-color: rgba(255, 255, 255, 0.75);
+  margin-inline: 4px;
+  vertical-align: middle;
 }
 
 /* Nav links: Normal white, Hover dark/black, NO white box */
 .nav-link {
-  padding: 8px 16px;
+  padding: 8px 14px;
   font-size: 0.92rem;
   font-weight: 700;
   text-transform: uppercase;
   color: #FFFFFF;
-  border-inline-end: 2px solid rgba(255, 255, 255, 0.85);
+  border: none;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   background: transparent;
   border-radius: 0;
   transition: color var(--transition-fast);
+  white-space: nowrap;
 }
 
 .nav-link:hover,
@@ -302,16 +323,22 @@ button {
 
 .search-btn {
   color: #FFFFFF;
-  font-size: 1.15rem;
-  padding: 8px 14px;
-  display: flex;
+  padding: 8px 12px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   transition: color var(--transition-fast);
+  border: none;
 }
 
 .search-btn:hover {
   color: var(--nav-hover-text);
+}
+
+/* Spacer on the right: reserves area so nav never collides with overlay */
+.header-right-spacer {
+  width: 210px;
+  flex-shrink: 0;
 }
 
 /* ==========================================================================
@@ -428,6 +455,7 @@ button {
   display: none;
   color: #FFFFFF;
   padding: 8px;
+  margin-left: auto;
 }
 
 /* Search Drawer */
@@ -553,7 +581,7 @@ button {
 }
 
 /* ==========================================================================
-   3. Hero Section (LCP Optimized)
+   3. Hero Section (Multi-Image Slideshow with Smooth Crossfade)
    ========================================================================== */
 .hero-section {
   position: relative;
@@ -575,6 +603,7 @@ button {
   overflow: hidden;
 }
 
+/* Multi-image slideshow: calm crossfade, no layout shift */
 .hero-bg-image {
   position: absolute;
   inset: 0;
@@ -582,21 +611,23 @@ button {
   height: 100%;
   object-fit: cover;
   object-position: center;
-  opacity: 0.82;
-  will-change: transform;
-  animation: kenBurnsZoom 16s ease-in-out infinite alternate;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1000ms cubic-bezier(0.25, 1, 0.5, 1), visibility 1000ms cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: opacity;
 }
 
-@keyframes kenBurnsZoom {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.08); }
+.hero-bg-image.active {
+  opacity: 0.82;
+  visibility: visible;
+  z-index: 2;
 }
 
 .hero-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, rgba(30, 15, 6, 0.38) 0%, rgba(30, 15, 6, 0.65) 100%);
-  z-index: 2;
+  z-index: 3;
 }
 
 .hero-content {
@@ -807,7 +838,7 @@ button {
 
 /* ==========================================================================
    7 & 8. Continuous Wood Environment: Recipe Section & Honey Month Section
-   (Same Subtle Wood Texture, Visible Planks, No Dark Seams or Borders)
+   (Shared Wood Texture, Proportional 600px Cards, 75% Image Frame, 25% Content)
    ========================================================================== */
 .recipes-section,
 .blog-section {
@@ -893,16 +924,16 @@ button {
 
 .recipe-cards-container {
   display: flex;
-  gap: 24px;
+  gap: 20px;
   transition: transform 0.45s var(--ease-smooth);
   will-change: transform;
 }
 
-/* Sharp-cornered, taller, visually dense recipe cards */
+/* Proportional Recipe Cards: Total height ~595px, Width ~345px, Displays ~4 cards + partial next */
 .recipe-card {
-  flex: 0 0 calc(33.333% - 16px);
-  min-width: 320px;
-  height: 520px;
+  flex: 0 0 345px;
+  width: 345px;
+  height: 595px;
   border-radius: 0; /* Sharp corners */
   overflow: hidden;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
@@ -927,13 +958,14 @@ button {
   color: inherit;
 }
 
-/* Upper image area with sharp corners */
+/* Image frame: ~75% of card height (445px out of 595px) */
 .card-img-wrap {
-  height: 290px;
+  height: 445px;
   position: relative;
   overflow: hidden;
   background-color: #1E0F07;
   border-radius: 0;
+  flex-shrink: 0;
 }
 
 .card-img-wrap img {
@@ -949,7 +981,7 @@ button {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.32);
   opacity: 0;
   transition: opacity var(--transition-fast);
   pointer-events: none;
@@ -959,8 +991,10 @@ button {
   opacity: 1;
 }
 
+/* Content block: ~25% of card height (150px out of 595px) */
 .card-content-wrap {
-  padding: 24px 22px;
+  height: 150px;
+  padding: 20px 22px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -985,7 +1019,7 @@ button {
   font-size: 1.25rem;
   font-weight: 800;
   line-height: 1.4;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .card-sunglow,
@@ -1311,6 +1345,35 @@ button {
 /* ==========================================================================
    Responsive Breakpoints
    ========================================================================== */
+@media (max-width: 1440px) {
+  .header-right-spacer {
+    width: 180px;
+  }
+  .recipe-card {
+    flex: 0 0 320px;
+    width: 320px;
+    height: 570px;
+  }
+  .card-img-wrap {
+    height: 425px; /* ~74.5% */
+  }
+  .card-content-wrap {
+    height: 145px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .desktop-nav {
+    display: none;
+  }
+  .header-right-spacer {
+    display: none;
+  }
+  .mobile-menu-btn {
+    display: block;
+  }
+}
+
 @media (max-width: 1024px) {
   .footer-main-grid {
     grid-template-columns: 1fr 1fr;
@@ -1324,6 +1387,20 @@ button {
     flex-direction: row;
     justify-content: flex-start;
   }
+  .recipe-card {
+    flex: 0 0 calc(50% - 10px);
+    width: calc(50% - 10px);
+    height: 540px;
+  }
+  .card-img-wrap {
+    height: 400px;
+  }
+  .card-content-wrap {
+    height: 140px;
+  }
+  .carousel-nav-btn {
+    display: none;
+  }
 }
 
 @media (max-width: 992px) {
@@ -1333,29 +1410,11 @@ button {
     grid-template-columns: 1fr;
     gap: 40px;
   }
-
-  .recipe-card {
-    flex: 0 0 calc(50% - 12px);
-    min-width: 280px;
-    height: 490px;
-  }
-  
-  .carousel-nav-btn {
-    display: none;
-  }
 }
 
 @media (max-width: 768px) {
-  .desktop-nav {
-    display: none;
-  }
-
   .utility-wrapper {
-    display: none; /* Integrated in mobile drawer on small screens */
-  }
-
-  .mobile-menu-btn {
-    display: block;
+    display: none; /* Handled in mobile drawer on small screens */
   }
 
   .circular-frame {
@@ -1384,14 +1443,23 @@ button {
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 640px) {
   .container, .container-wide {
     padding-inline: 16px;
   }
 
   .recipe-card {
     flex: 0 0 100% !important;
-    min-width: 100% !important;
+    width: 100% !important;
+    height: 500px;
+  }
+
+  .card-img-wrap {
+    height: 370px;
+  }
+
+  .card-content-wrap {
+    height: 130px;
   }
 
   .circular-frame {

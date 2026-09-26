@@ -1,6 +1,10 @@
 /**
  * Recipe Carousel / Grid Section Component (Visual Match with honey.com)
- * Reconstructed: sharp corners, wood-textured background, simple arrows, pagination dots, image darkening on hover
+ * Proportions:
+ * - Card total height: ~595px (wide, vertically elongated)
+ * - Card image height: ~445px (74-76% of total card height)
+ * - Card content height: ~150px (24-26% of total card height)
+ * - Sharp corners, simple arrows, pagination dots, image darkening on hover
  */
 
 import { renderDottedArrow, renderPillButton, getPlaceholderSVG } from './UIHelpers.js';
@@ -12,7 +16,7 @@ export function renderRecipeSection(data) {
   const recipes = data.recipes || [];
 
   const cardsHTML = recipes.map(recipe => {
-    const fallbackSvg = getPlaceholderSVG(recipe.title, 420, 300);
+    const fallbackSvg = getPlaceholderSVG(recipe.title, 420, 450);
     const colorClass = recipe.colorScheme || 'card-mantis1';
 
     return `
@@ -24,8 +28,8 @@ export function renderRecipeSection(data) {
               alt="${recipe.imageAlt || recipe.title}" 
               loading="lazy" 
               decoding="async" 
-              width="380" 
-              height="300"
+              width="355" 
+              height="445"
               onerror="this.onerror=null; this.src='${fallbackSvg}';"
             >
           </div>
@@ -55,7 +59,7 @@ export function renderRecipeSection(data) {
           aria-roledescription="carousel" 
           aria-label="اسلایدر دستور پخت‌های منتخب"
         >
-          <!-- RTL Prev Button (on the Right) - Simple Arrow, Not Enclosed in Circle -->
+          <!-- RTL Prev Button (Right Side) - Simple Arrow -->
           <button 
             class="carousel-nav-btn carousel-nav-prev" 
             id="carouselPrevBtn" 
@@ -73,7 +77,7 @@ export function renderRecipeSection(data) {
             </div>
           </div>
 
-          <!-- RTL Next Button (on the Left) - Simple Arrow, Not Enclosed in Circle -->
+          <!-- RTL Next Button (Left Side) - Simple Arrow -->
           <button 
             class="carousel-nav-btn carousel-nav-next" 
             id="carouselNextBtn" 
