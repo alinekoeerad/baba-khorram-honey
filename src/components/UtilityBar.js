@@ -1,6 +1,6 @@
 /**
  * Utility Bar Component
- * Displays industry & partners dropdown navigation
+ * Displays industry & partners dropdown navigation hanging down in the container
  */
 
 export function renderUtilityBar(utilityNav) {
@@ -20,7 +20,7 @@ export function renderUtilityBar(utilityNav) {
   `).join('');
 
   return `
-    <div class="utility-bar" role="region" aria-label="ناوبری صنعت و همکاران">
+    <div class="utility-container" role="region" aria-label="ناوبری صنعت و همکاران">
       <div class="dropdown-wrapper">
         <button 
           class="utility-btn" 

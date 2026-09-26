@@ -1,5 +1,5 @@
 /**
- * Versatility of Honey Section Component (Feature 3)
+ * Versatility of Honey Section Component (Feature 3 - Visual Match)
  */
 
 import { renderPillButton, getPlaceholderSVG } from './UIHelpers.js';
@@ -43,11 +43,6 @@ export function renderVersatilitySection(data) {
         </div>
 
         <div class="versatility-text-wrap">
-          <div class="versatility-badge-icon" aria-hidden="true">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
-            </svg>
-          </div>
           <div class="versatility-kicker">${kicker}</div>
           <h2 id="versatility-heading" class="versatility-headline">${title}</h2>
           <p class="versatility-body">${body}</p>

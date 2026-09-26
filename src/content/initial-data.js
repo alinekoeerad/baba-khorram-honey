@@ -117,7 +117,7 @@ export const initialHomepageData = {
   ],
   "hero": {
     "id": "hero-section-1",
-    "title": "شاهکار بی‌نظیر طبیعت",
+    "title": "شاهکار بی‌نظیر<br>طبیعت",
     "subtitle": "تغذیه اصیل، طعمی تکرارنشدنی و سرشار از انرژی طلایی برای زندگی روزمره",
     "images": [
       "images/hero-1.jpg"
@@ -127,14 +127,14 @@ export const initialHomepageData = {
   "beekeeping": {
     "id": "section-beekeeping",
     "badge": "صنعت زنبورداری",
-    "title": "تجلیل از صنعت زنبورداری",
+    "title": "تجلیل از<br>صنعت زنبورداری",
     "body": "شورای ملی عسل متعهد به اشتراک‌گذاری داستان‌های الهام‌بخش زنبورداران و تولیدکنندگان عسل از سراسر جهان است؛ با تأکید ویژه بر تأثیر شگرف و مثبتی که صنعت زنبورداری بر توسعه جوامع محلی، سلامت محیط‌زیست و تضمین امنیت چرخه غذایی ما بر جای می‌گذارد.",
     "image": "images/beekeeping.jpg",
     "imageAlt": "زنبوردار حرفه‌ای در حال سرکشی به کندوهای عسل در مزرعه آفتابی",
     "ctaButton": {
       "label": "کسب اطلاعات بیشتر",
       "href": "bees-sustainability.html",
-      "variant": "green",
+      "variant": "mantis",
       "ariaLabel": "کسب اطلاعات بیشتر درباره زنبورداری و پایداری محیط زیست"
     }
   },
@@ -146,7 +146,7 @@ export const initialHomepageData = {
     "ctaButton": {
       "label": "مشاهده زنبورها",
       "href": "bees-sustainability.html",
-      "variant": "orange",
+      "variant": "tan-hide",
       "ariaLabel": "مشاهده بخش زنبورها و خدمات زیست‌محیطی گرده‌افشان‌ها"
     }
   },
@@ -161,7 +161,7 @@ export const initialHomepageData = {
     "ctaButton": {
       "label": "شناخت بیشتر عسل",
       "href": "about-honey.html",
-      "variant": "gold",
+      "variant": "sunglow",
       "ariaLabel": "شناخت ویژگی‌ها و انواع گوناگون عسل طبیعی"
     }
   },
@@ -175,7 +175,7 @@ export const initialHomepageData = {
         "slug": "blueberry-citrus-honey-smoothie",
         "image": "images/recipe-1.jpg",
         "imageAlt": "اسموتی بلوبری، لیمو و عسل طبیعی در لیوان شیشه‌ای",
-        "colorScheme": "card-green",
+        "colorScheme": "card-mantis1",
         "actionLabel": "مشاهده دستور پخت",
         "href": "recipe-detail.html?id=1",
         "order": 1,
@@ -187,7 +187,7 @@ export const initialHomepageData = {
         "slug": "watermelon-honey-granita",
         "image": "images/recipe-2.jpg",
         "imageAlt": "دسر یخی گرانیتای هندوانه و عسل طبیعی خنک",
-        "colorScheme": "card-orange",
+        "colorScheme": "card-zest",
         "actionLabel": "مشاهده دستور پخت",
         "href": "recipe-detail.html?id=2",
         "order": 2,
@@ -195,71 +195,71 @@ export const initialHomepageData = {
       },
       {
         "id": "rec-3",
-        "title": "بستنی عسلی نمکی با کباب میوه‌های گریل‌شده",
-        "slug": "salted-honey-ice-cream-grilled-fruit",
-        "image": "images/recipe-3.jpg",
-        "imageAlt": "بستنی خامه‌ای با شهد عسل نمکی و میوه‌های تابستانی",
-        "colorScheme": "card-yellow",
+        "title": "پای ماست بستنی میوه‌ای با شهد عسل",
+        "slug": "frozen-yogurt-honey-berry-pie",
+        "image": "images/recipe-4.jpg",
+        "imageAlt": "برشی از پای ماست بستنی تزیین‌شده با تمشک و شهد عسل",
+        "colorScheme": "card-hippie-pink",
         "actionLabel": "مشاهده دستور پخت",
-        "href": "recipe-detail.html?id=3",
+        "href": "recipe-detail.html?id=4",
         "order": 3,
         "featured": true
       },
       {
         "id": "rec-4",
-        "title": "پای ماست بستنی میوه‌ای با شهد عسل",
-        "slug": "frozen-yogurt-honey-berry-pie",
-        "image": "images/recipe-4.jpg",
-        "imageAlt": "برشی از پای ماست بستنی تزیین‌شده با تمشک و شهد عسل",
-        "colorScheme": "card-burgundy",
-        "actionLabel": "مشاهده دستور پخت",
-        "href": "recipe-detail.html?id=4",
-        "order": 4,
-        "featured": true
-      },
-      {
-        "id": "rec-5",
         "title": "کیک خانگی لایه‌ای با شهد عسل کوهی",
         "slug": "mountain-honey-layer-cake",
         "image": "images/recipe-5.jpg",
         "imageAlt": "کیک اسفنجی چند لایه لطیف آغشته به شربت عسل کوهستان",
-        "colorScheme": "card-green",
+        "colorScheme": "card-mantis",
         "actionLabel": "مشاهده دستور پخت",
         "href": "recipe-detail.html?id=5",
+        "order": 4,
+        "featured": false
+      },
+      {
+        "id": "rec-5",
+        "title": "نوشیدنی آرامش‌بخش عسل، لیمو و زنجبیل",
+        "slug": "soothing-honey-lemon-ginger-tea",
+        "image": "images/recipe-6.jpg",
+        "imageAlt": "فنجان دمنوش داغ عسل، برش‌های لیمو و ریشه زنجبیل تازه",
+        "colorScheme": "card-tan-hide",
+        "actionLabel": "مشاهده دستور پخت",
+        "href": "recipe-detail.html?id=6",
         "order": 5,
         "featured": false
       },
       {
         "id": "rec-6",
-        "title": "نوشیدنی آرامش‌بخش عسل، لیمو و زنجبیل",
-        "slug": "soothing-honey-lemon-ginger-tea",
-        "image": "images/recipe-6.jpg",
-        "imageAlt": "فنجان دمنوش داغ عسل، برش‌های لیمو و ریشه زنجبیل تازه",
-        "colorScheme": "card-orange",
+        "title": "بستنی عسلی نمکی با کباب میوه‌های گریل‌شده",
+        "slug": "salted-honey-ice-cream-grilled-fruit",
+        "image": "images/recipe-3.jpg",
+        "imageAlt": "بستنی خامه‌ای با شهد عسل نمکی و میوه‌های تابستانی",
+        "colorScheme": "card-sunglow",
         "actionLabel": "مشاهده دستور پخت",
-        "href": "recipe-detail.html?id=6",
+        "href": "recipe-detail.html?id=3",
         "order": 6,
-        "featured": false
+        "featured": true
       }
     ],
     "allRecipesCta": {
       "label": "مشاهده تمام دستور پخت‌ها",
       "href": "recipes.html",
-      "variant": "gold",
+      "variant": "hippie-pink",
       "ariaLabel": "مشاهده آرشیو کامل دستور پخت‌های غذایی با عسل"
     }
   },
   "blog": {
     "id": "section-blog",
     "tag": "وبلاگ (THE BLOG)",
-    "title": "ماه ملی عسل (HONEY MONTH)",
+    "title": "ماه ملی<br>عسل",
     "excerpt": "چه می‌شد اگر شیرین‌کننده دلخواه شما، چیزی فراتر از صرفاً یک ماده شیرین بود؟ عسل با خود شیرینی اصیل، طعمی متمایز و بافتی بی‌همتا را به قلب آشپزخانه شما می‌آورد؛ و این فقط آغاز یک سفر خوش‌طعم است. در این ماه ملی عسل، تمامی دلایل فوق‌العاده برای حضور عسل در پخت‌وپز روزمره را با هم جشن می‌گیریم.",
     "image": "images/blog-honey.jpg",
     "imageAlt": "ظروف شیشه‌ای زیبا، موم زنبور و عسل طلایی در سینی چوبی سنتی",
     "ctaButton": {
       "label": "ادامه مطلب",
       "href": "blog-honey-month.html",
-      "variant": "green",
+      "variant": "wild-willow",
       "ariaLabel": "مطالعه مقاله کامل جشن ماه ملی عسل در وبلاگ"
     }
   },
@@ -301,7 +301,7 @@ export const initialHomepageData = {
     "linkGroups": [
       {
         "id": "fg-industry",
-        "groupTitle": "صنعت و همکاران:",
+        "groupTitle": "صنعت و همکاران",
         "links": [
           {
             "id": "fl-ind-1",
@@ -343,7 +343,7 @@ export const initialHomepageData = {
       },
       {
         "id": "fg-board",
-        "groupTitle": "درباره شورا:",
+        "groupTitle": "درباره شورا",
         "links": [
           {
             "id": "fl-nhb-1",
@@ -414,12 +414,6 @@ export const initialHomepageData = {
         "label": "ایکس (توییتر سابق)",
         "href": "https://x.com",
         "iconClass": "fa-brands fa-x-twitter"
-      },
-      {
-        "platform": "linkedin",
-        "label": "لینکدین",
-        "href": "https://linkedin.com",
-        "iconClass": "fa-brands fa-linkedin-in"
       },
       {
         "platform": "youtube",

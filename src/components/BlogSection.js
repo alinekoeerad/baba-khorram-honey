@@ -1,5 +1,5 @@
 /**
- * Blog / Educational Section Component (Honey Month)
+ * Blog / Educational Section Component (Honey Month - Visual Match with honey.com)
  */
 
 import { renderPillButton, getPlaceholderSVG } from './UIHelpers.js';
@@ -8,7 +8,7 @@ export function renderBlogSection(data) {
   if (!data) return '';
 
   const tag = data.tag || 'وبلاگ (THE BLOG)';
-  const title = data.title || 'ماه ملی عسل (HONEY MONTH)';
+  const title = data.title || 'ماه ملی<br>عسل';
   const excerpt = data.excerpt || '';
   const image = data.image || 'images/blog-honey.jpg';
   const imageAlt = data.imageAlt || 'ظروف شیشه‌ای عسل در سینی چوبی';
@@ -24,8 +24,8 @@ export function renderBlogSection(data) {
               alt="${imageAlt}" 
               loading="lazy" 
               decoding="async" 
-              width="350" 
-              height="350"
+              width="380" 
+              height="380"
               onerror="this.onerror=null; this.src='${fallbackSvg}';"
             >
           </div>

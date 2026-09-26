@@ -1,5 +1,5 @@
 /**
- * Made by Bees Banner Section Component (Feature 2)
+ * Made by Bees Banner Section Component (Feature 2 - Visual Match)
  */
 
 import { renderPillButton } from './UIHelpers.js';

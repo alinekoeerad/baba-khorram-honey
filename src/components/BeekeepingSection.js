@@ -1,5 +1,5 @@
 /**
- * Beekeeping Feature Section Component (Feature 1)
+ * Beekeeping Feature Section Component (Feature 1 - Visual Match)
  */
 
 import { renderPillButton, getPlaceholderSVG } from './UIHelpers.js';
@@ -7,7 +7,7 @@ import { renderPillButton, getPlaceholderSVG } from './UIHelpers.js';
 export function renderBeekeepingSection(data) {
   if (!data) return '';
 
-  const title = data.title || 'تجلیل از صنعت زنبورداری';
+  const title = data.title || 'تجلیل از<br>صنعت زنبورداری';
   const body = data.body || '';
   const image = data.image || 'images/beekeeping.jpg';
   const imageAlt = data.imageAlt || 'زنبوردار در مزرعه آفتابی';

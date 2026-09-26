@@ -1,5 +1,5 @@
 /**
- * Shared UI Helper Functions & SVG Icons
+ * Shared UI Helper Functions & SVG Icons (Visual Match with honey.com)
  */
 
 /**
@@ -24,7 +24,7 @@ export function renderDottedArrow() {
  */
 export function renderPillButton(btn) {
   if (!btn || !btn.label) return '';
-  const variantClass = btn.variant ? `pill-btn-${btn.variant}` : 'pill-btn-gold';
+  const variantClass = btn.variant ? `pill-btn-${btn.variant}` : 'pill-btn-sunglow';
   const aria = btn.ariaLabel ? `aria-label="${btn.ariaLabel}"` : '';
   return `
     <a href="${btn.href || '#'}" class="pill-btn ${variantClass}" ${aria}>
@@ -42,6 +42,6 @@ export function renderPillButton(btn) {
  * @param {string} bg 
  * @returns {string}
  */
-export function getPlaceholderSVG(text, width = 600, height = 400, bg = '%23F8F5F0') {
-  return `data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22${width}%22%20height%3D%22${height}%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20${width}%20${height}%22%3E%3Crect%20fill%3D%22${bg}%22%20width%3D%22100%25%22%20height%3D%22100%25%22%2F%3E%3Ctext%20fill%3D%22%23B45309%22%20font-family%3D%22sans-serif%22%20font-size%3D%2220%22%20font-weight%3D%22bold%22%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%20dy%3D%22.3em%22%3E${encodeURIComponent(text)}%3C%2Ftext%3E%3C%2Fsvg%3E`;
+export function getPlaceholderSVG(text, width = 600, height = 400, bg = '%23FAF7F2') {
+  return `data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22${width}%22%20height%3D%22${height}%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20${width}%20${height}%22%3E%3Crect%20fill%3D%22${bg}%22%20width%3D%22100%25%22%20height%3D%22100%25%22%2F%3E%3Ctext%20fill%3D%22%233F2414%22%20font-family%3D%22sans-serif%22%20font-size%3D%2220%22%20font-weight%3D%22bold%22%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%20dy%3D%22.3em%22%3E${encodeURIComponent(text)}%3C%2Ftext%3E%3C%2Fsvg%3E`;
 }

@@ -1,6 +1,6 @@
 /**
- * Header Component
- * Contains Logo, Navigation, Search Drawer, and Full Mobile Menu
+ * Header Component (Visual Match with honey.com)
+ * Contains Logo, Navigation with Border Dividers, Search Drawer, and Full Mobile Menu
  */
 
 export function renderHeader(settings, navigation, utilityNav = null) {
@@ -8,12 +8,9 @@ export function renderHeader(settings, navigation, utilityNav = null) {
   const brandEn = settings?.siteNameEn || 'National Honey Board';
   const navItems = navigation || [];
 
-  const navLinksHTML = navItems.map((item, index) => {
+  const navLinksHTML = navItems.map((item) => {
     const activeClass = item.isActive ? 'active' : '';
     const ariaCurrent = item.isActive ? 'aria-current="page"' : '';
-    const divider = index < navItems.length - 1 
-      ? '<li class="nav-item" aria-hidden="true"><span class="nav-divider">|</span></li>' 
-      : '';
 
     return `
       <li class="nav-item">
@@ -21,7 +18,6 @@ export function renderHeader(settings, navigation, utilityNav = null) {
           ${item.label}
         </a>
       </li>
-      ${divider}
     `;
   }).join('');
 
@@ -47,7 +43,7 @@ export function renderHeader(settings, navigation, utilityNav = null) {
 
   return `
     <header class="main-header" role="banner">
-      <div class="container header-inner">
+      <div class="container-wide header-inner">
         <!-- Brand Logo -->
         <a href="index.html" class="brand-logo" aria-label="${brandFa} - ${brandEn}">
           <svg class="brand-logo-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -63,7 +59,6 @@ export function renderHeader(settings, navigation, utilityNav = null) {
         <nav class="desktop-nav" aria-label="منوی اصلی">
           <ul class="nav-menu">
             ${navLinksHTML}
-            <li class="nav-item" aria-hidden="true"><span class="nav-divider">|</span></li>
             <li class="nav-item">
               <button 
                 class="search-btn" 

@@ -1,41 +1,47 @@
 /**
  * Main Production Stylesheet - Persian Honey Board (شورای ملی عسل)
  * Pixel-faithful recreation of https://honey.com/ in Persian RTL
- * Production Audited & Refined: Performance, Accessibility, Responsive, Security
+ * Visual Regression & Pixel-Matching Pass
  */
 
 :root {
-  /* Brand Honey Colors (honey.com authentic palette) */
-  --primary-honey: #F59E0B;
-  --honey-dark: #C86A00;
-  --honey-amber: #D97706;
-  --honey-gold: #FBBF24;
-  --honey-light: #FEF3C7;
-  --honey-pale: #FFFBEB;
+  /* Honey.com Authentic Brand Colors */
+  --honey-white: #FFFFFF;
+  --honey-cedar: #3F2414;          /* Authentic Dark Chocolate/Cedar Brown */
+  --chocolate-brown: #3F2414;
+  --dark-brown-hover: #2B160A;
+  --footer-bg: #3F2414;
+  --footer-nav-bg: #341D10;
 
-  /* Neutrals & Dark Browns */
-  --chocolate-brown: #332115;
-  --dark-brown-hover: #26180E;
-  --footer-bg: #4B3A2F;
-  --footer-nav-bg: #403127;
-  --text-dark: #2B2017;
-  --text-cream: #E8E2D9;
+  --honey-sunglow: #FDC13B;        /* Golden Yellow */
+  --honey-tan-hide: #F79D4A;       /* Warm Amber */
+  --honey-mantis: #63BA4D;         /* Fresh Green */
+  --honey-mantis1: #73C15F;        /* Bright Card Green */
+  --honey-zest: #E77731;           /* Vibrant Card Orange */
+  --honey-jaffa: #EA8648;          /* Warm Orange */
+  --honey-hippie-pink: #AD4662;     /* Berry Pink / Burgundy */
+  --honey-wild-willow: #9ECD76;     /* Lime / Wild Willow Green */
+
+  /* Neutral Backgrounds & Texts */
+  --text-dark: #3F2414;
   --text-muted: #5C5248;
-  --bg-warm-light: #FDFBF8;
+  --text-cream: #F3ECE2;
+  --bg-warm-light: #FAF7F2;
   --border-light: #EFE9E0;
 
-  /* Accent & Category Colors (WCAG AA Compliant Contrast) */
-  --accent-green: #357A38;
-  --accent-green-light: #4CAF50;
-  --blog-green: #7BB839;
-  --accent-orange: #CF6D17;
-  --accent-amber: #E68A00;
+  /* Card Colors */
+  --card-mantis1: #73C15F;
+  --card-zest: #E77731;
+  --card-hippie-pink: #AD4662;
+  --card-mantis: #63BA4D;
+  --card-tan-hide: #F79D4A;
+  --card-sunglow: #FDC13B;
 
-  /* Recipe Card Colors (WCAG AA compliant contrast with text) */
-  --card-green: #357A38;
-  --card-orange: #CF6D17;
-  --card-yellow: #FBC034;
-  --card-burgundy: #9E3556;
+  /* Backward Compatibility Aliases */
+  --card-green: #73C15F;
+  --card-orange: #E77731;
+  --card-yellow: #FDC13B;
+  --card-burgundy: #AD4662;
 
   /* Transitions & Easings */
   --ease-smooth: cubic-bezier(0.25, 1, 0.5, 1);
@@ -89,46 +95,54 @@ button {
   background: transparent;
 }
 
-.container {
+/* Page Geometry: 1280px wide container for header/carousel/footer, 1152px for focused feature content */
+.container-wide {
   width: 100%;
-  max-width: 1220px;
+  max-width: 1280px;
   margin-inline: auto;
   padding-inline: 24px;
 }
 
-/* Skip link for Accessibility */
+.container {
+  width: 100%;
+  max-width: 1152px;
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+/* Accessibility Skip Link */
 .skip-link {
   position: absolute;
   top: -100px;
   inset-inline-start: 16px;
-  background: var(--chocolate-brown);
+  background: var(--honey-cedar);
   color: #FFFFFF;
   padding: 12px 24px;
   z-index: 9999;
   font-weight: 700;
-  border-radius: 0 0 6px 6px;
+  border-radius: 0 0 8px 8px;
   transition: top 0.2s ease;
 }
 
 .skip-link:focus {
   top: 0;
-  outline: 3px solid var(--primary-honey);
+  outline: 3px solid var(--honey-sunglow);
   outline-offset: 2px;
 }
 
-/* High-Contrast Visible Focus States */
+/* Focus Standards */
 :focus-visible {
-  outline: 2px solid var(--honey-dark);
+  outline: 2px solid var(--honey-sunglow);
   outline-offset: 3px;
 }
 
 /* ==========================================================================
-   Reusable Honey SVG Dotted Arrow (Mirrored for RTL: points left: ◀ · · ·)
+   Honey Dotted Arrow (Mirrored for RTL: points left: ◀ · · ·)
    ========================================================================== */
 .honey-arrow-svg {
   display: inline-block;
   vertical-align: middle;
-  width: 26px;
+  width: 24px;
   height: 12px;
   fill: currentColor;
   transition: transform var(--transition-normal);
@@ -136,51 +150,51 @@ button {
 }
 
 .pill-btn:hover .honey-arrow-svg,
-.recipe-card:hover .honey-arrow-svg,
-.link-with-arrow:hover .honey-arrow-svg {
-  transform: translateX(-6px);
+.recipe-card:hover .honey-arrow-svg {
+  transform: translateX(-5px);
 }
 
 /* ==========================================================================
-   Honey Pill Button System
+   Honey Pill Button System (Matching honey.com exactly: rounded-full, cedar bg)
    ========================================================================== */
 .pill-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  background-color: var(--chocolate-brown);
-  padding: 12px 28px;
+  gap: 10px;
+  background-color: var(--honey-cedar);
+  padding: 11px 28px;
   border-radius: 50px;
   font-weight: 800;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   border: none;
   transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
-  box-shadow: 0 4px 12px rgba(51, 33, 21, 0.18);
+  box-shadow: 0 4px 12px rgba(63, 36, 20, 0.16);
   white-space: nowrap;
 }
 
 .pill-btn:hover {
   background-color: var(--dark-brown-hover);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(51, 33, 21, 0.28);
+  box-shadow: 0 6px 16px rgba(63, 36, 20, 0.26);
 }
 
-.pill-btn-green { color: var(--accent-green-light); }
-.pill-btn-gold { color: var(--honey-gold); }
-.pill-btn-orange { color: #FFA338; }
-.pill-btn-yellow { color: #FCD34D; }
+.pill-btn-mantis, .pill-btn-green { color: var(--honey-mantis); }
+.pill-btn-tan-hide, .pill-btn-orange { color: var(--honey-tan-hide); }
+.pill-btn-sunglow, .pill-btn-gold { color: var(--honey-sunglow); }
+.pill-btn-hippie-pink { color: var(--honey-hippie-pink); }
+.pill-btn-wild-willow { color: var(--honey-wild-willow); }
 
 /* ==========================================================================
-   1. Top Utility Bar (صنعت و همکاران تجاری)
+   1. Top Utility Bar (صنعت و همکاران تجاری - Exact recreation)
    ========================================================================== */
-.utility-bar {
-  background-color: #F8F5F0;
-  border-bottom: 1px solid #ECE4D8;
-  padding-block: 6px;
+.utility-container {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
   padding-inline: 24px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-end; /* in RTL flexbox, aligns to top-left corner (mirror of LTR top-right) */
   position: relative;
   z-index: 120;
 }
@@ -190,24 +204,23 @@ button {
 }
 
 .utility-btn {
-  background-color: #FFFFFF;
-  color: #554438;
-  font-size: 0.82rem;
+  background-color: var(--honey-cedar);
+  color: #FFFFFF;
+  font-size: 0.78rem;
   font-weight: 700;
-  padding: 6px 16px;
-  border-radius: 4px;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  border-radius: 0 0 12px 12px; /* rounded-b-xl hanging down */
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid #E2D7C8;
-  transition: all var(--transition-fast);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: background-color var(--transition-fast);
 }
 
 .utility-btn:hover,
 .utility-btn.open {
-  background-color: #FFF9ED;
-  color: var(--honey-dark);
-  border-color: var(--primary-honey);
+  background-color: var(--dark-brown-hover);
 }
 
 .utility-btn svg {
@@ -222,47 +235,47 @@ button {
 
 .utility-dropdown-menu {
   position: absolute;
-  top: calc(100% + 5px);
+  top: 100%;
   inset-inline-start: 0;
-  background: #FFFFFF;
+  background-color: var(--honey-cedar);
   min-width: 250px;
-  box-shadow: 0 12px 30px rgba(43, 32, 23, 0.16);
-  border-radius: 4px;
-  padding-block: 6px;
+  box-shadow: 0 12px 30px rgba(43, 22, 10, 0.3);
+  border-radius: 12px;
+  padding-block: 8px;
   list-style: none;
-  border: 1px solid #E8DFD1;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   z-index: 200;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-8px);
+  transform: translateY(-6px);
   transition: all var(--transition-fast);
 }
 
 .utility-dropdown-menu.show {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
+  transform: translateY(4px);
 }
 
 .utility-dropdown-menu li a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 9px 18px;
+  padding: 10px 18px;
   font-size: 0.85rem;
-  color: #4A3A2F;
+  color: rgba(255, 255, 255, 0.9);
   font-weight: 600;
-  transition: background-color var(--transition-fast), padding-inline-start var(--transition-fast);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
 .utility-dropdown-menu li a:hover {
-  background-color: #FFF6E5;
-  color: var(--honey-dark);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--honey-sunglow);
   padding-inline-start: 22px;
 }
 
 /* ==========================================================================
-   2. Main Header & Navigation
+   2. Main Header & Navigation (80px height, honey background texture)
    ========================================================================== */
 .main-header {
   background-color: #F59E0B;
@@ -270,22 +283,22 @@ button {
     linear-gradient(rgba(217, 119, 6, 0.40), rgba(180, 83, 9, 0.72)),
     url('../images/header-bg.jpg'),
     url('../../images/header-bg.jpg'),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cpath fill-rule='evenodd' d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v13.2l11 6.35 11-6.35V17.9L14 11.55 3 17.9zm11-16.65l13 7.5v2.32l-13-7.5-13 7.5V8.75l13-7.5zM14 47.75l13-7.5v-2.32l-13 7.5-13-7.5v2.32l13 7.5z' fill='%23B45309' fill-opacity='0.2'/%3E%3C/svg%3E");
-  background-position: center;
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cpath fill-rule='evenodd' d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v13.2l11 6.35 11-6.35V17.9L14 11.55 3 17.9zm11-16.65l13 7.5v2.32l-13-7.5-13 7.5V8.75l13-7.5zM14 47.75l13-7.5v-2.32l-13 7.5-13-7.5v2.32l13 7.5z' fill='%23B45309' fill-opacity='0.22'/%3E%3C/svg%3E");
+  background-position: center top;
   background-size: cover;
   background-repeat: no-repeat;
   color: #FFFFFF;
-  padding-block: 14px;
   position: sticky;
   top: 0;
   z-index: 110;
-  box-shadow: 0 4px 18px rgba(180, 83, 9, 0.3);
+  box-shadow: 0 4px 18px rgba(180, 83, 9, 0.28);
 }
 
 .header-inner {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: 80px; /* Exact 80px / 5rem */
 }
 
 .brand-logo {
@@ -293,11 +306,12 @@ button {
   align-items: center;
   gap: 12px;
   color: #FFFFFF;
+  flex-shrink: 0;
 }
 
 .brand-logo-icon {
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   fill: #FFFFFF;
   transition: transform 0.4s ease;
   filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.25));
@@ -327,11 +341,15 @@ button {
   letter-spacing: 0.5px;
 }
 
+.desktop-nav {
+  display: flex;
+  align-items: center;
+}
+
 .nav-menu {
   display: flex;
   align-items: center;
   list-style: none;
-  gap: 6px;
 }
 
 .nav-item {
@@ -340,59 +358,46 @@ button {
 }
 
 .nav-link {
-  padding: 8px 14px;
-  font-size: 0.96rem;
+  padding: 8px 16px;
+  font-size: 0.92rem;
   font-weight: 700;
+  text-transform: uppercase;
   color: #FFFFFF;
-  border-radius: 4px;
+  border-inline-end: 2px solid rgba(255, 255, 255, 0.85);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  position: relative;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
 }
 
-.nav-link:hover,
+.nav-link:hover {
+  color: var(--honey-sunglow);
+}
+
 .nav-link.active {
-  color: #FFF6D6;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
-}
-
-.nav-link.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  inset-inline: 14px;
-  height: 2px;
-  background-color: #FFF6D6;
-  border-radius: 2px;
-}
-
-.nav-divider {
-  color: rgba(255, 255, 255, 0.45);
-  font-size: 0.85rem;
-  user-select: none;
+  color: var(--honey-cedar);
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: 4px;
 }
 
 .search-btn {
   color: #FFFFFF;
   font-size: 1.15rem;
-  padding: 8px 12px;
-  transition: transform var(--transition-fast), color var(--transition-fast);
+  padding: 8px 14px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform var(--transition-fast), color var(--transition-fast);
 }
 
 .search-btn:hover {
   transform: scale(1.15);
-  color: #FFF6D6;
+  color: var(--honey-sunglow);
 }
 
-/* Mobile Hamburger Toggle */
+/* Mobile Toggle */
 .mobile-menu-btn {
   display: none;
   color: #FFFFFF;
-  font-size: 1.5rem;
-  padding: 6px;
-  border-radius: 4px;
+  padding: 8px;
 }
 
 /* Search Drawer */
@@ -432,12 +437,12 @@ button {
 }
 
 .search-drawer input:focus {
-  border-color: var(--honey-dark);
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+  border-color: var(--honey-sunglow);
+  box-shadow: 0 0 0 3px rgba(253, 193, 59, 0.25);
 }
 
 .search-drawer button {
-  background: var(--chocolate-brown);
+  background: var(--honey-cedar);
   color: #FFFFFF;
   padding: 10px 24px;
   border-radius: 4px;
@@ -454,11 +459,10 @@ button {
 /* Mobile Navigation Drawer */
 .mobile-nav-drawer {
   display: none;
-  background: #2C1D11;
+  background: var(--honey-cedar);
   color: #FFFFFF;
   padding: 24px 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .mobile-nav-drawer.open {
@@ -482,9 +486,9 @@ button {
 
 .mobile-nav-list a:hover,
 .mobile-nav-list a.active {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: var(--primary-honey);
-  color: var(--honey-gold);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--honey-sunglow);
+  color: var(--honey-sunglow);
 }
 
 .mobile-utility-section {
@@ -495,7 +499,7 @@ button {
 
 .mobile-utility-title {
   font-size: 0.85rem;
-  color: var(--honey-gold);
+  color: var(--honey-sunglow);
   font-weight: 800;
   margin-bottom: 10px;
 }
@@ -519,19 +523,19 @@ button {
 }
 
 /* ==========================================================================
-   3. Hero Section (LCP Optimized with Atmospheric Scrim)
+   3. Hero Section (LCP Optimized, Two-line bold headline)
    ========================================================================== */
 .hero-section {
   position: relative;
-  min-height: clamp(440px, 58vh, 620px);
+  min-height: 580px; /* Matching md:min-h-[580px] */
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding-block: 70px;
+  padding-block: 80px;
   padding-inline: 24px;
-  background-color: #2C1D11;
+  background-color: var(--honey-cedar);
 }
 
 .hero-background-wrapper {
@@ -548,6 +552,7 @@ button {
   height: 100%;
   object-fit: cover;
   object-position: center;
+  opacity: 0.82;
   will-change: transform;
   animation: kenBurnsZoom 16s ease-in-out infinite alternate;
 }
@@ -560,39 +565,39 @@ button {
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(20, 10, 5, 0.42) 0%, rgba(20, 10, 5, 0.68) 100%);
+  background: linear-gradient(180deg, rgba(30, 15, 6, 0.38) 0%, rgba(30, 15, 6, 0.65) 100%);
   z-index: 2;
 }
 
 .hero-content {
   position: relative;
   z-index: 10;
-  max-width: 880px;
+  max-width: 900px;
 }
 
 .hero-title {
-  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-size: clamp(2.8rem, 6.5vw, 5.2rem);
   font-weight: 900;
   color: #FFFFFF;
-  line-height: 1.25;
-  text-shadow: 0 4px 22px rgba(0, 0, 0, 0.7);
-  margin-bottom: 16px;
+  line-height: 1.08;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+  margin-bottom: 18px;
   letter-spacing: -0.5px;
 }
 
 .hero-sub {
   color: #FFFFFF;
-  font-size: clamp(1.05rem, 2vw, 1.25rem);
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
   font-weight: 400;
   line-height: 1.85;
 }
 
 /* ==========================================================================
-   4. Feature 1: Celebrating Beekeeping (تجلیل از صنعت زنبورداری)
+   4. Feature 1: Celebrating Beekeeping (max-w-6xl, rounded-2xl image)
    ========================================================================== */
 .feature-beekeeping {
-  padding-block: 75px;
+  padding-block: 80px 96px;
   background-color: #FFFFFF;
 }
 
@@ -604,27 +609,27 @@ button {
 }
 
 .section-tag-green {
-  color: var(--accent-green);
-  font-size: 2.1rem;
-  font-weight: 900;
-  line-height: 1.3;
-  margin-bottom: 18px;
+  color: var(--honey-mantis);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  line-height: 1.18;
+  margin-bottom: 20px;
   letter-spacing: -0.3px;
 }
 
 .feature-body {
-  font-size: 1.08rem;
-  color: #4A423A;
-  line-height: 1.95;
-  margin-bottom: 28px;
+  font-size: 1.125rem;
+  color: var(--honey-cedar);
+  line-height: 1.85;
+  margin-bottom: 30px;
 }
 
 .feature-image-wrap {
+  border-radius: 1rem; /* rounded-2xl */
   overflow: hidden;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  background-color: #F8F5F0;
-  aspect-ratio: 16 / 10;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(63, 36, 20, 0.08);
+  aspect-ratio: 16 / 11;
 }
 
 .feature-image-wrap img {
@@ -639,15 +644,15 @@ button {
 }
 
 /* ==========================================================================
-   5. Feature Banner 2: Made by Bees (با افتخار، کارِ زنبورها)
+   5. Feature Banner 2: Made by Bees (py-28 md:py-36)
    ========================================================================== */
 .banner-made-by-bees {
   position: relative;
-  padding-block: 70px;
+  padding-block: 100px 110px;
   padding-inline: 24px;
-  background-color: #2C1D11;
+  background-color: var(--honey-cedar);
   background-image: 
-    linear-gradient(180deg, rgba(28, 16, 7, 0.52) 0%, rgba(28, 16, 7, 0.74) 100%),
+    linear-gradient(180deg, rgba(63, 36, 20, 0.45) 0%, rgba(63, 36, 20, 0.70) 100%),
     url('../images/bees-banner.jpg'),
     url('../../images/bees-banner.jpg');
   background-position: center;
@@ -665,28 +670,28 @@ button {
 }
 
 .banner-subtitle {
-  font-size: 1.25rem;
-  font-weight: 800;
+  font-size: 1.35rem;
+  font-weight: 700;
   color: #FFFFFF;
   letter-spacing: 2px;
-  margin-bottom: 6px;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.65);
+  margin-bottom: 8px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .banner-title {
-  font-size: clamp(2.2rem, 4.5vw, 2.85rem);
+  font-size: clamp(2.5rem, 5.5vw, 4.2rem);
   font-weight: 900;
-  color: var(--accent-orange);
-  text-shadow: 0 3px 14px rgba(0, 0, 0, 0.75);
-  margin-bottom: 24px;
-  line-height: 1.25;
+  color: var(--honey-tan-hide);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+  margin-bottom: 28px;
+  line-height: 1.12;
 }
 
 /* ==========================================================================
-   6. Feature 3: Versatility of Honey (تنها ماده‌ای که از عهده هر کاری برمی‌آید)
+   6. Feature 3: Versatility of Honey (ANYTHING in Sunglow)
    ========================================================================== */
 .feature-versatility {
-  padding-block: 80px 65px;
+  padding-block: 85px 80px;
   background-color: #FFFFFF;
 }
 
@@ -705,10 +710,10 @@ button {
 }
 
 .versatility-image-wrap img.primary-jar {
-  max-height: 410px;
+  max-height: 420px;
   width: auto;
   object-fit: contain;
-  filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.14));
+  filter: drop-shadow(0 16px 24px rgba(63, 36, 20, 0.16));
   transition: transform 0.4s ease;
 }
 
@@ -718,56 +723,43 @@ button {
 
 .versatility-decorative-figure {
   position: absolute;
-  inset-inline-start: -20px;
-  bottom: -20px;
+  inset-inline-start: -24px;
+  bottom: -16px;
   width: 140px;
   height: auto;
   pointer-events: none;
-  opacity: 0.85;
-}
-
-.versatility-badge-icon {
-  width: 58px;
-  height: 58px;
-  background: var(--honey-light);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 16px;
-  color: var(--honey-dark);
-  font-size: 1.6rem;
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+  opacity: 0.9;
 }
 
 .versatility-kicker {
-  font-size: 1.4rem;
-  font-weight: 800;
-  color: #382A20;
-  margin-bottom: 4px;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--honey-cedar);
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
 }
 
 .versatility-headline {
-  font-size: clamp(2.4rem, 4.5vw, 3.2rem);
+  font-size: clamp(2.8rem, 6vw, 4.8rem);
   font-weight: 900;
-  color: var(--honey-dark);
-  line-height: 1.15;
-  margin-bottom: 20px;
+  color: var(--honey-sunglow);
+  line-height: 1.05;
+  margin-bottom: 22px;
   letter-spacing: -0.5px;
 }
 
 .versatility-body {
-  font-size: 1.08rem;
-  color: #4A423A;
-  line-height: 1.95;
+  font-size: 1.125rem;
+  color: var(--honey-cedar);
+  line-height: 1.85;
   margin-bottom: 30px;
 }
 
 /* ==========================================================================
-   7. Recipe Section (کارت‌های رنگی شیک و دقیق)
+   7. Recipe Section (480px height, rounded-2xl cards matching honey.com)
    ========================================================================== */
 .recipes-section {
-  padding-block: 50px 75px;
+  padding-block: 64px 85px;
   background-color: var(--bg-warm-light);
   border-top: 1px solid var(--border-light);
   border-bottom: 1px solid var(--border-light);
@@ -781,7 +773,7 @@ button {
 .recipes-section-title {
   font-size: 2.2rem;
   font-weight: 900;
-  color: var(--chocolate-brown);
+  color: var(--honey-cedar);
   margin-bottom: 8px;
 }
 
@@ -798,9 +790,10 @@ button {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: #FFFFFF;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
   border: 1px solid #D5C8B8;
-  color: var(--chocolate-brown);
+  color: var(--honey-cedar);
   font-size: 1.1rem;
   display: flex;
   align-items: center;
@@ -812,9 +805,9 @@ button {
 }
 
 .carousel-nav-btn:hover {
-  background: var(--chocolate-brown);
+  background: var(--honey-cedar);
   color: #FFFFFF;
-  border-color: var(--chocolate-brown);
+  border-color: var(--honey-cedar);
   transform: translateY(-50%) scale(1.08);
 }
 
@@ -834,42 +827,43 @@ button {
   will-change: transform;
 }
 
-/* Strict 90-degree sharp corners per honey.com design */
+/* 480px height & rounded-2xl cards matching honey.com */
 .recipe-card {
   flex: 0 0 calc(33.333% - 16px);
   min-width: 320px;
+  height: 480px; /* Exact h-[480px] */
+  border-radius: 1rem; /* rounded-2xl */
   overflow: hidden;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   color: #FFFFFF;
   transition: transform var(--transition-normal), box-shadow var(--transition-normal);
   cursor: pointer;
   background-color: #FFFFFF;
-  border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .recipe-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.18);
 }
 
 .card-img-wrap {
-  height: 240px;
+  height: 256px; /* Exact h-64 */
   overflow: hidden;
   background-color: #EFE9E0;
-  aspect-ratio: 3 / 2;
 }
 
 .card-img-wrap img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.6s ease;
+  transition: transform 0.5s ease;
 }
 
 .recipe-card:hover .card-img-wrap img {
-  transform: scale(1.08);
+  transform: scale(1.06);
 }
 
 .card-content-wrap {
@@ -878,27 +872,39 @@ button {
   flex-direction: column;
   justify-content: space-between;
   flex-grow: 1;
-  min-height: 140px;
 }
 
-.card-green { background-color: var(--card-green); color: #FFFFFF; }
-.card-orange { background-color: var(--card-orange); color: #FFFFFF; }
-.card-yellow { background-color: var(--card-yellow); color: var(--chocolate-brown); }
-.card-burgundy { background-color: var(--card-burgundy); color: #FFFFFF; }
+/* Authentic Recipe Colors */
+.card-mantis1 { background-color: var(--card-mantis1); color: #FFFFFF; }
+.card-zest { background-color: var(--card-zest); color: #FFFFFF; }
+.card-hippie-pink { background-color: var(--card-hippie-pink); color: #FFFFFF; }
+.card-mantis { background-color: var(--card-mantis); color: #FFFFFF; }
+.card-tan-hide { background-color: var(--card-tan-hide); color: #FFFFFF; }
+.card-sunglow { background-color: var(--card-sunglow); color: var(--honey-cedar); }
+
+/* Compatibility Aliases */
+.card-green { background-color: var(--card-mantis1); color: #FFFFFF; }
+.card-orange { background-color: var(--card-zest); color: #FFFFFF; }
+.card-yellow { background-color: var(--card-sunglow); color: var(--honey-cedar); }
+.card-burgundy { background-color: var(--card-hippie-pink); color: #FFFFFF; }
 
 .recipe-card-title {
-  font-size: 1.18rem;
+  font-size: 1.25rem;
   font-weight: 800;
-  line-height: 1.5;
+  line-height: 1.4;
   margin-bottom: 16px;
 }
 
+.card-sunglow,
+.card-sunglow .recipe-card-title,
+.card-sunglow .recipe-card-link,
+.card-sunglow .honey-arrow-svg,
 .card-yellow,
 .card-yellow .recipe-card-title,
 .card-yellow .recipe-card-link,
 .card-yellow .honey-arrow-svg {
-  color: var(--chocolate-brown) !important;
-  fill: var(--chocolate-brown) !important;
+  color: var(--honey-cedar) !important;
+  fill: var(--honey-cedar) !important;
 }
 
 .recipe-card-link {
@@ -915,26 +921,26 @@ button {
 }
 
 /* ==========================================================================
-   8. Blog Section: Honey Month (طرح چوب عمیق و اصیل)
+   8. Blog Section: Honey Month (wood-bg, 380px circular frame)
    ========================================================================== */
 .blog-section {
-  padding-block: 85px;
-  background-color: #26160B;
+  padding-block: 85px 96px;
+  background-color: var(--honey-cedar);
   background-image: 
-    linear-gradient(rgba(35, 20, 10, 0.45), rgba(35, 20, 10, 0.45)),
+    linear-gradient(rgba(43, 22, 10, 0.45), rgba(43, 22, 10, 0.45)),
     url('../images/wood-bg.jpg'),
     url('../../images/wood-bg.jpg');
   background-position: center;
   background-size: cover;
   background-repeat: repeat;
   color: #FFFFFF;
-  border-top: 1px solid #3A2314;
-  border-bottom: 1px solid #3A2314;
+  border-top: 1px solid #2B160A;
+  border-bottom: 1px solid #2B160A;
 }
 
 .blog-grid {
   display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
+  grid-template-columns: 0.95fr 1.05fr;
   gap: 60px;
   align-items: center;
 }
@@ -946,14 +952,14 @@ button {
 }
 
 .circular-frame {
-  width: 350px;
-  height: 350px;
+  width: 380px;
+  height: 380px;
   border-radius: 50%;
   overflow: hidden;
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
-  border: 7px solid #FFFFFF;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+  border: 8px solid #FFFFFF;
   transition: transform 0.4s ease;
-  background-color: #332115;
+  background-color: var(--honey-cedar);
   aspect-ratio: 1 / 1;
 }
 
@@ -968,153 +974,150 @@ button {
 }
 
 .blog-tag {
-  font-size: 0.96rem;
-  font-weight: 800;
-  color: #A2E898;
-  letter-spacing: 1.5px;
-  margin-bottom: 6px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
 }
 
 .blog-title {
-  font-size: clamp(2.1rem, 4vw, 2.75rem);
+  font-size: clamp(2.4rem, 4.5vw, 3.8rem);
   font-weight: 900;
-  color: #FFFFFF;
-  margin-bottom: 18px;
-  line-height: 1.25;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  color: var(--honey-wild-willow);
+  margin-bottom: 20px;
+  line-height: 1.15;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .blog-excerpt {
-  font-size: 1.08rem;
-  color: #F3ECE2;
-  line-height: 1.95;
-  margin-bottom: 28px;
+  font-size: 1.125rem;
+  color: var(--text-cream);
+  line-height: 1.85;
+  margin-bottom: 30px;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
 /* ==========================================================================
-   9. Footer Section (چیدمان چندسطحی استاندارد)
+   9. Footer Section (5-column layout matching honey.com)
    ========================================================================== */
 .site-footer {
-  background-color: var(--footer-bg);
+  background-color: var(--honey-cedar);
   color: #E6DDD4;
-  padding-block: 60px 35px;
-  border-top: 5px solid var(--primary-honey);
+  padding-block: 64px 40px;
+  border-top: 5px solid var(--honey-sunglow);
   margin-top: auto;
 }
 
-.footer-primary-nav {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 24px;
-  padding-bottom: 26px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-  margin-bottom: 28px;
+.footer-main-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.footer-primary-link {
+.footer-brand-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.footer-logo-img {
+  width: 220px;
+  height: auto;
+  object-fit: contain;
+}
+
+.footer-mission-text {
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.7;
+  max-width: 320px;
+}
+
+.footer-col-title {
+  font-size: 0.95rem;
   font-weight: 800;
-  font-size: 1rem;
   color: #FFFFFF;
-  padding: 4px 8px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  letter-spacing: 0.5px;
+}
+
+.footer-col-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-col-links a {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
   transition: color var(--transition-fast);
 }
 
-.footer-primary-link:hover {
-  color: var(--honey-gold);
+.footer-col-links a:hover {
+  color: var(--honey-sunglow);
 }
 
-.footer-sections-row {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  text-align: center;
-  padding-bottom: 30px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-  margin-bottom: 28px;
+.footer-main-nav a {
+  color: var(--honey-sunglow);
+  font-weight: 700;
 }
 
-.footer-group-title {
-  font-size: 0.9rem;
-  font-weight: 900;
-  color: var(--honey-gold);
-  letter-spacing: 1px;
-  display: inline-block;
-  margin-inline-end: 12px;
-}
-
-.footer-sublinks-wrap {
-  display: inline-flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 18px;
-  font-size: 0.88rem;
-}
-
-.footer-sublinks-wrap a {
-  color: #E2D7CC;
-  padding: 4px 6px;
-}
-
-.footer-sublinks-wrap a:hover {
+.footer-main-nav a:hover {
   color: #FFFFFF;
   text-decoration: underline;
 }
 
-.footer-bottom-row {
+.footer-social-wrap {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.footer-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 1.2rem;
-  font-weight: 800;
-  color: #FFFFFF;
-}
-
-.footer-logo-img {
-  height: 48px;
-  width: auto;
-  object-fit: contain;
-}
-
-.social-links {
-  display: flex;
-  gap: 12px;
+  gap: 10px;
+  margin-top: 16px;
 }
 
 .social-icon {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #FFFFFF;
-  font-size: 1rem;
+  font-size: 0.95rem;
   transition: all var(--transition-fast);
 }
 
 .social-icon:hover {
-  background: var(--primary-honey);
-  color: var(--chocolate-brown);
-  transform: translateY(-3px);
+  background: var(--honey-sunglow);
+  color: var(--honey-cedar);
+  transform: translateY(-2px);
 }
 
-.footer-copyright {
+.footer-bottom-bar {
+  padding-top: 24px;
   font-size: 0.82rem;
-  color: #B5A799;
-  width: 100%;
-  text-align: center;
-  margin-top: 20px;
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer-bottom-links {
+  display: flex;
+  gap: 16px;
+}
+
+.footer-bottom-links a:hover {
+  text-decoration: underline;
+  color: #FFFFFF;
 }
 
 /* ==========================================================================
@@ -1125,7 +1128,7 @@ button {
   bottom: 0;
   inset-inline: 0;
   background: #FFFFFF;
-  border-top: 3px solid var(--primary-honey);
+  border-top: 3px solid var(--honey-sunglow);
   box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.14);
   padding: 18px 24px;
   z-index: 1000;
@@ -1150,7 +1153,7 @@ button {
 }
 
 .btn-consent {
-  background: var(--accent-green);
+  background: var(--honey-mantis);
   color: #FFFFFF;
   padding: 9px 24px;
   border-radius: 4px;
@@ -1181,8 +1184,9 @@ button {
    Responsive Breakpoints Audit
    ========================================================================== */
 @media (max-width: 1024px) {
-  .container {
-    padding-inline: 20px;
+  .footer-main-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
   }
 }
 
@@ -1205,7 +1209,7 @@ button {
 }
 
 @media (max-width: 768px) {
-  .nav-menu {
+  .desktop-nav {
     display: none;
   }
 
@@ -1219,23 +1223,23 @@ button {
   }
 
   .hero-section {
-    padding-block: 50px;
+    min-height: 480px;
+    padding-block: 60px;
     padding-inline: 16px;
   }
 
-  .footer-bottom-row {
-    flex-direction: column;
-    text-align: center;
+  .footer-main-grid {
+    grid-template-columns: 1fr;
   }
 
-  .footer-sublinks-wrap {
+  .footer-bottom-bar {
     flex-direction: column;
-    gap: 8px;
+    text-align: center;
   }
 }
 
 @media (max-width: 480px) {
-  .container {
+  .container, .container-wide {
     padding-inline: 16px;
   }
 

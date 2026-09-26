@@ -1,5 +1,5 @@
 /**
- * Hero Section Component (LCP Priority Optimized)
+ * Hero Section Component (LCP Priority Optimized, Visual Match with honey.com)
  */
 
 import { getPlaceholderSVG } from './UIHelpers.js';
@@ -7,10 +7,10 @@ import { getPlaceholderSVG } from './UIHelpers.js';
 export function renderHeroSection(hero) {
   if (!hero || hero.isActive === false) return '';
 
-  const title = hero.title || 'شاهکار بی‌نظیر طبیعت';
+  const title = hero.title || 'شاهکار بی‌نظیر<br>طبیعت';
   const subtitle = hero.subtitle || '';
   const heroImg = (hero.images && hero.images[0]) || 'images/hero-1.jpg';
-  const fallbackSvg = getPlaceholderSVG('شاهکار بی‌نظیر طبیعت', 1600, 700, '%232C1D11');
+  const fallbackSvg = getPlaceholderSVG('شاهکار بی‌نظیر طبیعت', 1600, 700, '%233F2414');
 
   return `
     <section class="hero-section" aria-labelledby="hero-heading">

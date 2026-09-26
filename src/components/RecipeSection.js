@@ -1,5 +1,5 @@
 /**
- * Recipe Carousel / Grid Section Component
+ * Recipe Carousel / Grid Section Component (Visual Match with honey.com)
  */
 
 import { renderDottedArrow, renderPillButton, getPlaceholderSVG } from './UIHelpers.js';
@@ -12,7 +12,7 @@ export function renderRecipeSection(data) {
 
   const cardsHTML = recipes.map(recipe => {
     const fallbackSvg = getPlaceholderSVG(recipe.title, 400, 260);
-    const colorClass = recipe.colorScheme || 'card-green';
+    const colorClass = recipe.colorScheme || 'card-mantis1';
 
     return `
       <article class="recipe-card ${colorClass}" data-recipe-id="${recipe.id}">
@@ -24,7 +24,7 @@ export function renderRecipeSection(data) {
               loading="lazy" 
               decoding="async" 
               width="360" 
-              height="240"
+              height="256"
               onerror="this.onerror=null; this.src='${fallbackSvg}';"
             >
           </div>
@@ -42,7 +42,7 @@ export function renderRecipeSection(data) {
 
   return `
     <section class="recipes-section" aria-labelledby="recipes-heading">
-      <div class="container">
+      <div class="container-wide">
         <div class="recipes-header">
           <h2 id="recipes-heading" class="recipes-section-title">${title}</h2>
         </div>
