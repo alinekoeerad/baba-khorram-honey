@@ -1,10 +1,11 @@
 /**
  * Main Production Stylesheet - Persian Honey Board (شورای ملی عسل)
  * Pixel-faithful recreation of https://honey.com/ in Persian RTL
+ * Production Audited & Refined: Performance, Accessibility, Responsive, Security
  */
 
 :root {
-  /* Brand Honey Colors */
+  /* Brand Honey Colors (honey.com authentic palette) */
   --primary-honey: #F59E0B;
   --honey-dark: #C86A00;
   --honey-amber: #D97706;
@@ -23,20 +24,20 @@
   --bg-warm-light: #FDFBF8;
   --border-light: #EFE9E0;
 
-  /* Accent & Category Colors (honey.com exact palette) */
-  --accent-green: #3F8F3B;
-  --accent-green-light: #52B44C;
+  /* Accent & Category Colors (WCAG AA Compliant Contrast) */
+  --accent-green: #357A38;
+  --accent-green-light: #4CAF50;
   --blog-green: #7BB839;
-  --accent-orange: #E07D2B;
-  --accent-amber: #FFC527;
+  --accent-orange: #CF6D17;
+  --accent-amber: #E68A00;
 
-  /* Card Colors */
-  --card-green: #4CA849;
-  --card-orange: #E08B38;
-  --card-yellow: #F5A623;
+  /* Recipe Card Colors (WCAG AA compliant contrast with text) */
+  --card-green: #357A38;
+  --card-orange: #CF6D17;
+  --card-yellow: #FBC034;
   --card-burgundy: #9E3556;
 
-  /* Transitions */
+  /* Transitions & Easings */
   --ease-smooth: cubic-bezier(0.25, 1, 0.5, 1);
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s var(--ease-smooth);
@@ -54,6 +55,7 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -83,19 +85,22 @@ img {
 button {
   font-family: inherit;
   cursor: pointer;
+  border: none;
+  background: transparent;
 }
 
 .container {
+  width: 100%;
   max-width: 1220px;
-  margin: 0 auto;
-  padding: 0 24px;
+  margin-inline: auto;
+  padding-inline: 24px;
 }
 
 /* Skip link for Accessibility */
 .skip-link {
   position: absolute;
   top: -100px;
-  right: 16px;
+  inset-inline-start: 16px;
   background: var(--chocolate-brown);
   color: #FFFFFF;
   padding: 12px 24px;
@@ -108,16 +113,17 @@ button {
 .skip-link:focus {
   top: 0;
   outline: 3px solid var(--primary-honey);
+  outline-offset: 2px;
 }
 
-/* Focus Visible standards */
+/* High-Contrast Visible Focus States */
 :focus-visible {
   outline: 2px solid var(--honey-dark);
   outline-offset: 3px;
 }
 
 /* ==========================================================================
-   Reusable Honey SVG Dotted Arrow (Adapted for RTL: points left: ◀ · · ·)
+   Reusable Honey SVG Dotted Arrow (Mirrored for RTL: points left: ◀ · · ·)
    ========================================================================== */
 .honey-arrow-svg {
   display: inline-block;
@@ -171,7 +177,8 @@ button {
 .utility-bar {
   background-color: #F8F5F0;
   border-bottom: 1px solid #ECE4D8;
-  padding: 6px 24px;
+  padding-block: 6px;
+  padding-inline: 24px;
   display: flex;
   justify-content: flex-end;
   position: relative;
@@ -203,13 +210,12 @@ button {
   border-color: var(--primary-honey);
 }
 
-.utility-btn i,
 .utility-btn svg {
-  font-size: 0.72rem;
+  width: 12px;
+  height: 12px;
   transition: transform var(--transition-normal);
 }
 
-.utility-btn.open i,
 .utility-btn.open svg {
   transform: rotate(180deg);
 }
@@ -217,12 +223,12 @@ button {
 .utility-dropdown-menu {
   position: absolute;
   top: calc(100% + 5px);
-  left: 0;
+  inset-inline-start: 0;
   background: #FFFFFF;
   min-width: 250px;
   box-shadow: 0 12px 30px rgba(43, 32, 23, 0.16);
   border-radius: 4px;
-  padding: 6px 0;
+  padding-block: 6px;
   list-style: none;
   border: 1px solid #E8DFD1;
   z-index: 200;
@@ -246,12 +252,13 @@ button {
   font-size: 0.85rem;
   color: #4A3A2F;
   font-weight: 600;
+  transition: background-color var(--transition-fast), padding-inline-start var(--transition-fast);
 }
 
 .utility-dropdown-menu li a:hover {
   background-color: #FFF6E5;
   color: var(--honey-dark);
-  padding-right: 22px;
+  padding-inline-start: 22px;
 }
 
 /* ==========================================================================
@@ -268,7 +275,7 @@ button {
   background-size: cover;
   background-repeat: no-repeat;
   color: #FFFFFF;
-  padding: 14px 0;
+  padding-block: 14px;
   position: sticky;
   top: 0;
   z-index: 110;
@@ -352,8 +359,7 @@ button {
   content: '';
   position: absolute;
   bottom: 0;
-  right: 14px;
-  left: 14px;
+  inset-inline: 14px;
   height: 2px;
   background-color: #FFF6D6;
   border-radius: 2px;
@@ -366,11 +372,8 @@ button {
 }
 
 .search-btn {
-  background: none;
-  border: none;
   color: #FFFFFF;
   font-size: 1.15rem;
-  cursor: pointer;
   padding: 8px 12px;
   transition: transform var(--transition-fast), color var(--transition-fast);
   display: flex;
@@ -386,12 +389,10 @@ button {
 /* Mobile Hamburger Toggle */
 .mobile-menu-btn {
   display: none;
-  background: none;
-  border: none;
   color: #FFFFFF;
   font-size: 1.5rem;
   padding: 6px;
-  cursor: pointer;
+  border-radius: 4px;
 }
 
 /* Search Drawer */
@@ -402,20 +403,20 @@ button {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
   position: absolute;
   top: 100%;
-  left: 0;
-  right: 0;
+  inset-inline: 0;
   transition: max-height 0.32s ease, padding 0.32s ease;
-  padding: 0 24px;
+  padding-inline: 24px;
+  padding-block: 0;
 }
 
 .search-drawer.show {
   max-height: 90px;
-  padding: 18px 24px;
+  padding-block: 18px;
 }
 
 .search-drawer form {
   max-width: 650px;
-  margin: 0 auto;
+  margin-inline: auto;
   display: flex;
   gap: 12px;
 }
@@ -438,12 +439,11 @@ button {
 .search-drawer button {
   background: var(--chocolate-brown);
   color: #FFFFFF;
-  border: none;
   padding: 10px 24px;
   border-radius: 4px;
-  font-family: inherit;
   font-weight: 700;
-  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
   transition: background-color var(--transition-fast);
 }
 
@@ -456,8 +456,9 @@ button {
   display: none;
   background: #2C1D11;
   color: #FFFFFF;
-  padding: 20px;
+  padding: 24px 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .mobile-nav-drawer.open {
@@ -476,7 +477,7 @@ button {
   padding: 10px 14px;
   font-weight: 700;
   border-radius: 4px;
-  border-right: 3px solid transparent;
+  border-inline-start: 3px solid transparent;
 }
 
 .mobile-nav-list a:hover,
@@ -486,18 +487,50 @@ button {
   color: var(--honey-gold);
 }
 
+.mobile-utility-section {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.mobile-utility-title {
+  font-size: 0.85rem;
+  color: var(--honey-gold);
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.mobile-utility-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobile-utility-list a {
+  font-size: 0.84rem;
+  color: #D1C7BD;
+  padding: 6px 12px;
+  display: block;
+}
+
+.mobile-utility-list a:hover {
+  color: #FFFFFF;
+}
+
 /* ==========================================================================
    3. Hero Section (LCP Optimized with Atmospheric Scrim)
    ========================================================================== */
 .hero-section {
   position: relative;
-  min-height: 520px;
+  min-height: clamp(440px, 58vh, 620px);
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 70px 24px;
+  padding-block: 70px;
+  padding-inline: 24px;
   background-color: #2C1D11;
 }
 
@@ -527,39 +560,39 @@ button {
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(20, 10, 5, 0.38) 0%, rgba(20, 10, 5, 0.65) 100%);
+  background: linear-gradient(180deg, rgba(20, 10, 5, 0.42) 0%, rgba(20, 10, 5, 0.68) 100%);
   z-index: 2;
 }
 
 .hero-content {
   position: relative;
   z-index: 10;
-  max-width: 860px;
+  max-width: 880px;
 }
 
 .hero-title {
-  font-size: 3.4rem;
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
   font-weight: 900;
   color: #FFFFFF;
   line-height: 1.25;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.65);
+  text-shadow: 0 4px 22px rgba(0, 0, 0, 0.7);
   margin-bottom: 16px;
   letter-spacing: -0.5px;
 }
 
 .hero-sub {
   color: #FFFFFF;
-  font-size: 1.2rem;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
   font-weight: 400;
-  line-height: 1.8;
+  line-height: 1.85;
 }
 
 /* ==========================================================================
    4. Feature 1: Celebrating Beekeeping (تجلیل از صنعت زنبورداری)
    ========================================================================== */
 .feature-beekeeping {
-  padding: 70px 0;
+  padding-block: 75px;
   background-color: #FFFFFF;
 }
 
@@ -591,11 +624,12 @@ button {
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(0, 0, 0, 0.06);
   background-color: #F8F5F0;
+  aspect-ratio: 16 / 10;
 }
 
 .feature-image-wrap img {
   width: 100%;
-  height: 350px;
+  height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
 }
@@ -609,7 +643,8 @@ button {
    ========================================================================== */
 .banner-made-by-bees {
   position: relative;
-  padding: 65px 24px;
+  padding-block: 70px;
+  padding-inline: 24px;
   background-color: #2C1D11;
   background-image: 
     linear-gradient(180deg, rgba(28, 16, 7, 0.52) 0%, rgba(28, 16, 7, 0.74) 100%),
@@ -625,8 +660,8 @@ button {
 .banner-content {
   position: relative;
   z-index: 10;
-  max-width: 650px;
-  margin: 0 auto;
+  max-width: 680px;
+  margin-inline: auto;
 }
 
 .banner-subtitle {
@@ -639,7 +674,7 @@ button {
 }
 
 .banner-title {
-  font-size: 2.6rem;
+  font-size: clamp(2.2rem, 4.5vw, 2.85rem);
   font-weight: 900;
   color: var(--accent-orange);
   text-shadow: 0 3px 14px rgba(0, 0, 0, 0.75);
@@ -651,7 +686,7 @@ button {
    6. Feature 3: Versatility of Honey (تنها ماده‌ای که از عهده هر کاری برمی‌آید)
    ========================================================================== */
 .feature-versatility {
-  padding: 75px 0 60px 0;
+  padding-block: 80px 65px;
   background-color: #FFFFFF;
 }
 
@@ -670,7 +705,8 @@ button {
 }
 
 .versatility-image-wrap img.primary-jar {
-  max-height: 400px;
+  max-height: 410px;
+  width: auto;
   object-fit: contain;
   filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.14));
   transition: transform 0.4s ease;
@@ -682,7 +718,7 @@ button {
 
 .versatility-decorative-figure {
   position: absolute;
-  left: -20px;
+  inset-inline-start: -20px;
   bottom: -20px;
   width: 140px;
   height: auto;
@@ -712,7 +748,7 @@ button {
 }
 
 .versatility-headline {
-  font-size: 3.1rem;
+  font-size: clamp(2.4rem, 4.5vw, 3.2rem);
   font-weight: 900;
   color: var(--honey-dark);
   line-height: 1.15;
@@ -731,7 +767,7 @@ button {
    7. Recipe Section (کارت‌های رنگی شیک و دقیق)
    ========================================================================== */
 .recipes-section {
-  padding: 45px 0 70px 0;
+  padding-block: 50px 75px;
   background-color: var(--bg-warm-light);
   border-top: 1px solid var(--border-light);
   border-bottom: 1px solid var(--border-light);
@@ -739,7 +775,7 @@ button {
 
 .recipes-header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 35px;
 }
 
 .recipes-section-title {
@@ -759,8 +795,8 @@ button {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 46px;
-  height: 46px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: #FFFFFF;
   border: 1px solid #D5C8B8;
@@ -782,13 +818,13 @@ button {
   transform: translateY(-50%) scale(1.08);
 }
 
-.carousel-nav-prev { right: -20px; }
-.carousel-nav-next { left: -20px; }
+.carousel-nav-prev { inset-inline-end: -22px; }
+.carousel-nav-next { inset-inline-start: -22px; }
 
 .carousel-viewport {
   overflow: hidden;
   width: 100%;
-  padding: 12px 4px 24px 4px;
+  padding-block: 12px 24px;
 }
 
 .recipe-cards-container {
@@ -822,6 +858,7 @@ button {
   height: 240px;
   overflow: hidden;
   background-color: #EFE9E0;
+  aspect-ratio: 3 / 2;
 }
 
 .card-img-wrap img {
@@ -856,8 +893,12 @@ button {
   margin-bottom: 16px;
 }
 
-.card-yellow .recipe-card-title {
-  color: var(--chocolate-brown);
+.card-yellow,
+.card-yellow .recipe-card-title,
+.card-yellow .recipe-card-link,
+.card-yellow .honey-arrow-svg {
+  color: var(--chocolate-brown) !important;
+  fill: var(--chocolate-brown) !important;
 }
 
 .recipe-card-link {
@@ -866,10 +907,6 @@ button {
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.card-yellow .recipe-card-link {
-  color: var(--chocolate-brown);
 }
 
 .recipes-footer-cta {
@@ -881,7 +918,7 @@ button {
    8. Blog Section: Honey Month (طرح چوب عمیق و اصیل)
    ========================================================================== */
 .blog-section {
-  padding: 85px 0;
+  padding-block: 85px;
   background-color: #26160B;
   background-image: 
     linear-gradient(rgba(35, 20, 10, 0.45), rgba(35, 20, 10, 0.45)),
@@ -917,6 +954,7 @@ button {
   border: 7px solid #FFFFFF;
   transition: transform 0.4s ease;
   background-color: #332115;
+  aspect-ratio: 1 / 1;
 }
 
 .circular-frame:hover {
@@ -938,7 +976,7 @@ button {
 }
 
 .blog-title {
-  font-size: 2.75rem;
+  font-size: clamp(2.1rem, 4vw, 2.75rem);
   font-weight: 900;
   color: #FFFFFF;
   margin-bottom: 18px;
@@ -960,7 +998,7 @@ button {
 .site-footer {
   background-color: var(--footer-bg);
   color: #E6DDD4;
-  padding: 55px 0 35px 0;
+  padding-block: 60px 35px;
   border-top: 5px solid var(--primary-honey);
   margin-top: auto;
 }
@@ -979,6 +1017,7 @@ button {
   font-weight: 800;
   font-size: 1rem;
   color: #FFFFFF;
+  padding: 4px 8px;
   transition: color var(--transition-fast);
 }
 
@@ -1002,7 +1041,7 @@ button {
   color: var(--honey-gold);
   letter-spacing: 1px;
   display: inline-block;
-  margin-left: 12px;
+  margin-inline-end: 12px;
 }
 
 .footer-sublinks-wrap {
@@ -1015,6 +1054,7 @@ button {
 
 .footer-sublinks-wrap a {
   color: #E2D7CC;
+  padding: 4px 6px;
 }
 
 .footer-sublinks-wrap a:hover {
@@ -1051,8 +1091,8 @@ button {
 }
 
 .social-icon {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.1);
   display: flex;
@@ -1074,7 +1114,7 @@ button {
   color: #B5A799;
   width: 100%;
   text-align: center;
-  margin-top: 18px;
+  margin-top: 20px;
 }
 
 /* ==========================================================================
@@ -1083,8 +1123,7 @@ button {
 .cookie-banner {
   position: fixed;
   bottom: 0;
-  left: 0;
-  right: 0;
+  inset-inline: 0;
   background: #FFFFFF;
   border-top: 3px solid var(--primary-honey);
   box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.14);
@@ -1117,13 +1156,11 @@ button {
   border-radius: 4px;
   font-weight: 700;
   font-size: 0.85rem;
-  border: none;
-  cursor: pointer;
   transition: background-color var(--transition-fast);
 }
 
 .btn-consent:hover {
-  background: #347630;
+  background: #2B622E;
 }
 
 .btn-decline {
@@ -1133,8 +1170,6 @@ button {
   border-radius: 4px;
   font-weight: 700;
   font-size: 0.85rem;
-  border: none;
-  cursor: pointer;
   transition: background-color var(--transition-fast);
 }
 
@@ -1143,8 +1178,14 @@ button {
 }
 
 /* ==========================================================================
-   Responsive Breakpoints
+   Responsive Breakpoints Audit
    ========================================================================== */
+@media (max-width: 1024px) {
+  .container {
+    padding-inline: 20px;
+  }
+}
+
 @media (max-width: 992px) {
   .feature-grid,
   .versatility-grid,
@@ -1157,10 +1198,6 @@ button {
     flex: 0 0 calc(50% - 12px);
     min-width: 280px;
   }
-
-  .hero-title { font-size: 2.7rem; }
-  .versatility-headline { font-size: 2.6rem; }
-  .blog-title { font-size: 2.3rem; }
   
   .carousel-nav-btn {
     display: none;
@@ -1176,24 +1213,15 @@ button {
     display: block;
   }
 
-  .recipe-card {
-    flex: 0 0 100%;
-    min-width: 100%;
-  }
-
   .circular-frame {
     width: 280px;
     height: 280px;
   }
 
   .hero-section {
-    min-height: 420px;
-    padding: 50px 16px;
+    padding-block: 50px;
+    padding-inline: 16px;
   }
-
-  .hero-title { font-size: 2.2rem; }
-  .banner-title { font-size: 2.1rem; }
-  .versatility-headline { font-size: 2.2rem; }
 
   .footer-bottom-row {
     flex-direction: column;
@@ -1203,6 +1231,37 @@ button {
   .footer-sublinks-wrap {
     flex-direction: column;
     gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding-inline: 16px;
+  }
+
+  .recipe-card {
+    flex: 0 0 100% !important;
+    min-width: 100% !important;
+  }
+
+  .circular-frame {
+    width: 240px;
+    height: 240px;
+  }
+
+  .pill-btn {
+    padding: 10px 20px;
+    font-size: 0.88rem;
+  }
+
+  .cookie-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .cookie-actions button {
+    flex: 1;
+    text-align: center;
   }
 }
 

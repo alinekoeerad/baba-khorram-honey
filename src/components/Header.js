@@ -1,9 +1,9 @@
 /**
  * Header Component
- * Contains Logo, Navigation, Search Drawer, and Mobile Menu
+ * Contains Logo, Navigation, Search Drawer, and Full Mobile Menu
  */
 
-export function renderHeader(settings, navigation) {
+export function renderHeader(settings, navigation, utilityNav = null) {
   const brandFa = settings?.siteNameFa || 'شورای ملی عسل®';
   const brandEn = settings?.siteNameEn || 'National Honey Board';
   const navItems = navigation || [];
@@ -35,6 +35,15 @@ export function renderHeader(settings, navigation) {
       </li>
     `;
   }).join('');
+
+  const mobileUtilityHTML = utilityNav && utilityNav.items ? `
+    <div class="mobile-utility-section">
+      <div class="mobile-utility-title">${utilityNav.buttonLabel || 'صنعت و همکاران تجاری'}</div>
+      <ul class="mobile-utility-list">
+        ${utilityNav.items.map(u => `<li><a href="${u.href}">${u.label}</a></li>`).join('')}
+      </ul>
+    </div>
+  ` : '';
 
   return `
     <header class="main-header" role="banner">
@@ -80,7 +89,7 @@ export function renderHeader(settings, navigation) {
           aria-expanded="false" 
           aria-controls="mobileNavDrawer"
         >
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg id="hamburgerIcon" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <line x1="3" y1="12" x2="21" y2="12"></line>
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <line x1="3" y1="18" x2="21" y2="18"></line>
@@ -97,6 +106,7 @@ export function renderHeader(settings, navigation) {
             id="searchInput" 
             placeholder="جستجو در میان دستور پخت‌ها، مقالات و انواع عسل طبیعی..." 
             aria-label="جستجو در سایت"
+            autocomplete="off"
             required
           >
           <button type="submit">جستجو</button>
@@ -108,6 +118,7 @@ export function renderHeader(settings, navigation) {
         <ul class="mobile-nav-list">
           ${mobileNavLinksHTML}
         </ul>
+        ${mobileUtilityHTML}
       </nav>
     </header>
   `;
