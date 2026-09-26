@@ -56,8 +56,8 @@ export function renderHeader(settings, navigation, utilityNav = null) {
             src="images/homepage-footer-logo@2x.png" 
             alt="${brandFa}" 
             class="brand-logo-img" 
-            width="200" 
-            height="64"
+            width="155" 
+            height="42"
             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
           >
           <div class="brand-title-wrap">
@@ -78,7 +78,7 @@ export function renderHeader(settings, navigation, utilityNav = null) {
                 aria-expanded="false" 
                 aria-controls="searchDrawer"
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <circle cx="11" cy="11" r="8"></circle>
                   <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
