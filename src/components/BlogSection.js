@@ -1,5 +1,6 @@
 /**
  * Blog / Educational Section Component (Honey Month - Visual Match with honey.com)
+ * Reconstructed: softer lighter wood background, clean circular crop without white ring or hover animation
  */
 
 import { renderPillButton, getPlaceholderSVG } from './UIHelpers.js';
@@ -18,6 +19,7 @@ export function renderBlogSection(data) {
     <section class="blog-section" aria-labelledby="blog-heading">
       <div class="container blog-grid">
         <div class="blog-image-wrap">
+          <!-- Clean Circular Crop - No white border, no artificial animations -->
           <div class="circular-frame">
             <img 
               src="${image}" 

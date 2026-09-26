@@ -1,7 +1,7 @@
 /**
  * Main Production Stylesheet - Persian Honey Board (شورای ملی عسل)
  * Pixel-faithful recreation of https://honey.com/ in Persian RTL
- * Visual Regression & Pixel-Matching Pass
+ * Visual Correction Pass: Exact Reference Behavior & Aesthetics
  */
 
 :root {
@@ -10,15 +10,14 @@
   --honey-cedar: #3F2414;          /* Authentic Dark Chocolate/Cedar Brown */
   --chocolate-brown: #3F2414;
   --dark-brown-hover: #2B160A;
+  --nav-hover-text: #1E1008;       /* Dark/Black text on nav hover */
   --footer-bg: #3F2414;
-  --footer-nav-bg: #341D10;
 
   --honey-sunglow: #FDC13B;        /* Golden Yellow */
   --honey-tan-hide: #F79D4A;       /* Warm Amber */
   --honey-mantis: #63BA4D;         /* Fresh Green */
   --honey-mantis1: #73C15F;        /* Bright Card Green */
   --honey-zest: #E77731;           /* Vibrant Card Orange */
-  --honey-jaffa: #EA8648;          /* Warm Orange */
   --honey-hippie-pink: #AD4662;     /* Berry Pink / Burgundy */
   --honey-wild-willow: #9ECD76;     /* Lime / Wild Willow Green */
 
@@ -155,7 +154,7 @@ button {
 }
 
 /* ==========================================================================
-   Honey Pill Button System (Matching honey.com exactly: rounded-full, cedar bg)
+   Honey Pill Button System (rounded-full, cedar bg)
    ========================================================================== */
 .pill-btn {
   display: inline-flex;
@@ -186,7 +185,7 @@ button {
 .pill-btn-wild-willow { color: var(--honey-wild-willow); }
 
 /* ==========================================================================
-   1. Top Utility Bar (صنعت و همکاران تجاری - Exact recreation)
+   1. Top Utility Bar (Industry & Partners Dropdown - Visual Match)
    ========================================================================== */
 .utility-container {
   width: 100%;
@@ -210,11 +209,11 @@ button {
   font-weight: 700;
   text-transform: uppercase;
   padding: 8px 18px;
-  border-radius: 0 0 12px 12px; /* rounded-b-xl hanging down */
+  border-radius: 0 0 10px 10px; /* hanging control */
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
   transition: background-color var(--transition-fast);
 }
 
@@ -223,32 +222,33 @@ button {
   background-color: var(--dark-brown-hover);
 }
 
-.utility-btn svg {
+.utility-caret {
   width: 12px;
   height: 12px;
   transition: transform var(--transition-normal);
 }
 
-.utility-btn.open svg {
+.utility-btn.open .utility-caret {
   transform: rotate(180deg);
 }
 
+/* Dropdown remains dark brown with no unnecessary white borders or boxes */
 .utility-dropdown-menu {
   position: absolute;
   top: 100%;
   inset-inline-start: 0;
   background-color: var(--honey-cedar);
-  min-width: 250px;
-  box-shadow: 0 12px 30px rgba(43, 22, 10, 0.3);
-  border-radius: 12px;
+  min-width: 260px;
+  box-shadow: 0 14px 32px rgba(30, 16, 8, 0.45);
+  border-radius: 0 0 10px 10px;
   padding-block: 8px;
   list-style: none;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: none;
   z-index: 200;
   opacity: 0;
   visibility: hidden;
   transform: translateY(-6px);
-  transition: all var(--transition-fast);
+  transition: opacity var(--transition-fast), transform var(--transition-fast), visibility var(--transition-fast);
 }
 
 .utility-dropdown-menu.show {
@@ -265,17 +265,37 @@ button {
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.9);
   font-weight: 600;
-  transition: background-color var(--transition-fast), color var(--transition-fast);
+  background-color: transparent;
+  border: none;
+  transition: color var(--transition-fast);
 }
 
-.utility-dropdown-menu li a:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+/* Hovered item changes to honey/yellow accent with subtle dotted arrow */
+.utility-dropdown-menu li a:hover,
+.utility-dropdown-menu li a:focus {
   color: var(--honey-sunglow);
-  padding-inline-start: 22px;
+  background-color: transparent;
+}
+
+.utility-hover-indicator {
+  opacity: 0;
+  visibility: hidden;
+  color: var(--honey-sunglow);
+  display: flex;
+  align-items: center;
+  transform: translateX(4px);
+  transition: opacity var(--transition-fast), transform var(--transition-fast), visibility var(--transition-fast);
+}
+
+.utility-dropdown-menu li a:hover .utility-hover-indicator,
+.utility-dropdown-menu li a:focus .utility-hover-indicator {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
 }
 
 /* ==========================================================================
-   2. Main Header & Navigation (80px height, honey background texture)
+   2. Main Header & Navigation (Visual Match: Flat, Integrated, Dark Hover)
    ========================================================================== */
 .main-header {
   background-color: #F59E0B;
@@ -291,14 +311,14 @@ button {
   position: sticky;
   top: 0;
   z-index: 110;
-  box-shadow: 0 4px 18px rgba(180, 83, 9, 0.28);
+  box-shadow: none; /* Flat and integrated with honey texture */
 }
 
 .header-inner {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 80px; /* Exact 80px / 5rem */
+  height: 80px;
 }
 
 .brand-logo {
@@ -357,6 +377,7 @@ button {
   align-items: center;
 }
 
+/* Nav links: Normal white, Hover dark/black, NO white box */
 .nav-link {
   padding: 8px 16px;
   font-size: 0.92rem;
@@ -365,17 +386,27 @@ button {
   color: #FFFFFF;
   border-inline-end: 2px solid rgba(255, 255, 255, 0.85);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  transition: color var(--transition-fast), background-color var(--transition-fast);
+  background: transparent;
+  border-radius: 0;
+  transition: color var(--transition-fast);
 }
 
-.nav-link:hover {
-  color: var(--honey-sunglow);
+.nav-link:hover,
+.nav-link:focus-visible {
+  color: var(--nav-hover-text);
+  text-shadow: none;
+  background: transparent;
 }
 
+/* Active navigation item preserves semantics without white box */
 .nav-link.active {
-  color: var(--honey-cedar);
-  background-color: rgba(255, 255, 255, 0.85);
-  border-radius: 4px;
+  background: transparent;
+  border-radius: 0;
+  color: #FFFFFF;
+}
+
+.nav-link.active:hover {
+  color: var(--nav-hover-text);
 }
 
 .search-btn {
@@ -385,12 +416,11 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform var(--transition-fast), color var(--transition-fast);
+  transition: color var(--transition-fast);
 }
 
 .search-btn:hover {
-  transform: scale(1.15);
-  color: var(--honey-sunglow);
+  color: var(--nav-hover-text);
 }
 
 /* Mobile Toggle */
@@ -523,11 +553,11 @@ button {
 }
 
 /* ==========================================================================
-   3. Hero Section (LCP Optimized, Two-line bold headline)
+   3. Hero Section (LCP Optimized)
    ========================================================================== */
 .hero-section {
   position: relative;
-  min-height: 580px; /* Matching md:min-h-[580px] */
+  min-height: 580px;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -594,26 +624,27 @@ button {
 }
 
 /* ==========================================================================
-   4. Feature 1: Celebrating Beekeeping (max-w-6xl, rounded-2xl image)
+   4. Feature 1: Celebrating Beekeeping (Sharp Corners, Rebalanced Grid)
    ========================================================================== */
 .feature-beekeeping {
-  padding-block: 80px 96px;
+  padding-block: 85px 95px;
   background-color: #FFFFFF;
 }
 
+/* Text block visually smaller (0.85fr), Image visually larger (1.15fr) */
 .feature-grid {
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
+  grid-template-columns: 0.85fr 1.15fr;
   gap: 55px;
   align-items: center;
 }
 
 .section-tag-green {
   color: var(--honey-mantis);
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(2rem, 3.8vw, 2.9rem);
   font-weight: 800;
   line-height: 1.18;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   letter-spacing: -0.3px;
 }
 
@@ -621,83 +652,86 @@ button {
   font-size: 1.125rem;
   color: var(--honey-cedar);
   line-height: 1.85;
-  margin-bottom: 30px;
+  margin-bottom: 28px;
 }
 
+/* Sharp square corners, no rounded card, no card border, no shadow, no hover zoom */
 .feature-image-wrap {
-  border-radius: 1rem; /* rounded-2xl */
+  border-radius: 0;
   overflow: hidden;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(63, 36, 20, 0.08);
+  box-shadow: none;
+  border: none;
   aspect-ratio: 16 / 11;
+  width: 100%;
 }
 
 .feature-image-wrap img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
-}
-
-.feature-image-wrap:hover img {
-  transform: scale(1.03);
+  border-radius: 0;
+  transition: none;
 }
 
 /* ==========================================================================
-   5. Feature Banner 2: Made by Bees (py-28 md:py-36)
+   5. Feature Banner 2: Made by Bees (Large Scale Visual Banner)
    ========================================================================== */
 .banner-made-by-bees {
   position: relative;
-  padding-block: 100px 110px;
+  min-height: 520px;
+  padding-block: 140px 150px;
   padding-inline: 24px;
   background-color: var(--honey-cedar);
   background-image: 
-    linear-gradient(180deg, rgba(63, 36, 20, 0.45) 0%, rgba(63, 36, 20, 0.70) 100%),
+    linear-gradient(180deg, rgba(63, 36, 20, 0.42) 0%, rgba(63, 36, 20, 0.68) 100%),
     url('../images/bees-banner.jpg'),
     url('../../images/bees-banner.jpg');
-  background-position: center;
+  background-position: center 35%;
   background-size: cover;
   background-repeat: no-repeat;
   text-align: center;
   color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .banner-content {
   position: relative;
   z-index: 10;
-  max-width: 680px;
+  max-width: 820px;
   margin-inline: auto;
 }
 
 .banner-subtitle {
-  font-size: 1.35rem;
+  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
   font-weight: 700;
   color: #FFFFFF;
   letter-spacing: 2px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .banner-title {
-  font-size: clamp(2.5rem, 5.5vw, 4.2rem);
+  font-size: clamp(3.2rem, 7vw, 5.5rem);
   font-weight: 900;
   color: var(--honey-tan-hide);
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
-  margin-bottom: 28px;
-  line-height: 1.12;
+  margin-bottom: 34px;
+  line-height: 1.05;
 }
 
 /* ==========================================================================
-   6. Feature 3: Versatility of Honey (ANYTHING in Sunglow)
+   6. Feature 3: Versatility of Honey (Balanced Grid, Reconstructed Composition)
    ========================================================================== */
 .feature-versatility {
-  padding-block: 85px 80px;
+  padding-block: 95px 105px;
   background-color: #FFFFFF;
 }
 
 .versatility-grid {
   display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 60px;
   align-items: center;
 }
@@ -709,30 +743,35 @@ button {
   align-items: center;
 }
 
+/* Large honey jar dominating its column - no hover animation */
 .versatility-image-wrap img.primary-jar {
-  max-height: 420px;
+  max-height: 480px;
   width: auto;
+  max-width: 100%;
   object-fit: contain;
   filter: drop-shadow(0 16px 24px rgba(63, 36, 20, 0.16));
-  transition: transform 0.4s ease;
+  transition: none;
 }
 
-.versatility-image-wrap:hover img.primary-jar {
-  transform: translateY(-4px) scale(1.02);
+.versatility-text-wrap {
+  position: relative;
 }
 
-.versatility-decorative-figure {
-  position: absolute;
-  inset-inline-start: -24px;
-  bottom: -16px;
-  width: 140px;
-  height: auto;
-  pointer-events: none;
-  opacity: 0.9;
+.versatility-header-area {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.versatility-kicker-wrap {
+  display: flex;
+  flex-direction: column;
 }
 
 .versatility-kicker {
-  font-size: 1.35rem;
+  font-size: 1.45rem;
   font-weight: 600;
   color: var(--honey-cedar);
   margin-bottom: 6px;
@@ -740,41 +779,60 @@ button {
 }
 
 .versatility-headline {
-  font-size: clamp(2.8rem, 6vw, 4.8rem);
+  font-size: clamp(3.2rem, 6.5vw, 5.2rem);
   font-weight: 900;
   color: var(--honey-sunglow);
-  line-height: 1.05;
+  line-height: 1.02;
   margin-bottom: 22px;
   letter-spacing: -0.5px;
 }
 
+/* Decorative bee/honey figure positioned near the upper area of the headline */
+.versatility-decorative-figure {
+  width: 130px;
+  height: auto;
+  pointer-events: none;
+  flex-shrink: 0;
+  margin-top: -15px;
+  margin-inline-start: 16px;
+}
+
 .versatility-body {
-  font-size: 1.125rem;
+  font-size: 1.15rem;
   color: var(--honey-cedar);
   line-height: 1.85;
-  margin-bottom: 30px;
+  margin-bottom: 32px;
+  max-width: 520px;
 }
 
 /* ==========================================================================
-   7. Recipe Section (480px height, rounded-2xl cards matching honey.com)
+   7. Recipe Section (Wood Background, Sharp Corners, Darken on Hover, Simple Arrows)
    ========================================================================== */
 .recipes-section {
-  padding-block: 64px 85px;
-  background-color: var(--bg-warm-light);
-  border-top: 1px solid var(--border-light);
-  border-bottom: 1px solid var(--border-light);
+  padding-block: 80px 90px;
+  background-color: #2F1A0E;
+  background-image: 
+    linear-gradient(rgba(35, 18, 9, 0.70), rgba(35, 18, 9, 0.76)),
+    url('../images/wood-bg.jpg'),
+    url('../../images/wood-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: repeat;
+  border-top: 1px solid #1E0F07;
+  border-bottom: 1px solid #1E0F07;
+  color: #FFFFFF;
 }
 
 .recipes-header {
   text-align: center;
-  margin-bottom: 35px;
+  margin-bottom: 38px;
 }
 
 .recipes-section-title {
-  font-size: 2.2rem;
+  font-size: 2.3rem;
   font-weight: 900;
-  color: var(--honey-cedar);
-  margin-bottom: 8px;
+  color: #FFFFFF;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
 .carousel-outer-wrapper {
@@ -783,41 +841,44 @@ button {
   align-items: center;
 }
 
+/* Simple < and > arrows - NOT inside circles */
 .carousel-nav-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(4px);
-  border: 1px solid #D5C8B8;
-  color: var(--honey-cedar);
-  font-size: 1.1rem;
+  width: auto;
+  height: auto;
+  padding: 8px;
+  background: transparent;
+  border: none;
+  color: #FFFFFF;
+  cursor: pointer;
+  z-index: 20;
+  box-shadow: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  z-index: 20;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
-  transition: all var(--transition-fast);
+  transition: color var(--transition-fast), transform var(--transition-fast);
 }
 
 .carousel-nav-btn:hover {
-  background: var(--honey-cedar);
-  color: #FFFFFF;
-  border-color: var(--honey-cedar);
-  transform: translateY(-50%) scale(1.08);
+  background: transparent;
+  color: var(--honey-sunglow);
+  transform: translateY(-50%) scale(1.18);
 }
 
-.carousel-nav-prev { inset-inline-end: -22px; }
-.carousel-nav-next { inset-inline-start: -22px; }
+.carousel-arrow-icon {
+  width: 34px;
+  height: 34px;
+}
+
+.carousel-nav-prev { inset-inline-end: -28px; }
+.carousel-nav-next { inset-inline-start: -28px; }
 
 .carousel-viewport {
   overflow: hidden;
   width: 100%;
-  padding-block: 12px 24px;
+  padding-block: 10px 16px;
 }
 
 .recipe-cards-container {
@@ -827,43 +888,65 @@ button {
   will-change: transform;
 }
 
-/* 480px height & rounded-2xl cards matching honey.com */
+/* Sharp-cornered, taller, visually dense recipe cards */
 .recipe-card {
   flex: 0 0 calc(33.333% - 16px);
   min-width: 320px;
-  height: 480px; /* Exact h-[480px] */
-  border-radius: 1rem; /* rounded-2xl */
+  height: 520px;
+  border-radius: 0; /* Sharp corners */
   overflow: hidden;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   color: #FFFFFF;
-  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
   cursor: pointer;
   background-color: #FFFFFF;
+  transition: none; /* No card lift */
 }
 
+/* Card remains visually stable on hover */
 .recipe-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.18);
+  transform: none;
 }
 
+.recipe-card-clickable {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: inherit;
+}
+
+/* Upper image area with sharp corners */
 .card-img-wrap {
-  height: 256px; /* Exact h-64 */
+  height: 290px;
+  position: relative;
   overflow: hidden;
-  background-color: #EFE9E0;
+  background-color: #1E0F07;
+  border-radius: 0;
 }
 
 .card-img-wrap img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  border-radius: 0;
+  transition: none; /* No zoom */
 }
 
-.recipe-card:hover .card-img-wrap img {
-  transform: scale(1.06);
+/* Hover effect: IMAGE DARKENING overlay */
+.card-img-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  pointer-events: none;
+}
+
+.recipe-card:hover .card-img-wrap::after {
+  opacity: 1;
 }
 
 .card-content-wrap {
@@ -874,7 +957,7 @@ button {
   flex-grow: 1;
 }
 
-/* Authentic Recipe Colors */
+/* Authentic Recipe Card Colors */
 .card-mantis1 { background-color: var(--card-mantis1); color: #FFFFFF; }
 .card-zest { background-color: var(--card-zest); color: #FFFFFF; }
 .card-hippie-pink { background-color: var(--card-hippie-pink); color: #FFFFFF; }
@@ -915,27 +998,57 @@ button {
   gap: 8px;
 }
 
+/* Recipe Carousel Pagination Dots */
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 24px;
+  margin-bottom: 28px;
+}
+
+.carousel-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.45);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.carousel-dot.active {
+  background-color: var(--honey-sunglow);
+  transform: scale(1.25);
+}
+
+.carousel-dot:hover:not(.active) {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
 .recipes-footer-cta {
   text-align: center;
-  margin-top: 36px;
+  margin-top: 10px;
 }
 
 /* ==========================================================================
-   8. Blog Section: Honey Month (wood-bg, 380px circular frame)
+   8. Blog Section: Honey Month (Lighter Wood Background, Clean Circle)
    ========================================================================== */
 .blog-section {
-  padding-block: 85px 96px;
-  background-color: var(--honey-cedar);
+  padding-block: 85px 95px;
+  background-color: #4A2E1C;
   background-image: 
-    linear-gradient(rgba(43, 22, 10, 0.45), rgba(43, 22, 10, 0.45)),
+    linear-gradient(rgba(65, 38, 22, 0.35), rgba(65, 38, 22, 0.35)),
     url('../images/wood-bg.jpg'),
     url('../../images/wood-bg.jpg');
   background-position: center;
   background-size: cover;
   background-repeat: repeat;
   color: #FFFFFF;
-  border-top: 1px solid #2B160A;
-  border-bottom: 1px solid #2B160A;
+  border-top: 1px solid #331B0E;
+  border-bottom: 1px solid #331B0E;
 }
 
 .blog-grid {
@@ -951,26 +1064,28 @@ button {
   align-items: center;
 }
 
+/* Clean circular crop - NO white border, NO hover animation, NO heavy shadow */
 .circular-frame {
   width: 380px;
   height: 380px;
   border-radius: 50%;
   overflow: hidden;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
-  border: 8px solid #FFFFFF;
-  transition: transform 0.4s ease;
-  background-color: var(--honey-cedar);
+  border: none;
+  box-shadow: none;
+  background-color: transparent;
   aspect-ratio: 1 / 1;
-}
-
-.circular-frame:hover {
-  transform: scale(1.03);
 }
 
 .circular-frame img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 50%;
+  transition: none;
+}
+
+.circular-frame:hover {
+  transform: none;
 }
 
 .blog-tag {
@@ -1000,7 +1115,7 @@ button {
 }
 
 /* ==========================================================================
-   9. Footer Section (5-column layout matching honey.com)
+   9. Footer Section (5-Column Layout, Vertical Separators, Vertical Social)
    ========================================================================== */
 .site-footer {
   background-color: var(--honey-cedar);
@@ -1012,13 +1127,20 @@ button {
 
 .footer-main-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 40px;
+  grid-template-columns: 1.8fr 1fr 1fr 1fr auto;
+  gap: 32px;
   padding-bottom: 40px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  align-items: start;
 }
 
-.footer-brand-col {
+/* Vertical separator lines between major footer groups */
+.footer-col-bordered {
+  border-inline-end: 1px solid rgba(255, 255, 255, 0.18);
+  padding-inline-end: 28px;
+}
+
+.footer-col-logo {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -1035,7 +1157,7 @@ button {
   font-size: 0.92rem;
   color: rgba(255, 255, 255, 0.75);
   line-height: 1.7;
-  max-width: 320px;
+  max-width: 300px;
 }
 
 .footer-col-title {
@@ -1074,22 +1196,23 @@ button {
   text-decoration: underline;
 }
 
+/* Social icons arranged vertically as circular containers */
 .footer-social-wrap {
   display: flex;
-  gap: 10px;
-  margin-top: 16px;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
 }
 
 .social-icon {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.16);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #FFFFFF;
-  font-size: 0.95rem;
   transition: all var(--transition-fast);
 }
 
@@ -1181,12 +1304,20 @@ button {
 }
 
 /* ==========================================================================
-   Responsive Breakpoints Audit
+   Responsive Breakpoints
    ========================================================================== */
 @media (max-width: 1024px) {
   .footer-main-grid {
     grid-template-columns: 1fr 1fr;
     gap: 30px;
+  }
+  .footer-col-bordered {
+    border-inline-end: none;
+    padding-inline-end: 0;
+  }
+  .footer-social-wrap {
+    flex-direction: row;
+    justify-content: flex-start;
   }
 }
 
@@ -1201,6 +1332,7 @@ button {
   .recipe-card {
     flex: 0 0 calc(50% - 12px);
     min-width: 280px;
+    height: 490px;
   }
   
   .carousel-nav-btn {
@@ -1226,6 +1358,11 @@ button {
     min-height: 480px;
     padding-block: 60px;
     padding-inline: 16px;
+  }
+
+  .banner-made-by-bees {
+    min-height: 400px;
+    padding-block: 80px 90px;
   }
 
   .footer-main-grid {

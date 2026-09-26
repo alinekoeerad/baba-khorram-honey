@@ -1,5 +1,6 @@
 /**
  * Made by Bees Banner Section Component (Feature 2 - Visual Match)
+ * Reconstructed with large scale and strong visual presence matching honey.com
  */
 
 import { renderPillButton } from './UIHelpers.js';

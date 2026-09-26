@@ -1,6 +1,6 @@
 /**
  * Application Controller & Bootstrapper (Production Audited)
- * Orchestrates Components, Data Services, Touch/Keyboard Interactions, and Dynamic RTL Carousel
+ * Orchestrates Components, Data Services, Touch/Keyboard Interactions, and Dynamic RTL Carousel with Pagination Dots
  */
 
 import { homepageService } from './services/HomepageService.js';
@@ -63,7 +63,7 @@ class App {
   }
 
   bindEvents() {
-    // 1. Utility Dropdown (with Keyboard Accessibility)
+    // 1. Utility Dropdown (with Keyboard Accessibility & Click Outside)
     const utilityBtn = document.getElementById('utilityBtn');
     const utilityMenu = document.getElementById('utilityMenu');
 
@@ -183,6 +183,7 @@ class App {
     const container = document.getElementById('recipeCardsContainer');
     const wrapper = document.getElementById('recipesCarouselWrapper');
     const viewport = document.getElementById('carouselViewport');
+    const dotsContainer = document.getElementById('carouselDots');
 
     if (!container || !wrapper) return;
 
@@ -208,11 +209,42 @@ class App {
       return Math.max(0, this.carouselState.totalCards - visible);
     };
 
+    const updateDots = () => {
+      if (!dotsContainer) return;
+      const dots = dotsContainer.querySelectorAll('.carousel-dot');
+      dots.forEach((dot, idx) => {
+        const isActive = idx === this.carouselState.currentIndex;
+        dot.classList.toggle('active', isActive);
+        dot.setAttribute('aria-selected', String(isActive));
+      });
+    };
+
+    const renderDots = () => {
+      if (!dotsContainer) return;
+      const maxSlides = getMaxSlides();
+      const totalPages = maxSlides + 1;
+      dotsContainer.innerHTML = '';
+      for (let i = 0; i < totalPages; i++) {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = `carousel-dot ${i === this.carouselState.currentIndex ? 'active' : ''}`;
+        dot.setAttribute('role', 'tab');
+        dot.setAttribute('aria-label', `صفحه ${i + 1}`);
+        dot.setAttribute('aria-selected', String(i === this.carouselState.currentIndex));
+        dot.addEventListener('click', () => {
+          this.carouselState.currentIndex = i;
+          updatePosition();
+        });
+        dotsContainer.appendChild(dot);
+      }
+    };
+
     const updatePosition = () => {
       // In RTL: positive translateX moves items rightward, revealing subsequent items from the left
       const step = getCardStep();
       const offset = this.carouselState.currentIndex * step;
       container.style.transform = `translateX(${offset}px)`;
+      updateDots();
     };
 
     const slide = (dir) => {
@@ -231,7 +263,7 @@ class App {
       nextBtn.addEventListener('click', () => slide(1));
     }
 
-    // Auto-advance
+    // Auto-advance every 4.5 seconds
     const startAutoPlay = () => {
       if (!this.carouselState.autoInterval) {
         this.carouselState.autoInterval = setInterval(() => {
@@ -255,6 +287,7 @@ class App {
       }
     };
 
+    // Pause on hover anywhere over cards or carousel wrapper
     wrapper.addEventListener('mouseenter', pauseAutoPlay);
     wrapper.addEventListener('mouseleave', startAutoPlay);
     wrapper.addEventListener('focusin', pauseAutoPlay);
@@ -284,7 +317,7 @@ class App {
       const touchEndX = e.changedTouches[0].screenX;
       const diffX = touchEndX - touchStartX;
       if (Math.abs(diffX) > 40) {
-        // In RTL, swiping right (diffX > 0) means next, swiping left (diffX < 0) means prev
+        // In RTL, swiping right (diffX > 0) moves next, swiping left (diffX < 0) moves prev
         if (diffX > 0) {
           slide(1);
         } else {
@@ -302,10 +335,12 @@ class App {
         if (this.carouselState.currentIndex > maxSlides) {
           this.carouselState.currentIndex = maxSlides;
         }
+        renderDots();
         updatePosition();
       }, 150);
     });
 
+    renderDots();
     startAutoPlay();
   }
 

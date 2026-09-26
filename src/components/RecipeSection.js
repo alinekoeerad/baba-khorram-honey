@@ -1,5 +1,6 @@
 /**
  * Recipe Carousel / Grid Section Component (Visual Match with honey.com)
+ * Reconstructed: sharp corners, wood-textured background, simple arrows, pagination dots, image darkening on hover
  */
 
 import { renderDottedArrow, renderPillButton, getPlaceholderSVG } from './UIHelpers.js';
@@ -11,7 +12,7 @@ export function renderRecipeSection(data) {
   const recipes = data.recipes || [];
 
   const cardsHTML = recipes.map(recipe => {
-    const fallbackSvg = getPlaceholderSVG(recipe.title, 400, 260);
+    const fallbackSvg = getPlaceholderSVG(recipe.title, 420, 300);
     const colorClass = recipe.colorScheme || 'card-mantis1';
 
     return `
@@ -23,8 +24,8 @@ export function renderRecipeSection(data) {
               alt="${recipe.imageAlt || recipe.title}" 
               loading="lazy" 
               decoding="async" 
-              width="360" 
-              height="256"
+              width="380" 
+              height="300"
               onerror="this.onerror=null; this.src='${fallbackSvg}';"
             >
           </div>
@@ -54,13 +55,13 @@ export function renderRecipeSection(data) {
           aria-roledescription="carousel" 
           aria-label="اسلایدر دستور پخت‌های منتخب"
         >
-          <!-- RTL Prev Button (on the Right) -->
+          <!-- RTL Prev Button (on the Right) - Simple Arrow, Not Enclosed in Circle -->
           <button 
             class="carousel-nav-btn carousel-nav-prev" 
             id="carouselPrevBtn" 
             aria-label="دستور پخت قبلی"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg class="carousel-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <polyline points="9 18 15 12 9 6"></polyline>
             </svg>
           </button>
@@ -72,17 +73,20 @@ export function renderRecipeSection(data) {
             </div>
           </div>
 
-          <!-- RTL Next Button (on the Left) -->
+          <!-- RTL Next Button (on the Left) - Simple Arrow, Not Enclosed in Circle -->
           <button 
             class="carousel-nav-btn carousel-nav-next" 
             id="carouselNextBtn" 
             aria-label="دستور پخت بعدی"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg class="carousel-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
           </button>
         </div>
+
+        <!-- Recipe Carousel Pagination Dots -->
+        <div class="carousel-dots" id="carouselDots" role="tablist" aria-label="انتخاب صفحه دستور پخت"></div>
 
         <div class="recipes-footer-cta">
           ${renderPillButton(data.allRecipesCta)}

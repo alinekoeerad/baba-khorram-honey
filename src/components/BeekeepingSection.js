@@ -1,5 +1,6 @@
 /**
  * Beekeeping Feature Section Component (Feature 1 - Visual Match)
+ * Rebalanced composition: smaller text block, larger image with sharp square corners
  */
 
 import { renderPillButton, getPlaceholderSVG } from './UIHelpers.js';
@@ -11,7 +12,7 @@ export function renderBeekeepingSection(data) {
   const body = data.body || '';
   const image = data.image || 'images/beekeeping.jpg';
   const imageAlt = data.imageAlt || 'زنبوردار در مزرعه آفتابی';
-  const fallbackSvg = getPlaceholderSVG('صنعت زنبورداری', 800, 500);
+  const fallbackSvg = getPlaceholderSVG('صنعت زنبورداری', 900, 560);
 
   return `
     <section class="feature-beekeeping" aria-labelledby="beekeeping-heading">
@@ -27,8 +28,8 @@ export function renderBeekeepingSection(data) {
             alt="${imageAlt}" 
             loading="lazy" 
             decoding="async" 
-            width="600" 
-            height="380"
+            width="720" 
+            height="460"
             onerror="this.onerror=null; this.src='${fallbackSvg}';"
           >
         </div>

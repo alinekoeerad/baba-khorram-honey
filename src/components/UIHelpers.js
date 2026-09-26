@@ -3,7 +3,7 @@
  */
 
 /**
- * Renders the authentic Honey.com Dotted Arrow SVG (pointing left for RTL)
+ * Renders the authentic Honey.com Dotted Arrow SVG (pointing left for RTL: ◀ · · ·)
  * @returns {string} SVG HTML string
  */
 export function renderDottedArrow() {
