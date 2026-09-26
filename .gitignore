@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Archives & Temporary files
+*.zip
+*.tar.gz
+*.tmp
+*.bundle
+.cache/
+downloads/
+version_archives/
+agent_sandbox/
+test_write.txt

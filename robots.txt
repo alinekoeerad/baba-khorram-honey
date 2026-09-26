@@ -1,0 +1,7 @@
+# Robots.txt for Persian Honey Board Website (شورای ملی عسل)
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: https://honey.ir/sitemap.xml
