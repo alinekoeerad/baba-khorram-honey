@@ -41,7 +41,25 @@
   <link rel="preload" as="image" href="images/hero-1.jpg" fetchpriority="high">
 
   <!-- Instant Cookie Consent Pre-check (Zero-flash) -->
+  <!-- Instant Cookie Consent Pre-check & Universal Handler (Zero-flash & Resilient) -->
   <script>
+    window.handleCookieConsent = function(choice) {
+      try {
+        localStorage.setItem('nhb_cookie_consent', choice);
+      } catch (e) {}
+      window.__nhb_cookie_consent = choice;
+      if (document.documentElement) {
+        document.documentElement.classList.add('cookie-consented');
+      }
+      var b = document.getElementById('cookieBanner');
+      if (b) {
+        b.style.display = 'none';
+        b.style.pointerEvents = 'none';
+        b.classList.add('hidden');
+        b.setAttribute('aria-hidden', 'true');
+      }
+    };
+
     try {
       var consent = localStorage.getItem('nhb_cookie_consent');
       if (consent === 'accepted' || consent === 'declined') {
@@ -610,13 +628,50 @@
     </footer>
 
     <!-- 9. Cookie Consent Banner (Robust, Resilient, Accessible) -->
-    <div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite" aria-label="حریم خصوصی و کوکی‌ها">
-      <div class="cookie-text">
-        <strong>حریم خصوصی و کوکی‌ها:</strong> ما برای مدیریت، بهبود تجربه کاربری و حفظ امنیت وب‌سایت از کوکی‌ها استفاده می‌کنیم. این کوکی‌ها تنظیمات دلخواه شما را به خاطر سپرده و تجربه وب‌گردی بهتری به ارمغان می‌آورند.
+    <div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite" aria-label="مقررات عمومی حفاظت از داده‌ها (GDPR)">
+      <div class="cookie-content-wrapper">
+        <div class="cookie-header-title">
+          <strong>مقررات عمومی حفاظت از داده‌ها (General Data Protection Regulation)</strong>
+        </div>
+        <p class="cookie-text">
+          ما از کوکی‌ها برای مدیریت و نگهداری وب‌سایت استفاده می‌کنیم. کوکی‌ها فایل‌های کوچکی هستند که برای شناسایی مرورگر اینترنت، ذخیره تنظیمات برگزیده و احراز هویت نشست‌های کاربری بر روی رایانه شما قرار می‌گیرند. در صورت موافقت با قرار دادن کوکی‌ها، روی «موافقم» کلیک کنید و در غیر این صورت «عدم موافقت» را انتخاب نمایید.
+        </p>
+        <div class="cookie-categories" aria-label="دسته‌بندی‌های کوکی">
+          <label class="cookie-cat-item">
+            <input type="checkbox" checked disabled>
+            <span>ضروری (Necessary)</span>
+          </label>
+          <label class="cookie-cat-item">
+            <input type="checkbox" checked id="prefCookies">
+            <span>ترجیحات (Preferences)</span>
+          </label>
+          <label class="cookie-cat-item">
+            <input type="checkbox" checked id="statCookies">
+            <span>آمار (Statistics)</span>
+          </label>
+          <label class="cookie-cat-item">
+            <input type="checkbox" id="mktCookies">
+            <span>بازاریابی (Marketing)</span>
+          </label>
+        </div>
       </div>
       <div class="cookie-actions">
-        <button type="button" class="btn-consent" id="acceptCookieBtn">موافقم</button>
-        <button type="button" class="btn-decline" id="declineCookieBtn">عدم موافقت</button>
+        <button 
+          type="button" 
+          class="btn-consent" 
+          id="acceptCookieBtn"
+          onclick="if(window.handleCookieConsent) { window.handleCookieConsent('accepted'); } else { localStorage.setItem('nhb_cookie_consent','accepted'); document.getElementById('cookieBanner').style.display='none'; document.documentElement.classList.add('cookie-consented'); }"
+        >
+          موافقم (I Consent)
+        </button>
+        <button 
+          type="button" 
+          class="btn-decline" 
+          id="declineCookieBtn"
+          onclick="if(window.handleCookieConsent) { window.handleCookieConsent('declined'); } else { localStorage.setItem('nhb_cookie_consent','declined'); document.getElementById('cookieBanner').style.display='none'; document.documentElement.classList.add('cookie-consented'); }"
+        >
+          عدم موافقت (I Do Not Consent)
+        </button>
       </div>
     </div>
 

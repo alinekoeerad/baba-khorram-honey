@@ -1,6 +1,7 @@
 /**
  * Application Controller & Bootstrapper (Production Audited)
- * Orchestrates Components, Data Services, Hero Multi-Image Slideshow, Touch/Keyboard RTL Carousel with Dynamic Pagination Dots
+ * Orchestrates Components, Data Services, Hero Multi-Image Slideshow,
+ * Touch/Keyboard RTL Carousel with Dynamic Pagination Dots & Robust Cookie Consent
  */
 
 import { homepageService } from './services/HomepageService.js';
@@ -13,6 +14,30 @@ import { renderRecipeSection } from './components/RecipeSection.js';
 import { renderBlogSection } from './components/BlogSection.js';
 import { renderFooter } from './components/Footer.js';
 import { renderCookieBanner } from './components/CookieBanner.js';
+
+// Global Consent Function available immediately
+if (typeof window !== 'undefined') {
+  window.handleCookieConsent = function(choice) {
+    try {
+      if (window.localStorage) {
+        window.localStorage.setItem('nhb_cookie_consent', choice);
+      }
+    } catch (e) {
+      console.warn('LocalStorage unavailable for cookie consent:', e);
+    }
+    window.__nhb_cookie_consent = choice;
+    if (document.documentElement) {
+      document.documentElement.classList.add('cookie-consented');
+    }
+    const banner = document.getElementById('cookieBanner');
+    if (banner) {
+      banner.style.display = 'none';
+      banner.style.pointerEvents = 'none';
+      banner.classList.add('hidden');
+      banner.setAttribute('aria-hidden', 'true');
+    }
+  };
+}
 
 class App {
   constructor() {
@@ -39,7 +64,7 @@ class App {
       this.initHeroSlideshow();
       this.initCarousel();
       this.injectStructuredData();
-      // Re-bind cookie consent in case render() re-created DOM elements
+      // Re-bind cookie consent after render
       this.initCookieConsent();
     } catch (error) {
       console.error('App initialization failed:', error);
@@ -52,7 +77,7 @@ class App {
     const root = document.getElementById('app-root');
     if (!root) return;
 
-    // Header begins at Y=0 (with overlay Utility Bar), followed by main content and footer
+    // Header begins at Y=0 (with overlay Utility Bar), followed by main content, footer & cookie banner
     root.innerHTML = `
       ${renderHeader(this.data.settings, this.data.navigation, this.data.utilityNav)}
       <main id="main-content" role="main" tabindex="-1">
@@ -87,101 +112,87 @@ class App {
           toggleMenu();
         });
 
-        document.addEventListener('click', (e) => {
-          if (!e.target.closest('.dropdown-wrapper')) {
-            toggleMenu(false);
-          }
-        });
-
+        // Close on Escape or click outside
         document.addEventListener('keydown', (e) => {
           if (e.key === 'Escape' && utilityMenu.classList.contains('show')) {
             toggleMenu(false);
             utilityBtn.focus();
           }
         });
+
+        document.addEventListener('click', (e) => {
+          if (!utilityBtn.contains(e.target) && !utilityMenu.contains(e.target)) {
+            toggleMenu(false);
+          }
+        });
       }
-    } catch (err) {
-      console.warn('Utility menu bind error:', err);
+    } catch (e) {
+      console.warn('Utility menu init issue:', e);
     }
 
-    // 2. Search Drawer (with Focus Management)
+    // 2. Search Drawer Toggle
     try {
-      const searchToggleBtn = document.getElementById('searchToggleBtn');
+      const searchBtn = document.getElementById('searchToggleBtn');
       const searchDrawer = document.getElementById('searchDrawer');
       const searchInput = document.getElementById('searchInput');
 
-      if (searchToggleBtn && searchDrawer) {
-        const toggleSearch = (open) => {
-          const isOpen = open !== undefined ? open : !searchDrawer.classList.contains('show');
-          searchDrawer.classList.toggle('show', isOpen);
-          searchToggleBtn.setAttribute('aria-expanded', String(isOpen));
-          searchDrawer.setAttribute('aria-hidden', String(!isOpen));
-          if (isOpen && searchInput) {
-            setTimeout(() => searchInput.focus(), 120);
+      if (searchBtn && searchDrawer) {
+        searchBtn.addEventListener('click', () => {
+          const isExpanded = searchBtn.getAttribute('aria-expanded') === 'true';
+          const nextState = !isExpanded;
+          searchBtn.setAttribute('aria-expanded', String(nextState));
+          searchDrawer.classList.toggle('show', nextState);
+          searchDrawer.setAttribute('aria-hidden', String(!nextState));
+          if (nextState && searchInput) {
+            setTimeout(() => searchInput.focus(), 150);
           }
-        };
-
-        searchToggleBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          toggleSearch();
         });
 
         document.addEventListener('keydown', (e) => {
           if (e.key === 'Escape' && searchDrawer.classList.contains('show')) {
-            toggleSearch(false);
-            searchToggleBtn.focus();
+            searchDrawer.classList.remove('show');
+            searchDrawer.setAttribute('aria-hidden', 'true');
+            searchBtn.setAttribute('aria-expanded', 'false');
+            searchBtn.focus();
           }
         });
       }
-    } catch (err) {
-      console.warn('Search drawer bind error:', err);
+    } catch (e) {
+      console.warn('Search toggle init issue:', e);
     }
 
-    // 3. Mobile Navigation Drawer (with Accessible Hamburger Morph)
+    // 3. Mobile Navigation Drawer
     try {
-      const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-      const mobileNavDrawer = document.getElementById('mobileNavDrawer');
-      const hamburgerIcon = document.getElementById('hamburgerIcon');
+      const mobileBtn = document.getElementById('mobileMenuBtn');
+      const mobileDrawer = document.getElementById('mobileNavDrawer');
 
-      if (mobileMenuBtn && mobileNavDrawer) {
-        mobileMenuBtn.addEventListener('click', () => {
-          const isOpen = mobileNavDrawer.classList.toggle('open');
-          mobileNavDrawer.hidden = !isOpen;
-          mobileMenuBtn.setAttribute('aria-expanded', String(isOpen));
-
-          if (hamburgerIcon) {
-            if (isOpen) {
-              hamburgerIcon.innerHTML = `
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              `;
-            } else {
-              hamburgerIcon.innerHTML = `
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-              `;
-            }
+      if (mobileBtn && mobileDrawer) {
+        mobileBtn.addEventListener('click', () => {
+          const isOpen = mobileDrawer.classList.toggle('open');
+          mobileBtn.setAttribute('aria-expanded', String(isOpen));
+          if (isOpen) {
+            mobileDrawer.removeAttribute('hidden');
+          } else {
+            mobileDrawer.setAttribute('hidden', '');
           }
         });
       }
-    } catch (err) {
-      console.warn('Mobile menu bind error:', err);
+    } catch (e) {
+      console.warn('Mobile menu init issue:', e);
     }
   }
 
   /**
-   * Hero Multi-Image Slideshow with Calm Crossfade Animation
+   * Hero Slideshow Controller (Crossfading multi-images calmly every 6 seconds)
    */
   initHeroSlideshow() {
     try {
       const images = document.querySelectorAll('.hero-bg-image');
-      if (images.length <= 1) return;
+      if (!images || images.length <= 1) return;
 
-      // Respect prefers-reduced-motion
-      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        return;
-      }
+      // Check reduced motion
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) return;
 
       let currentHeroIdx = 0;
       if (this.heroInterval) clearInterval(this.heroInterval);
@@ -210,11 +221,9 @@ class App {
           storedConsent = window.localStorage.getItem('nhb_cookie_consent');
         }
       } catch (e) {
-        console.warn('localStorage not accessible for cookie consent:', e);
         storedConsent = window.__nhb_cookie_consent || null;
       }
 
-      // Check in-memory fallback
       if (!storedConsent && typeof window !== 'undefined' && window.__nhb_cookie_consent) {
         storedConsent = window.__nhb_cookie_consent;
       }
@@ -246,34 +255,14 @@ class App {
       if (acceptBtn) {
         acceptBtn.onclick = (e) => {
           if (e) e.preventDefault();
-          try {
-            if (typeof window !== 'undefined' && window.localStorage) {
-              window.localStorage.setItem('nhb_cookie_consent', 'accepted');
-            }
-          } catch (err) {
-            console.warn('Failed to save accepted consent to localStorage:', err);
-          }
-          if (typeof window !== 'undefined') {
-            window.__nhb_cookie_consent = 'accepted';
-          }
-          hideBanner();
+          window.handleCookieConsent('accepted');
         };
       }
 
       if (declineBtn) {
         declineBtn.onclick = (e) => {
           if (e) e.preventDefault();
-          try {
-            if (typeof window !== 'undefined' && window.localStorage) {
-              window.localStorage.setItem('nhb_cookie_consent', 'declined');
-            }
-          } catch (err) {
-            console.warn('Failed to save declined consent to localStorage:', err);
-          }
-          if (typeof window !== 'undefined') {
-            window.__nhb_cookie_consent = 'declined';
-          }
-          hideBanner();
+          window.handleCookieConsent('declined');
         };
       }
     } catch (globalCookieErr) {
@@ -281,6 +270,9 @@ class App {
     }
   }
 
+  /**
+   * Recipe Carousel with Pause on Hover & Dynamic Pagination
+   */
   initCarousel() {
     const prevBtn = document.getElementById('carouselPrevBtn');
     const nextBtn = document.getElementById('carouselNextBtn');
@@ -293,47 +285,38 @@ class App {
 
     this.carouselState.totalCards = container.querySelectorAll('.recipe-card').length;
 
-    // Dynamically measure step size to support any viewport and padding perfectly
+    const getVisibleCards = () => {
+      const w = window.innerWidth;
+      if (w < 640) return 1;
+      if (w < 1024) return 2;
+      if (w < 1366) return 3;
+      return 4; // ~4 full cards + partial next card on large desktop
+    };
+
     const getCardStep = () => {
-      const card = container.querySelector('.recipe-card');
-      if (!card) return 365;
-      const style = window.getComputedStyle(container);
-      const gap = parseFloat(style.gap) || 20;
-      return card.offsetWidth + gap;
+      const firstCard = container.querySelector('.recipe-card');
+      if (!firstCard) return 365;
+      const cardWidth = firstCard.offsetWidth;
+      const gap = 20;
+      return cardWidth + gap;
     };
 
-    const getVisibleCardsCount = () => {
-      if (!viewport) return 4;
-      const step = getCardStep();
-      return Math.max(1, Math.floor(viewport.offsetWidth / step));
-    };
-
-    const getMaxSlides = () => {
-      const visible = getVisibleCardsCount();
-      return Math.max(0, this.carouselState.totalCards - visible);
-    };
-
-    const updateDots = () => {
-      if (!dotsContainer) return;
-      const dots = dotsContainer.querySelectorAll('.carousel-dot');
-      dots.forEach((dot, idx) => {
-        const isActive = idx === this.carouselState.currentIndex;
-        dot.classList.toggle('active', isActive);
-        dot.setAttribute('aria-selected', String(isActive));
-      });
+    const getMaxIndex = () => {
+      return Math.max(0, this.carouselState.totalCards - getVisibleCards());
     };
 
     const renderDots = () => {
       if (!dotsContainer) return;
-      const maxSlides = getMaxSlides();
-      const totalPages = maxSlides + 1;
       dotsContainer.innerHTML = '';
-      for (let i = 0; i < totalPages; i++) {
+      const maxIndex = getMaxIndex();
+      const numDots = maxIndex + 1;
+      if (numDots <= 1) return;
+
+      for (let i = 0; i < numDots; i++) {
         const dot = document.createElement('button');
-        dot.type = 'button';
         dot.className = `carousel-dot ${i === this.carouselState.currentIndex ? 'active' : ''}`;
         dot.setAttribute('role', 'tab');
-        dot.setAttribute('aria-label', `صفحه ${i + 1}`);
+        dot.setAttribute('aria-label', `رفتن به صفحه ${i + 1}`);
         dot.setAttribute('aria-selected', String(i === this.carouselState.currentIndex));
         dot.addEventListener('click', () => {
           this.carouselState.currentIndex = i;
@@ -344,171 +327,189 @@ class App {
     };
 
     const updatePosition = () => {
-      // In RTL: positive translateX moves items rightward, revealing subsequent items from the left
-      const step = getCardStep();
-      const offset = this.carouselState.currentIndex * step;
+      const maxIdx = getMaxIndex();
+      if (this.carouselState.currentIndex > maxIdx) {
+        this.carouselState.currentIndex = maxIdx;
+      }
+      if (this.carouselState.currentIndex < 0) {
+        this.carouselState.currentIndex = 0;
+      }
+
+      const cardStep = getCardStep();
+      const offset = this.carouselState.currentIndex * cardStep;
+
+      // In Persian RTL layout, translating positively shifts cards along reading order
       container.style.transform = `translateX(${offset}px)`;
-      updateDots();
+
+      // Update dots
+      if (dotsContainer) {
+        const dots = dotsContainer.querySelectorAll('.carousel-dot');
+        dots.forEach((dot, idx) => {
+          const isActive = idx === this.carouselState.currentIndex;
+          dot.classList.toggle('active', isActive);
+          dot.setAttribute('aria-selected', String(isActive));
+        });
+      }
     };
 
-    const slide = (dir) => {
-      const maxSlides = getMaxSlides();
-      this.carouselState.currentIndex += dir;
-      if (this.carouselState.currentIndex < 0) this.carouselState.currentIndex = 0;
-      if (this.carouselState.currentIndex > maxSlides) this.carouselState.currentIndex = maxSlides;
+    const stepForward = () => {
+      const maxIdx = getMaxIndex();
+      if (this.carouselState.currentIndex >= maxIdx) {
+        this.carouselState.currentIndex = 0;
+      } else {
+        this.carouselState.currentIndex += 1;
+      }
       updatePosition();
     };
 
-    if (prevBtn) {
-      prevBtn.addEventListener('click', () => slide(-1));
-    }
+    const stepBackward = () => {
+      const maxIdx = getMaxIndex();
+      if (this.carouselState.currentIndex <= 0) {
+        this.carouselState.currentIndex = maxIdx;
+      } else {
+        this.carouselState.currentIndex -= 1;
+      }
+      updatePosition();
+    };
 
     if (nextBtn) {
-      nextBtn.addEventListener('click', () => slide(1));
+      nextBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        stepForward();
+      });
     }
 
-    // Auto-advance every 5 seconds
-    const startAutoPlay = () => {
-      if (!this.carouselState.autoInterval) {
-        this.carouselState.autoInterval = setInterval(() => {
-          if (this.carouselState.isPaused) return;
-          const maxSlides = getMaxSlides();
-          this.carouselState.currentIndex += this.carouselState.autoDirection;
-          if (this.carouselState.currentIndex >= maxSlides) {
-            this.carouselState.autoDirection = -1;
-          } else if (this.carouselState.currentIndex <= 0) {
-            this.carouselState.autoDirection = 1;
+    if (prevBtn) {
+      prevBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        stepBackward();
+      });
+    }
+
+    // Touch Swipe for Mobile / Tablet
+    let startX = 0;
+    let isSwiping = false;
+
+    if (viewport) {
+      viewport.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        isSwiping = true;
+      }, { passive: true });
+
+      viewport.addEventListener('touchend', (e) => {
+        if (!isSwiping) return;
+        const endX = e.changedTouches[0].clientX;
+        const diffX = endX - startX;
+        if (Math.abs(diffX) > 40) {
+          // RTL swipe
+          if (diffX > 0) {
+            stepForward();
+          } else {
+            stepBackward();
+          }
+        }
+        isSwiping = false;
+      }, { passive: true });
+    }
+
+    // Autoplay Controller with Pause on Hover & Keyboard Focus
+    const startAutoplay = () => {
+      if (this.carouselState.autoInterval) clearInterval(this.carouselState.autoInterval);
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) return;
+
+      this.carouselState.autoInterval = setInterval(() => {
+        if (!this.carouselState.isPaused) {
+          const maxIdx = getMaxIndex();
+          if (this.carouselState.currentIndex >= maxIdx) {
+            this.carouselState.currentIndex = 0;
+          } else {
+            this.carouselState.currentIndex += 1;
           }
           updatePosition();
-        }, 5000);
-      }
-    };
-
-    const pauseAutoPlay = () => {
-      if (this.carouselState.autoInterval) {
-        clearInterval(this.carouselState.autoInterval);
-        this.carouselState.autoInterval = null;
-      }
-    };
-
-    // Pause on hover anywhere over cards or carousel wrapper
-    wrapper.addEventListener('mouseenter', pauseAutoPlay);
-    wrapper.addEventListener('mouseleave', startAutoPlay);
-    wrapper.addEventListener('focusin', pauseAutoPlay);
-    wrapper.addEventListener('focusout', startAutoPlay);
-
-    // Keyboard Navigation for accessibility (Arrow keys)
-    wrapper.setAttribute('tabindex', '0');
-    wrapper.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') {
-        // In RTL, ArrowLeft navigates forward / next
-        e.preventDefault();
-        slide(1);
-      } else if (e.key === 'ArrowRight') {
-        // In RTL, ArrowRight navigates backward / prev
-        e.preventDefault();
-        slide(-1);
-      }
-    });
-
-    // Touch Swipe Support for Mobile/Tablet
-    let touchStartX = 0;
-    wrapper.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-    }, { passive: true });
-
-    wrapper.addEventListener('touchend', (e) => {
-      const touchEndX = e.changedTouches[0].screenX;
-      const diffX = touchEndX - touchStartX;
-      if (Math.abs(diffX) > 40) {
-        if (diffX > 0) {
-          slide(1);
-        } else {
-          slide(-1);
         }
-      }
-    }, { passive: true });
+      }, 5000);
+    };
 
-    // Responsive window resize recalculation
-    let resizeTimer = null;
+    const pauseAutoplay = () => {
+      this.carouselState.isPaused = true;
+    };
+
+    const resumeAutoplay = () => {
+      this.carouselState.isPaused = false;
+    };
+
+    // Pause on Hover
+    wrapper.addEventListener('mouseenter', pauseAutoplay);
+    wrapper.addEventListener('mouseleave', resumeAutoplay);
+    wrapper.addEventListener('focusin', pauseAutoplay);
+    wrapper.addEventListener('focusout', resumeAutoplay);
+
+    // Window Resize Observer for responsive re-calculation
     window.addEventListener('resize', () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        const maxSlides = getMaxSlides();
-        if (this.carouselState.currentIndex > maxSlides) {
-          this.carouselState.currentIndex = maxSlides;
-        }
-        renderDots();
-        updatePosition();
-      }, 150);
+      renderDots();
+      updatePosition();
     });
 
     renderDots();
-    startAutoPlay();
+    updatePosition();
+    startAutoplay();
   }
 
   injectStructuredData() {
-    if (!this.data) return;
+    try {
+      const existingScript = document.getElementById('schemaOrgJsonLd');
+      if (existingScript) existingScript.remove();
 
-    const schema = {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "WebSite",
-          "@id": `${this.data.seo.canonicalUrl}#website`,
-          "url": this.data.seo.canonicalUrl,
-          "name": this.data.settings.siteNameFa,
-          "description": this.data.seo.metaDescription,
-          "inLanguage": "fa-IR"
-        },
-        {
-          "@type": "Organization",
-          "@id": `${this.data.seo.canonicalUrl}#organization`,
-          "name": this.data.settings.siteNameFa,
-          "alternateName": this.data.settings.siteNameEn,
-          "url": this.data.seo.canonicalUrl,
-          "logo": `${this.data.seo.canonicalUrl}${this.data.footer.brandLogo}`,
-          "sameAs": (this.data.footer.socialLinks || []).map(s => s.href)
-        },
-        {
-          "@type": "ItemList",
-          "name": this.data.recipes.title,
-          "itemListElement": (this.data.recipes.recipes || []).map((recipe, index) => ({
-            "@type": "ListItem",
-            "position": index + 1,
-            "item": {
-              "@type": "Recipe",
-              "name": recipe.title,
-              "image": `${this.data.seo.canonicalUrl}${recipe.image}`,
-              "url": `${this.data.seo.canonicalUrl}${recipe.href}`
-            }
-          }))
-        }
-      ]
-    };
-
-    const script = document.createElement('script');
-    script.type = 'application/ld+json';
-    script.text = JSON.stringify(schema);
-    document.head.appendChild(script);
+      const script = document.createElement('script');
+      script.id = 'schemaOrgJsonLd';
+      script.type = 'application/ld+json';
+      script.textContent = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'Organization',
+            '@id': 'https://honey.com/#organization',
+            'name': this.data.settings.siteNameFa,
+            'alternateName': this.data.settings.siteNameEn,
+            'url': this.data.seo.canonicalUrl,
+            'logo': `${this.data.seo.canonicalUrl}images/homepage-footer-logo@2x.png`,
+            'description': this.data.seo.metaDescription,
+            'sameAs': [
+              'https://facebook.com',
+              'https://instagram.com',
+              'https://twitter.com',
+              'https://youtube.com',
+              'https://pinterest.com'
+            ]
+          },
+          {
+            '@type': 'WebSite',
+            '@id': 'https://honey.com/#website',
+            'url': this.data.seo.canonicalUrl,
+            'name': this.data.settings.siteNameFa,
+            'publisher': { '@id': 'https://honey.com/#organization' },
+            'inLanguage': 'fa-IR'
+          }
+        ]
+      });
+      document.head.appendChild(script);
+    } catch (e) {
+      console.warn('Schema injection warning:', e);
+    }
   }
 
   handleGlobalError(error) {
-    const root = document.getElementById('app-root');
-    if (root) {
-      root.innerHTML = `
-        <div style="padding: 40px; text-align: center; direction: rtl; font-family: sans-serif;">
-          <h2 style="color: #C86A00;">متأسفانه در بارگذاری صفحه اصلی مشکلی رخ داده است</h2>
-          <p style="margin-top: 10px; color: #5C5248;">لطفاً صفحه را مجدداً بارگذاری فرمایید.</p>
-          <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 24px; background: #332115; color: #FFF; border: none; border-radius: 4px; cursor: pointer;">بارگذاری مجدد</button>
-        </div>
-      `;
-    }
+    console.error('Fatal initialization error:', error);
   }
 }
 
-// Bootstrap application on DOM ready
-document.addEventListener('DOMContentLoaded', () => {
-  const app = new App();
+// Bootstrap Application
+const app = new App();
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => app.init());
+} else {
   app.init();
-});
+}
+
+export default app;

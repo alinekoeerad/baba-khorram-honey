@@ -1280,14 +1280,14 @@ button {
   inset-inline: 0;
   background: #FFFFFF;
   border-top: 3px solid var(--honey-sunglow);
-  box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.14);
-  padding: 18px 24px;
+  box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.16);
+  padding: 20px 32px;
   z-index: 1000;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  align-items: center;
-  gap: 18px;
+  align-items: flex-start;
+  gap: 24px;
   transition: opacity var(--transition-fast), visibility var(--transition-fast);
 }
 
@@ -1301,17 +1301,54 @@ button {
   opacity: 0 !important;
 }
 
+.cookie-content-wrapper {
+  flex: 1 1 700px;
+}
+
+.cookie-header-title {
+  font-size: 1.05rem;
+  color: var(--honey-cedar);
+  margin-bottom: 6px;
+}
+
 .cookie-text {
-  flex: 1 1 620px;
-  font-size: 0.86rem;
+  font-size: 0.88rem;
   color: #4B5563;
-  line-height: 1.6;
+  line-height: 1.65;
+  margin-bottom: 12px;
+}
+
+.cookie-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.cookie-cat-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--honey-cedar);
+  cursor: pointer;
+  background: #F3F4F6;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+.cookie-cat-item input {
+  accent-color: var(--honey-sunglow);
+  cursor: pointer;
 }
 
 .cookie-actions {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-shrink: 0;
+  margin-top: 8px;
 }
 
 .btn-consent {
