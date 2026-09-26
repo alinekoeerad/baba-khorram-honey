@@ -185,117 +185,7 @@ button {
 .pill-btn-wild-willow { color: var(--honey-wild-willow); }
 
 /* ==========================================================================
-   1. Top Utility Bar (Industry & Partners Dropdown - Visual Match)
-   ========================================================================== */
-.utility-container {
-  width: 100%;
-  max-width: 1280px;
-  margin-inline: auto;
-  padding-inline: 24px;
-  display: flex;
-  justify-content: flex-end; /* in RTL flexbox, aligns to top-left corner (mirror of LTR top-right) */
-  position: relative;
-  z-index: 120;
-}
-
-.dropdown-wrapper {
-  position: relative;
-}
-
-.utility-btn {
-  background-color: var(--honey-cedar);
-  color: #FFFFFF;
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  padding: 8px 18px;
-  border-radius: 0 0 10px 10px; /* hanging control */
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
-  transition: background-color var(--transition-fast);
-}
-
-.utility-btn:hover,
-.utility-btn.open {
-  background-color: var(--dark-brown-hover);
-}
-
-.utility-caret {
-  width: 12px;
-  height: 12px;
-  transition: transform var(--transition-normal);
-}
-
-.utility-btn.open .utility-caret {
-  transform: rotate(180deg);
-}
-
-/* Dropdown remains dark brown with no unnecessary white borders or boxes */
-.utility-dropdown-menu {
-  position: absolute;
-  top: 100%;
-  inset-inline-start: 0;
-  background-color: var(--honey-cedar);
-  min-width: 260px;
-  box-shadow: 0 14px 32px rgba(30, 16, 8, 0.45);
-  border-radius: 0 0 10px 10px;
-  padding-block: 8px;
-  list-style: none;
-  border: none;
-  z-index: 200;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-6px);
-  transition: opacity var(--transition-fast), transform var(--transition-fast), visibility var(--transition-fast);
-}
-
-.utility-dropdown-menu.show {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(4px);
-}
-
-.utility-dropdown-menu li a {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 18px;
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.9);
-  font-weight: 600;
-  background-color: transparent;
-  border: none;
-  transition: color var(--transition-fast);
-}
-
-/* Hovered item changes to honey/yellow accent with subtle dotted arrow */
-.utility-dropdown-menu li a:hover,
-.utility-dropdown-menu li a:focus {
-  color: var(--honey-sunglow);
-  background-color: transparent;
-}
-
-.utility-hover-indicator {
-  opacity: 0;
-  visibility: hidden;
-  color: var(--honey-sunglow);
-  display: flex;
-  align-items: center;
-  transform: translateX(4px);
-  transition: opacity var(--transition-fast), transform var(--transition-fast), visibility var(--transition-fast);
-}
-
-.utility-dropdown-menu li a:hover .utility-hover-indicator,
-.utility-dropdown-menu li a:focus .utility-hover-indicator {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(0);
-}
-
-/* ==========================================================================
-   2. Main Header & Navigation (Visual Match: Flat, Integrated, Dark Hover)
+   1. Main Header (Starts at Y=0, Flat, Integrated Honey Texture)
    ========================================================================== */
 .main-header {
   background-color: #F59E0B;
@@ -312,6 +202,7 @@ button {
   top: 0;
   z-index: 110;
   box-shadow: none; /* Flat and integrated with honey texture */
+  width: 100%;
 }
 
 .header-inner {
@@ -421,6 +312,115 @@ button {
 
 .search-btn:hover {
   color: var(--nav-hover-text);
+}
+
+/* ==========================================================================
+   2. Industry & Partners Control (Physical Top-Right Edge Overlay)
+   ========================================================================== */
+.utility-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0; /* Aligned to physical right edge of the header/viewport */
+  z-index: 130;
+}
+
+.dropdown-wrapper {
+  position: relative;
+}
+
+.utility-btn {
+  background-color: var(--honey-cedar);
+  color: #FFFFFF;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  border-radius: 0 0 10px 10px; /* Hanging down from top edge */
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+  transition: background-color var(--transition-fast);
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.utility-btn:hover,
+.utility-btn.open {
+  background-color: var(--dark-brown-hover);
+}
+
+.utility-caret {
+  width: 12px;
+  height: 12px;
+  transition: transform var(--transition-normal);
+}
+
+.utility-btn.open .utility-caret {
+  transform: rotate(180deg);
+}
+
+/* Dropdown expands downward from the hanging control at the physical right */
+.utility-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0; /* Aligns with physical right edge of the control */
+  background-color: var(--honey-cedar);
+  min-width: 260px;
+  box-shadow: 0 14px 32px rgba(30, 16, 8, 0.45);
+  border-radius: 0 0 10px 10px;
+  padding-block: 8px;
+  list-style: none;
+  border: none;
+  z-index: 200;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity var(--transition-fast), transform var(--transition-fast), visibility var(--transition-fast);
+}
+
+.utility-dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(2px);
+}
+
+.utility-dropdown-menu li a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 18px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  background-color: transparent;
+  border: none;
+  transition: color var(--transition-fast);
+}
+
+/* Hovered item changes to honey/yellow accent with subtle dotted arrow */
+.utility-dropdown-menu li a:hover,
+.utility-dropdown-menu li a:focus {
+  color: var(--honey-sunglow);
+  background-color: transparent;
+}
+
+.utility-hover-indicator {
+  opacity: 0;
+  visibility: hidden;
+  color: var(--honey-sunglow);
+  display: flex;
+  align-items: center;
+  transform: translateX(4px);
+  transition: opacity var(--transition-fast), transform var(--transition-fast), visibility var(--transition-fast);
+}
+
+.utility-dropdown-menu li a:hover .utility-hover-indicator,
+.utility-dropdown-menu li a:focus .utility-hover-indicator {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
 }
 
 /* Mobile Toggle */
@@ -806,21 +806,31 @@ button {
 }
 
 /* ==========================================================================
-   7. Recipe Section (Wood Background, Sharp Corners, Darken on Hover, Simple Arrows)
+   7 & 8. Continuous Wood Environment: Recipe Section & Honey Month Section
+   (Same Subtle Wood Texture, Visible Planks, No Dark Seams or Borders)
    ========================================================================== */
-.recipes-section {
-  padding-block: 80px 90px;
-  background-color: #2F1A0E;
+.recipes-section,
+.blog-section {
+  background-color: #3F2414;
   background-image: 
-    linear-gradient(rgba(35, 18, 9, 0.70), rgba(35, 18, 9, 0.76)),
+    linear-gradient(rgba(45, 24, 12, 0.35), rgba(45, 24, 12, 0.35)),
     url('../images/wood-bg.jpg'),
     url('../../images/wood-bg.jpg');
   background-size: cover;
   background-position: center;
-  background-repeat: repeat;
-  border-top: 1px solid #1E0F07;
-  border-bottom: 1px solid #1E0F07;
+  background-repeat: repeat-y;
   color: #FFFFFF;
+  border: none;
+  border-top: none;
+  border-bottom: none;
+}
+
+.recipes-section {
+  padding-block: 80px 70px;
+}
+
+.blog-section {
+  padding-block: 70px 95px;
 }
 
 .recipes-header {
@@ -832,7 +842,7 @@ button {
   font-size: 2.3rem;
   font-weight: 900;
   color: #FFFFFF;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
 }
 
 .carousel-outer-wrapper {
@@ -1033,24 +1043,7 @@ button {
   margin-top: 10px;
 }
 
-/* ==========================================================================
-   8. Blog Section: Honey Month (Lighter Wood Background, Clean Circle)
-   ========================================================================== */
-.blog-section {
-  padding-block: 85px 95px;
-  background-color: #4A2E1C;
-  background-image: 
-    linear-gradient(rgba(65, 38, 22, 0.35), rgba(65, 38, 22, 0.35)),
-    url('../images/wood-bg.jpg'),
-    url('../../images/wood-bg.jpg');
-  background-position: center;
-  background-size: cover;
-  background-repeat: repeat;
-  color: #FFFFFF;
-  border-top: 1px solid #331B0E;
-  border-bottom: 1px solid #331B0E;
-}
-
+/* Honey Month Grid & Content */
 .blog-grid {
   display: grid;
   grid-template-columns: 0.95fr 1.05fr;
@@ -1095,6 +1088,7 @@ button {
   letter-spacing: 1px;
   margin-bottom: 8px;
   text-transform: uppercase;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 .blog-title {
@@ -1115,13 +1109,13 @@ button {
 }
 
 /* ==========================================================================
-   9. Footer Section (5-Column Layout, Vertical Separators, Vertical Social)
+   9. Footer Section (NO Yellow Separator Line, 5 Columns, Vertical Social)
    ========================================================================== */
 .site-footer {
   background-color: var(--honey-cedar);
   color: #E6DDD4;
   padding-block: 64px 40px;
-  border-top: 5px solid var(--honey-sunglow);
+  border-top: none; /* NO yellow separator line */
   margin-top: auto;
 }
 
@@ -1244,7 +1238,7 @@ button {
 }
 
 /* ==========================================================================
-   10. Cookie Consent Banner
+   10. Cookie Consent Banner (Robust, Resilient, Accessible)
    ========================================================================== */
 .cookie-banner {
   position: fixed;
@@ -1260,6 +1254,17 @@ button {
   justify-content: space-between;
   align-items: center;
   gap: 18px;
+  transition: opacity var(--transition-fast), visibility var(--transition-fast);
+}
+
+/* Guaranteed hiding when consented or dismissed */
+.cookie-banner.hidden,
+.cookie-banner[aria-hidden="true"],
+.cookie-consented #cookieBanner {
+  display: none !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
 }
 
 .cookie-text {
@@ -1343,6 +1348,10 @@ button {
 @media (max-width: 768px) {
   .desktop-nav {
     display: none;
+  }
+
+  .utility-wrapper {
+    display: none; /* Integrated in mobile drawer on small screens */
   }
 
   .mobile-menu-btn {

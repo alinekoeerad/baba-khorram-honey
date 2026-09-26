@@ -1,7 +1,6 @@
 /**
  * Utility Bar Component
- * Displays industry & partners dropdown navigation hanging down in the container
- * Faithful recreation of Honey.com reference behavior
+ * Displays industry & partners dropdown navigation hanging down at the physical top-right edge of the header
  */
 
 import { renderDottedArrow } from './UIHelpers.js';
@@ -21,7 +20,7 @@ export function renderUtilityBar(utilityNav) {
   `).join('');
 
   return `
-    <div class="utility-container" role="region" aria-label="ناوبری صنعت و همکاران">
+    <div class="utility-wrapper" role="region" aria-label="ناوبری صنعت و همکاران">
       <div class="dropdown-wrapper">
         <button 
           class="utility-btn" 

@@ -1,16 +1,35 @@
 /**
  * Cookie Consent Banner Component
+ * Robust, accessible, and self-contained
  */
 
 export function renderCookieBanner(data) {
   if (!data) return '';
 
+  let isConsented = false;
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const consent = window.localStorage.getItem('nhb_cookie_consent');
+      if (consent === 'accepted' || consent === 'declined' || window.__nhb_cookie_consent) {
+        isConsented = true;
+      }
+    }
+  } catch (e) {
+    if (typeof window !== 'undefined' && window.__nhb_cookie_consent) {
+      isConsented = true;
+    }
+  }
+
+  const hiddenAttr = isConsented ? 'aria-hidden="true" style="display: none; pointer-events: none;"' : '';
+  const hiddenClass = isConsented ? 'hidden' : '';
+
   return `
     <div 
-      class="cookie-banner" 
+      class="cookie-banner ${hiddenClass}" 
       id="cookieBanner" 
       role="dialog" 
       aria-live="polite" 
+      ${hiddenAttr}
       aria-label="${data.title || 'حریم خصوصی و کوکی‌ها'}"
     >
       <div class="cookie-text">

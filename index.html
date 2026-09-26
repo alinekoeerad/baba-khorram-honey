@@ -40,6 +40,16 @@
   <!-- LCP Hero Image Preload -->
   <link rel="preload" as="image" href="images/hero-1.jpg" fetchpriority="high">
 
+  <!-- Instant Cookie Consent Pre-check (Zero-flash) -->
+  <script>
+    try {
+      var consent = localStorage.getItem('nhb_cookie_consent');
+      if (consent === 'accepted' || consent === 'declined') {
+        document.documentElement.classList.add('cookie-consented');
+      }
+    } catch (e) {}
+  </script>
+
   <!-- Stylesheets -->
   <link rel="stylesheet" href="assets/css/typography.css">
   <link rel="stylesheet" href="assets/css/style.css">
@@ -51,23 +61,25 @@
   <!-- Application Root with Pre-rendered Semantic SSR Markup -->
   <div id="app-root">
     
-    <!-- 1. Top Utility Bar (Hanging Brown Control - Visual Match) -->
-    <div class="utility-container" role="region" aria-label="ناوبری صنعت و همکاران">
-      <div class="dropdown-wrapper">
-        <button 
-          class="utility-btn" 
-          id="utilityBtn" 
-          aria-haspopup="true" 
-          aria-expanded="false" 
-          aria-controls="utilityMenu"
-        >
-          <span>صنعت و همکاران تجاری</span>
-          <svg class="utility-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </button>
-        <ul class="utility-dropdown-menu" id="utilityMenu" role="menu">
-          
+    <!-- 1. Main Header (Begins at Y=0, Overlay Utility Bar at Physical Top-Right Edge) -->
+    <header class="main-header" role="banner">
+      <!-- Industry & Partners Hanging Overlay (Physical Top-Right Edge) -->
+      <div class="utility-wrapper" role="region" aria-label="ناوبری صنعت و همکاران">
+        <div class="dropdown-wrapper">
+          <button 
+            class="utility-btn" 
+            id="utilityBtn" 
+            aria-haspopup="true" 
+            aria-expanded="false" 
+            aria-controls="utilityMenu"
+          >
+            <span>صنعت و همکاران تجاری</span>
+            <svg class="utility-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <ul class="utility-dropdown-menu" id="utilityMenu" role="menu">
+            
       <li role="none">
         <a href="consumers.html" class="utility-menu-link" role="menuitem">
           <span class="utility-item-text">مصرف‌کنندگان (Consumers)</span>
@@ -134,12 +146,10 @@
     </svg></span>
         </a>
       </li>
-        </ul>
+          </ul>
+        </div>
       </div>
-    </div>
 
-    <!-- 2. Main Header (Flat, Integrated, Dark Text on Hover) -->
-    <header class="main-header" role="banner">
       <div class="container-wide header-inner">
         <a href="index.html" class="brand-logo" aria-label="شورای ملی عسل® - National Honey Board">
           <svg class="brand-logo-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -199,7 +209,7 @@
     <!-- Main Content -->
     <main id="main-content" role="main" tabindex="-1">
 
-      <!-- 3. Hero Section (LCP Optimized) -->
+      <!-- 2. Hero Section (LCP Optimized) -->
       <section class="hero-section" aria-labelledby="hero-heading">
         <div class="hero-background-wrapper">
           <img 
@@ -219,7 +229,7 @@
         </div>
       </section>
 
-      <!-- 4. Feature 1: Beekeeping (Sharp Corners, Rebalanced Grid) -->
+      <!-- 3. Feature 1: Beekeeping (Sharp Corners, Rebalanced Grid) -->
       <section class="feature-beekeeping" aria-labelledby="beekeeping-heading">
         <div class="container feature-grid">
           <div class="feature-text-block">
@@ -241,7 +251,7 @@
         </div>
       </section>
 
-      <!-- 5. Feature Banner 2: Made by Bees (Large Scale Banner) -->
+      <!-- 4. Feature Banner 2: Made by Bees (Large Scale Banner) -->
       <section class="banner-made-by-bees" aria-labelledby="banner-heading">
         <div class="banner-content">
           <div class="banner-subtitle">با افتخار</div>
@@ -258,7 +268,7 @@
         </div>
       </section>
 
-      <!-- 6. Feature 3: Versatility of Honey (Balanced Grid, Large Jar, Upper Icon) -->
+      <!-- 5. Feature 3: Versatility of Honey (Balanced Grid, Large Jar, Upper Icon) -->
       <section class="feature-versatility" aria-labelledby="versatility-heading">
         <div class="container versatility-grid">
           <div class="versatility-image-wrap">
@@ -286,7 +296,7 @@
         </div>
       </section>
 
-      <!-- 7. Recipe Showcase Carousel (Wood Texture, Sharp Corners, Simple Arrows, Pagination Dots) -->
+      <!-- 6. Recipe Showcase Carousel (Continuous Wood Texture, Sharp Corners, Simple Arrows, Pagination Dots) -->
       <section class="recipes-section" aria-labelledby="recipes-heading">
         <div class="container-wide">
           <div class="recipes-header">
@@ -438,7 +448,7 @@
         </div>
       </section>
 
-      <!-- 8. Blog Section: Honey Month (Lighter Wood, Clean Circle) -->
+      <!-- 7. Blog Section: Honey Month (Same Continuous Wood Atmosphere, Clean Circle) -->
       <section class="blog-section" aria-labelledby="blog-heading">
         <div class="container blog-grid">
           <div class="blog-image-wrap">
@@ -465,7 +475,7 @@
 
     </main>
 
-    <!-- 9. Footer Section (5 Columns, Vertical Dividers, Vertical Social Media Column) -->
+    <!-- 8. Footer Section (NO Yellow Separator Line, Continuous Dark Cedar, 5 Columns, Vertical Social) -->
     <footer class="site-footer" role="contentinfo">
       <div class="container-wide">
         <div class="footer-main-grid">
@@ -527,7 +537,7 @@
       </div>
     </footer>
 
-    <!-- 10. Cookie Banner -->
+    <!-- 9. Cookie Consent Banner (Robust, Resilient, Accessible) -->
     <div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite" aria-label="حریم خصوصی و کوکی‌ها">
       <div class="cookie-text">
         <strong>حریم خصوصی و کوکی‌ها:</strong> ما برای مدیریت، بهبود تجربه کاربری و حفظ امنیت وب‌سایت از کوکی‌ها استفاده می‌کنیم. این کوکی‌ها تنظیمات دلخواه شما را به خاطر سپرده و تجربه وب‌گردی بهتری به ارمغان می‌آورند.

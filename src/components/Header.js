@@ -1,7 +1,9 @@
 /**
  * Header Component (Visual Match with honey.com)
- * Contains Logo, Navigation with Border Dividers, Search Drawer, and Full Mobile Menu
+ * Contains Overlay Utility Bar (Industry & Partners at physical Top-Right), Logo, Navigation, Search Drawer, and Mobile Menu
  */
+
+import { renderUtilityBar } from './UtilityBar.js';
 
 export function renderHeader(settings, navigation, utilityNav = null) {
   const brandFa = settings?.siteNameFa || 'شورای ملی عسل®';
@@ -43,6 +45,9 @@ export function renderHeader(settings, navigation, utilityNav = null) {
 
   return `
     <header class="main-header" role="banner">
+      <!-- Industry & Partners Hanging Overlay (Physical Top-Right Edge) -->
+      ${utilityNav ? renderUtilityBar(utilityNav) : ''}
+
       <div class="container-wide header-inner">
         <!-- Brand Logo -->
         <a href="index.html" class="brand-logo" aria-label="${brandFa} - ${brandEn}">

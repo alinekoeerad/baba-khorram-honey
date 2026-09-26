@@ -4,7 +4,6 @@
  */
 
 import { homepageService } from './services/HomepageService.js';
-import { renderUtilityBar } from './components/UtilityBar.js';
 import { renderHeader } from './components/Header.js';
 import { renderHeroSection } from './components/HeroSection.js';
 import { renderBeekeepingSection } from './components/BeekeepingSection.js';
@@ -29,15 +28,22 @@ class App {
   }
 
   async init() {
+    // 1. Initialize cookie consent immediately & independently on raw DOM if present
+    this.initCookieConsent();
+
     try {
       this.data = await this.service.loadHomepage();
       this.render();
       this.bindEvents();
       this.initCarousel();
       this.injectStructuredData();
+      // Re-bind cookie consent in case render() re-created the DOM elements
+      this.initCookieConsent();
     } catch (error) {
       console.error('App initialization failed:', error);
       this.handleGlobalError(error);
+      // Ensure cookie consent still functions even if main app threw an error
+      this.initCookieConsent();
     }
   }
 
@@ -45,9 +51,8 @@ class App {
     const root = document.getElementById('app-root');
     if (!root) return;
 
-    // Render modular components into page structure
+    // Render modular components: Header begins at Y=0 (with overlay Utility Bar), followed by main and footer
     root.innerHTML = `
-      ${renderUtilityBar(this.data.utilityNav)}
       ${renderHeader(this.data.settings, this.data.navigation, this.data.utilityNav)}
       <main id="main-content" role="main" tabindex="-1">
         ${renderHeroSection(this.data.hero)}
@@ -64,116 +69,188 @@ class App {
 
   bindEvents() {
     // 1. Utility Dropdown (with Keyboard Accessibility & Click Outside)
-    const utilityBtn = document.getElementById('utilityBtn');
-    const utilityMenu = document.getElementById('utilityMenu');
+    try {
+      const utilityBtn = document.getElementById('utilityBtn');
+      const utilityMenu = document.getElementById('utilityMenu');
 
-    if (utilityBtn && utilityMenu) {
-      const toggleMenu = (open) => {
-        const isOpen = open !== undefined ? open : !utilityMenu.classList.contains('show');
-        utilityMenu.classList.toggle('show', isOpen);
-        utilityBtn.classList.toggle('open', isOpen);
-        utilityBtn.setAttribute('aria-expanded', String(isOpen));
-      };
+      if (utilityBtn && utilityMenu) {
+        const toggleMenu = (open) => {
+          const isOpen = open !== undefined ? open : !utilityMenu.classList.contains('show');
+          utilityMenu.classList.toggle('show', isOpen);
+          utilityBtn.classList.toggle('open', isOpen);
+          utilityBtn.setAttribute('aria-expanded', String(isOpen));
+        };
 
-      utilityBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleMenu();
-      });
+        utilityBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleMenu();
+        });
 
-      document.addEventListener('click', (e) => {
-        if (!e.target.closest('.dropdown-wrapper')) {
-          toggleMenu(false);
-        }
-      });
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('.dropdown-wrapper')) {
+            toggleMenu(false);
+          }
+        });
 
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && utilityMenu.classList.contains('show')) {
-          toggleMenu(false);
-          utilityBtn.focus();
-        }
-      });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && utilityMenu.classList.contains('show')) {
+            toggleMenu(false);
+            utilityBtn.focus();
+          }
+        });
+      }
+    } catch (err) {
+      console.warn('Utility menu bind error:', err);
     }
 
     // 2. Search Drawer (with Focus Management)
-    const searchToggleBtn = document.getElementById('searchToggleBtn');
-    const searchDrawer = document.getElementById('searchDrawer');
-    const searchInput = document.getElementById('searchInput');
+    try {
+      const searchToggleBtn = document.getElementById('searchToggleBtn');
+      const searchDrawer = document.getElementById('searchDrawer');
+      const searchInput = document.getElementById('searchInput');
 
-    if (searchToggleBtn && searchDrawer) {
-      const toggleSearch = (open) => {
-        const isOpen = open !== undefined ? open : !searchDrawer.classList.contains('show');
-        searchDrawer.classList.toggle('show', isOpen);
-        searchToggleBtn.setAttribute('aria-expanded', String(isOpen));
-        searchDrawer.setAttribute('aria-hidden', String(!isOpen));
-        if (isOpen && searchInput) {
-          setTimeout(() => searchInput.focus(), 120);
-        }
-      };
+      if (searchToggleBtn && searchDrawer) {
+        const toggleSearch = (open) => {
+          const isOpen = open !== undefined ? open : !searchDrawer.classList.contains('show');
+          searchDrawer.classList.toggle('show', isOpen);
+          searchToggleBtn.setAttribute('aria-expanded', String(isOpen));
+          searchDrawer.setAttribute('aria-hidden', String(!isOpen));
+          if (isOpen && searchInput) {
+            setTimeout(() => searchInput.focus(), 120);
+          }
+        };
 
-      searchToggleBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleSearch();
-      });
+        searchToggleBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleSearch();
+        });
 
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && searchDrawer.classList.contains('show')) {
-          toggleSearch(false);
-          searchToggleBtn.focus();
-        }
-      });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && searchDrawer.classList.contains('show')) {
+            toggleSearch(false);
+            searchToggleBtn.focus();
+          }
+        });
+      }
+    } catch (err) {
+      console.warn('Search drawer bind error:', err);
     }
 
     // 3. Mobile Navigation Drawer (with Accessible Hamburger Morph)
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const mobileNavDrawer = document.getElementById('mobileNavDrawer');
-    const hamburgerIcon = document.getElementById('hamburgerIcon');
+    try {
+      const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+      const mobileNavDrawer = document.getElementById('mobileNavDrawer');
+      const hamburgerIcon = document.getElementById('hamburgerIcon');
 
-    if (mobileMenuBtn && mobileNavDrawer) {
-      mobileMenuBtn.addEventListener('click', () => {
-        const isOpen = mobileNavDrawer.classList.toggle('open');
-        mobileNavDrawer.hidden = !isOpen;
-        mobileMenuBtn.setAttribute('aria-expanded', String(isOpen));
+      if (mobileMenuBtn && mobileNavDrawer) {
+        mobileMenuBtn.addEventListener('click', () => {
+          const isOpen = mobileNavDrawer.classList.toggle('open');
+          mobileNavDrawer.hidden = !isOpen;
+          mobileMenuBtn.setAttribute('aria-expanded', String(isOpen));
 
-        if (hamburgerIcon) {
-          if (isOpen) {
-            hamburgerIcon.innerHTML = `
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            `;
-          } else {
-            hamburgerIcon.innerHTML = `
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
-            `;
+          if (hamburgerIcon) {
+            if (isOpen) {
+              hamburgerIcon.innerHTML = `
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              `;
+            } else {
+              hamburgerIcon.innerHTML = `
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              `;
+            }
           }
-        }
-      });
+        });
+      }
+    } catch (err) {
+      console.warn('Mobile menu bind error:', err);
     }
+  }
 
-    // 4. Cookie Consent Persistence
-    const cookieBanner = document.getElementById('cookieBanner');
-    const acceptCookieBtn = document.getElementById('acceptCookieBtn');
-    const declineCookieBtn = document.getElementById('declineCookieBtn');
+  /**
+   * Independent, resilient cookie consent handler with full try/catch
+   */
+  initCookieConsent() {
+    try {
+      const banner = document.getElementById('cookieBanner');
+      if (!banner) return;
 
-    if (cookieBanner) {
-      if (localStorage.getItem('nhb_cookie_consent')) {
-        cookieBanner.style.display = 'none';
+      let storedConsent = null;
+      try {
+        if (typeof window !== 'undefined' && window.localStorage) {
+          storedConsent = window.localStorage.getItem('nhb_cookie_consent');
+        }
+      } catch (e) {
+        console.warn('localStorage not accessible for cookie consent:', e);
+        storedConsent = window.__nhb_cookie_consent || null;
       }
 
-      if (acceptCookieBtn) {
-        acceptCookieBtn.addEventListener('click', () => {
-          localStorage.setItem('nhb_cookie_consent', 'accepted');
-          cookieBanner.style.display = 'none';
-        });
+      // Check in-memory fallback as well
+      if (!storedConsent && typeof window !== 'undefined' && window.__nhb_cookie_consent) {
+        storedConsent = window.__nhb_cookie_consent;
       }
 
-      if (declineCookieBtn) {
-        declineCookieBtn.addEventListener('click', () => {
-          localStorage.setItem('nhb_cookie_consent', 'declined');
-          cookieBanner.style.display = 'none';
-        });
+      const hideBanner = () => {
+        banner.style.display = 'none';
+        banner.style.pointerEvents = 'none';
+        banner.classList.add('hidden');
+        banner.setAttribute('aria-hidden', 'true');
+        if (document.documentElement) {
+          document.documentElement.classList.add('cookie-consented');
+        }
+      };
+
+      if (storedConsent === 'accepted' || storedConsent === 'declined') {
+        hideBanner();
+        return;
       }
+
+      // Show banner if no consent
+      banner.style.display = 'flex';
+      banner.style.pointerEvents = 'auto';
+      banner.classList.remove('hidden');
+      banner.removeAttribute('aria-hidden');
+
+      const acceptBtn = document.getElementById('acceptCookieBtn');
+      const declineBtn = document.getElementById('declineCookieBtn');
+
+      if (acceptBtn) {
+        acceptBtn.onclick = (e) => {
+          if (e) e.preventDefault();
+          try {
+            if (typeof window !== 'undefined' && window.localStorage) {
+              window.localStorage.setItem('nhb_cookie_consent', 'accepted');
+            }
+          } catch (err) {
+            console.warn('Failed to save accepted consent to localStorage:', err);
+          }
+          if (typeof window !== 'undefined') {
+            window.__nhb_cookie_consent = 'accepted';
+          }
+          hideBanner();
+        };
+      }
+
+      if (declineBtn) {
+        declineBtn.onclick = (e) => {
+          if (e) e.preventDefault();
+          try {
+            if (typeof window !== 'undefined' && window.localStorage) {
+              window.localStorage.setItem('nhb_cookie_consent', 'declined');
+            }
+          } catch (err) {
+            console.warn('Failed to save declined consent to localStorage:', err);
+          }
+          if (typeof window !== 'undefined') {
+            window.__nhb_cookie_consent = 'declined';
+          }
+          hideBanner();
+        };
+      }
+    } catch (globalCookieErr) {
+      console.error('Cookie consent setup failed:', globalCookieErr);
     }
   }
 
