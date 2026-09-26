@@ -43,6 +43,7 @@
   <!-- Instant Cookie Consent Pre-check (Zero-flash) -->
   <!-- Instant Cookie Consent Pre-check & Universal Handler (Zero-flash & Resilient) -->
   <script>
+    // 1. Instant Cookie Consent Pre-check & Universal Handler
     window.handleCookieConsent = function(choice) {
       try {
         localStorage.setItem('nhb_cookie_consent', choice);
@@ -66,6 +67,73 @@
         document.documentElement.classList.add('cookie-consented');
       }
     } catch (e) {}
+
+    // 2. Universal Industry & Partners Dropdown Handler
+    window.toggleUtilityMenu = function(e) {
+      if (e) e.stopPropagation();
+      var btn = document.getElementById('utilityBtn');
+      var menu = document.getElementById('utilityMenu');
+      if (!btn || !menu) return;
+      var isOpen = !menu.classList.contains('show');
+      menu.classList.toggle('show', isOpen);
+      btn.classList.toggle('open', isOpen);
+      btn.setAttribute('aria-expanded', String(isOpen));
+    };
+
+    // Close Industry & Partners on click outside & Escape
+    document.addEventListener('click', function(e) {
+      var btn = document.getElementById('utilityBtn');
+      var menu = document.getElementById('utilityMenu');
+      if (btn && menu && menu.classList.contains('show')) {
+        if (!btn.contains(e.target) && !menu.contains(e.target)) {
+          menu.classList.remove('show');
+          btn.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        var btn = document.getElementById('utilityBtn');
+        var menu = document.getElementById('utilityMenu');
+        if (btn && menu && menu.classList.contains('show')) {
+          menu.classList.remove('show');
+          btn.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+          btn.focus();
+        }
+      }
+    });
+
+    // 3. Universal Hero Slideshow Auto-Cycle Controller
+    window.initHeroGallery = function() {
+      var images = document.querySelectorAll('.hero-bg-image');
+      if (!images || images.length <= 1) return;
+      if (window.__heroGalleryInterval) clearInterval(window.__heroGalleryInterval);
+
+      window.__heroGalleryInterval = setInterval(function() {
+        var imgs = document.querySelectorAll('.hero-bg-image');
+        if (!imgs || imgs.length <= 1) return;
+        var activeIdx = -1;
+        for (var i = 0; i < imgs.length; i++) {
+          if (imgs[i].classList.contains('active')) {
+            activeIdx = i;
+            break;
+          }
+        }
+        if (activeIdx === -1) activeIdx = 0;
+        imgs[activeIdx].classList.remove('active');
+        var nextIdx = (activeIdx + 1) % imgs.length;
+        imgs[nextIdx].classList.add('active');
+      }, 5000);
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', window.initHeroGallery);
+    } else {
+      window.initHeroGallery();
+    }
   </script>
 
   <!-- Stylesheets -->
@@ -149,6 +217,7 @@
           <button 
             class="utility-btn" 
             id="utilityBtn" 
+            onclick="toggleUtilityMenu(event)"
             aria-haspopup="true" 
             aria-expanded="false" 
             aria-controls="utilityMenu"
@@ -284,8 +353,7 @@
         <img 
           src="images/hero-2.jpg" 
           alt="شهد زرین و کوهستان‌های سرسبز زنبورداری" 
-          class="hero-bg-image " 
-          loading="lazy"
+          class="hero-bg-image" 
           decoding="async" 
           width="1600" 
           height="700"
@@ -294,8 +362,7 @@
         <img 
           src="images/hero-3.jpg" 
           alt="شهد زرین و کوهستان‌های سرسبز زنبورداری" 
-          class="hero-bg-image " 
-          loading="lazy"
+          class="hero-bg-image" 
           decoding="async" 
           width="1600" 
           height="700"
@@ -304,8 +371,7 @@
         <img 
           src="images/hero-4.jpg" 
           alt="شهد زرین و کوهستان‌های سرسبز زنبورداری" 
-          class="hero-bg-image " 
-          loading="lazy"
+          class="hero-bg-image" 
           decoding="async" 
           width="1600" 
           height="700"

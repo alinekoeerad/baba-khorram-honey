@@ -25,6 +25,7 @@ export function renderUtilityBar(utilityNav) {
         <button 
           class="utility-btn" 
           id="utilityBtn" 
+          onclick="toggleUtilityMenu(event)"
           aria-haspopup="true" 
           aria-expanded="false" 
           aria-controls="utilityMenu"

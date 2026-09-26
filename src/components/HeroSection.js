@@ -17,7 +17,7 @@ export function renderHeroSection(hero) {
       src="${imgSrc}" 
       alt="شهد زرین و کوهستان‌های سرسبز زنبورداری" 
       class="hero-bg-image ${idx === 0 ? 'active' : ''}" 
-      ${idx === 0 ? 'fetchpriority="high"' : 'loading="lazy"'}
+      ${idx === 0 ? 'fetchpriority="high"' : ''}
       decoding="async"
       width="1600"
       height="700"
