@@ -59,14 +59,15 @@ export function renderRecipeSection(data) {
           aria-roledescription="carousel" 
           aria-label="اسلایدر دستور پخت‌های منتخب"
         >
-          <!-- RTL Prev Button (Right Side) - Simple Arrow -->
+          <!-- Left Control (Physical Left Side) - points LEFT -->
           <button 
-            class="carousel-nav-btn carousel-nav-prev" 
-            id="carouselPrevBtn" 
-            aria-label="دستور پخت قبلی"
+            class="carousel-nav-btn carousel-nav-left" 
+            id="carouselLeftBtn" 
+            aria-label="دستور پخت بعدی"
+            onclick="handleRecipeCarouselLeft(event)"
           >
             <svg class="carousel-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <polyline points="9 18 15 12 9 6"></polyline>
+              <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
           </button>
 
@@ -77,14 +78,15 @@ export function renderRecipeSection(data) {
             </div>
           </div>
 
-          <!-- RTL Next Button (Left Side) - Simple Arrow -->
+          <!-- Right Control (Physical Right Side) - points RIGHT -->
           <button 
-            class="carousel-nav-btn carousel-nav-next" 
-            id="carouselNextBtn" 
-            aria-label="دستور پخت بعدی"
+            class="carousel-nav-btn carousel-nav-right" 
+            id="carouselRightBtn" 
+            aria-label="دستور پخت قبلی"
+            onclick="handleRecipeCarouselRight(event)"
           >
             <svg class="carousel-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <polyline points="15 18 9 12 15 6"></polyline>
+              <polyline points="9 18 15 12 9 6"></polyline>
             </svg>
           </button>
         </div>

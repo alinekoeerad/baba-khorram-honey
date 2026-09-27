@@ -195,23 +195,9 @@ class App {
    * Hero Slideshow Controller (Crossfading multi-images calmly every 6 seconds)
    */
   initHeroSlideshow() {
-    try {
-      const images = document.querySelectorAll('.hero-bg-image');
-      if (!images || images.length <= 1) return;
-
-      if (this.heroInterval) clearInterval(this.heroInterval);
-
-      this.heroInterval = setInterval(() => {
-        const imgs = document.querySelectorAll('.hero-bg-image');
-        if (!imgs || imgs.length <= 1) return;
-        let activeIdx = Array.from(imgs).findIndex(img => img.classList.contains('active'));
-        if (activeIdx === -1) activeIdx = 0;
-        imgs[activeIdx].classList.remove('active');
-        const nextIdx = (activeIdx + 1) % imgs.length;
-        imgs[nextIdx].classList.add('active');
-      }, 5000);
-    } catch (err) {
-      console.warn('Hero slideshow init error:', err);
+    if (typeof window !== 'undefined' && typeof window.initHeroGallery === 'function') {
+      window.initHeroGallery();
+      return;
     }
   }
 
@@ -282,178 +268,124 @@ class App {
    * Recipe Carousel with Pause on Hover & Dynamic Pagination
    */
   initCarousel() {
-    const prevBtn = document.getElementById('carouselPrevBtn');
-    const nextBtn = document.getElementById('carouselNextBtn');
+    if (typeof window !== 'undefined' && typeof window.initRecipeCarousel === 'function') {
+      window.initRecipeCarousel();
+      return;
+    }
+
+    const leftBtn = document.getElementById('carouselLeftBtn') || document.getElementById('carouselPrevBtn');
+    const rightBtn = document.getElementById('carouselRightBtn') || document.getElementById('carouselNextBtn');
     const container = document.getElementById('recipeCardsContainer');
     const wrapper = document.getElementById('recipesCarouselWrapper');
     const viewport = document.getElementById('carouselViewport');
     const dotsContainer = document.getElementById('carouselDots');
 
-    if (!container || !wrapper) return;
+    if (!container || !viewport) return;
 
-    this.carouselState.totalCards = container.querySelectorAll('.recipe-card').length;
+    const cards = container.querySelectorAll('.recipe-card');
+    const totalCards = cards.length;
+    if (totalCards === 0) return;
 
-    const getVisibleCards = () => {
+    let currentPage = 0;
+    let isPaused = false;
+    let autoInterval = null;
+
+    const getCardsPerPage = () => {
       const w = window.innerWidth;
       if (w < 640) return 1;
       if (w < 1024) return 2;
-      if (w < 1366) return 3;
-      return 4; // ~4 full cards + partial next card on large desktop
+      return 3;
     };
 
-    const getCardStep = () => {
-      const firstCard = container.querySelector('.recipe-card');
-      if (!firstCard) return 365;
-      const cardWidth = firstCard.offsetWidth;
-      const gap = 20;
-      return cardWidth + gap;
-    };
-
-    const getMaxIndex = () => {
-      return Math.max(0, this.carouselState.totalCards - getVisibleCards());
+    const getTotalPages = () => {
+      return Math.max(1, Math.ceil(totalCards / getCardsPerPage()));
     };
 
     const renderDots = () => {
       if (!dotsContainer) return;
       dotsContainer.innerHTML = '';
-      const maxIndex = getMaxIndex();
-      const numDots = maxIndex + 1;
-      if (numDots <= 1) return;
+      const totalPages = getTotalPages();
+      if (totalPages <= 1) return;
 
-      for (let i = 0; i < numDots; i++) {
+      for (let i = 0; i < totalPages; i++) {
         const dot = document.createElement('button');
-        dot.className = `carousel-dot ${i === this.carouselState.currentIndex ? 'active' : ''}`;
+        dot.className = `carousel-dot ${i === currentPage ? 'active' : ''}`;
         dot.setAttribute('role', 'tab');
         dot.setAttribute('aria-label', `رفتن به صفحه ${i + 1}`);
-        dot.setAttribute('aria-selected', String(i === this.carouselState.currentIndex));
-        dot.addEventListener('click', () => {
-          this.carouselState.currentIndex = i;
-          updatePosition();
+        dot.setAttribute('aria-selected', String(i === currentPage));
+        dot.addEventListener('click', (e) => {
+          if (e) e.preventDefault();
+          goToPage(i);
         });
         dotsContainer.appendChild(dot);
       }
     };
 
     const updatePosition = () => {
-      const maxIdx = getMaxIndex();
-      if (this.carouselState.currentIndex > maxIdx) {
-        this.carouselState.currentIndex = maxIdx;
-      }
-      if (this.carouselState.currentIndex < 0) {
-        this.carouselState.currentIndex = 0;
-      }
+      const totalPages = getTotalPages();
+      if (currentPage >= totalPages) currentPage = 0;
+      if (currentPage < 0) currentPage = totalPages - 1;
 
-      const cardStep = getCardStep();
-      const offset = this.carouselState.currentIndex * cardStep;
+      const shift = currentPage * (viewport.offsetWidth + 20);
+      container.style.transform = `translateX(${shift}px)`;
 
-      // In Persian RTL layout, translating positively shifts cards along reading order
-      container.style.transform = `translateX(${offset}px)`;
-
-      // Update dots
       if (dotsContainer) {
         const dots = dotsContainer.querySelectorAll('.carousel-dot');
         dots.forEach((dot, idx) => {
-          const isActive = idx === this.carouselState.currentIndex;
+          const isActive = idx === currentPage;
           dot.classList.toggle('active', isActive);
           dot.setAttribute('aria-selected', String(isActive));
         });
       }
     };
 
-    const stepForward = () => {
-      const maxIdx = getMaxIndex();
-      if (this.carouselState.currentIndex >= maxIdx) {
-        this.carouselState.currentIndex = 0;
-      } else {
-        this.carouselState.currentIndex += 1;
-      }
+    const goToPage = (pageIdx) => {
+      currentPage = pageIdx;
       updatePosition();
     };
 
-    const stepBackward = () => {
-      const maxIdx = getMaxIndex();
-      if (this.carouselState.currentIndex <= 0) {
-        this.carouselState.currentIndex = maxIdx;
-      } else {
-        this.carouselState.currentIndex -= 1;
-      }
+    const stepLeft = () => {
+      const totalPages = getTotalPages();
+      currentPage = (currentPage + 1) % totalPages;
       updatePosition();
     };
 
-    if (nextBtn) {
-      nextBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        stepForward();
-      });
+    const stepRight = () => {
+      const totalPages = getTotalPages();
+      currentPage = (currentPage - 1 + totalPages) % totalPages;
+      updatePosition();
+    };
+
+    if (leftBtn) {
+      leftBtn.onclick = (e) => {
+        if (e) e.preventDefault();
+        stepLeft();
+      };
     }
 
-    if (prevBtn) {
-      prevBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        stepBackward();
-      });
+    if (rightBtn) {
+      rightBtn.onclick = (e) => {
+        if (e) e.preventDefault();
+        stepRight();
+      };
     }
 
-    // Touch Swipe for Mobile / Tablet
-    let startX = 0;
-    let isSwiping = false;
-
-    if (viewport) {
-      viewport.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-        isSwiping = true;
-      }, { passive: true });
-
-      viewport.addEventListener('touchend', (e) => {
-        if (!isSwiping) return;
-        const endX = e.changedTouches[0].clientX;
-        const diffX = endX - startX;
-        if (Math.abs(diffX) > 40) {
-          // RTL swipe
-          if (diffX > 0) {
-            stepForward();
-          } else {
-            stepBackward();
-          }
-        }
-        isSwiping = false;
-      }, { passive: true });
-    }
-
-    // Autoplay Controller with Pause on Hover & Keyboard Focus
     const startAutoplay = () => {
-      if (this.carouselState.autoInterval) clearInterval(this.carouselState.autoInterval);
-      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (prefersReducedMotion) return;
-
-      this.carouselState.autoInterval = setInterval(() => {
-        if (!this.carouselState.isPaused) {
-          const maxIdx = getMaxIndex();
-          if (this.carouselState.currentIndex >= maxIdx) {
-            this.carouselState.currentIndex = 0;
-          } else {
-            this.carouselState.currentIndex += 1;
-          }
-          updatePosition();
+      if (autoInterval) clearInterval(autoInterval);
+      autoInterval = setInterval(() => {
+        if (!isPaused) {
+          stepLeft();
         }
       }, 5000);
     };
 
-    const pauseAutoplay = () => {
-      this.carouselState.isPaused = true;
-    };
+    if (wrapper) {
+      wrapper.onmouseenter = () => { isPaused = true; };
+      wrapper.onmouseleave = () => { isPaused = false; };
+      wrapper.onfocusin = () => { isPaused = true; };
+      wrapper.onfocusout = () => { isPaused = false; };
+    }
 
-    const resumeAutoplay = () => {
-      this.carouselState.isPaused = false;
-    };
-
-    // Pause on Hover
-    wrapper.addEventListener('mouseenter', pauseAutoplay);
-    wrapper.addEventListener('mouseleave', resumeAutoplay);
-    wrapper.addEventListener('focusin', pauseAutoplay);
-    wrapper.addEventListener('focusout', resumeAutoplay);
-
-    // Window Resize Observer for responsive re-calculation
     window.addEventListener('resize', () => {
       renderDots();
       updatePosition();

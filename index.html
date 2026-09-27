@@ -106,33 +106,230 @@
       }
     });
 
-    // 3. Universal Hero Slideshow Auto-Cycle Controller
+    // 3. Cinematic Alternating Hero Gallery Animation Controller
     window.initHeroGallery = function() {
       var images = document.querySelectorAll('.hero-bg-image');
       if (!images || images.length <= 1) return;
       if (window.__heroGalleryInterval) clearInterval(window.__heroGalleryInterval);
+      if (window.__heroTransitionTimeout) clearTimeout(window.__heroTransitionTimeout);
 
-      window.__heroGalleryInterval = setInterval(function() {
+      var total = images.length;
+      var currentIdx = 0;
+      for (var i = 0; i < total; i++) {
+        if (images[i].classList.contains('active')) {
+          currentIdx = i;
+          break;
+        }
+      }
+
+      // Initialize current slide: even index zooms in, odd index zooms out
+      for (var j = 0; j < total; j++) {
+        if (j === currentIdx) {
+          var initialZoom = (j % 2 === 0) ? 'zoom-in' : 'zoom-out';
+          images[j].className = 'hero-bg-image active ' + initialZoom;
+        } else {
+          images[j].className = 'hero-bg-image';
+        }
+      }
+
+      var isTransitioning = false;
+
+      function doTransition() {
+        if (document.hidden) return;
+        if (isTransitioning) return;
+
         var imgs = document.querySelectorAll('.hero-bg-image');
         if (!imgs || imgs.length <= 1) return;
-        var activeIdx = -1;
-        for (var i = 0; i < imgs.length; i++) {
-          if (imgs[i].classList.contains('active')) {
-            activeIdx = i;
-            break;
+
+        isTransitioning = true;
+        var outgoingIdx = currentIdx;
+        var incomingIdx = (currentIdx + 1) % imgs.length;
+
+        var outgoingSlide = imgs[outgoingIdx];
+        var incomingSlide = imgs[incomingIdx];
+
+        // Alternating zoom: even index zooms in, odd index zooms out
+        var incomingZoom = (incomingIdx % 2 === 0) ? 'zoom-in' : 'zoom-out';
+        var outgoingZoom = (outgoingIdx % 2 === 0) ? 'zoom-in' : 'zoom-out';
+
+        // 1. Incoming slide starts fading in on top and playing its zoom without resetting
+        incomingSlide.className = 'hero-bg-image active ' + incomingZoom;
+
+        // 2. Outgoing slide fades out underneath while holding its scale to prevent snapping
+        outgoingSlide.className = 'hero-bg-image outgoing ' + outgoingZoom;
+
+        // 3. After crossfade finishes, clean up the outgoing slide
+        window.__heroTransitionTimeout = setTimeout(function() {
+          outgoingSlide.className = 'hero-bg-image';
+          currentIdx = incomingIdx;
+          isTransitioning = false;
+        }, 2000);
+      }
+
+      window.__heroGalleryInterval = setInterval(doTransition, 6500);
+    };
+
+    // 4. Universal Recipe Carousel Controller (Page-based, Auto-scrolling, RTL-consistent)
+    window.initRecipeCarousel = function() {
+      var container = document.getElementById('recipeCardsContainer');
+      var viewport = document.getElementById('carouselViewport');
+      var wrapper = document.getElementById('recipesCarouselWrapper');
+      var dotsContainer = document.getElementById('carouselDots');
+      if (!container || !viewport) return;
+
+      var cards = container.querySelectorAll('.recipe-card');
+      var totalCards = cards.length;
+      if (totalCards === 0) return;
+
+      var currentPage = 0;
+      var isPaused = false;
+      var autoInterval = null;
+
+      function getCardsPerPage() {
+        var w = window.innerWidth;
+        if (w < 640) return 1;
+        if (w < 1024) return 2;
+        return 3;
+      }
+
+      function getTotalPages() {
+        return Math.max(1, Math.ceil(totalCards / getCardsPerPage()));
+      }
+
+      function renderDots() {
+        if (!dotsContainer) return;
+        dotsContainer.innerHTML = '';
+        var totalPages = getTotalPages();
+        if (totalPages <= 1) return;
+
+        for (var i = 0; i < totalPages; i++) {
+          (function(pageIdx) {
+            var dot = document.createElement('button');
+            dot.className = 'carousel-dot' + (pageIdx === currentPage ? ' active' : '');
+            dot.setAttribute('role', 'tab');
+            dot.setAttribute('aria-label', 'رفتن به صفحه ' + (pageIdx + 1));
+            dot.setAttribute('aria-selected', String(pageIdx === currentPage));
+            dot.addEventListener('click', function(e) {
+              if (e) e.preventDefault();
+              goToPage(pageIdx);
+            });
+            dotsContainer.appendChild(dot);
+          })(i);
+        }
+      }
+
+      function updatePosition() {
+        var totalPages = getTotalPages();
+        if (currentPage >= totalPages) currentPage = 0;
+        if (currentPage < 0) currentPage = totalPages - 1;
+
+        // In Persian RTL layout: positive translateX brings the cards from the left into viewport
+        var shift = currentPage * (viewport.offsetWidth + 20);
+        container.style.transform = 'translateX(' + shift + 'px)';
+
+        if (dotsContainer) {
+          var dots = dotsContainer.querySelectorAll('.carousel-dot');
+          for (var i = 0; i < dots.length; i++) {
+            var isActive = (i === currentPage);
+            dots[i].classList.toggle('active', isActive);
+            dots[i].setAttribute('aria-selected', String(isActive));
           }
         }
-        if (activeIdx === -1) activeIdx = 0;
-        imgs[activeIdx].classList.remove('active');
-        var nextIdx = (activeIdx + 1) % imgs.length;
-        imgs[nextIdx].classList.add('active');
-      }, 5000);
+      }
+
+      function goToPage(pageIdx) {
+        currentPage = pageIdx;
+        updatePosition();
+      }
+
+      function stepLeft() {
+        var totalPages = getTotalPages();
+        currentPage = (currentPage + 1) % totalPages;
+        updatePosition();
+      }
+
+      function stepRight() {
+        var totalPages = getTotalPages();
+        currentPage = (currentPage - 1 + totalPages) % totalPages;
+        updatePosition();
+      }
+
+      window.handleRecipeCarouselLeft = function(e) {
+        if (e) e.preventDefault();
+        stepLeft();
+      };
+
+      window.handleRecipeCarouselRight = function(e) {
+        if (e) e.preventDefault();
+        stepRight();
+      };
+
+      var leftBtn = document.getElementById('carouselLeftBtn') || document.getElementById('carouselPrevBtn');
+      var rightBtn = document.getElementById('carouselRightBtn') || document.getElementById('carouselNextBtn');
+      if (leftBtn) leftBtn.onclick = window.handleRecipeCarouselLeft;
+      if (rightBtn) rightBtn.onclick = window.handleRecipeCarouselRight;
+
+      function startAutoplay() {
+        if (autoInterval) clearInterval(autoInterval);
+        autoInterval = setInterval(function() {
+          if (!isPaused) {
+            stepLeft();
+          }
+        }, 5000);
+      }
+
+      if (wrapper) {
+        wrapper.onmouseenter = function() { isPaused = true; };
+        wrapper.onmouseleave = function() { isPaused = false; };
+        wrapper.onfocusin = function() { isPaused = true; };
+        wrapper.onfocusout = function() { isPaused = false; };
+      }
+
+      // Touch swipe
+      var startX = 0;
+      var isSwiping = false;
+
+      viewport.ontouchstart = function(e) {
+        if (e.touches && e.touches.length > 0) {
+          startX = e.touches[0].clientX;
+          isSwiping = true;
+        }
+      };
+
+      viewport.ontouchend = function(e) {
+        if (!isSwiping) return;
+        if (e.changedTouches && e.changedTouches.length > 0) {
+          var endX = e.changedTouches[0].clientX;
+          var diffX = endX - startX;
+          if (Math.abs(diffX) > 40) {
+            if (diffX < 0) {
+              stepLeft();
+            } else {
+              stepRight();
+            }
+          }
+        }
+        isSwiping = false;
+      };
+
+      window.addEventListener('resize', function() {
+        renderDots();
+        updatePosition();
+      });
+
+      renderDots();
+      updatePosition();
+      startAutoplay();
     };
 
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', window.initHeroGallery);
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.initHeroGallery) window.initHeroGallery();
+        if (window.initRecipeCarousel) window.initRecipeCarousel();
+      });
     } else {
-      window.initHeroGallery();
+      if (window.initHeroGallery) window.initHeroGallery();
+      if (window.initRecipeCarousel) window.initRecipeCarousel();
     }
   </script>
 
@@ -459,9 +656,15 @@
             <h2 id="recipes-heading" class="recipes-section-title">دستور پخت‌های منتخب</h2>
           </div>
           <div class="carousel-outer-wrapper" id="recipesCarouselWrapper" role="region" aria-roledescription="carousel" aria-label="اسلایدر دستور پخت‌های منتخب">
-            <button class="carousel-nav-btn carousel-nav-prev" id="carouselPrevBtn" aria-label="دستور پخت قبلی">
+            <!-- Left Control (Physical Left Side) - points LEFT -->
+            <button 
+              class="carousel-nav-btn carousel-nav-left" 
+              id="carouselLeftBtn" 
+              aria-label="دستور پخت بعدی"
+              onclick="handleRecipeCarouselLeft(event)"
+            >
               <svg class="carousel-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <polyline points="9 18 15 12 9 6"></polyline>
+                <polyline points="15 18 9 12 15 6"></polyline>
               </svg>
             </button>
             <div class="carousel-viewport" id="carouselViewport">
@@ -583,9 +786,15 @@
               </article>
               </div>
             </div>
-            <button class="carousel-nav-btn carousel-nav-next" id="carouselNextBtn" aria-label="دستور پخت بعدی">
+            <!-- Right Control (Physical Right Side) - points RIGHT -->
+            <button 
+              class="carousel-nav-btn carousel-nav-right" 
+              id="carouselRightBtn" 
+              aria-label="دستور پخت قبلی"
+              onclick="handleRecipeCarouselRight(event)"
+            >
               <svg class="carousel-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <polyline points="15 18 9 12 15 6"></polyline>
+                <polyline points="9 18 15 12 9 6"></polyline>
               </svg>
             </button>
           </div>

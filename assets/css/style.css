@@ -192,7 +192,10 @@ button {
    ========================================================================== */
 .main-header {
   background-color: #F7AC1A;
-  background-image: url('../images/header-bg.jpg');
+  background-image:
+    url('../images/header-bg.jpg'),
+    url('../../images/header-bg.jpg'),
+    url('images/header-bg.jpg');
   background-position: center top;
   background-size: cover;
   background-repeat: no-repeat;
@@ -603,24 +606,65 @@ button {
   overflow: hidden;
 }
 
-/* Multi-image slideshow: calm crossfade, no layout shift */
+/* Multi-image slideshow: alternating continuous zoom and true crossfade */
 .hero-bg-image {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: center center;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 1000ms cubic-bezier(0.25, 1, 0.5, 1), visibility 1000ms cubic-bezier(0.25, 1, 0.5, 1);
-  will-change: opacity;
+  z-index: 1;
+  transform: scale(1);
+  transform-origin: center center;
+  will-change: transform, opacity;
+  pointer-events: none;
 }
 
+/* Active and Incoming slides: smoothly fade in over 2000ms and sit on top */
 .hero-bg-image.active {
   opacity: 0.82;
   visibility: visible;
   z-index: 2;
+  transition: opacity 2000ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Outgoing slide: crossfades out smoothly over 2000ms while staying underneath */
+.hero-bg-image.outgoing {
+  opacity: 0;
+  visibility: visible;
+  z-index: 1;
+  transition: opacity 2000ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Zoom In: starts at 1.0 and smoothly expands to 1.08 without resetting */
+.hero-bg-image.zoom-in {
+  animation: heroZoomIn 9000ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* Zoom Out: starts at 1.08 and smoothly contracts to 1.0 without resetting */
+.hero-bg-image.zoom-out {
+  animation: heroZoomOut 9000ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes heroZoomIn {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes heroZoomOut {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 
 .hero-overlay {
@@ -840,11 +884,23 @@ button {
    7 & 8. Continuous Wood Environment: Recipe Section & Honey Month Section
    (Shared Wood Texture, Proportional 600px Cards, 75% Image Frame, 25% Content)
    ========================================================================== */
-.recipes-section,
-.blog-section {
+.recipes-section {
   background-color: #3F2414;
   background-image: 
-    linear-gradient(rgba(45, 24, 12, 0.35), rgba(45, 24, 12, 0.35)),
+    url('../images/wood-bg.jpg'),
+    url('../../images/wood-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: repeat-y;
+  color: #FFFFFF;
+  border: none;
+  border-top: none;
+  border-bottom: none;
+}
+
+.blog-section {
+  background-color: #3F2414;
+  background-image:
     url('../images/wood-bg.jpg'),
     url('../../images/wood-bg.jpg');
   background-size: cover;
@@ -913,8 +969,17 @@ button {
   height: 34px;
 }
 
-.carousel-nav-prev { inset-inline-end: -28px; }
-.carousel-nav-next { inset-inline-start: -28px; }
+.carousel-nav-left,
+.carousel-nav-prev {
+  left: -28px;
+  right: auto;
+}
+
+.carousel-nav-right,
+.carousel-nav-next {
+  right: -28px;
+  left: auto;
+}
 
 .carousel-viewport {
   overflow: hidden;
@@ -931,8 +996,9 @@ button {
 
 /* Proportional Recipe Cards: Total height ~595px, Width ~345px, Displays ~4 cards + partial next */
 .recipe-card {
-  flex: 0 0 345px;
-  width: 345px;
+  flex: 0 0 calc((100% - 40px) / 3);
+  width: calc((100% - 40px) / 3);
+  max-width: 380px;
   height: 595px;
   border-radius: 0; /* Sharp corners */
   overflow: hidden;
@@ -1056,20 +1122,23 @@ button {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.45);
+  background-color: var(--footer-bg);
+  opacity: 0.35;
   border: none;
   cursor: pointer;
   padding: 0;
-  transition: background-color var(--transition-fast), transform var(--transition-fast);
+  transition: background-color var(--transition-fast), opacity var(--transition-fast), transform var(--transition-fast);
 }
 
 .carousel-dot.active {
-  background-color: var(--honey-sunglow);
+  background-color: var(--footer-bg);
+  opacity: 1;
   transform: scale(1.25);
 }
 
 .carousel-dot:hover:not(.active) {
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: var(--footer-bg);
+  opacity: 0.7;
 }
 
 .recipes-footer-cta {
@@ -1117,29 +1186,29 @@ button {
 
 .blog-tag {
   font-size: 1.25rem;
-  font-weight: 600;
-  color: #FFFFFF;
+  font-weight: 700;
+  color: var(--footer-bg);
   letter-spacing: 1px;
   margin-bottom: 8px;
   text-transform: uppercase;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  text-shadow: none;
 }
 
 .blog-title {
   font-size: clamp(2.4rem, 4.5vw, 3.8rem);
   font-weight: 900;
-  color: var(--honey-wild-willow);
+  color: #FFFFFF;
   margin-bottom: 20px;
   line-height: 1.15;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
 }
 
 .blog-excerpt {
   font-size: 1.125rem;
-  color: var(--text-cream);
+  color: var(--text-dark);
   line-height: 1.85;
   margin-bottom: 30px;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  text-shadow: none;
 }
 
 /* ==========================================================================
@@ -1391,8 +1460,8 @@ button {
     font-size: 0.93rem;
   }
   .recipe-card {
-    flex: 0 0 320px;
-    width: 320px;
+    flex: 0 0 calc((100% - 40px) / 3);
+    width: calc((100% - 40px) / 3);
     height: 570px;
   }
   .card-img-wrap {
@@ -1439,8 +1508,20 @@ button {
   .card-content-wrap {
     height: 140px;
   }
+  .carousel-nav-left,
+  .carousel-nav-prev {
+    left: 4px;
+  }
+  .carousel-nav-right,
+  .carousel-nav-next {
+    right: 4px;
+  }
   .carousel-nav-btn {
-    display: none;
+    background: rgba(30, 16, 8, 0.5);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    padding: 4px;
   }
 }
 
