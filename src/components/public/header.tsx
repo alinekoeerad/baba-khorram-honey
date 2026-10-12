@@ -251,15 +251,33 @@ export function Header({
 
       {/* 3. Main Header Container */}
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3 sm:gap-6 relative">
-        {/* Right Section in RTL: Hamburger Trigger & Desktop Main Navigation */}
-        <div className="flex items-center gap-3 sm:gap-6 shrink-0">
+        {/* Right Section in RTL: Brand Logo Emblem & Title (shrink-0 min-w-max, never squeezed) + Hamburger */}
+        <div className="flex items-center gap-2 sm:gap-4 shrink-0 min-w-max">
+          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0 min-w-max">
+            {/* Dedicated Brand Emblem */}
+            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-none bg-gradient-to-br from-[#FDE68A] to-[#F59E0B] text-[#332115] flex items-center justify-center shadow-md border border-white/30 group-hover:scale-105 transition-transform shrink-0">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L4 6.5V17.5L12 22L20 17.5V6.5L12 2ZM12 4.3L18 7.7V16.3L12 19.7L6 16.3V7.7L12 4.3ZM12 7L8 9.3V14.7L12 17L16 14.7V9.3L12 7Z" />
+              </svg>
+            </div>
+
+            <div className="flex flex-col text-right shrink-0 whitespace-nowrap">
+              <span className="text-base sm:text-2xl font-black text-white tracking-tight drop-shadow-md group-hover:text-[#FFF6D6] transition-colors leading-tight whitespace-nowrap">
+                {siteNameFa}
+              </span>
+              <span className="text-[10px] sm:text-[11px] text-[#FEF3C7] tracking-wider font-bold drop-shadow-xs hidden xs:inline whitespace-nowrap">
+                طعم اصیل و طبیعی کوهستان
+              </span>
+            </div>
+          </Link>
+
           {/* Hamburger Trigger: "منو" on mobile, "دسته‌بندی‌ها" on desktop */}
           <button
             ref={hamburgerButtonRef}
             type="button"
             onClick={onOpenHamburger}
             aria-label="باز کردن منوی سایت"
-            className="flex flex-col items-center justify-center p-1.5 sm:p-2 rounded-xl hover:bg-black/20 text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer select-none shrink-0 group"
+            className="flex flex-col items-center justify-center p-1.5 sm:p-2 rounded-none hover:bg-black/20 text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer select-none shrink-0 group mr-1 sm:mr-2"
           >
             <Menu className="w-5 h-5 sm:w-6 sm:h-6 drop-shadow-sm group-hover:scale-105 transition-transform" />
             <span className="text-[10px] sm:text-xs font-black text-white mt-0.5 tracking-tight whitespace-nowrap">
@@ -267,73 +285,45 @@ export function Header({
               <span className="hidden lg:inline">دسته‌بندی‌ها</span>
             </span>
           </button>
-
-          {/* 
-            Desktop Main Navigation with "|" Dividers and Search button:
-            Restored for desktop per user instruction ("در حالت دسکتاپ وضعیت قدیمی باشه")
-          */}
-          {/* 
-            Desktop Main Navigation with "|" Dividers and Search button:
-            Prominent, bold white lettering with solid vertical bar dividers matching reference
-          */}
-                    <nav className="hidden lg:flex items-center text-base font-black" aria-label="ناوبری اصلی">
-            {navLinks.map((link, idx) => {
-              const isActive = pathname === link.href;
-              return (
-                <React.Fragment key={link.href}>
-                  {idx > 0 && (
-                    <span className="mx-2.5 sm:mx-3 text-white font-black text-lg select-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]" aria-hidden="true">|</span>
-                  )}
-                  <Link
-                    href={link.href}
-                    className={`transition-colors py-1 text-sm sm:text-base ${
-                      isActive
-                        ? "font-black text-white underline underline-offset-8 decoration-[3px] decoration-[#FFF6D6] drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]"
-                        : "font-black text-white hover:text-[#FFF6D6] drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                </React.Fragment>
-              );
-            })}
-
-            {/* Thick bold | divider before Search Button */}
-            <span className="mx-2.5 sm:mx-3 text-white font-black text-lg select-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]" aria-hidden="true">|</span>
-
-            {/* Search Trigger Button inside nav (Desktop) */}
-            <button
-              type="button"
-              onClick={onOpenSearch}
-              aria-label="جستجوی محصولات و مقالات"
-              className="flex items-center gap-1.5 py-1 px-1.5 text-white hover:text-[#FFF6D6] transition-colors cursor-pointer group"
-            >
-              <Search className="w-4 h-4 stroke-[3] text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)] group-hover:scale-110 transition-transform" />
-              <span className="text-sm sm:text-base font-black text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">جستجو</span>
-            </button>
-          </nav>
         </div>
 
-        {/* Center Section: Dedicated Brand Logo Emblem & Title */}
-        <div className="flex items-center shrink min-w-0">
-          <Link href="/" className="flex items-center gap-2 sm:gap-3 group shrink min-w-0">
-            {/* Dedicated Placeholder Logo Emblem */}
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#FDE68A] to-[#F59E0B] text-[#332115] flex items-center justify-center shadow-md border border-white/30 group-hover:scale-105 transition-transform shrink-0">
-              <svg className="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L4 6.5V17.5L12 22L20 17.5V6.5L12 2ZM12 4.3L18 7.7V16.3L12 19.7L6 16.3V7.7L12 4.3ZM12 7L8 9.3V14.7L12 17L16 14.7V9.3L12 7Z" />
-              </svg>
-            </div>
+        {/* Center Section: Desktop Main Navigation with "|" Dividers and Search */}
+        <nav className="hidden lg:flex items-center text-sm xl:text-base font-black shrink min-w-0" aria-label="ناوبری اصلی">
+          {navLinks.map((link, idx) => {
+            const isActive = pathname === link.href;
+            return (
+              <React.Fragment key={link.href}>
+                {idx > 0 && (
+                  <span className="mx-2 sm:mx-2.5 text-white/90 font-black text-base select-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]" aria-hidden="true">|</span>
+                )}
+                <Link
+                  href={link.href}
+                  className={`transition-colors py-1 text-xs xl:text-sm whitespace-nowrap ${
+                    isActive
+                      ? "font-black text-white underline underline-offset-8 decoration-[3px] decoration-[#FFF6D6] drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]"
+                      : "font-black text-white hover:text-[#FFF6D6] drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              </React.Fragment>
+            );
+          })}
 
-            <div className="flex flex-col text-right truncate">
-              <span className="text-base sm:text-2xl font-black text-white tracking-tight drop-shadow-md group-hover:text-[#FFF6D6] transition-colors leading-tight truncate">
-                {siteNameFa}
-              </span>
-              <span className="text-[9px] sm:text-[10px] text-[#FEF3C7] tracking-wider uppercase font-black drop-shadow-xs hidden xs:inline truncate">
-                طعم اصیل و طبیعی کوهستان
-              </span>
-            </div>
-          </Link>
-        </div>
+          {/* Thick bold | divider before Search Button */}
+          <span className="mx-2 sm:mx-2.5 text-white/90 font-black text-base select-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]" aria-hidden="true">|</span>
+
+          {/* Search Trigger Button inside nav (Desktop) */}
+          <button
+            type="button"
+            onClick={onOpenSearch}
+            aria-label="جستجوی محصولات و مقالات"
+            className="flex items-center gap-1.5 py-1 px-1.5 text-white hover:text-[#FFF6D6] transition-colors cursor-pointer group whitespace-nowrap"
+          >
+            <Search className="w-4 h-4 stroke-[3] text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)] group-hover:scale-110 transition-transform" />
+            <span className="text-xs xl:text-sm font-black text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">جستجو</span>
+          </button>
+        </nav>
 
         {/* Left Section in RTL: Mobile Search Button + Cart Island (lg:pl-64 on desktop to clear corner tab) */}
         <div className="flex items-center gap-1.5 sm:gap-3 shrink-0 lg:pl-64">
@@ -342,7 +332,7 @@ export function Header({
             type="button"
             onClick={onOpenSearch}
             aria-label="جستجوی محصولات و مقالات"
-            className="lg:hidden p-2 hover:bg-black/20 rounded-xl text-white hover:text-[#FFF6D6] transition-colors cursor-pointer shrink-0"
+            className="lg:hidden p-2 hover:bg-black/20 rounded-none text-white hover:text-[#FFF6D6] transition-colors cursor-pointer shrink-0"
           >
             <Search className="w-5 h-5 drop-shadow-xs" />
           </button>

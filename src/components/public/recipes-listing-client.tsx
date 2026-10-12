@@ -230,7 +230,7 @@ export function RecipesListingClient({
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="جستجو در دسرهای عسل باباخُرم..."
-            className="w-full h-12 pr-11 pl-10 rounded-full bg-black/40 border border-white/25 text-white placeholder-white/70 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-[#FBBF24] focus:border-transparent transition-all shadow-inner"
+            className="w-full h-12 pr-11 pl-10 rounded-none bg-black/40 border border-white/25 text-white placeholder-white/70 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-[#FBBF24] focus:border-transparent transition-all shadow-inner"
             dir="rtl"
           />
           <Search className="absolute right-4 top-3.5 w-5 h-5 text-[#FBBF24] pointer-events-none" />
@@ -248,11 +248,11 @@ export function RecipesListingClient({
 
         {/* Cold / Hot Serving Toggle */}
         <div className="flex items-center justify-center">
-          <div className="inline-flex p-1 rounded-full bg-black/40 border border-white/20 shadow-md">
+          <div className="inline-flex p-1 rounded-none bg-black/40 border border-white/20 shadow-md">
             <button
               type="button"
               onClick={() => handleServingToggle('cold')}
-              className={`px-6 py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              className={`px-6 py-2 rounded-none text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                 serving === 'cold'
                   ? 'bg-[#FBBF24] text-[#2B2017] shadow-sm font-black'
                   : 'text-white/80 hover:text-white'
@@ -263,7 +263,7 @@ export function RecipesListingClient({
             <button
               type="button"
               onClick={() => handleServingToggle('hot')}
-              className={`px-6 py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              className={`px-6 py-2 rounded-none text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                 serving === 'hot'
                   ? 'bg-[#E08B38] text-white shadow-sm font-black'
                   : 'text-white/80 hover:text-white'
@@ -279,7 +279,7 @@ export function RecipesListingClient({
           <button
             type="button"
             onClick={() => handleCategoryClick('')}
-            className={`px-4 py-1.5 sm:px-5 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all shadow-sm cursor-pointer ${
+            className={`px-4 py-1.5 sm:px-5 sm:py-2 rounded-none text-xs sm:text-sm font-bold transition-all shadow-sm cursor-pointer ${
               !activeCategory || activeCategory === 'all'
                 ? 'bg-[#FBBF24] text-[#2B2017] shadow-md ring-2 ring-[#FBBF24]/50 font-black'
                 : 'bg-black/40 text-white border border-white/20 hover:bg-black/60 hover:text-white'
@@ -292,7 +292,7 @@ export function RecipesListingClient({
               key={cat.id}
               type="button"
               onClick={() => handleCategoryClick(cat.slug)}
-              className={`px-4 py-1.5 sm:px-5 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all shadow-sm cursor-pointer ${
+              className={`px-4 py-1.5 sm:px-5 sm:py-2 rounded-none text-xs sm:text-sm font-bold transition-all shadow-sm cursor-pointer ${
                 activeCategory === cat.slug
                   ? 'bg-[#FBBF24] text-[#2B2017] shadow-md ring-2 ring-[#FBBF24]/50 font-black'
                   : 'bg-black/40 text-white border border-white/20 hover:bg-black/60 hover:text-white'

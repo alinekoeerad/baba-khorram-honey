@@ -39,6 +39,7 @@ export interface ContentCardProps {
   className?: string;
   priority?: boolean;
   index?: number;
+  itemType?: 'product' | 'recipe';
 }
 
 const THEME_STYLES: Record<string, { bg: string; text: string; subtext: string; badgeBg: string }> = {
@@ -109,6 +110,7 @@ export function ContentCard({
   className = '',
   priority = false,
   index,
+  itemType,
 }: ContentCardProps) {
   // Resolve card theme: supports index-based balanced alternation, AUTO, uppercase, lowercase
   const rawTheme = theme ? String(theme).toUpperCase() : 'AUTO';
@@ -118,6 +120,7 @@ export function ContentCard({
       : rawTheme;
 
   const currentTheme = THEME_STYLES[resolvedTheme] || THEME_STYLES.GREEN;
+  const isProduct = itemType === 'product' || (itemType === undefined && href.startsWith('/products'));
 
   // Horizontal variant (Mobile-row: Image on visual right in RTL, text on left)
   if (variant === 'horizontal') {
@@ -128,7 +131,9 @@ export function ContentCard({
       >
         <div className="flex flex-row items-center h-28 sm:h-32">
           {/* Image Container - Visual Right in RTL (first in DOM under dir="rtl") */}
-          <div className="relative w-28 sm:w-32 h-full shrink-0 overflow-hidden bg-black/5">
+          <div className={`relative w-28 sm:w-32 h-full shrink-0 overflow-hidden ${
+            isProduct ? 'bg-[#FAF7F2] p-2 flex items-center justify-center' : 'bg-black/5'
+          }`}>
             {imageAsset ? (
               <Picture
                 asset={imageAsset}
@@ -136,14 +141,18 @@ export function ContentCard({
                 height={imageAsset.height}
                 blurDataUrl={imageAsset.blurDataUrl}
                 alt={imageAlt || title}
-                className="w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.08] motion-reduce:transform-none"
+                className={`transition-transform duration-300 ease-out group-hover:scale-[1.05] motion-reduce:transform-none ${
+                  isProduct ? 'w-full h-full max-h-full object-contain' : 'w-full h-full object-cover'
+                }`}
                 priority={priority}
               />
             ) : imageUrl ? (
               <img
                 src={imageUrl}
                 alt={imageAlt || title}
-                className="w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.08] motion-reduce:transform-none"
+                className={`transition-transform duration-300 ease-out group-hover:scale-[1.05] motion-reduce:transform-none ${
+                  isProduct ? 'w-full h-full max-h-full object-contain' : 'w-full h-full object-cover'
+                }`}
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-black/10 text-xs font-bold">
@@ -191,8 +200,12 @@ export function ContentCard({
       href={href}
       className={`group flex flex-col rounded-none border border-[#EFE9E0] shadow-sm hover:shadow-[0_16px_36px_rgba(51,33,21,0.22)] active:scale-[0.99] transition-all duration-300 ease-out hover:-translate-y-1.5 motion-reduce:transform-none overflow-hidden ${currentTheme.bg} ${className}`}
     >
-      {/* Image Area - 240px high on desktop, sharp corners */}
-      <div className="relative w-full h-52 sm:h-60 overflow-hidden bg-black/5 shrink-0">
+      {/* Image Area - Zero cropping for honey jar on products, aspect-4/3 for recipes */}
+      <div className={`relative w-full overflow-hidden shrink-0 ${
+        isProduct
+          ? 'h-52 sm:h-60 bg-[#FAF7F2] p-3 sm:p-4 flex items-center justify-center'
+          : 'aspect-4/3 sm:h-60 bg-black/5'
+      }`}>
         {imageAsset ? (
           <Picture
             asset={imageAsset}
@@ -200,14 +213,18 @@ export function ContentCard({
             height={imageAsset.height}
             blurDataUrl={imageAsset.blurDataUrl}
             alt={imageAlt || title}
-            className="w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.08] motion-reduce:transform-none"
+            className={`transition-transform duration-300 ease-out group-hover:scale-[1.05] motion-reduce:transform-none ${
+              isProduct ? 'w-full h-full max-h-full object-contain' : 'w-full h-full object-cover'
+            }`}
             priority={priority}
           />
         ) : imageUrl ? (
           <img
             src={imageUrl}
             alt={imageAlt || title}
-            className="w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.08] motion-reduce:transform-none"
+            className={`transition-transform duration-300 ease-out group-hover:scale-[1.05] motion-reduce:transform-none ${
+              isProduct ? 'w-full h-full max-h-full object-contain' : 'w-full h-full object-cover'
+            }`}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-black/10 text-sm font-medium text-stone-600">

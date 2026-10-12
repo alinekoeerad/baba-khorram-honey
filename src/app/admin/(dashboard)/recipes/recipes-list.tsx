@@ -12,11 +12,12 @@ import React, { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { uiStringsFa } from '@/content/ui-strings.fa';
-import { duplicateRecipeAction, deleteRecipeAction } from '@/server/actions/recipe-actions';
+import { duplicateRecipeAction, deleteRecipeAction, updateRecipeAction } from '@/server/actions/recipe-actions';
 import { useToast } from '@/components/admin/toast-provider';
 import { ConfirmModal } from '@/components/admin/confirm-modal';
 import { AdminBadge } from '@/components/admin/admin-badge';
-import { Plus } from 'lucide-react';
+import { Plus, CheckCircle2, Archive, Trash2, Download } from 'lucide-react';
+import { exportToCsv } from '@/lib/csv-export';
 
 export interface RecipeListItem {
   id: string;
@@ -53,8 +54,11 @@ export function RecipesList({ initialRecipes, categories, totalCount }: RecipesL
   const [categoryFilter, setCategoryFilter] = useState('');
   const [visibleCount, setVisibleCount] = useState(20);
 
+  // Bulk Selection
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
   // Confirm Modal state
-  const [confirmDelete, setConfirmDelete] = useState<{ isOpen: boolean; recipe?: RecipeListItem }>({
+  const [confirmDelete, setConfirmDelete] = useState<{ isOpen: boolean; recipe?: RecipeListItem; isBulk?: boolean }>({
     isOpen: false,
   });
 
@@ -76,6 +80,43 @@ export function RecipesList({ initialRecipes, categories, totalCount }: RecipesL
   const displayedItems = filtered.slice(0, visibleCount);
   const hasMore = filtered.length > visibleCount;
 
+  // Toggle selection
+  const handleToggleSelect = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const handleSelectAll = () => {
+    if (selectedIds.size === displayedItems.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(displayedItems.map((r) => r.id)));
+    }
+  };
+
+  // Bulk Status Update (Archive / Publish)
+  const handleBulkStatusChange = (newStatus: 'ARCHIVED' | 'PUBLISHED') => {
+    const ids = Array.from(selectedIds);
+    if (ids.length === 0) return;
+
+    startTransition(async () => {
+      let updatedCount = 0;
+      for (const id of ids) {
+        const res = await updateRecipeAction({ id, input: { status: newStatus } });
+        if (res.success) updatedCount++;
+      }
+      setRecipes((prev) =>
+        prev.map((r) => (selectedIds.has(r.id) ? { ...r, status: newStatus } : r))
+      );
+      setSelectedIds(new Set());
+      toast.success(`${updatedCount} دستور به وضعیت «${newStatus === 'ARCHIVED' ? 'بایگانی‌شده' : 'منتشرشده'}» تغییر یافت.`);
+    });
+  };
+
   const handleDuplicate = (recipe: RecipeListItem) => {
     startTransition(async () => {
       const res = await duplicateRecipeAction(recipe.id);
@@ -89,6 +130,22 @@ export function RecipesList({ initialRecipes, categories, totalCount }: RecipesL
   };
 
   const handleConfirmDelete = async () => {
+    if (confirmDelete.isBulk) {
+      const idsToDelete = Array.from(selectedIds);
+      startTransition(async () => {
+        let deletedCount = 0;
+        for (const id of idsToDelete) {
+          const res = await deleteRecipeAction(id);
+          if (res.success) deletedCount++;
+        }
+        setRecipes((prev) => prev.filter((r) => !selectedIds.has(r.id)));
+        setSelectedIds(new Set());
+        setConfirmDelete({ isOpen: false });
+        toast.success(`${deletedCount} دستور با موفقیت حذف گردید.`);
+      });
+      return;
+    }
+
     if (!confirmDelete.recipe) return;
     const recipe = confirmDelete.recipe;
 
@@ -104,6 +161,21 @@ export function RecipesList({ initialRecipes, categories, totalCount }: RecipesL
     });
   };
 
+  // CSV Export
+  const handleExportCsv = () => {
+    const headers = ['شناسه', 'نام فارسی', 'نام لاتین', 'نامک', 'خاستگاه', 'نحوه سرو', 'وضعیت'];
+    const rows = filtered.map((r) => [
+      r.id,
+      r.nameFa,
+      r.nameOriginal || '',
+      r.slug,
+      r.country || '',
+      r.servingTypes?.join(', ') || '',
+      r.status,
+    ]);
+    exportToCsv('recipes_export', headers, rows);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -112,13 +184,24 @@ export function RecipesList({ initialRecipes, categories, totalCount }: RecipesL
           <p className="text-xs sm:text-sm text-[#5C5248] mt-1">{uiStringsFa.adminRecipes.subtitle}</p>
         </div>
 
-        <Link
-          href="/admin/recipes/new"
-          className="flex items-center gap-2 px-4 py-2.5 bg-[#FBBF24] hover:bg-[#F59E0B] text-[#332115] font-black text-xs rounded-none shadow-xs transition-colors"
-        >
-          <Plus className="w-4 h-4" />
-          <span>{uiStringsFa.adminRecipes.newRecipe}</span>
-        </Link>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={handleExportCsv}
+            className="flex items-center gap-2 px-3.5 py-2.5 bg-white hover:bg-stone-50 text-[#332115] font-bold text-xs rounded-none border border-[#EFE9E0] shadow-2xs transition-colors cursor-pointer"
+          >
+            <Download className="w-4 h-4 text-[#C86A00]" />
+            <span>خروجی اکسل (CSV)</span>
+          </button>
+
+          <Link
+            href="/admin/recipes/new"
+            className="flex items-center gap-2 px-4 py-2.5 bg-[#FBBF24] hover:bg-[#F59E0B] text-[#332115] font-black text-xs rounded-none shadow-xs transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            <span>{uiStringsFa.adminRecipes.newRecipe}</span>
+          </Link>
+        </div>
       </div>
 
       {/* Filter Toolbar */}
@@ -162,11 +245,69 @@ export function RecipesList({ initialRecipes, categories, totalCount }: RecipesL
         </div>
       </div>
 
+      {/* Floating Bulk Actions Bar (ADM-WORKFLOW-03) */}
+      {selectedIds.size > 0 && (
+        <div className="sticky top-20 z-20 bg-[#332115] text-white p-3.5 rounded-none shadow-xl flex flex-wrap items-center justify-between gap-4 animate-in slide-in-from-top-2">
+          <div className="flex items-center gap-2 text-xs font-bold">
+            <span className="w-5 h-5 rounded-full bg-[#F59E0B] text-[#2B2017] flex items-center justify-center font-black text-[11px]">
+              {selectedIds.size}
+            </span>
+            <span>دستور انتخاب شده است</span>
+          </div>
+
+          <div className="flex items-center gap-2.5">
+            <button
+              type="button"
+              onClick={() => handleBulkStatusChange('PUBLISHED')}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-none text-xs font-bold cursor-pointer"
+            >
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              <span>انتشار سراسری</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleBulkStatusChange('ARCHIVED')}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-none text-xs font-bold cursor-pointer"
+            >
+              <Archive className="w-3.5 h-3.5" />
+              <span>بایگانی موارد انتخابی</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setConfirmDelete({ isOpen: true, isBulk: true })}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-none text-xs font-bold cursor-pointer"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>حذف گروهی</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setSelectedIds(new Set())}
+              className="px-2.5 py-1.5 text-stone-300 hover:text-white text-xs underline cursor-pointer"
+            >
+              لغو انتخاب
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Recipes Table */}
       <div className="bg-white border border-[#EFE9E0] rounded-none shadow-xs overflow-x-auto">
         <table className="w-full text-start text-xs border-collapse">
           <thead>
             <tr className="border-b border-[#EFE9E0] text-[#5C5248] bg-[#FDFBF8]">
+              <th className="py-3 px-3 text-center w-10">
+                <input
+                  type="checkbox"
+                  aria-label="انتخاب همه"
+                  checked={displayedItems.length > 0 && selectedIds.size === displayedItems.length}
+                  onChange={handleSelectAll}
+                  className="rounded-none border-stone-300 text-[#C86A00] focus:ring-[#C86A00] cursor-pointer"
+                />
+              </th>
               <th className="py-3 px-4 text-start">{uiStringsFa.adminRecipes.nameFa}</th>
               <th className="py-3 px-4 text-start">{uiStringsFa.adminRecipes.nameOriginal}</th>
               <th className="py-3 px-4 text-start">{uiStringsFa.adminRecipes.servingType}</th>
@@ -179,77 +320,92 @@ export function RecipesList({ initialRecipes, categories, totalCount }: RecipesL
           <tbody className="divide-y divide-[#EFE9E0]">
             {displayedItems.length === 0 ? (
               <tr>
-                <td colSpan={7} className="py-8 text-center text-[#5C5248]">
+                <td colSpan={8} className="py-8 text-center text-[#5C5248]">
                   هیچ دستوری با معیارهای جستجو یافت نشد.
                 </td>
               </tr>
             ) : (
-              displayedItems.map((r) => (
-                <tr key={r.id} className="hover:bg-[#FFFBEB]/40 transition-colors">
-                  <td className="py-3 px-4 font-bold text-[#332115]">
-                    <Link href={`/admin/recipes/${r.id}`} className="hover:text-[#D97706]">
-                      {r.nameFa}
-                    </Link>
-                    {r.isFeatured && (
-                      <span className="ms-1.5 px-1 py-0.5 text-[9px] bg-[#FEF3C7] text-[#C86A00] font-bold">
-                        ویژه
+              displayedItems.map((r) => {
+                const isSelected = selectedIds.has(r.id);
+                return (
+                  <tr
+                    key={r.id}
+                    className={`transition-colors ${isSelected ? 'bg-amber-50/70' : 'hover:bg-[#FFFBEB]/40'}`}
+                  >
+                    <td className="py-3 px-3 text-center">
+                      <input
+                        type="checkbox"
+                        aria-label={`انتخاب ${r.nameFa}`}
+                        checked={isSelected}
+                        onChange={() => handleToggleSelect(r.id)}
+                        className="rounded-none border-stone-300 text-[#C86A00] focus:ring-[#C86A00] cursor-pointer"
+                      />
+                    </td>
+                    <td className="py-3 px-4 font-bold text-[#332115]">
+                      <Link href={`/admin/recipes/${r.id}`} className="hover:text-[#D97706]">
+                        {r.nameFa}
+                      </Link>
+                      {r.isFeatured && (
+                        <span className="ms-1.5 px-1 py-0.5 text-[9px] bg-[#FEF3C7] text-[#C86A00] font-bold">
+                          ویژه
+                        </span>
+                      )}
+                    </td>
+                    <td className="py-3 px-4 text-[#5C5248] font-mono text-[11px]" dir="ltr">
+                      {r.nameOriginal || r.slug}
+                    </td>
+                    <td className="py-3 px-4">
+                      <span className="text-[11px] text-[#5C5248]">
+                        {r.servingTypes?.join(' • ') || '-'}
                       </span>
-                    )}
-                  </td>
-                  <td className="py-3 px-4 text-[#5C5248] font-mono text-[11px]" dir="ltr">
-                    {r.nameOriginal || r.slug}
-                  </td>
-                  <td className="py-3 px-4">
-                    <span className="text-[11px] text-[#5C5248]">
-                      {r.servingTypes?.join(' • ') || '-'}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4">
-                    {/* [ADM-UI-02] AdminBadge */}
-                    <AdminBadge status={r.status} />
-                  </td>
-                  <td className="py-3 px-4 text-center font-bold text-[#332115]">
-                    {r.ingredients?.length || 0}
-                  </td>
-                  <td className="py-3 px-4 text-center font-bold text-[#332115]">
-                    {r.steps?.length || 0}
-                  </td>
-                  <td className="py-3 px-4 text-end space-x-reverse space-x-2 whitespace-nowrap">
-                    <Link
-                      href={`/admin/preview/recipes/${r.id}`}
-                      target="_blank"
-                      className="px-2 py-1 text-[11px] font-bold text-[#5C5248] hover:bg-[#EFE9E0] border border-[#EFE9E0] rounded-none"
-                    >
-                      پیش‌نمایش
-                    </Link>
+                    </td>
+                    <td className="py-3 px-4">
+                      {/* [ADM-UI-02] AdminBadge */}
+                      <AdminBadge status={r.status} />
+                    </td>
+                    <td className="py-3 px-4 text-center font-bold text-[#332115]">
+                      {r.ingredients?.length || 0}
+                    </td>
+                    <td className="py-3 px-4 text-center font-bold text-[#332115]">
+                      {r.steps?.length || 0}
+                    </td>
+                    <td className="py-3 px-4 text-end space-x-reverse space-x-2 whitespace-nowrap">
+                      <Link
+                        href={`/admin/preview/recipes/${r.id}`}
+                        target="_blank"
+                        className="px-2 py-1 text-[11px] font-bold text-[#5C5248] hover:bg-[#EFE9E0] border border-[#EFE9E0] rounded-none"
+                      >
+                        پیش‌نمایش
+                      </Link>
 
-                    <Link
-                      href={`/admin/recipes/${r.id}`}
-                      className="px-2 py-1 text-[11px] font-bold text-[#D97706] hover:bg-[#FEF3C7] border border-[#FDE68A] rounded-none"
-                    >
-                      ویرایش
-                    </Link>
+                      <Link
+                        href={`/admin/recipes/${r.id}`}
+                        className="px-2 py-1 text-[11px] font-bold text-[#D97706] hover:bg-[#FEF3C7] border border-[#FDE68A] rounded-none"
+                      >
+                        ویرایش
+                      </Link>
 
-                    <button
-                      type="button"
-                      disabled={isPending}
-                      onClick={() => handleDuplicate(r)}
-                      className="px-2 py-1 text-[11px] font-bold text-[#5C5248] hover:bg-[#EFE9E0] border border-[#EFE9E0] rounded-none cursor-pointer"
-                    >
-                      کپی
-                    </button>
+                      <button
+                        type="button"
+                        disabled={isPending}
+                        onClick={() => handleDuplicate(r)}
+                        className="px-2 py-1 text-[11px] font-bold text-[#5C5248] hover:bg-[#EFE9E0] border border-[#EFE9E0] rounded-none cursor-pointer"
+                      >
+                        کپی
+                      </button>
 
-                    <button
-                      type="button"
-                      disabled={isPending}
-                      onClick={() => setConfirmDelete({ isOpen: true, recipe: r })}
-                      className="px-2 py-1 text-[11px] font-bold text-[#9E3556] hover:bg-[#FEF2F2] border border-[#FECACA] rounded-none cursor-pointer"
-                    >
-                      حذف
-                    </button>
-                  </td>
-                </tr>
-              ))
+                      <button
+                        type="button"
+                        disabled={isPending}
+                        onClick={() => setConfirmDelete({ isOpen: true, recipe: r })}
+                        className="px-2 py-1 text-[11px] font-bold text-[#9E3556] hover:bg-[#FEF2F2] border border-[#FECACA] rounded-none cursor-pointer"
+                      >
+                        حذف
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>
@@ -270,9 +426,13 @@ export function RecipesList({ initialRecipes, categories, totalCount }: RecipesL
       {/* [ADM-UI-01] Universal ConfirmModal */}
       <ConfirmModal
         isOpen={confirmDelete.isOpen}
-        title="حذف دستور تهیه"
-        itemName={confirmDelete.recipe?.nameFa}
-        message="آیا از حذف کامل این دستور اطمینان دارید؟ تمام مواد لازم و مراحل آماده‌سازی حذف خواهند شد."
+        title={confirmDelete.isBulk ? `حذف گروهی ${selectedIds.size} دستور` : 'حذف دستور تهیه'}
+        itemName={confirmDelete.isBulk ? `${selectedIds.size} دستور انتخاب‌شده` : confirmDelete.recipe?.nameFa}
+        message={
+          confirmDelete.isBulk
+            ? `آیا از حذف گروهی ${selectedIds.size} دستور انتخاب‌شده اطمینان دارید؟ این عمل غیرقابل بازگشت است.`
+            : 'آیا از حذف کامل این دستور اطمینان دارید؟ تمام مواد لازم و مراحل آماده‌سازی حذف خواهند شد.'
+        }
         confirmLabel="بله، حذف کن"
         cancelLabel="انصراف"
         isLoading={isPending}

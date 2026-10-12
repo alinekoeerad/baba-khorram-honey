@@ -27,7 +27,8 @@
           "alt": "برداشت عسل طبیعی از شان"
         }
       ]
-    }
+    },
+    "updatedAt": "2026-10-12T14:42:49.664Z"
   },
   {
     "id": "sec_beekeeping_2",
@@ -54,7 +55,8 @@
       },
       "imagePosition": "LEFT",
       "theme": "GREEN"
-    }
+    },
+    "updatedAt": "2026-10-12T14:42:49.665Z"
   },
   {
     "id": "sec_overlay_3",
@@ -80,7 +82,8 @@
         "label": "ارتباط و مشاوره خرید"
       },
       "theme": "GOLD"
-    }
+    },
+    "updatedAt": "2026-10-12T14:42:49.666Z"
   },
   {
     "id": "sec_gallery_4",
@@ -115,7 +118,8 @@
           "alt": "عسل آویشن طبیعی"
         }
       ]
-    }
+    },
+    "updatedAt": "2026-10-12T14:42:49.666Z"
   },
   {
     "id": "sec_carousel_5",
@@ -136,7 +140,8 @@
         "type": "RECIPES_PAGE",
         "label": "مشاهده تمام دستورها"
       }
-    }
+    },
+    "updatedAt": "2026-10-12T14:42:49.667Z"
   },
   {
     "id": "sec_carousel_products",
@@ -157,7 +162,8 @@
         "type": "PRODUCTS_PAGE",
         "label": "مشاهده همه محصولات"
       }
-    }
+    },
+    "updatedAt": "2026-10-12T14:42:49.667Z"
   },
   {
     "id": "sec_blog_6",
@@ -184,6 +190,7 @@
       },
       "imagePosition": "RIGHT",
       "theme": "ORANGE"
-    }
+    },
+    "updatedAt": "2026-10-12T14:42:49.668Z"
   }
 ]

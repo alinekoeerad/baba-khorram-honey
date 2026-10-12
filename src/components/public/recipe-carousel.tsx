@@ -156,7 +156,7 @@ export function RecipeCarousel({
 
       {/* Carousel Outer Wrapper */}
       <div
-        className="relative flex items-center px-2 sm:px-6"
+        className="relative flex items-center px-6 sm:px-12"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
         onTouchStart={handleTouchStart}
@@ -167,7 +167,7 @@ export function RecipeCarousel({
           type="button"
           onClick={slidePrev}
           aria-label="دستور قبلی"
-          className="absolute right-1 sm:right-3 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 text-[#332115] shadow-2xl flex items-center justify-center transition-all cursor-pointer border border-[#EFE9E0] hover:bg-[#FBBF24] hover:scale-105 active:scale-95"
+          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white text-[#332115] shadow-2xl flex items-center justify-center transition-all cursor-pointer border border-[#EFE9E0] hover:bg-[#FBBF24] hover:scale-105 active:scale-95"
         >
           <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
@@ -198,8 +198,8 @@ export function RecipeCarousel({
                   className="shrink-0 w-[270px] xs:w-[290px] sm:w-[320px] md:w-[340px] rounded-none overflow-hidden shadow-lg border border-black/10 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_36px_rgba(51,33,21,0.24)] group cursor-pointer bg-white flex flex-col"
                 >
                   <Link href={`/recipes/${r.slug}`} className="flex flex-col h-full">
-                    {/* Image Wrap - Fixed 240px with uniform object-cover */}
-                    <div className="w-full h-48 sm:h-60 overflow-hidden bg-[#2B1B10] shrink-0 relative">
+                    {/* Image Wrap - Balanced aspect ratio with clean borders */}
+                    <div className="w-full aspect-[4/3] h-48 sm:h-60 overflow-hidden bg-[#2B1B10] shrink-0 relative">
                       <img
                         src={r.imageUrl || `/images/recipe-${((idx % 6) + 1)}.jpg`}
                         alt={r.title}
@@ -235,7 +235,7 @@ export function RecipeCarousel({
           type="button"
           onClick={slideNext}
           aria-label="دستور بعدی"
-          className="absolute left-1 sm:left-3 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 text-[#332115] shadow-2xl flex items-center justify-center transition-all cursor-pointer border border-[#EFE9E0] hover:bg-[#FBBF24] hover:scale-105 active:scale-95"
+          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white text-[#332115] shadow-2xl flex items-center justify-center transition-all cursor-pointer border border-[#EFE9E0] hover:bg-[#FBBF24] hover:scale-105 active:scale-95"
         >
           <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>

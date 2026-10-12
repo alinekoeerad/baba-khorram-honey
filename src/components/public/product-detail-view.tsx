@@ -89,8 +89,8 @@ export function ProductDetailView({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           {/* RIGHT COLUMN (7 Cols): Gallery, Trust Certificate, Nutritional Specs & Description */}
           <div className="lg:col-span-7 space-y-8 text-right">
-            {/* 1. Main High-Resolution Image */}
-            <div className="w-full aspect-4/3 rounded-none overflow-hidden border-2 border-white/20 shadow-2xl bg-black/40 flex items-center justify-center relative">
+            {/* 1. Main High-Resolution Image (Full Jar Presentation, Zero Cropping) */}
+            <div className="w-full aspect-4/3 rounded-none overflow-hidden border-2 border-white/20 shadow-2xl bg-[#FAF7F2] p-4 sm:p-6 flex items-center justify-center relative">
               {product.mainImage ? (
                 <Picture
                   asset={product.mainImage}
@@ -99,13 +99,13 @@ export function ProductDetailView({
                   blurDataUrl={product.mainImage.blurDataUrl}
                   alt={product.nameFa}
                   priority={true}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full max-h-full object-contain"
                 />
               ) : (
                 <img
                   src="/images/honey-jar.jpg"
                   alt={product.nameFa}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full max-h-full object-contain"
                 />
               )}
               {product.isFeatured && (
@@ -121,14 +121,14 @@ export function ProductDetailView({
                 {product.gallery.map((item) => (
                   <div
                     key={item.id}
-                    className="aspect-square bg-black/30 border border-white/20 rounded-none overflow-hidden shadow-md"
+                    className="aspect-square bg-[#FAF7F2] p-1.5 flex items-center justify-center border border-white/20 rounded-none overflow-hidden shadow-md"
                   >
                     <Picture
                       asset={item.asset}
                       width={300}
                       height={300}
                       alt={product.nameFa}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full max-h-full object-contain hover:scale-105 transition-transform duration-300"
                     />
                   </div>
                 ))}

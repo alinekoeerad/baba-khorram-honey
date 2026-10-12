@@ -158,7 +158,7 @@ export function ProductCarousel({
 
       {/* Carousel Outer Wrapper */}
       <div
-        className="relative flex items-center px-2 sm:px-6"
+        className="relative flex items-center px-6 sm:px-12"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
         onTouchStart={handleTouchStart}
@@ -169,7 +169,7 @@ export function ProductCarousel({
           type="button"
           onClick={slidePrev}
           aria-label="محصول قبلی"
-          className="absolute right-1 sm:right-3 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 text-[#332115] shadow-2xl flex items-center justify-center transition-all cursor-pointer border border-[#EFE9E0] hover:bg-[#FBBF24] hover:scale-105 active:scale-95"
+          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white text-[#332115] shadow-2xl flex items-center justify-center transition-all cursor-pointer border border-[#EFE9E0] hover:bg-[#FBBF24] hover:scale-105 active:scale-95"
         >
           <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
@@ -202,12 +202,12 @@ export function ProductCarousel({
                   className="shrink-0 w-[270px] xs:w-[290px] sm:w-[320px] md:w-[340px] rounded-none overflow-hidden shadow-lg border border-black/10 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_36px_rgba(51,33,21,0.24)] group cursor-pointer bg-white flex flex-col"
                 >
                   <Link href={`/products/${p.slug}`} className="flex flex-col h-full">
-                    {/* Image Wrap - Fixed uniform height matching recipe cards */}
-                    <div className="w-full h-48 sm:h-60 overflow-hidden bg-[#2B1B10] shrink-0 relative flex items-center justify-center">
+                    {/* Image Wrap - Zero cropping soft container */}
+                    <div className="w-full h-48 sm:h-60 overflow-hidden bg-[#FAF7F2] p-3 sm:p-4 shrink-0 relative flex items-center justify-center">
                       <img
                         src={imageSrc}
                         alt={titleText}
-                        className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                        className="w-full h-full max-h-full object-contain transition-transform duration-500 ease-out group-hover:scale-105"
                         loading="lazy"
                         width={360}
                         height={240}
@@ -244,7 +244,7 @@ export function ProductCarousel({
           type="button"
           onClick={slideNext}
           aria-label="محصول بعدی"
-          className="absolute left-1 sm:left-3 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 text-[#332115] shadow-2xl flex items-center justify-center transition-all cursor-pointer border border-[#EFE9E0] hover:bg-[#FBBF24] hover:scale-105 active:scale-95"
+          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white text-[#332115] shadow-2xl flex items-center justify-center transition-all cursor-pointer border border-[#EFE9E0] hover:bg-[#FBBF24] hover:scale-105 active:scale-95"
         >
           <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>

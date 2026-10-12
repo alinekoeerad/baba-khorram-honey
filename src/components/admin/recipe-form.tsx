@@ -410,6 +410,24 @@ export function RecipeForm({ initialData, categories, isEdit = false }: RecipeFo
             {fieldErrors.slug && (
               <p className="text-[11px] text-red-600 font-bold mt-1">{fieldErrors.slug}</p>
             )}
+
+            {/* 301 Redirect Preview [ADM-WORKFLOW-04] */}
+            {isSlugChanged && (
+              <div className="mt-2.5 p-3 bg-amber-50 border border-amber-300 text-amber-900 text-xs rounded-none space-y-1">
+                <div className="font-bold flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                  <span>پیش‌نمایش انتقال نشانی (301 Permanent Redirect):</span>
+                </div>
+                <div className="font-mono text-[11px] text-amber-800 flex items-center gap-2" dir="ltr">
+                  <span className="line-through text-stone-500">/recipes/{originalSlug}</span>
+                  <span>➜</span>
+                  <span className="font-bold text-amber-950">/recipes/{slug}</span>
+                </div>
+                <p className="text-[10px] text-amber-700 leading-relaxed">
+                  جهت حفظ رتبه و اعتبار در موتورهای جستجو (SEO)، لینک قبلی به صورت دائم ۳۰۱ به آدرس جدید منتقل خواهد شد.
+                </p>
+              </div>
+            )}
           </div>
         </div>
 

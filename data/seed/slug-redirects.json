@@ -40,5 +40,12 @@
     "oldSlug": "thyme-honey-test-slug",
     "targetId": "prd_thyme-honey-test-slug",
     "createdAt": "2026-10-12T14:37:40.108Z"
+  },
+  {
+    "id": "red_1791835492009_981s4",
+    "entityType": "PRODUCT",
+    "oldSlug": "thyme-honey-test-slug",
+    "targetId": "prd_thyme-honey-test-slug",
+    "createdAt": "2026-10-12T20:04:52.009Z"
   }
 ]

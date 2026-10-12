@@ -222,7 +222,7 @@ export function ProductsListingClient({
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="جستجو در محصولات باباخُرم..."
-            className="w-full h-12 pr-11 pl-10 rounded-full bg-black/40 border border-white/25 text-white placeholder-white/70 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-[#FBBF24] focus:border-transparent transition-all shadow-inner"
+            className="w-full h-12 pr-11 pl-10 rounded-none bg-black/40 border border-white/25 text-white placeholder-white/70 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-[#FBBF24] focus:border-transparent transition-all shadow-inner"
             dir="rtl"
           />
           <Search className="absolute right-4 top-3.5 w-5 h-5 text-[#FBBF24] pointer-events-none" />
@@ -243,7 +243,7 @@ export function ProductsListingClient({
           <button
             type="button"
             onClick={() => handleCategoryClick('')}
-            className={`shrink-0 px-4 py-1.5 sm:px-5 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all shadow-sm cursor-pointer whitespace-nowrap ${
+            className={`shrink-0 px-4 py-1.5 sm:px-5 sm:py-2 rounded-none text-xs sm:text-sm font-bold transition-all shadow-sm cursor-pointer whitespace-nowrap ${
               !activeCategory || activeCategory === 'all'
                 ? 'bg-[#FBBF24] text-[#2B2017] shadow-md ring-2 ring-[#FBBF24]/50 font-black'
                 : 'bg-black/40 text-white border border-white/20 hover:bg-black/60 hover:text-white'
@@ -256,7 +256,7 @@ export function ProductsListingClient({
               key={cat.id}
               type="button"
               onClick={() => handleCategoryClick(cat.slug)}
-              className={`shrink-0 px-4 py-1.5 sm:px-5 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all shadow-sm cursor-pointer whitespace-nowrap ${
+              className={`shrink-0 px-4 py-1.5 sm:px-5 sm:py-2 rounded-none text-xs sm:text-sm font-bold transition-all shadow-sm cursor-pointer whitespace-nowrap ${
                 activeCategory === cat.slug
                   ? 'bg-[#FBBF24] text-[#2B2017] shadow-md ring-2 ring-[#FBBF24]/50 font-black'
                   : 'bg-black/40 text-white border border-white/20 hover:bg-black/60 hover:text-white'
@@ -272,7 +272,7 @@ export function ProductsListingClient({
           <button
             type="button"
             onClick={() => setInStockOnly((prev) => !prev)}
-            className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold border transition-all cursor-pointer ${
+            className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-none text-xs sm:text-sm font-bold border transition-all cursor-pointer ${
               inStockOnly
                 ? 'bg-emerald-600/90 text-white border-emerald-400 shadow-md ring-2 ring-emerald-500/40'
                 : 'bg-black/40 text-[#E5D5C5] border-white/20 hover:text-white hover:bg-black/60'
