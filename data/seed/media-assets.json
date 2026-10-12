@@ -1,0 +1,527 @@
+[
+  {
+    "id": "ast_seed_bees-banner",
+    "storageKey": "seed_bees-banner_209cf5e0-3102.webp",
+    "mime": "image/webp",
+    "bytes": 553706,
+    "width": 3102,
+    "height": 2071,
+    "blurDataUrl": "data:image/webp;base64,UklGRj4AAABXRUJQVlA4IDIAAADwAQCdASoQAAoABABoJaACdAEPRNwy8AAA3PGb/Auz6jzlX6LpA24/1V/KdhjsTlAAAA==",
+    "variants": {
+      "480": {
+        "key": "seed_bees-banner_209cf5e0-480.webp",
+        "url": "/uploads/seed_bees-banner_209cf5e0-480.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 29890
+      },
+      "768": {
+        "key": "seed_bees-banner_209cf5e0-768.webp",
+        "url": "/uploads/seed_bees-banner_209cf5e0-768.webp",
+        "width": 768,
+        "height": 512,
+        "bytes": 66822
+      },
+      "1200": {
+        "key": "seed_bees-banner_209cf5e0-1200.webp",
+        "url": "/uploads/seed_bees-banner_209cf5e0-1200.webp",
+        "width": 1200,
+        "height": 801,
+        "bytes": 140002
+      },
+      "1920": {
+        "key": "seed_bees-banner_209cf5e0-1920.webp",
+        "url": "/uploads/seed_bees-banner_209cf5e0-1920.webp",
+        "width": 1920,
+        "height": 1281,
+        "bytes": 287316
+      },
+      "3102": {
+        "key": "seed_bees-banner_209cf5e0-3102.webp",
+        "url": "/uploads/seed_bees-banner_209cf5e0-3102.webp",
+        "width": 3102,
+        "height": 2071,
+        "bytes": 553706
+      }
+    },
+    "alt": "تصویر نمونه bees-banner",
+    "createdById": "usr_system",
+    "createdAt": "2026-10-08T13:44:31.324Z",
+    "updatedAt": "2026-10-08T13:44:31.324Z"
+  },
+  {
+    "id": "ast_seed_blog-honey",
+    "storageKey": "seed_blog-honey_4609e351-575.webp",
+    "mime": "image/webp",
+    "bytes": 32368,
+    "width": 575,
+    "height": 625,
+    "blurDataUrl": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAACwAwCdASoQABEAPxFysFAsJqSisAgBgCIJbAC+SCPOqamufpI6gAD+7V+87BZFot/bjklPNBmFM+u1isy60FFeEp//F4ftVLWVPDWbeZGepW/gBSyA8AAA",
+    "variants": {
+      "480": {
+        "key": "seed_blog-honey_4609e351-480.webp",
+        "url": "/uploads/seed_blog-honey_4609e351-480.webp",
+        "width": 480,
+        "height": 521,
+        "bytes": 24298
+      },
+      "575": {
+        "key": "seed_blog-honey_4609e351-575.webp",
+        "url": "/uploads/seed_blog-honey_4609e351-575.webp",
+        "width": 575,
+        "height": 625,
+        "bytes": 32368
+      }
+    },
+    "alt": "تصویر نمونه blog-honey",
+    "createdById": "usr_system",
+    "createdAt": "2026-10-08T13:44:32.361Z",
+    "updatedAt": "2026-10-08T13:44:32.361Z"
+  },
+  {
+    "id": "ast_seed_figure-image-right@2x",
+    "storageKey": "seed_figure-image-right@2x_1038d3d5-242.webp",
+    "mime": "image/webp",
+    "bytes": 4082,
+    "width": 242,
+    "height": 354,
+    "blurDataUrl": "data:image/webp;base64,UklGRlgBAABXRUJQVlA4WAoAAAAQAAAADwAAFgAAQUxQSLsAAAABBqi2bStbLu7uRM/u9jT0n0TU/lfcIWtyd7f0D6q7Oyfci/MA60bEBGAesnzx0P5r0Y7+YosjyuRRcSPEI1yVeyhw7xFMYN0VlQIzoW6ETAhYlfIo0FsGWIHHFCewWVporWVHwLkLzKcmAKnLArtPAozXWmsR4PFV63VXuA9qr3saZweci77XZGC+A2NT3rt2E+m1rb3nqXbtMtRjVWtX+M8IsO8SYMZfQUDzmxhf6wKUMbPe9YytT1MAAFZQOCB2AAAAsAMAnQEqEAAXAD8RcrBQLCakorAIAYAiCWwAnTKEdwApx9AE7wAA/q4W7sjy6/G7SUBjQK1YIp+KzoEZWp5kKISSBI634X7Mo/fs8718T5z2JR3h/wDGbTH/gyn+pvy7/47J/oE/hVsA+pcz0J3LC9kjXDAAAA==",
+    "variants": {
+      "242": {
+        "key": "seed_figure-image-right@2x_1038d3d5-242.webp",
+        "url": "/uploads/seed_figure-image-right@2x_1038d3d5-242.webp",
+        "width": 242,
+        "height": 354,
+        "bytes": 4082
+      }
+    },
+    "alt": "تصویر نمونه figure-image-right@2x",
+    "createdById": "usr_system",
+    "createdAt": "2026-10-08T13:44:35.234Z",
+    "updatedAt": "2026-10-08T13:44:35.234Z"
+  },
+  {
+    "id": "ast_seed_header-bg",
+    "storageKey": "seed_header-bg_ae2e8a85-3840.webp",
+    "mime": "image/webp",
+    "bytes": 48208,
+    "width": 3840,
+    "height": 174,
+    "blurDataUrl": "data:image/webp;base64,UklGRjgAAABXRUJQVlA4ICwAAACQAQCdASoQAAEACABoJagCdLoAA5gA/upUokzpf+QY8lPQ1ol+okEey+AAAA==",
+    "variants": {
+      "480": {
+        "key": "seed_header-bg_ae2e8a85-480.webp",
+        "url": "/uploads/seed_header-bg_ae2e8a85-480.webp",
+        "width": 480,
+        "height": 21,
+        "bytes": 1134
+      },
+      "768": {
+        "key": "seed_header-bg_ae2e8a85-768.webp",
+        "url": "/uploads/seed_header-bg_ae2e8a85-768.webp",
+        "width": 768,
+        "height": 34,
+        "bytes": 3348
+      },
+      "1200": {
+        "key": "seed_header-bg_ae2e8a85-1200.webp",
+        "url": "/uploads/seed_header-bg_ae2e8a85-1200.webp",
+        "width": 1200,
+        "height": 54,
+        "bytes": 8220
+      },
+      "1920": {
+        "key": "seed_header-bg_ae2e8a85-1920.webp",
+        "url": "/uploads/seed_header-bg_ae2e8a85-1920.webp",
+        "width": 1920,
+        "height": 87,
+        "bytes": 18176
+      },
+      "3840": {
+        "key": "seed_header-bg_ae2e8a85-3840.webp",
+        "url": "/uploads/seed_header-bg_ae2e8a85-3840.webp",
+        "width": 3840,
+        "height": 174,
+        "bytes": 48208
+      }
+    },
+    "alt": "تصویر نمونه header-bg",
+    "createdById": "usr_system",
+    "createdAt": "2026-10-08T13:44:38.533Z",
+    "updatedAt": "2026-10-08T13:44:38.533Z"
+  },
+  {
+    "id": "ast_seed_hero-1",
+    "storageKey": "seed_hero-1_4cea9c18-1529.webp",
+    "mime": "image/webp",
+    "bytes": 87718,
+    "width": 1529,
+    "height": 725,
+    "blurDataUrl": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADQAQCdASoQAAcABABoJbACdADJJ23pAAD8Me5jyINVG88kklIl3bMWzvfTdiBTjLfZ/dCe9iFbFeWoeFsNK7EvQPja05dda5W2jC9pAAA=",
+    "variants": {
+      "480": {
+        "key": "seed_hero-1_4cea9c18-480.webp",
+        "url": "/uploads/seed_hero-1_4cea9c18-480.webp",
+        "width": 480,
+        "height": 227,
+        "bytes": 18248
+      },
+      "768": {
+        "key": "seed_hero-1_4cea9c18-768.webp",
+        "url": "/uploads/seed_hero-1_4cea9c18-768.webp",
+        "width": 768,
+        "height": 364,
+        "bytes": 33556
+      },
+      "1200": {
+        "key": "seed_hero-1_4cea9c18-1200.webp",
+        "url": "/uploads/seed_hero-1_4cea9c18-1200.webp",
+        "width": 1200,
+        "height": 568,
+        "bytes": 61818
+      },
+      "1529": {
+        "key": "seed_hero-1_4cea9c18-1529.webp",
+        "url": "/uploads/seed_hero-1_4cea9c18-1529.webp",
+        "width": 1529,
+        "height": 725,
+        "bytes": 87718
+      }
+    },
+    "alt": "تصویر نمونه hero-1",
+    "createdById": "usr_system",
+    "createdAt": "2026-10-08T13:44:40.434Z",
+    "updatedAt": "2026-10-08T13:44:40.434Z"
+  },
+  {
+    "id": "ast_seed_homepage-footer-logo-png@2x",
+    "storageKey": "seed_homepage-footer-logo-png@2x_3b14308a-434.webp",
+    "mime": "image/webp",
+    "bytes": 8128,
+    "width": 434,
+    "height": 256,
+    "blurDataUrl": "data:image/webp;base64,UklGRuwAAABXRUJQVlA4WAoAAAAQAAAADwAACAAAQUxQSIMAAAABgFvb1rLo4O7umbu7W8SiAGJCcmKnCht3n6lMG6CHiMiRDxCMTZxs9kDsXyCXSiSAZH6BmfQ3zVonF6766/OL6ddD+xuNy262qayu+e3h/n72Ta5ezuaTML+YvJ41vvGYTUqrX8L8Ah3pb4aBXD2cU7HdAZF/odtsdOpMMHACjIycAABWUDggQgAAABACAJ0BKhAACQAEAGglsAJ0ARRUXARdswAA/pYmsaNhVpsswedRRgH/ggu//xbfIheuWoebOL7o/iiGgbgQWaAAAA==",
+    "variants": {
+      "434": {
+        "key": "seed_homepage-footer-logo-png@2x_3b14308a-434.webp",
+        "url": "/uploads/seed_homepage-footer-logo-png@2x_3b14308a-434.webp",
+        "width": 434,
+        "height": 256,
+        "bytes": 8128
+      }
+    },
+    "alt": "تصویر نمونه homepage-footer-logo-png@2x",
+    "createdById": "usr_system",
+    "createdAt": "2026-10-08T13:44:45.203Z",
+    "updatedAt": "2026-10-08T13:44:45.203Z"
+  },
+  {
+    "id": "ast_seed_honey-jar",
+    "storageKey": "seed_honey-jar_7d3f1847-3091.webp",
+    "mime": "image/webp",
+    "bytes": 724720,
+    "width": 3091,
+    "height": 3880,
+    "blurDataUrl": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAAAwBACdASoQABQAPxFysFAsJqSisAgBgCIJbACsMoM0bEo0RjTq5b0/KPAA/udmSoLWRchqq7FAdPAT3QgP2sNKXPcAEJb676ZVDBjRwZ4xYDQESrVnKEGLqHXeVQTVRmXXpp+LtePsSniS+OerB3coyAA=",
+    "variants": {
+      "480": {
+        "key": "seed_honey-jar_7d3f1847-480.webp",
+        "url": "/uploads/seed_honey-jar_7d3f1847-480.webp",
+        "width": 480,
+        "height": 602,
+        "bytes": 27718
+      },
+      "768": {
+        "key": "seed_honey-jar_7d3f1847-768.webp",
+        "url": "/uploads/seed_honey-jar_7d3f1847-768.webp",
+        "width": 768,
+        "height": 964,
+        "bytes": 56342
+      },
+      "1200": {
+        "key": "seed_honey-jar_7d3f1847-1200.webp",
+        "url": "/uploads/seed_honey-jar_7d3f1847-1200.webp",
+        "width": 1200,
+        "height": 1506,
+        "bytes": 118108
+      },
+      "1920": {
+        "key": "seed_honey-jar_7d3f1847-1920.webp",
+        "url": "/uploads/seed_honey-jar_7d3f1847-1920.webp",
+        "width": 1920,
+        "height": 2410,
+        "bytes": 270282
+      },
+      "3091": {
+        "key": "seed_honey-jar_7d3f1847-3091.webp",
+        "url": "/uploads/seed_honey-jar_7d3f1847-3091.webp",
+        "width": 3091,
+        "height": 3880,
+        "bytes": 724720
+      }
+    },
+    "alt": "تصویر نمونه honey-jar",
+    "createdById": "usr_system",
+    "createdAt": "2026-10-08T13:44:54.813Z",
+    "updatedAt": "2026-10-08T13:44:54.813Z"
+  },
+  {
+    "id": "ast_seed_recipe-1",
+    "storageKey": "seed_recipe-1_955694b1-600.webp",
+    "mime": "image/webp",
+    "bytes": 31574,
+    "width": 600,
+    "height": 600,
+    "blurDataUrl": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAQAgCdASoQABAABABoJbACdAEXabXb0JbIAP5qPMUNGPOY1OwtaUoK4MvetTHuJdqNexNJdufV2z0pZ676e67pCv2ET/bBqYJD06kTc2DcmYcGE+r5Be8Azs7ggHhfD8XnLyqVc2UAAA==",
+    "variants": {
+      "480": {
+        "key": "seed_recipe-1_955694b1-480.webp",
+        "url": "/uploads/seed_recipe-1_955694b1-480.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 24182
+      },
+      "600": {
+        "key": "seed_recipe-1_955694b1-600.webp",
+        "url": "/uploads/seed_recipe-1_955694b1-600.webp",
+        "width": 600,
+        "height": 600,
+        "bytes": 31574
+      }
+    },
+    "alt": "تصویر نمونه recipe-1",
+    "createdById": "usr_system",
+    "createdAt": "2026-10-08T13:44:56.143Z",
+    "updatedAt": "2026-10-08T13:44:56.143Z"
+  },
+  {
+    "id": "ast_seed_recipe-2",
+    "storageKey": "seed_recipe-2_961129e5-3600.webp",
+    "mime": "image/webp",
+    "bytes": 479980,
+    "width": 3600,
+    "height": 5398,
+    "blurDataUrl": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAABQBACdASoQABcAPxFysFAsJqSisAgBgCIJbACdACHN5uHXy0c4FWuL7q4AAP7TiaFdVU1fl9QSDBJ0vkNzCqCaoTnViSrzxk4gmNPqHnluBSihlwMl+m2nu++/8D4OweEnFZ/dWKzNaNj8MJmknzLfgAA=",
+    "variants": {
+      "480": {
+        "key": "seed_recipe-2_961129e5-480.webp",
+        "url": "/uploads/seed_recipe-2_961129e5-480.webp",
+        "width": 480,
+        "height": 719,
+        "bytes": 28100
+      },
+      "768": {
+        "key": "seed_recipe-2_961129e5-768.webp",
+        "url": "/uploads/seed_recipe-2_961129e5-768.webp",
+        "width": 768,
+        "height": 1151,
+        "bytes": 56726
+      },
+      "1200": {
+        "key": "seed_recipe-2_961129e5-1200.webp",
+        "url": "/uploads/seed_recipe-2_961129e5-1200.webp",
+        "width": 1200,
+        "height": 1799,
+        "bytes": 105248
+      },
+      "1920": {
+        "key": "seed_recipe-2_961129e5-1920.webp",
+        "url": "/uploads/seed_recipe-2_961129e5-1920.webp",
+        "width": 1920,
+        "height": 2878,
+        "bytes": 197744
+      },
+      "3600": {
+        "key": "seed_recipe-2_961129e5-3600.webp",
+        "url": "/uploads/seed_recipe-2_961129e5-3600.webp",
+        "width": 3600,
+        "height": 5398,
+        "bytes": 479980
+      }
+    },
+    "alt": "تصویر نمونه recipe-2",
+    "createdById": "usr_system",
+    "createdAt": "2026-10-08T13:45:05.776Z",
+    "updatedAt": "2026-10-08T13:45:05.776Z"
+  },
+  {
+    "id": "ast_seed_recipe-3",
+    "storageKey": "seed_recipe-3_f6117535-1536.webp",
+    "mime": "image/webp",
+    "bytes": 191438,
+    "width": 1536,
+    "height": 1024,
+    "blurDataUrl": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADwAQCdASoQAAoABABoJbACdACZaTNjAAAA/usyet0e5rDBl2Ma46oI6OByi3kBWqlfGRFtnT67TLBXsskERNTsYmprglv/kynDuT/Ye+5FYxXXcOQ8CiAA",
+    "variants": {
+      "480": {
+        "key": "seed_recipe-3_f6117535-480.webp",
+        "url": "/uploads/seed_recipe-3_f6117535-480.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 25564
+      },
+      "768": {
+        "key": "seed_recipe-3_f6117535-768.webp",
+        "url": "/uploads/seed_recipe-3_f6117535-768.webp",
+        "width": 768,
+        "height": 512,
+        "bytes": 58206
+      },
+      "1200": {
+        "key": "seed_recipe-3_f6117535-1200.webp",
+        "url": "/uploads/seed_recipe-3_f6117535-1200.webp",
+        "width": 1200,
+        "height": 800,
+        "bytes": 124316
+      },
+      "1536": {
+        "key": "seed_recipe-3_f6117535-1536.webp",
+        "url": "/uploads/seed_recipe-3_f6117535-1536.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 191438
+      }
+    },
+    "alt": "تصویر نمونه recipe-3",
+    "createdById": "usr_system",
+    "createdAt": "2026-10-08T13:45:08.401Z",
+    "updatedAt": "2026-10-08T13:45:08.401Z"
+  },
+  {
+    "id": "ast_seed_recipe-4",
+    "storageKey": "seed_recipe-4_b0f9e7fc-600.webp",
+    "mime": "image/webp",
+    "bytes": 89424,
+    "width": 600,
+    "height": 600,
+    "blurDataUrl": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAABQAgCdASoQABAABABoJbACdAYqJ9VIuwSbuCAA+VgWUJkLBzGGeYUG6fMDbMt5qZn0Fr+hrrcx37NDv/PsZ6E6ybLZ9pqQBFZSjeExNOxm0MdsZzT2oqhiMUxNhPF7YgCL3o1ZxhcTkcMjqHv1F/H7yZtljezShzR5hhDbUkKS5Je13AAAAA==",
+    "variants": {
+      "480": {
+        "key": "seed_recipe-4_b0f9e7fc-480.webp",
+        "url": "/uploads/seed_recipe-4_b0f9e7fc-480.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 61564
+      },
+      "600": {
+        "key": "seed_recipe-4_b0f9e7fc-600.webp",
+        "url": "/uploads/seed_recipe-4_b0f9e7fc-600.webp",
+        "width": 600,
+        "height": 600,
+        "bytes": 89424
+      }
+    },
+    "alt": "تصویر نمونه recipe-4",
+    "createdById": "usr_system",
+    "createdAt": "2026-10-08T13:45:09.520Z",
+    "updatedAt": "2026-10-08T13:45:09.520Z"
+  },
+  {
+    "id": "ast_seed_recipe-5",
+    "storageKey": "seed_recipe-5_d018a2d6-600.webp",
+    "mime": "image/webp",
+    "bytes": 27462,
+    "width": 600,
+    "height": 600,
+    "blurDataUrl": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAwAgCdASoQABAABABoJbACdAEesG0oHOk2AAD90osxw69TKkPIkf006GPtYTSDyo9vXEE2vBUyu23RBLyTwIO/CCzr+KeheI97wOdS/B+uRxD1cnvDS+Oyi8phOufK3VYCfq5d56AAAA==",
+    "variants": {
+      "480": {
+        "key": "seed_recipe-5_d018a2d6-480.webp",
+        "url": "/uploads/seed_recipe-5_d018a2d6-480.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 20340
+      },
+      "600": {
+        "key": "seed_recipe-5_d018a2d6-600.webp",
+        "url": "/uploads/seed_recipe-5_d018a2d6-600.webp",
+        "width": 600,
+        "height": 600,
+        "bytes": 27462
+      }
+    },
+    "alt": "تصویر نمونه recipe-5",
+    "createdById": "usr_system",
+    "createdAt": "2026-10-08T13:45:10.395Z",
+    "updatedAt": "2026-10-08T13:45:10.395Z"
+  },
+  {
+    "id": "ast_seed_recipe-6",
+    "storageKey": "seed_recipe-6_c98c1e16-600.webp",
+    "mime": "image/webp",
+    "bytes": 27968,
+    "width": 600,
+    "height": 600,
+    "blurDataUrl": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAQAgCdASoQABAABABoJbACdAEf+hsoJUgAAP7wOPFLZXXQKbXlDGoAAOwO4Cb6TvVMwkIg2CuAuev9jg0FwgNZNc8mTGnO92yDpEAAAAA=",
+    "variants": {
+      "480": {
+        "key": "seed_recipe-6_c98c1e16-480.webp",
+        "url": "/uploads/seed_recipe-6_c98c1e16-480.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 20702
+      },
+      "600": {
+        "key": "seed_recipe-6_c98c1e16-600.webp",
+        "url": "/uploads/seed_recipe-6_c98c1e16-600.webp",
+        "width": 600,
+        "height": 600,
+        "bytes": 27968
+      }
+    },
+    "alt": "تصویر نمونه recipe-6",
+    "createdById": "usr_system",
+    "createdAt": "2026-10-08T13:45:11.196Z",
+    "updatedAt": "2026-10-08T13:45:11.196Z"
+  },
+  {
+    "id": "ast_seed_wood-bg",
+    "storageKey": "seed_wood-bg_39978daa-3054.webp",
+    "mime": "image/webp",
+    "bytes": 321650,
+    "width": 3054,
+    "height": 1422,
+    "blurDataUrl": "data:image/webp;base64,UklGRioAAABXRUJQVlA4IB4AAABQAQCdASoQAAcABABoJZwABDOAAP7w8yNX46BAAAA=",
+    "variants": {
+      "480": {
+        "key": "seed_wood-bg_39978daa-480.webp",
+        "url": "/uploads/seed_wood-bg_39978daa-480.webp",
+        "width": 480,
+        "height": 223,
+        "bytes": 2468
+      },
+      "768": {
+        "key": "seed_wood-bg_39978daa-768.webp",
+        "url": "/uploads/seed_wood-bg_39978daa-768.webp",
+        "width": 768,
+        "height": 357,
+        "bytes": 9070
+      },
+      "1200": {
+        "key": "seed_wood-bg_39978daa-1200.webp",
+        "url": "/uploads/seed_wood-bg_39978daa-1200.webp",
+        "width": 1200,
+        "height": 558,
+        "bytes": 30394
+      },
+      "1920": {
+        "key": "seed_wood-bg_39978daa-1920.webp",
+        "url": "/uploads/seed_wood-bg_39978daa-1920.webp",
+        "width": 1920,
+        "height": 893,
+        "bytes": 112868
+      },
+      "3054": {
+        "key": "seed_wood-bg_39978daa-3054.webp",
+        "url": "/uploads/seed_wood-bg_39978daa-3054.webp",
+        "width": 3054,
+        "height": 1422,
+        "bytes": 321650
+      }
+    },
+    "alt": "تصویر نمونه wood-bg",
+    "createdById": "usr_system",
+    "createdAt": "2026-10-08T13:45:15.440Z",
+    "updatedAt": "2026-10-08T13:45:15.440Z"
+  }
+]

@@ -1,0 +1,1217 @@
+/**
+ * Main Production Stylesheet - Persian Honey Board (شورای ملی عسل)
+ * Pixel-faithful recreation of https://honey.com/ in Persian RTL
+ */
+
+:root {
+  /* Brand Honey Colors */
+  --primary-honey: #F59E0B;
+  --honey-dark: #C86A00;
+  --honey-amber: #D97706;
+  --honey-gold: #FBBF24;
+  --honey-light: #FEF3C7;
+  --honey-pale: #FFFBEB;
+
+  /* Neutrals & Dark Browns */
+  --chocolate-brown: #332115;
+  --dark-brown-hover: #26180E;
+  --footer-bg: #4B3A2F;
+  --footer-nav-bg: #403127;
+  --text-dark: #2B2017;
+  --text-cream: #E8E2D9;
+  --text-muted: #5C5248;
+  --bg-warm-light: #FDFBF8;
+  --border-light: #EFE9E0;
+
+  /* Accent & Category Colors (honey.com exact palette) */
+  --accent-green: #3F8F3B;
+  --accent-green-light: #52B44C;
+  --blog-green: #7BB839;
+  --accent-orange: #E07D2B;
+  --accent-amber: #FFC527;
+
+  /* Card Colors */
+  --card-green: #4CA849;
+  --card-orange: #E08B38;
+  --card-yellow: #F5A623;
+  --card-burgundy: #9E3556;
+
+  /* Transitions */
+  --ease-smooth: cubic-bezier(0.25, 1, 0.5, 1);
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s var(--ease-smooth);
+}
+
+/* ==========================================================================
+   Reset & Base Standards
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  color: var(--text-dark);
+  background-color: #FFFFFF;
+  line-height: 1.6;
+  overflow-x: hidden;
+  direction: rtl;
+  text-align: right;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color var(--transition-fast), background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.container {
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Skip link for Accessibility */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  right: 16px;
+  background: var(--chocolate-brown);
+  color: #FFFFFF;
+  padding: 12px 24px;
+  z-index: 9999;
+  font-weight: 700;
+  border-radius: 0 0 6px 6px;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 3px solid var(--primary-honey);
+}
+
+/* Focus Visible standards */
+:focus-visible {
+  outline: 2px solid var(--honey-dark);
+  outline-offset: 3px;
+}
+
+/* ==========================================================================
+   Reusable Honey SVG Dotted Arrow (Adapted for RTL: points left: ◀ · · ·)
+   ========================================================================== */
+.honey-arrow-svg {
+  display: inline-block;
+  vertical-align: middle;
+  width: 26px;
+  height: 12px;
+  fill: currentColor;
+  transition: transform var(--transition-normal);
+  flex-shrink: 0;
+}
+
+.pill-btn:hover .honey-arrow-svg,
+.recipe-card:hover .honey-arrow-svg,
+.link-with-arrow:hover .honey-arrow-svg {
+  transform: translateX(-6px);
+}
+
+/* ==========================================================================
+   Honey Pill Button System
+   ========================================================================== */
+.pill-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background-color: var(--chocolate-brown);
+  padding: 12px 28px;
+  border-radius: 50px;
+  font-weight: 800;
+  font-size: 0.95rem;
+  border: none;
+  transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow: 0 4px 12px rgba(51, 33, 21, 0.18);
+  white-space: nowrap;
+}
+
+.pill-btn:hover {
+  background-color: var(--dark-brown-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(51, 33, 21, 0.28);
+}
+
+.pill-btn-green { color: var(--accent-green-light); }
+.pill-btn-gold { color: var(--honey-gold); }
+.pill-btn-orange { color: #FFA338; }
+.pill-btn-yellow { color: #FCD34D; }
+
+/* ==========================================================================
+   1. Top Utility Bar (صنعت و همکاران تجاری)
+   ========================================================================== */
+.utility-bar {
+  background-color: #F8F5F0;
+  border-bottom: 1px solid #ECE4D8;
+  padding: 6px 24px;
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+  z-index: 120;
+}
+
+.dropdown-wrapper {
+  position: relative;
+}
+
+.utility-btn {
+  background-color: #FFFFFF;
+  color: #554438;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 6px 16px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #E2D7C8;
+  transition: all var(--transition-fast);
+}
+
+.utility-btn:hover,
+.utility-btn.open {
+  background-color: #FFF9ED;
+  color: var(--honey-dark);
+  border-color: var(--primary-honey);
+}
+
+.utility-btn i,
+.utility-btn svg {
+  font-size: 0.72rem;
+  transition: transform var(--transition-normal);
+}
+
+.utility-btn.open i,
+.utility-btn.open svg {
+  transform: rotate(180deg);
+}
+
+.utility-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  background: #FFFFFF;
+  min-width: 250px;
+  box-shadow: 0 12px 30px rgba(43, 32, 23, 0.16);
+  border-radius: 4px;
+  padding: 6px 0;
+  list-style: none;
+  border: 1px solid #E8DFD1;
+  z-index: 200;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: all var(--transition-fast);
+}
+
+.utility-dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.utility-dropdown-menu li a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 18px;
+  font-size: 0.85rem;
+  color: #4A3A2F;
+  font-weight: 600;
+}
+
+.utility-dropdown-menu li a:hover {
+  background-color: #FFF6E5;
+  color: var(--honey-dark);
+  padding-right: 22px;
+}
+
+/* ==========================================================================
+   2. Main Header & Navigation
+   ========================================================================== */
+.main-header {
+  background-color: #F59E0B;
+  background-image: 
+    linear-gradient(rgba(217, 119, 6, 0.40), rgba(180, 83, 9, 0.72)),
+    url('../images/header-bg.jpg'),
+    url('../../images/header-bg.jpg'),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cpath fill-rule='evenodd' d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v13.2l11 6.35 11-6.35V17.9L14 11.55 3 17.9zm11-16.65l13 7.5v2.32l-13-7.5-13 7.5V8.75l13-7.5zM14 47.75l13-7.5v-2.32l-13 7.5-13-7.5v2.32l13 7.5z' fill='%23B45309' fill-opacity='0.2'/%3E%3C/svg%3E");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: #FFFFFF;
+  padding: 14px 0;
+  position: sticky;
+  top: 0;
+  z-index: 110;
+  box-shadow: 0 4px 18px rgba(180, 83, 9, 0.3);
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #FFFFFF;
+}
+
+.brand-logo-icon {
+  width: 44px;
+  height: 44px;
+  fill: #FFFFFF;
+  transition: transform 0.4s ease;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.25));
+}
+
+.brand-logo:hover .brand-logo-icon {
+  transform: rotate(15deg);
+}
+
+.brand-title-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-name {
+  font-size: 1.45rem;
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: -0.3px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.brand-subtitle {
+  font-size: 0.72rem;
+  font-weight: 600;
+  opacity: 0.95;
+  letter-spacing: 0.5px;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  gap: 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+}
+
+.nav-link {
+  padding: 8px 14px;
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  border-radius: 4px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #FFF6D6;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 14px;
+  left: 14px;
+  height: 2px;
+  background-color: #FFF6D6;
+  border-radius: 2px;
+}
+
+.nav-divider {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.85rem;
+  user-select: none;
+}
+
+.search-btn {
+  background: none;
+  border: none;
+  color: #FFFFFF;
+  font-size: 1.15rem;
+  cursor: pointer;
+  padding: 8px 12px;
+  transition: transform var(--transition-fast), color var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-btn:hover {
+  transform: scale(1.15);
+  color: #FFF6D6;
+}
+
+/* Mobile Hamburger Toggle */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: #FFFFFF;
+  font-size: 1.5rem;
+  padding: 6px;
+  cursor: pointer;
+}
+
+/* Search Drawer */
+.search-drawer {
+  max-height: 0;
+  overflow: hidden;
+  background: #FFFFFF;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  transition: max-height 0.32s ease, padding 0.32s ease;
+  padding: 0 24px;
+}
+
+.search-drawer.show {
+  max-height: 90px;
+  padding: 18px 24px;
+}
+
+.search-drawer form {
+  max-width: 650px;
+  margin: 0 auto;
+  display: flex;
+  gap: 12px;
+}
+
+.search-drawer input {
+  flex: 1;
+  padding: 10px 18px;
+  border: 1.5px solid var(--primary-honey);
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.search-drawer input:focus {
+  border-color: var(--honey-dark);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+}
+
+.search-drawer button {
+  background: var(--chocolate-brown);
+  color: #FFFFFF;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.search-drawer button:hover {
+  background: var(--dark-brown-hover);
+}
+
+/* Mobile Navigation Drawer */
+.mobile-nav-drawer {
+  display: none;
+  background: #2C1D11;
+  color: #FFFFFF;
+  padding: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-nav-drawer.open {
+  display: block;
+}
+
+.mobile-nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mobile-nav-list a {
+  display: block;
+  padding: 10px 14px;
+  font-weight: 700;
+  border-radius: 4px;
+  border-right: 3px solid transparent;
+}
+
+.mobile-nav-list a:hover,
+.mobile-nav-list a.active {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--primary-honey);
+  color: var(--honey-gold);
+}
+
+/* ==========================================================================
+   3. Hero Section (LCP Optimized with Atmospheric Scrim)
+   ========================================================================== */
+.hero-section {
+  position: relative;
+  min-height: 520px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 70px 24px;
+  background-color: #2C1D11;
+}
+
+.hero-background-wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.hero-bg-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  will-change: transform;
+  animation: kenBurnsZoom 16s ease-in-out infinite alternate;
+}
+
+@keyframes kenBurnsZoom {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.08); }
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(20, 10, 5, 0.38) 0%, rgba(20, 10, 5, 0.65) 100%);
+  z-index: 2;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+  max-width: 860px;
+}
+
+.hero-title {
+  font-size: 3.4rem;
+  font-weight: 900;
+  color: #FFFFFF;
+  line-height: 1.25;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.65);
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+}
+
+.hero-sub {
+  color: #FFFFFF;
+  font-size: 1.2rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
+  font-weight: 400;
+  line-height: 1.8;
+}
+
+/* ==========================================================================
+   4. Feature 1: Celebrating Beekeeping (تجلیل از صنعت زنبورداری)
+   ========================================================================== */
+.feature-beekeeping {
+  padding: 70px 0;
+  background-color: #FFFFFF;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 55px;
+  align-items: center;
+}
+
+.section-tag-green {
+  color: var(--accent-green);
+  font-size: 2.1rem;
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 18px;
+  letter-spacing: -0.3px;
+}
+
+.feature-body {
+  font-size: 1.08rem;
+  color: #4A423A;
+  line-height: 1.95;
+  margin-bottom: 28px;
+}
+
+.feature-image-wrap {
+  overflow: hidden;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background-color: #F8F5F0;
+}
+
+.feature-image-wrap img {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.feature-image-wrap:hover img {
+  transform: scale(1.03);
+}
+
+/* ==========================================================================
+   5. Feature Banner 2: Made by Bees (با افتخار، کارِ زنبورها)
+   ========================================================================== */
+.banner-made-by-bees {
+  position: relative;
+  padding: 65px 24px;
+  background-color: #2C1D11;
+  background-image: 
+    linear-gradient(180deg, rgba(28, 16, 7, 0.52) 0%, rgba(28, 16, 7, 0.74) 100%),
+    url('../images/bees-banner.jpg'),
+    url('../../images/bees-banner.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.banner-content {
+  position: relative;
+  z-index: 10;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+.banner-subtitle {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.65);
+}
+
+.banner-title {
+  font-size: 2.6rem;
+  font-weight: 900;
+  color: var(--accent-orange);
+  text-shadow: 0 3px 14px rgba(0, 0, 0, 0.75);
+  margin-bottom: 24px;
+  line-height: 1.25;
+}
+
+/* ==========================================================================
+   6. Feature 3: Versatility of Honey (تنها ماده‌ای که از عهده هر کاری برمی‌آید)
+   ========================================================================== */
+.feature-versatility {
+  padding: 75px 0 60px 0;
+  background-color: #FFFFFF;
+}
+
+.versatility-grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.versatility-image-wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.versatility-image-wrap img.primary-jar {
+  max-height: 400px;
+  object-fit: contain;
+  filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.14));
+  transition: transform 0.4s ease;
+}
+
+.versatility-image-wrap:hover img.primary-jar {
+  transform: translateY(-4px) scale(1.02);
+}
+
+.versatility-decorative-figure {
+  position: absolute;
+  left: -20px;
+  bottom: -20px;
+  width: 140px;
+  height: auto;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.versatility-badge-icon {
+  width: 58px;
+  height: 58px;
+  background: var(--honey-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  color: var(--honey-dark);
+  font-size: 1.6rem;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+}
+
+.versatility-kicker {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #382A20;
+  margin-bottom: 4px;
+}
+
+.versatility-headline {
+  font-size: 3.1rem;
+  font-weight: 900;
+  color: var(--honey-dark);
+  line-height: 1.15;
+  margin-bottom: 20px;
+  letter-spacing: -0.5px;
+}
+
+.versatility-body {
+  font-size: 1.08rem;
+  color: #4A423A;
+  line-height: 1.95;
+  margin-bottom: 30px;
+}
+
+/* ==========================================================================
+   7. Recipe Section (کارت‌های رنگی شیک و دقیق)
+   ========================================================================== */
+.recipes-section {
+  padding: 45px 0 70px 0;
+  background-color: var(--bg-warm-light);
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.recipes-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.recipes-section-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--chocolate-brown);
+  margin-bottom: 8px;
+}
+
+.carousel-outer-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.carousel-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 1px solid #D5C8B8;
+  color: var(--chocolate-brown);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  transition: all var(--transition-fast);
+}
+
+.carousel-nav-btn:hover {
+  background: var(--chocolate-brown);
+  color: #FFFFFF;
+  border-color: var(--chocolate-brown);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.carousel-nav-prev { right: -20px; }
+.carousel-nav-next { left: -20px; }
+
+.carousel-viewport {
+  overflow: hidden;
+  width: 100%;
+  padding: 12px 4px 24px 4px;
+}
+
+.recipe-cards-container {
+  display: flex;
+  gap: 24px;
+  transition: transform 0.45s var(--ease-smooth);
+  will-change: transform;
+}
+
+/* Strict 90-degree sharp corners per honey.com design */
+.recipe-card {
+  flex: 0 0 calc(33.333% - 16px);
+  min-width: 320px;
+  overflow: hidden;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  color: #FFFFFF;
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  cursor: pointer;
+  background-color: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.recipe-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.16);
+}
+
+.card-img-wrap {
+  height: 240px;
+  overflow: hidden;
+  background-color: #EFE9E0;
+}
+
+.card-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.recipe-card:hover .card-img-wrap img {
+  transform: scale(1.08);
+}
+
+.card-content-wrap {
+  padding: 24px 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+  min-height: 140px;
+}
+
+.card-green { background-color: var(--card-green); color: #FFFFFF; }
+.card-orange { background-color: var(--card-orange); color: #FFFFFF; }
+.card-yellow { background-color: var(--card-yellow); color: var(--chocolate-brown); }
+.card-burgundy { background-color: var(--card-burgundy); color: #FFFFFF; }
+
+.recipe-card-title {
+  font-size: 1.18rem;
+  font-weight: 800;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.card-yellow .recipe-card-title {
+  color: var(--chocolate-brown);
+}
+
+.recipe-card-link {
+  font-weight: 800;
+  font-size: 0.94rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-yellow .recipe-card-link {
+  color: var(--chocolate-brown);
+}
+
+.recipes-footer-cta {
+  text-align: center;
+  margin-top: 36px;
+}
+
+/* ==========================================================================
+   8. Blog Section: Honey Month (طرح چوب عمیق و اصیل)
+   ========================================================================== */
+.blog-section {
+  padding: 85px 0;
+  background-color: #26160B;
+  background-image: 
+    linear-gradient(rgba(35, 20, 10, 0.45), rgba(35, 20, 10, 0.45)),
+    url('../images/wood-bg.jpg'),
+    url('../../images/wood-bg.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: repeat;
+  color: #FFFFFF;
+  border-top: 1px solid #3A2314;
+  border-bottom: 1px solid #3A2314;
+}
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.blog-image-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.circular-frame {
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
+  border: 7px solid #FFFFFF;
+  transition: transform 0.4s ease;
+  background-color: #332115;
+}
+
+.circular-frame:hover {
+  transform: scale(1.03);
+}
+
+.circular-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.blog-tag {
+  font-size: 0.96rem;
+  font-weight: 800;
+  color: #A2E898;
+  letter-spacing: 1.5px;
+  margin-bottom: 6px;
+}
+
+.blog-title {
+  font-size: 2.75rem;
+  font-weight: 900;
+  color: #FFFFFF;
+  margin-bottom: 18px;
+  line-height: 1.25;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+
+.blog-excerpt {
+  font-size: 1.08rem;
+  color: #F3ECE2;
+  line-height: 1.95;
+  margin-bottom: 28px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* ==========================================================================
+   9. Footer Section (چیدمان چندسطحی استاندارد)
+   ========================================================================== */
+.site-footer {
+  background-color: var(--footer-bg);
+  color: #E6DDD4;
+  padding: 55px 0 35px 0;
+  border-top: 5px solid var(--primary-honey);
+  margin-top: auto;
+}
+
+.footer-primary-nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding-bottom: 26px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  margin-bottom: 28px;
+}
+
+.footer-primary-link {
+  font-weight: 800;
+  font-size: 1rem;
+  color: #FFFFFF;
+  transition: color var(--transition-fast);
+}
+
+.footer-primary-link:hover {
+  color: var(--honey-gold);
+}
+
+.footer-sections-row {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  text-align: center;
+  padding-bottom: 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  margin-bottom: 28px;
+}
+
+.footer-group-title {
+  font-size: 0.9rem;
+  font-weight: 900;
+  color: var(--honey-gold);
+  letter-spacing: 1px;
+  display: inline-block;
+  margin-left: 12px;
+}
+
+.footer-sublinks-wrap {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 18px;
+  font-size: 0.88rem;
+}
+
+.footer-sublinks-wrap a {
+  color: #E2D7CC;
+}
+
+.footer-sublinks-wrap a:hover {
+  color: #FFFFFF;
+  text-decoration: underline;
+}
+
+.footer-bottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+.footer-logo-img {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+}
+
+.social-links {
+  display: flex;
+  gap: 12px;
+}
+
+.social-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-size: 1rem;
+  transition: all var(--transition-fast);
+}
+
+.social-icon:hover {
+  background: var(--primary-honey);
+  color: var(--chocolate-brown);
+  transform: translateY(-3px);
+}
+
+.footer-copyright {
+  font-size: 0.82rem;
+  color: #B5A799;
+  width: 100%;
+  text-align: center;
+  margin-top: 18px;
+}
+
+/* ==========================================================================
+   10. Cookie Consent Banner
+   ========================================================================== */
+.cookie-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #FFFFFF;
+  border-top: 3px solid var(--primary-honey);
+  box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.14);
+  padding: 18px 24px;
+  z-index: 1000;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+}
+
+.cookie-text {
+  flex: 1 1 620px;
+  font-size: 0.86rem;
+  color: #4B5563;
+  line-height: 1.6;
+}
+
+.cookie-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-consent {
+  background: var(--accent-green);
+  color: #FFFFFF;
+  padding: 9px 24px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.btn-consent:hover {
+  background: #347630;
+}
+
+.btn-decline {
+  background: #E5E7EB;
+  color: #374151;
+  padding: 9px 24px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.btn-decline:hover {
+  background: #D1D5DB;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+@media (max-width: 992px) {
+  .feature-grid,
+  .versatility-grid,
+  .blog-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .recipe-card {
+    flex: 0 0 calc(50% - 12px);
+    min-width: 280px;
+  }
+
+  .hero-title { font-size: 2.7rem; }
+  .versatility-headline { font-size: 2.6rem; }
+  .blog-title { font-size: 2.3rem; }
+  
+  .carousel-nav-btn {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-menu {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .recipe-card {
+    flex: 0 0 100%;
+    min-width: 100%;
+  }
+
+  .circular-frame {
+    width: 280px;
+    height: 280px;
+  }
+
+  .hero-section {
+    min-height: 420px;
+    padding: 50px 16px;
+  }
+
+  .hero-title { font-size: 2.2rem; }
+  .banner-title { font-size: 2.1rem; }
+  .versatility-headline { font-size: 2.2rem; }
+
+  .footer-bottom-row {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-sublinks-wrap {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+/* Reduced Motion Support for Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

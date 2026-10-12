@@ -1,0 +1,20 @@
+[
+  {
+    "id": "acc_1791465544435_0o52e",
+    "userId": "usr_1791465544331_so4k7",
+    "accountId": "usr_1791465544331_so4k7",
+    "providerId": "credential",
+    "password": "$scrypt$fe6794323c3b70616654a7267e193b15$5f250b344f81cb371f35bdfbcdcf450a2cfac4fa3a61be38f6122b9750c4680c",
+    "createdAt": "2026-10-08T13:19:04.331Z",
+    "updatedAt": "2026-10-12T13:13:03.838Z"
+  },
+  {
+    "id": "acc_1791465708647_ttun7",
+    "userId": "usr_1791465708552_kptxj",
+    "accountId": "usr_1791465708552_kptxj",
+    "providerId": "credential",
+    "password": "$scrypt$f9074445ca1d346d4dd725d1da8a5925$d45f9fda2b78b7ce78171174b803e6b6260807d90fc40a79e2f63a9a6df57ec4",
+    "createdAt": "2026-10-08T13:21:48.552Z",
+    "updatedAt": "2026-10-08T13:21:49.395Z"
+  }
+]

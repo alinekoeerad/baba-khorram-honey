@@ -1,0 +1,62 @@
+{
+  "name": "honey-website",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "dev:webpack": "next dev --webpack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "prisma": "prisma",
+    "db:validate": "prisma validate",
+    "import:data": "node scripts/import-data.mjs",
+    "seed": "node scripts/seed.mjs",
+    "admin:create": "node scripts/admin-create.mjs",
+    "admin:reset-password": "node scripts/admin-reset-password.mjs",
+    "media:cleanup": "node scripts/media-cleanup.mjs",
+    "seed:dev-media": "node scripts/seed-dev-media.mjs",
+    "check": "pnpm typecheck && pnpm test && pnpm build",
+    "test:db": "vitest run --config vitest.db.config.ts",
+    "db:test:setup": "node scripts/db-test-setup.mjs",
+    "orders:cleanup": "node scripts/cleanup-orders.mjs"
+  },
+  "dependencies": {
+    "@node-rs/argon2": "2.0.2",
+    "@prisma/client": "7.0.0",
+    "better-auth": "1.2.0",
+    "clsx": "2.1.1",
+    "lucide-react": "1.0.0",
+    "next": "16.4.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "sharp": "0.33.5",
+    "tailwind-merge": "3.0.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0",
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "22.10.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "autoprefixer": "10.4.20",
+    "eslint": "10.11.0",
+    "eslint-config-next": "16.4.0",
+    "postcss": "8.4.49",
+    "prettier": "3.4.2",
+    "prisma": "7.0.0",
+    "tailwindcss": "4.3.3",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3"
+  },
+  "packageManager": "pnpm@10.6.2"
+}

@@ -1,0 +1,189 @@
+[
+  {
+    "id": "sec_hero_1",
+    "type": "HERO",
+    "template": "hero-default",
+    "status": "ACTIVE",
+    "sortOrder": 1,
+    "background": "NONE",
+    "internalName": "هیرو صفحه اصلی (معرفی برند)",
+    "content": {
+      "type": "HERO",
+      "template": "hero-default",
+      "schemaVersion": 1,
+      "title": "عسل خالص و طبیعی باباخُرم",
+      "subtitle": "برداشت مستقیم از بهترین مراتع ییلاقی ارسباران، با حفظ ۱۰۰٪ خواص زیستی و دارویی",
+      "images": [
+        {
+          "url": "/images/hero-1.jpg",
+          "alt": "طبیعت کوهستان ارسباران و کندوهای عسل"
+        },
+        {
+          "url": "/images/bees-banner.jpg",
+          "alt": "زنبورداری سنتی و شهد خالص"
+        },
+        {
+          "url": "/images/beekeeping.jpg",
+          "alt": "برداشت عسل طبیعی از شان"
+        }
+      ]
+    }
+  },
+  {
+    "id": "sec_beekeeping_2",
+    "type": "IMAGE_TEXT",
+    "template": "image-text-rect",
+    "status": "ACTIVE",
+    "sortOrder": 2,
+    "background": "NONE",
+    "internalName": "معرفی زنبورستان و تولید پایدار",
+    "content": {
+      "type": "IMAGE_TEXT",
+      "template": "image-text-rect",
+      "schemaVersion": 1,
+      "image": {
+        "url": "/images/beekeeping.jpg",
+        "alt": "زنبورستان سنتی باباخُرم"
+      },
+      "kicker": "تولید پایدار و اخلاق‌مدار",
+      "title": "هماهنگی با طبیعت، احترامی به زندگی زنبورها",
+      "body": "در زنبورستان باباخُرم، سلامت کندوها اولویت نخست ماست. ما هرگز از تغذیه مصنوعی با شربت شکر برای افزایش تولید استفاده نمی‌کنیم و عسل تنها پس از بلوغ کامل در شان‌ها برداشت می‌شود.\n\nمراتع بکر قره‌داغ با بیش از ۶۰۰ گونه گیاه دارویی، بستر طبیعی زندگی کلونی‌های ما هستند.",
+      "cta": {
+        "type": "PRODUCTS_PAGE",
+        "label": "مشاهده محصولات ما"
+      },
+      "imagePosition": "LEFT",
+      "theme": "GREEN"
+    }
+  },
+  {
+    "id": "sec_overlay_3",
+    "type": "FULL_IMAGE_OVERLAY",
+    "template": "overlay-center",
+    "status": "ACTIVE",
+    "sortOrder": 3,
+    "background": "NONE",
+    "internalName": "بنر برگه آزمایشگاهی خلوص",
+    "content": {
+      "type": "FULL_IMAGE_OVERLAY",
+      "template": "overlay-center",
+      "schemaVersion": 1,
+      "image": {
+        "url": "/images/bees-banner.jpg",
+        "alt": "تضمین آزمایشگاهی خلوص عسل"
+      },
+      "kicker": "ضمانت آزمایشگاهی خلوص",
+      "heading": "عسل واقعی، با برگه آزمایش معتبر و ساکارز زیر ۲ درصد",
+      "body": "تمامی محصولات ما پیش از بسته‌بندی در آزمایشگاه‌های معتبر سنجش مواد غذایی از نظر قندهای احیاکننده و پرولین بررسی می‌شوند.",
+      "cta": {
+        "type": "CONTACT_PAGE",
+        "label": "ارتباط و مشاوره خرید"
+      },
+      "theme": "GOLD"
+    }
+  },
+  {
+    "id": "sec_gallery_4",
+    "type": "TEXT_GALLERY",
+    "template": "text-gallery-default",
+    "status": "ACTIVE",
+    "sortOrder": 4,
+    "background": "NONE",
+    "internalName": "گالری ویژگی‌ها و خواص درمانی",
+    "content": {
+      "type": "TEXT_GALLERY",
+      "template": "text-gallery-default",
+      "schemaVersion": 1,
+      "kicker": "تنوع اقلیمی و شفابخشی",
+      "title": "طعم اصیل گونه‌های گیاهی گوناگون",
+      "body": "از کوهپایه‌های پوشیده از آویشن دامنه‌های سبلان تا جنگل‌های بلوط و گون قره‌داغ، هر شیشه از عسل باباخُرم راوی عطر و خواص گل‌های منحصر‌به‌فرد یک اقلیم خاص است.\n\nرنگ، غلظت و طعم هر عسل بازتاب مستقیم شهد گیاهان همان فصل برداشت است.",
+      "cta": {
+        "type": "PRODUCTS_PAGE",
+        "label": "شناخت انواع عسل"
+      },
+      "images": [
+        {
+          "url": "/images/honey-jar.jpg",
+          "alt": "شیشه عسل طبیعی باباخُرم"
+        },
+        {
+          "url": "/images/recipe-1.jpg",
+          "alt": "عسل خام کوهستان"
+        },
+        {
+          "url": "/images/recipe-2.jpg",
+          "alt": "عسل آویشن طبیعی"
+        }
+      ]
+    }
+  },
+  {
+    "id": "sec_carousel_5",
+    "type": "CARD_CAROUSEL",
+    "template": "carousel-cards",
+    "status": "ACTIVE",
+    "sortOrder": 5,
+    "background": "WOOD",
+    "internalName": "گردونه دسرهای عسل (روی بافت چوب)",
+    "content": {
+      "type": "CARD_CAROUSEL",
+      "template": "carousel-cards",
+      "schemaVersion": 1,
+      "title": "ترکیبات و دسرهای سلامت‌بخش با عسل",
+      "source": "RECIPES",
+      "maxItems": 12,
+      "cta": {
+        "type": "RECIPES_PAGE",
+        "label": "مشاهده تمام دستورها"
+      }
+    }
+  },
+  {
+    "id": "sec_carousel_products",
+    "type": "CARD_CAROUSEL",
+    "template": "carousel-cards",
+    "status": "ACTIVE",
+    "sortOrder": 6,
+    "background": "WOOD",
+    "internalName": "گردونه محصولات ممتاز عسل (روی بافت چوب)",
+    "content": {
+      "type": "CARD_CAROUSEL",
+      "template": "carousel-cards",
+      "schemaVersion": 1,
+      "title": "محصولات ممتاز باباخُرم",
+      "source": "PRODUCTS",
+      "maxItems": 12,
+      "cta": {
+        "type": "PRODUCTS_PAGE",
+        "label": "مشاهده همه محصولات"
+      }
+    }
+  },
+  {
+    "id": "sec_blog_6",
+    "type": "IMAGE_TEXT",
+    "template": "image-text-circle",
+    "status": "ACTIVE",
+    "sortOrder": 7,
+    "background": "WOOD",
+    "internalName": "وبلاگ و فرهنگ عسل طبیعی (روی بافت چوب - ادغام با ۵)",
+    "content": {
+      "type": "IMAGE_TEXT",
+      "template": "image-text-circle",
+      "schemaVersion": 1,
+      "image": {
+        "url": "/images/blog-honey.jpg",
+        "alt": "فواید عسل خام و آنزیم‌های فعال"
+      },
+      "kicker": "دانش عسل و سلامت",
+      "title": "چرا عسل حرارت‌ندیده برای بدن حیاتی است؟",
+      "body": "حرارت‌دادن عسل برای شفاف‌سازی تجاری، آنزیم دیاستاز و اینورتاز را به طور کامل از بین می‌برد. عسل خام باباخُرم مستقیماً از صافی توری عبور کرده و تمام آنزیم‌ها و گرده‌های مغذی آن حفظ شده است.",
+      "cta": {
+        "type": "RECIPES_PAGE",
+        "label": "بیشتر بدانید"
+      },
+      "imagePosition": "RIGHT",
+      "theme": "ORANGE"
+    }
+  }
+]

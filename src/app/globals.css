@@ -1,0 +1,300 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('/fonts/Vazirmatn[wght].woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px; /* Brief Section 5: Tablet breakpoint */
+  --breakpoint-lg: 992px; /* Brief Section 5: Desktop breakpoint */
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  --font-sans: 'Vazirmatn', var(--font-vazirmatn), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Brand Palette (Brief Section 5) */
+  --color-honey: #F59E0B;
+  --color-honey-dark: #C86A00;
+  --color-amber: #D97706;
+  --color-gold: #FBBF24;
+  --color-honey-light: #FEF3C7;
+  --color-honey-pale: #FFFBEB;
+
+  /* Neutral, Dark & Background Tokens */
+  --color-chocolate: #332115;
+  --color-footer: #4B3A2F;
+  --color-footer-nav: #403127;
+  --color-text: #2B2017;
+  --color-text-cream: #E8E2D9;
+  --color-muted: #5C5248;
+  --color-warm-bg: #FDFBF8;
+  --color-border: #EFE9E0;
+
+  /* Accents */
+  --color-accent-green: #3F8F3B;
+  --color-accent-orange: #E07D2B;
+
+  /* Card Themes - Locked Palette */
+  --color-card-green: #4CA849;
+  --color-card-orange: #E08B38;
+  --color-card-yellow: #F5A623;
+  --color-card-burgundy: #9E3556;
+}
+
+:root {
+  /* Brand Tokens (Hex) */
+  --honey: #F59E0B;
+  --honey-dark: #C86A00;
+  --amber: #D97706;
+  --gold: #FBBF24;
+  --honey-light: #FEF3C7;
+  --honey-pale: #FFFBEB;
+
+  /* Neutral & Dark Tokens */
+  --chocolate: #332115;
+  --footer: #4B3A2F;
+  --footer-nav: #403127;
+  --text: #2B2017;
+  --text-cream: #E8E2D9;
+  --muted: #5C5248;
+  --warm-bg: #FDFBF8;
+  --border: #EFE9E0;
+
+  /* Accents */
+  --accent-green: #3F8F3B;
+  --accent-orange: #E07D2B;
+
+  /* Card Themes */
+  --card-green: #4CA849;
+  --card-orange: #E08B38;
+  --card-yellow: #F5A623;
+  --card-burgundy: #9E3556;
+
+  /* Wood Overlay */
+  --wood-overlay: rgba(35, 20, 10, 0.45);
+
+  /* shadcn base bindings (HSL format) */
+  --background: 40 40% 98%;
+  --foreground: 27 30% 13%;
+  --card: 0 0% 100%;
+  --card-foreground: 27 30% 13%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 27 30% 13%;
+  --primary: 38 92% 50%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 48 96% 89%;
+  --secondary-foreground: 27 40% 15%;
+  --muted-bg: 38 30% 93%;
+  --muted-foreground: 28 12% 32%;
+  --accent: 48 100% 96%;
+  --accent-foreground: 27 40% 15%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --input: 38 30% 91%;
+  --ring: 38 92% 50%;
+  --radius: 0.5rem;
+}
+
+:lang(fa), [dir="rtl"], [dir="rtl"] * {
+  letter-spacing: normal !important;
+}
+
+html {
+  direction: rtl;
+  font-family: 'Vazirmatn', var(--font-vazirmatn), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-feature-settings: "kern" 1, "ss01" 1, "cv01" 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--warm-bg);
+  color: var(--text);
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+}
+
+body {
+  font-family: 'Vazirmatn', var(--font-vazirmatn), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--warm-bg);
+  color: var(--text);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+  font-size: 16px;
+  line-height: 1.8;
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Persian Web Standard Typography Hierarchy */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Vazirmatn', var(--font-vazirmatn), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 900;
+  line-height: 1.35;
+  letter-spacing: normal !important;
+  color: var(--text);
+}
+
+b, strong {
+  font-weight: 800;
+}
+
+p {
+  line-height: 1.85;
+  font-weight: 500;
+  color: #332115;
+}
+
+/* Cards: sharp 90-degree corners, subtle shadow, lift 6px & scale image */
+.honey-card {
+  border-radius: 0;
+  box-shadow: 0 4px 12px rgba(51, 33, 21, 0.08);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.honey-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(51, 33, 21, 0.14);
+}
+
+.honey-card .honey-card-image {
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.honey-card:hover .honey-card-image {
+  transform: scale(1.08);
+}
+
+/* Pill button three-dots indicator (LOCKED: three dots only, no arrows) */
+.pill-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-inline-start: 8px;
+}
+
+.pill-dots span {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 9999px;
+  background-color: currentColor;
+  opacity: 0.85;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.honey-pill-button:hover .pill-dots span:nth-child(1) {
+  transform: scale(1.2);
+}
+.honey-pill-button:hover .pill-dots span:nth-child(2) {
+  transform: scale(1.2);
+  transition-delay: 50ms;
+}
+.honey-pill-button:hover .pill-dots span:nth-child(3) {
+  transform: scale(1.2);
+  transition-delay: 100ms;
+}
+
+/* Persian Numerals Utility */
+.fa-num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Wood background with locked dark overlay */
+.bg-wood-pattern {
+  background-color: var(--chocolate);
+  position: relative;
+}
+
+.bg-wood-pattern::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--wood-overlay);
+  pointer-events: none;
+}
+
+/* Accessible prefers-reduced-motion override */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .honey-card:hover {
+    transform: none !important;
+  }
+  .honey-card:hover .honey-card-image {
+    transform: none !important;
+  }
+}
+
+/* ==========================================================================
+   Hero Ken Burns Zoom Animation & Dotted Arrow (honey.com fidelity)
+   ========================================================================== */
+@keyframes kenBurnsZoom {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08) translate(-1%, -1%);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.hero-bg-image {
+  animation: kenBurnsZoom 18s ease-in-out infinite alternate !important;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg-image {
+    animation: none !important;
+    transform: scale(1) !important;
+  }
+}
+
+/* ==========================================================================
+   Smooth Scrolling & Custom Honey Scrollbar (Professional Web Standards)
+   ========================================================================== */
+html {
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #2C180E;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D97706;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #F59E0B;
+}
+
+/* Accessibility Focus Outline Standard */
+:focus-visible {
+  outline: 2px solid #F59E0B;
+  outline-offset: 2px;
+}

@@ -1,0 +1,6 @@
+reference/
+data/
+.next/
+node_modules/
+dist/
+public/fonts/

@@ -1,0 +1,825 @@
+'use client';
+
+/**
+ * Cart View Client Component (Phase 9 Tasks 5, 7, 9 & Addendum A3-A6)
+ *
+ * Implements:
+ * - Fresh item data fetching & verification
+ * - Line item quantity changes, option switching, and removal
+ * - Delivery-only customer form with Zod validation
+ * - "مرا به خاطر بسپار" local storage (cart-customer:v1)
+ * - Channel chooser (active channels with acceptsOrders)
+ * - Mobile vs Desktop device detection with manual override
+ * - Desktop QR panel encoding ONLY SITE_URL/o/<code> (generated client-side)
+ * - Copy-then-open fallback for unverified messengers
+ * - After-send confirmation dialog ("سفارش را ارسال کردید؟")
+ */
+
+import React, { useState, useEffect, useTransition } from 'react';
+import Link from 'next/link';
+import { WoodBackground } from '@/components/ui/wood-background';
+import { Container } from '@/components/ui/container';
+import { PillButton } from '@/components/ui/pill-button';
+import { Picture } from '@/components/ui/picture';
+import {
+  useCartStore,
+  getSavedCustomer,
+  saveCustomerLocally,
+  clearSavedCustomer,
+  SavedCustomerData,
+} from '@/lib/cart-store';
+import { toPersianDigits, validateAndNormalizeIranianMobile } from '@/lib/domain-utils';
+import { fetchFreshCartAction } from '@/server/actions/cart-actions';
+import { buildOrderAction, BuildOrderResult } from '@/server/actions/order-actions';
+import { generateQrSvg } from '@/lib/qr-code';
+import type { FreshCartLineItem } from '@/server/queries/cart';
+import type { PublicChannelItem } from '@/server/queries/settings';
+import {
+  ShoppingCart,
+  Trash2,
+  Plus,
+  Minus,
+  AlertTriangle,
+  Info,
+  Smartphone,
+  Monitor,
+  Copy,
+  Check,
+  ExternalLink,
+  Loader2,
+  CheckCircle2,
+} from 'lucide-react';
+
+export interface CartViewProps {
+  cartNotice: string;
+  orderChannels: PublicChannelItem[];
+}
+
+export function CartView({ cartNotice, orderChannels }: CartViewProps) {
+  const { lines, totalQuantity, warning, actions } = useCartStore();
+
+  const [freshItems, setFreshItems] = useState<FreshCartLineItem[]>([]);
+  const [isLoadingFresh, setIsLoadingFresh] = useState(false);
+  const [hasUnavailable, setHasUnavailable] = useState(false);
+
+  // Customer Form State
+  const [customer, setCustomer] = useState<SavedCustomerData>({
+    firstName: '',
+    lastName: '',
+    mobile: '',
+    province: '',
+    city: '',
+    address: '',
+    postalCode: '',
+    notes: '',
+  });
+  const [rememberMe, setRememberMe] = useState(false);
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+
+  // Device detection state (Mobile vs Desktop)
+  const [isMobileDevice, setIsMobileDevice] = useState(true);
+  const [manualDeviceMode, setManualDeviceMode] = useState<'auto' | 'mobile' | 'desktop'>('auto');
+
+  // Order submission state
+  const [selectedChannelId, setSelectedChannelId] = useState<string>('');
+  const [orderResult, setOrderResult] = useState<BuildOrderResult | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isCopied, setIsCopied] = useState(false);
+  const [showConfirmSent, setShowConfirmSent] = useState(false);
+
+  // 1. Initial Customer "Remember Me" Load
+  useEffect(() => {
+    const saved = getSavedCustomer();
+    if (saved) {
+      setCustomer(saved);
+      setRememberMe(true);
+    }
+
+    // Detect device
+    const isMobileUA =
+      typeof window !== 'undefined' &&
+      (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      ) ||
+        window.innerWidth < 768);
+    setIsMobileDevice(isMobileUA);
+  }, []);
+
+  // 2. Fetch fresh cart data on mount and whenever lines change
+  useEffect(() => {
+    if (lines.length === 0) {
+      setFreshItems([]);
+      setHasUnavailable(false);
+      return;
+    }
+
+    let isMounted = true;
+    setIsLoadingFresh(true);
+
+    fetchFreshCartAction(lines)
+      .then((res) => {
+        if (!isMounted) return;
+        if (res.success && res.items) {
+          setFreshItems(res.items);
+          setHasUnavailable(Boolean(res.hasUnavailableItems));
+        }
+      })
+      .finally(() => {
+        if (isMounted) setIsLoadingFresh(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [lines]);
+
+  // Determine effective device mode
+  const effectiveIsMobile =
+    manualDeviceMode === 'auto' ? isMobileDevice : manualDeviceMode === 'mobile';
+
+  // Filter channels based on effective device
+  // Desktop cannot use SMS (PHONE)
+  const availableChannels = orderChannels.filter((ch) => {
+    if (!effectiveIsMobile && ch.type === 'PHONE') {
+      return false;
+    }
+    return true;
+  });
+
+  // Set default channel
+  useEffect(() => {
+    if (availableChannels.length > 0 && !selectedChannelId) {
+      if (availableChannels[0]?.id) setSelectedChannelId(availableChannels[0].id);
+    } else if (
+      selectedChannelId &&
+      !availableChannels.some((ch) => ch.id === selectedChannelId)
+    ) {
+      setSelectedChannelId(availableChannels[0]?.id || '');
+    }
+  }, [availableChannels, selectedChannelId]);
+
+  // Validate form fields
+  const validateForm = (): boolean => {
+    const errors: Record<string, string> = {};
+
+    if (!customer.firstName.trim()) errors.firstName = 'نام الزامی است.';
+    if (!customer.lastName.trim()) errors.lastName = 'نام خانوادگی الزامی است.';
+
+    const mobileVal = validateAndNormalizeIranianMobile(customer.mobile);
+    if (!mobileVal.isValid) {
+      errors.mobile = mobileVal.error || 'شماره موبایل وارد شده معتبر نیست.';
+    }
+
+    if (!customer.province.trim()) errors.province = 'استان الزامی است.';
+    if (!customer.city.trim()) errors.city = 'شهر الزامی است.';
+    if (!customer.address.trim() || customer.address.trim().length < 5) {
+      errors.address = 'آدرس کامل و دقیق (حداقل ۵ کاراکتر) الزامی است.';
+    }
+
+    if (customer.postalCode && customer.postalCode.trim().length > 0) {
+      const cleanPostal = customer.postalCode.replace(/[^0-9]/g, '');
+      if (cleanPostal.length !== 10) {
+        errors.postalCode = 'کد پستی باید دقیقاً ۱۰ رقم باشد.';
+      }
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  // Submit and Build Order
+  const handleProceedToOrder = async () => {
+    if (lines.length === 0) return;
+    if (hasUnavailable) {
+      setSubmitError('برخی از اقلام سبد خرید ناموجود هستند. لطفاً ابتدا آن‌ها را حذف یا تغییر دهید.');
+      return;
+    }
+
+    if (!validateForm()) {
+      setSubmitError('لطفاً خطاهای فرم آدرس و مشخصات را برطرف نمایید.');
+      return;
+    }
+
+    if (!selectedChannelId) {
+      setSubmitError('لطفاً یک کانال ارتباطی برای ارسال سفارش انتخاب نمایید.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    // Save or clear Remember Me
+    if (rememberMe) {
+      saveCustomerLocally(customer);
+    } else {
+      clearSavedCustomer();
+    }
+
+    try {
+      const result = await buildOrderAction({
+        lines,
+        customer,
+        channelId: selectedChannelId,
+        createShareLink: !effectiveIsMobile, // Desktop needs share link for QR
+      });
+
+      if (result.success) {
+        setOrderResult(result);
+        setShowConfirmSent(true);
+
+        // If mobile with prefill link: open deep link automatically
+        if (effectiveIsMobile && result.directUrl && result.directUrl !== '#') {
+          window.location.href = result.directUrl;
+        }
+      } else {
+        setSubmitError(result.error || 'خطا در آماده‌سازی سفارش.');
+      }
+    } catch {
+      setSubmitError('خطای ارتباط با سرور.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCopyText = async () => {
+    if (!orderResult?.messageText) return;
+    try {
+      await navigator.clipboard.writeText(orderResult.messageText);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 3000);
+    } catch {
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 3000);
+    }
+  };
+
+  const handleConfirmClearCart = () => {
+    actions.clearCart();
+    setOrderResult(null);
+    setShowConfirmSent(false);
+  };
+
+  // If cart is empty
+  if (lines.length === 0 && !orderResult) {
+    return (
+      <WoodBackground className="py-20 min-h-screen">
+        <Container size="narrow" className="text-center space-y-6 bg-black/35 p-8 sm:p-12 border border-white/20 shadow-2xl">
+          <div className="w-16 h-16 rounded-full bg-[#FBBF24]/20 flex items-center justify-center mx-auto text-[#FBBF24]">
+            <ShoppingCart className="w-8 h-8" />
+          </div>
+          <h1 className="text-2xl sm:text-4xl font-black text-white">
+            سبد خرید شما خالی است
+          </h1>
+          <p className="text-sm sm:text-base text-[#E8E2D9] max-w-md mx-auto leading-relaxed">
+            محصولی به سبد خرید اضافه نشده است. می‌توانید با مراجعه به فهرست محصولات، انواع عسل طبیعی باباخُرم را بررسی و سفارش دهید.
+          </p>
+          <div className="pt-4">
+            <PillButton variant="gold" size="lg" href="/products">
+              مشاهده و انتخاب محصولات
+            </PillButton>
+          </div>
+        </Container>
+      </WoodBackground>
+    );
+  }
+
+  return (
+    <WoodBackground className="py-12 sm:py-20 min-h-screen">
+      <Container size="narrow" className="space-y-10 sm:space-y-12">
+        {/* Page Title */}
+        <div className="text-center space-y-3">
+          <h1 className="text-3xl sm:text-5xl font-black text-white leading-tight">
+            سبد خرید و ثبت سفارش
+          </h1>
+          <p className="text-xs sm:text-sm text-[#E8E2D9]">
+            تعداد کل اقلام: {toPersianDigits(totalQuantity)} عدد (بدون نیاز به پرداخت آنلاین)
+          </p>
+        </div>
+
+        {/* Private Mode In-Memory Warning */}
+        {warning && (
+          <div className="flex items-center gap-3 p-4 bg-[#D97706]/20 border border-[#D97706] text-[#FEF3C7] text-xs sm:text-sm leading-relaxed">
+            <Info className="w-5 h-5 shrink-0 text-[#FBBF24]" />
+            <span>{warning}</span>
+          </div>
+        )}
+
+        {/* 1. Cart Lines Items Section */}
+        <div className="bg-black/35 border-2 border-white/20 p-5 sm:p-8 space-y-6 shadow-2xl">
+          <h2 className="text-xl sm:text-2xl font-black text-[#FBBF24] border-b border-white/15 pb-3">
+            اقلام انتخابی شما
+          </h2>
+
+          {isLoadingFresh && (
+            <div className="py-4 flex items-center justify-center gap-2 text-xs text-[#E8E2D9]">
+              <Loader2 className="w-4 h-4 animate-spin text-[#FBBF24]" />
+              <span>در حال به‌روزرسانی موجودی و مشخصات...</span>
+            </div>
+          )}
+
+          <div className="divide-y divide-white/15">
+            {lines.map((line) => {
+              const fresh = freshItems.find((f) => f.optionId === line.optionId);
+              const title = fresh?.productNameFa || 'عسل طبیعی';
+              const optionLabel = fresh?.optionLabel || 'وزن نامشخص';
+              const isAvailable = fresh ? fresh.isAvailable : true;
+              const invalidReason = fresh?.invalidReason;
+
+              return (
+                <div
+                  key={line.optionId}
+                  className={`py-4 sm:py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+                    !isAvailable ? 'bg-red-950/30 p-3 border border-red-500/50' : ''
+                  }`}
+                >
+                  {/* Item Image and Name */}
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-black/30 border border-white/20 shrink-0 overflow-hidden">
+                      {fresh?.mainImage ? (
+                        <Picture
+                          asset={fresh.mainImage}
+                          alt={title}
+                          width={100}
+                          height={100}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-[10px] text-white/60">
+                          باباخُرم
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-1 min-w-0">
+                      <Link
+                        href={`/products/${fresh?.productSlug || ''}`}
+                        className="font-black text-sm sm:text-base text-white hover:text-[#FBBF24] transition-colors truncate block"
+                      >
+                        {title}
+                      </Link>
+                      <div className="text-xs text-[#FBBF24] font-bold">
+                        بسته‌بندی: {optionLabel}
+                      </div>
+                      {!isAvailable && (
+                        <div className="text-xs text-[#FCA5A5] font-bold flex items-center gap-1">
+                          <AlertTriangle className="w-3.5 h-3.5" />
+                          <span>{invalidReason || 'این مورد ناموجود است.'}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Quantity Stepper & Remove */}
+                  <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0">
+                    <div className="flex items-center gap-2 bg-black/40 border border-white/20 p-1">
+                      <button
+                        type="button"
+                        onClick={() => actions.updateQuantity(line.optionId, line.qty - 1)}
+                        disabled={line.qty <= 1}
+                        aria-label="کاهش"
+                        className="w-7 h-7 flex items-center justify-center text-white hover:bg-white/10 disabled:opacity-30"
+                      >
+                        <Minus className="w-3.5 h-3.5" />
+                      </button>
+                      <span className="w-7 text-center font-black text-sm text-white select-none">
+                        {toPersianDigits(line.qty)}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => actions.updateQuantity(line.optionId, line.qty + 1)}
+                        disabled={line.qty >= 50}
+                        aria-label="افزایش"
+                        className="w-7 h-7 flex items-center justify-center text-white hover:bg-white/10 disabled:opacity-30"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => actions.removeItem(line.optionId)}
+                      aria-label="حذف از سبد"
+                      className="p-2 text-red-400 hover:text-red-300 hover:bg-red-950/40 rounded transition-colors"
+                      title="حذف این مورد"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Cart Notice Box */}
+          <div className="p-4 bg-black/40 border border-[#FBBF24]/40 text-[#FBBF24] text-xs sm:text-sm leading-relaxed flex items-start gap-2.5">
+            <Info className="w-5 h-5 shrink-0 mt-0.5" />
+            <div>
+              <span className="font-bold">یادداشت فروشگاه: </span>
+              <span>{cartNotice}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* 2. Customer Delivery Form (Delivery Only) */}
+        <div className="bg-black/35 border-2 border-white/20 p-5 sm:p-8 space-y-6 shadow-2xl">
+          <div className="space-y-1 border-b border-white/15 pb-3">
+            <h2 className="text-xl sm:text-2xl font-black text-[#FBBF24]">
+              مشخصات و نشانی تحویل (فقط ارسال پستی)
+            </h2>
+            <p className="text-xs text-[#E8E2D9]/70">
+              تحویل سفارشات صرفاً به صورت ارسال پستی و درب منزل می‌باشد و امکان دریافت حضوری وجود ندارد.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            {/* First Name */}
+            <div className="space-y-1.5">
+              <label className="block text-xs sm:text-sm font-bold text-white">
+                نام <span className="text-red-400">*</span>
+              </label>
+              <input
+                type="text"
+                value={customer.firstName}
+                onChange={(e) => setCustomer({ ...customer, firstName: e.target.value })}
+                className="w-full h-11 px-3.5 bg-black/40 border border-white/25 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FBBF24]"
+                dir="rtl"
+              />
+              {formErrors.firstName && (
+                <p className="text-xs text-red-400 font-bold">{formErrors.firstName}</p>
+              )}
+            </div>
+
+            {/* Last Name */}
+            <div className="space-y-1.5">
+              <label className="block text-xs sm:text-sm font-bold text-white">
+                نام خانوادگی <span className="text-red-400">*</span>
+              </label>
+              <input
+                type="text"
+                value={customer.lastName}
+                onChange={(e) => setCustomer({ ...customer, lastName: e.target.value })}
+                className="w-full h-11 px-3.5 bg-black/40 border border-white/25 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FBBF24]"
+                dir="rtl"
+              />
+              {formErrors.lastName && (
+                <p className="text-xs text-red-400 font-bold">{formErrors.lastName}</p>
+              )}
+            </div>
+
+            {/* Mobile Number */}
+            <div className="space-y-1.5">
+              <label className="block text-xs sm:text-sm font-bold text-white">
+                شماره موبایل (۰۹xxxxxxxxx) <span className="text-red-400">*</span>
+              </label>
+              <input
+                type="tel"
+                value={customer.mobile}
+                onChange={(e) => setCustomer({ ...customer, mobile: e.target.value })}
+                placeholder="09123456789"
+                className="w-full h-11 px-3.5 bg-black/40 border border-white/25 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FBBF24]"
+                dir="ltr"
+              />
+              {formErrors.mobile && (
+                <p className="text-xs text-red-400 font-bold">{formErrors.mobile}</p>
+              )}
+            </div>
+
+            {/* Province */}
+            <div className="space-y-1.5">
+              <label className="block text-xs sm:text-sm font-bold text-white">
+                استان <span className="text-red-400">*</span>
+              </label>
+              <input
+                type="text"
+                value={customer.province}
+                onChange={(e) => setCustomer({ ...customer, province: e.target.value })}
+                placeholder="مثال: آذربایجان شرقی"
+                className="w-full h-11 px-3.5 bg-black/40 border border-white/25 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FBBF24]"
+                dir="rtl"
+              />
+              {formErrors.province && (
+                <p className="text-xs text-red-400 font-bold">{formErrors.province}</p>
+              )}
+            </div>
+
+            {/* City */}
+            <div className="space-y-1.5">
+              <label className="block text-xs sm:text-sm font-bold text-white">
+                شهر <span className="text-red-400">*</span>
+              </label>
+              <input
+                type="text"
+                value={customer.city}
+                onChange={(e) => setCustomer({ ...customer, city: e.target.value })}
+                placeholder="مثال: تبریز"
+                className="w-full h-11 px-3.5 bg-black/40 border border-white/25 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FBBF24]"
+                dir="rtl"
+              />
+              {formErrors.city && (
+                <p className="text-xs text-red-400 font-bold">{formErrors.city}</p>
+              )}
+            </div>
+
+            {/* Postal Code (Optional) */}
+            <div className="space-y-1.5">
+              <label className="block text-xs sm:text-sm font-bold text-white">
+                کد پستی (۱۰ رقم - اختیاری)
+              </label>
+              <input
+                type="text"
+                maxLength={10}
+                value={customer.postalCode || ''}
+                onChange={(e) => setCustomer({ ...customer, postalCode: e.target.value })}
+                placeholder="کد پستی ۱۰ رقمی"
+                className="w-full h-11 px-3.5 bg-black/40 border border-white/25 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FBBF24]"
+                dir="ltr"
+              />
+              {formErrors.postalCode && (
+                <p className="text-xs text-red-400 font-bold">{formErrors.postalCode}</p>
+              )}
+            </div>
+
+            {/* Address */}
+            <div className="sm:col-span-2 space-y-1.5">
+              <label className="block text-xs sm:text-sm font-bold text-white">
+                نشانی دقیق پستی (خیابان، کوچه، پلاک، واحد) <span className="text-red-400">*</span>
+              </label>
+              <textarea
+                rows={3}
+                value={customer.address}
+                onChange={(e) => setCustomer({ ...customer, address: e.target.value })}
+                maxLength={500}
+                className="w-full p-3 bg-black/40 border border-white/25 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FBBF24]"
+                dir="rtl"
+              />
+              {formErrors.address && (
+                <p className="text-xs text-red-400 font-bold">{formErrors.address}</p>
+              )}
+            </div>
+
+            {/* Notes (Optional) */}
+            <div className="sm:col-span-2 space-y-1.5">
+              <label className="block text-xs sm:text-sm font-bold text-white">
+                توضیحات تکمیلی (اختیاری - حداکثر ۳۰۰ کاراکتر)
+              </label>
+              <textarea
+                rows={2}
+                value={customer.notes || ''}
+                onChange={(e) => setCustomer({ ...customer, notes: e.target.value })}
+                maxLength={300}
+                className="w-full p-3 bg-black/40 border border-white/25 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FBBF24]"
+                dir="rtl"
+              />
+            </div>
+          </div>
+
+          {/* Remember Me Checkbox & Privacy Policy Line */}
+          <div className="space-y-3 pt-2 border-t border-white/10">
+            <label className="flex items-center gap-2.5 text-xs sm:text-sm text-white cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="w-4 h-4 rounded text-[#FBBF24] focus:ring-[#FBBF24] bg-black/40 border-white/30"
+              />
+              <span>مرا به خاطر بسپار (ذخیره اطلاعات نشانی در مرورگر شما برای سفارش‌های بعدی)</span>
+            </label>
+
+            <p className="text-[11px] sm:text-xs text-[#E8E2D9]/70 leading-relaxed">
+              🔒 حریم خصوصی: اطلاعات شما به هیچ وجه در دیتابیس سایت ذخیره نمی‌شود و صرفاً جهت ساخت متن پیام سفارش استفاده می‌گردد (در حالت بارکد QR، به مدت ۳۰ دقیقه به صورت رمزنگاری‌شده نگهداری می‌شود).
+            </p>
+          </div>
+        </div>
+
+        {/* 3. Channel Chooser & Device Override */}
+        <div className="bg-black/35 border-2 border-white/20 p-5 sm:p-8 space-y-6 shadow-2xl">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/15 pb-3">
+            <div>
+              <h2 className="text-xl sm:text-2xl font-black text-[#FBBF24]">
+                انتخاب روش و کانال ارسال سفارش
+              </h2>
+              <p className="text-xs text-[#E8E2D9]/70 mt-1">
+                سفارش شما مستقیماً به دست کارشناسان فروش باباخُرم خواهد رسید.
+              </p>
+            </div>
+
+            {/* Device Switcher Override */}
+            <div className="inline-flex rounded-full bg-black/50 p-1 border border-white/20 self-start sm:self-auto text-xs">
+              <button
+                type="button"
+                onClick={() => setManualDeviceMode('mobile')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all ${
+                  effectiveIsMobile
+                    ? 'bg-[#FBBF24] text-[#2B2017] font-black'
+                    : 'text-white/70 hover:text-white'
+                }`}
+              >
+                <Smartphone className="w-3.5 h-3.5" />
+                <span>با گوشی هستم</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setManualDeviceMode('desktop')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all ${
+                  !effectiveIsMobile
+                    ? 'bg-[#FBBF24] text-[#2B2017] font-black'
+                    : 'text-white/70 hover:text-white'
+                }`}
+              >
+                <Monitor className="w-3.5 h-3.5" />
+                <span>با کامپیوتر هستم</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Channels Selection */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            {availableChannels.map((channel) => {
+              const isSelected = selectedChannelId === channel.id;
+              const isSms = channel.type === 'PHONE';
+
+              return (
+                <div
+                  key={channel.id}
+                  onClick={() => channel.id && setSelectedChannelId(channel.id)}
+                  className={`p-4 border cursor-pointer transition-all flex items-center justify-between gap-3 ${
+                    isSelected
+                      ? 'bg-[#FBBF24]/20 border-[#FBBF24] shadow-md ring-1 ring-[#FBBF24]'
+                      : 'bg-black/30 border-white/20 hover:bg-black/50'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`w-4 h-4 rounded-full border flex items-center justify-center ${
+                        isSelected ? 'border-[#FBBF24] bg-[#FBBF24]' : 'border-white/40'
+                      }`}
+                    >
+                      {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-[#2B2017]" />}
+                    </div>
+                    <div>
+                      <div className="font-bold text-sm sm:text-base text-white">
+                        {channel.label || channel.type}
+                      </div>
+                      <div className="text-xs text-[#E8E2D9]/70">
+                        {isSms ? 'ارسال از طریق پیامک متنی' : 'ارسال در گفتگوی پیام‌رسان'}
+                      </div>
+                    </div>
+                  </div>
+                  {isSms && (
+                    <span className="text-[10px] px-2 py-0.5 bg-[#D97706]/30 text-[#FBBF24] border border-[#D97706]/40 font-bold">
+                      پیامک گوشی
+                    </span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {submitError && (
+            <div className="p-3 bg-red-950/60 border border-red-500 text-white text-xs sm:text-sm">
+              {submitError}
+            </div>
+          )}
+
+          {/* Action Trigger */}
+          <div className="pt-2 text-center">
+            <PillButton
+              variant="gold"
+              size="lg"
+              onClick={handleProceedToOrder}
+              disabled={isSubmitting || hasUnavailable}
+              className="w-full sm:w-auto px-12 font-black text-base shadow-xl"
+            >
+              {isSubmitting ? (
+                <span className="flex items-center gap-2">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span>در حال آماده‌سازی پیام سفارش...</span>
+                </span>
+              ) : (
+                <span>آماده‌سازی و ارسال سفارش</span>
+              )}
+            </PillButton>
+          </div>
+        </div>
+
+        {/* 4. Desktop Output Panel (Messenger Open + Copy + QR Code) */}
+        {!effectiveIsMobile && orderResult && (
+          <div className="bg-black/40 border-2 border-[#FBBF24] p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in duration-300">
+            <div className="border-b border-white/15 pb-3">
+              <h3 className="text-xl sm:text-2xl font-black text-[#FBBF24]">
+                سفارش شما با کد {orderResult.orderCode} آماده ارسال است
+              </h3>
+              <p className="text-xs text-[#E8E2D9] mt-1">
+                می‌توانید پیام‌رسان را باز کنید، متن را کپی فرمایید، یا بارکد را با گوشی اسکن کنید:
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              {/* Left Column: Actions & Copy */}
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs text-[#E8E2D9]">
+                    <span className="font-bold">متن سفارش:</span>
+                    <button
+                      type="button"
+                      onClick={handleCopyText}
+                      className="flex items-center gap-1.5 text-[#FBBF24] hover:text-white font-bold"
+                    >
+                      {isCopied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
+                      <span>{isCopied ? 'کپی شد!' : 'کپی متن'}</span>
+                    </button>
+                  </div>
+                  <pre
+                    className="w-full max-h-48 overflow-y-auto whitespace-pre-wrap font-sans text-xs text-white/90 bg-black/50 p-3 border border-white/10 select-all"
+                    dir="rtl"
+                  >
+                    {orderResult.messageText}
+                  </pre>
+                </div>
+
+                <div className="space-y-2 pt-2">
+                  {orderResult.directUrl && orderResult.directUrl !== '#' && (
+                    <a
+                      href={orderResult.directUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#15803D] hover:bg-[#166534] text-white font-black text-sm transition-all shadow-md"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      <span>باز کردن برنامه / نسخه وب پیام‌رسان</span>
+                    </a>
+                  )}
+
+                  <PillButton
+                    variant="gold"
+                    size="md"
+                    onClick={handleCopyText}
+                    className="w-full justify-center font-bold"
+                  >
+                    {isCopied ? 'متن کپی شد' : 'کپی متن سفارش برای ارسال دستی'}
+                  </PillButton>
+                </div>
+
+                {orderResult.instructionsFa && (
+                  <p className="text-xs text-[#E8E2D9]/80 leading-relaxed">
+                    💡 {orderResult.instructionsFa}
+                  </p>
+                )}
+              </div>
+
+              {/* Right Column: In-Browser SVG QR Code */}
+              {orderResult.shareUrl && (
+                <div className="flex flex-col items-center justify-center p-6 bg-white/95 rounded-none border border-white text-center space-y-3">
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: generateQrSvg(orderResult.shareUrl, 200),
+                    }}
+                    className="p-1 bg-white"
+                  />
+                  <div className="space-y-1 text-black">
+                    <p className="font-black text-xs sm:text-sm">
+                      اسکن و ارسال سریع با گوشی
+                    </p>
+                    <p className="text-[11px] text-stone-600">
+                      دوربین گوشی را روی تصویر بالا بگیرید تا صفحه سفارش با یک لمس باز شود.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* 5. Persistent After-Send Confirmation Dialog (Addendum A3/A9) */}
+        {showConfirmSent && (
+          <div className="p-6 bg-[#15803D]/20 border-2 border-[#22C55E]/60 space-y-4 shadow-xl text-center">
+            <div className="flex items-center justify-center gap-2 text-white font-black text-lg">
+              <CheckCircle2 className="w-6 h-6 text-[#4ADE80]" />
+              <span>سفارش را ارسال کردید؟</span>
+            </div>
+            <p className="text-xs sm:text-sm text-[#E8E2D9] max-w-md mx-auto leading-relaxed">
+              اگر پیام سفارش را در پیام‌رسان یا پیامک برای ما فرستادید، می‌توانید سبد خرید خود را خالی فرمایید.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+              <button
+                type="button"
+                onClick={handleConfirmClearCart}
+                className="px-6 py-2.5 rounded-full bg-[#15803D] hover:bg-[#166534] text-white font-black text-xs sm:text-sm shadow transition-all"
+              >
+                بله، سبد را خالی کن
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowConfirmSent(false)}
+                className="px-6 py-2.5 rounded-full bg-black/40 hover:bg-black/60 text-white font-bold text-xs sm:text-sm border border-white/20 transition-all"
+              >
+                نه، هنوز
+              </button>
+            </div>
+          </div>
+        )}
+      </Container>
+    </WoodBackground>
+  );
+}

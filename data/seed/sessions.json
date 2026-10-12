@@ -1,0 +1,12 @@
+[
+  {
+    "id": "sess_1791813013203_74nn2",
+    "userId": "usr_1791465544331_so4k7",
+    "token": "a1c8150b16bcefcd5d7df81fc8838d9784568dee318c5c972fca4d7672908878",
+    "expiresAt": "2026-10-19T13:50:13.203Z",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "createdAt": "2026-10-12T13:50:13.203Z",
+    "updatedAt": "2026-10-12T13:50:13.203Z"
+  }
+]

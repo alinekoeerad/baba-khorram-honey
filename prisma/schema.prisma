@@ -1,0 +1,561 @@
+// ===============================================================
+// Persian Honey Brand Website + CMS — Prisma Schema (Phase 1)
+// Conforming to Brief Section 8 & Addendum A2
+// ===============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------
+
+enum UserRole {
+  ADMIN
+}
+
+enum CategoryType {
+  PRODUCT
+  RECIPE
+}
+
+enum CategoryStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+enum ItemStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ServingType {
+  HOT
+  WARM
+  COLD
+}
+
+enum CardTheme {
+  AUTO
+  GREEN
+  ORANGE
+  YELLOW
+  BURGUNDY
+}
+
+enum SectionType {
+  HERO
+  IMAGE_TEXT
+  FULL_IMAGE_OVERLAY
+  TEXT_GALLERY
+  CARD_CAROUSEL
+  CONTENT_GRID
+}
+
+enum SectionStatus {
+  DRAFT
+  ACTIVE
+  DISABLED
+}
+
+enum SectionBackground {
+  NONE
+  WOOD
+}
+
+enum ChannelType {
+  PHONE
+  WHATSAPP
+  TELEGRAM
+  EITAA
+  RUBIKA
+  BALE
+  INSTAGRAM
+}
+
+enum RedirectEntityType {
+  PRODUCT
+  RECIPE
+}
+
+// ---------------------------------------------------------------
+// User & Auth Models (Better Auth placeholder for Phase 2)
+// ---------------------------------------------------------------
+
+// TODO: Better Auth schema integration in Phase 2
+// Extended with sessions, accounts, and verifications during Auth milestone.
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  role          UserRole  @default(ADMIN)
+  isActive      Boolean   @default(true)
+  lastLoginAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  sessions      Session[]
+  accounts      Account[]
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  userId                String
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("verifications")
+}
+
+// ---------------------------------------------------------------
+// Categories (Flat, typed, archivable)
+// ---------------------------------------------------------------
+
+model Category {
+  id        String         @id @default(cuid())
+  name      String
+  slug      String
+  type      CategoryType
+  status    CategoryStatus @default(ACTIVE)
+  sortOrder Int            @default(0)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  products  ProductCategory[]
+  recipes   RecipeCategory[]
+
+  @@unique([type, slug])
+  @@index([type, status, sortOrder])
+  @@map("categories")
+}
+
+// ---------------------------------------------------------------
+// Media Assets
+// ---------------------------------------------------------------
+
+model MediaAsset {
+  id          String   @id @default(cuid())
+  storageKey  String   @unique
+  mime        String
+  bytes       Int
+  width       Int?
+  height      Int?
+  blurDataUrl String?
+  variants    Json?
+  alt         String?
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  productMainImages Product[]            @relation("ProductMainImage")
+  productGallery    ProductGalleryItem[]
+  recipeMainImages  Recipe[]             @relation("RecipeMainImage")
+  recipeGallery     RecipeGalleryItem[]
+
+  @@map("media_assets")
+}
+
+// ---------------------------------------------------------------
+// Products & Options
+// ---------------------------------------------------------------
+
+model Product {
+  id               String      @id @default(cuid())
+  slug             String      @unique
+  nameFa           String
+  nameOriginal     String?
+  status           ItemStatus  @default(DRAFT)
+  isAvailable      Boolean     @default(true)
+  isFeatured       Boolean     @default(false)
+  cardTheme        CardTheme   @default(AUTO)
+  sortOrder        Int         @default(0)
+  shortDescription String?
+  description      String?
+  foodNature       String?     // طبع غذایی
+  vitamins         String?     // ویتامین
+  harvestSeason    String?     // فصل برداشت
+  harvestPlace     String?     // محل برداشت
+  color            String?     // رنگ
+  usageWarning     String?     // منع مصرف
+  mainImageId      String?
+  searchText       String      @default("")
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  mainImage   MediaAsset?          @relation("ProductMainImage", fields: [mainImageId], references: [id], onDelete: SetNull)
+  benefits    ProductBenefit[]
+  options     ProductOption[]
+  categories  ProductCategory[]
+  gallery     ProductGalleryItem[]
+  sectionItem SectionItem[]
+
+  @@index([status, sortOrder, id])
+  @@index([isFeatured])
+  @@index([isAvailable])
+  @@index([slug])
+  @@map("products")
+}
+
+model ProductBenefit {
+  id        String  @id @default(cuid())
+  productId String
+  text      String
+  sortOrder Int     @default(0)
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, sortOrder])
+  @@map("product_benefits")
+}
+
+model ProductOption {
+  id          String   @id @default(cuid())
+  productId   String
+  label       String
+  isAvailable Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, sortOrder])
+  @@map("product_options")
+}
+
+model ProductCategory {
+  productId  String
+  categoryId String
+
+  product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  @@id([productId, categoryId])
+  @@index([categoryId])
+  @@map("product_categories")
+}
+
+model ProductGalleryItem {
+  id        String @id @default(cuid())
+  productId String
+  assetId   String
+  sortOrder Int    @default(0)
+
+  product Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  asset   MediaAsset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, assetId])
+  @@index([productId, sortOrder])
+  @@map("product_gallery_items")
+}
+
+// ---------------------------------------------------------------
+// Recipes
+// ---------------------------------------------------------------
+
+model Recipe {
+  id               String        @id @default(cuid())
+  slug             String        @unique
+  nameFa           String
+  nameOriginal     String?
+  country          String?
+  servingTypes     ServingType[]
+  yieldText        String?
+  shortDescription String?
+  longDescription  String?
+  status           ItemStatus    @default(DRAFT)
+  isFeatured       Boolean       @default(false)
+  cardTheme        CardTheme     @default(AUTO)
+  sortOrder        Int           @default(0)
+  mainImageId      String?
+  searchText       String        @default("")
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  mainImage   MediaAsset?         @relation("RecipeMainImage", fields: [mainImageId], references: [id], onDelete: SetNull)
+  ingredients RecipeIngredient[]
+  steps       RecipeStep[]
+  categories  RecipeCategory[]
+  gallery     RecipeGalleryItem[]
+  sectionItem SectionItem[]
+
+  @@index([status, sortOrder, id])
+  @@index([isFeatured])
+  @@index([slug])
+  @@map("recipes")
+}
+
+model RecipeIngredient {
+  id             String  @id @default(cuid())
+  recipeId       String
+  name           String
+  quantityText   String?
+  unit           String?
+  equivalentText String?
+  isOptional     Boolean @default(false)
+  note           String?
+  sortOrder      Int     @default(0)
+
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@index([recipeId, sortOrder])
+  @@map("recipe_ingredients")
+}
+
+model RecipeStep {
+  id        String @id @default(cuid())
+  recipeId  String
+  text      String
+  sortOrder Int    @default(0)
+
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@index([recipeId, sortOrder])
+  @@map("recipe_steps")
+}
+
+model RecipeCategory {
+  recipeId   String
+  categoryId String
+
+  recipe   Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  @@id([recipeId, categoryId])
+  @@index([categoryId])
+  @@map("recipe_categories")
+}
+
+model RecipeGalleryItem {
+  id        String @id @default(cuid())
+  recipeId  String
+  assetId   String
+  sortOrder Int    @default(0)
+
+  recipe Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  asset  MediaAsset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  @@unique([recipeId, assetId])
+  @@index([recipeId, sortOrder])
+  @@map("recipe_gallery_items")
+}
+
+// ---------------------------------------------------------------
+// Homepage Sections & Items
+// ---------------------------------------------------------------
+
+model HomepageSection {
+  id           String            @id @default(cuid())
+  type         SectionType
+  template     String
+  status       SectionStatus     @default(DRAFT)
+  sortOrder    Int               @default(0)
+  background   SectionBackground @default(NONE)
+  internalName String
+  content      Json              @default("{}")
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  items SectionItem[]
+
+  @@index([status, sortOrder])
+  @@map("homepage_sections")
+}
+
+model SectionItem {
+  id        String  @id @default(cuid())
+  sectionId String
+  productId String?
+  recipeId  String?
+  sortOrder Int     @default(0)
+
+  section HomepageSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  product Product?        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  recipe  Recipe?         @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@index([sectionId, sortOrder])
+  @@map("section_items")
+}
+
+// ---------------------------------------------------------------
+// Site Settings (Singleton, id = 1)
+// ---------------------------------------------------------------
+
+model SiteSettings {
+  id             Int      @id @default(1)
+  siteNameFa     String   @default("عسل باباخُرم")
+  siteNameEn     String?
+  tagline        String?
+  logoId         String?
+  footerLogoId   String?
+  ogImageId      String?
+  address        String?
+  workingHours   String?
+  latitude       Float?
+  longitude      Float?
+  mapZoom        Int?     @default(14)
+  copyrightText  String?
+  seoTitle       String?
+  seoDescription String?
+  cartEnabled    Boolean  @default(false)
+  cartNotice     String   @default("قیمت و هزینه‌ی ارسال پس از تأیید اعلام می‌شود.")
+  orderIntroText String?
+  orderOutroText String?
+  isPlaceholder  Boolean  @default(true)
+  updatedAt      DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+// ---------------------------------------------------------------
+// Contact Channels
+// ---------------------------------------------------------------
+
+model ContactChannel {
+  id                String      @id @default(cuid())
+  type              ChannelType
+  value             String
+  label             String?
+  isActive          Boolean     @default(true)
+  sortOrder         Int         @default(0)
+  showInContactBar  Boolean     @default(true)
+  showInFooter      Boolean     @default(true)
+  showInContactPage Boolean     @default(true)
+  acceptsOrders     Boolean     @default(false)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  @@index([isActive, sortOrder])
+  @@map("contact_channels")
+}
+
+// ---------------------------------------------------------------
+// Order Share Links (Temporary Encrypted Links - Addendum A2)
+// ---------------------------------------------------------------
+
+model OrderShareLink {
+  id               String      @id @default(cuid())
+  code             String      @unique
+  payloadEncrypted String
+  channelType      ChannelType
+  expiresAt        DateTime
+  createdAt        DateTime    @default(now())
+
+  @@index([code])
+  @@index([expiresAt])
+  @@map("order_share_links")
+}
+
+// ---------------------------------------------------------------
+// Slug Redirects
+// ---------------------------------------------------------------
+
+model SlugRedirect {
+  id         String             @id @default(cuid())
+  entityType RedirectEntityType
+  oldSlug    String
+  targetId   String
+  createdAt  DateTime           @default(now())
+
+  @@unique([entityType, oldSlug])
+  @@map("slug_redirects")
+}
+
+// ---------------------------------------------------------------
+// Audit Log
+// ---------------------------------------------------------------
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  action     String
+  entityType String
+  entityId   String?
+  summary    String
+  ip         String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+
+enum FeedbackType {
+  SUGGESTION
+  CRITICISM
+  PRODUCT_QUALITY
+  OTHER
+}
+
+enum FeedbackStatus {
+  UNREAD
+  REVIEWED
+  ARCHIVED
+}
+
+model Feedback {
+  id           String         @id @default(cuid())
+  trackingCode String         @unique
+  name         String
+  phone        String
+  type         FeedbackType   @default(SUGGESTION)
+  message      String
+  status       FeedbackStatus @default(UNREAD)
+  adminNote    String?
+  ip           String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@map("feedbacks")
+}
