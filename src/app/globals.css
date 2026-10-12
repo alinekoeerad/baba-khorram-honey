@@ -271,7 +271,7 @@ p {
 /* ==========================================================================
    Smooth Scrolling & Custom Honey Scrollbar (Professional Web Standards)
    ========================================================================== */
-html {
+html[data-scroll-behavior="smooth"] {
   scroll-behavior: smooth;
 }
 
