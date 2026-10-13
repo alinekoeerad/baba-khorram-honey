@@ -15,7 +15,6 @@ import Link from 'next/link';
 import { WoodBackground } from '@/components/ui/wood-background';
 import { Container } from '@/components/ui/container';
 import { Picture } from '@/components/ui/picture';
-import { ContentCard } from '@/components/ui/content-card';
 import { PillButton } from '@/components/ui/pill-button';
 import { useCartStore } from '@/lib/cart-store';
 import { toPersianDigits, ServingTypeValue } from '@/lib/domain-utils';
@@ -94,19 +93,24 @@ export function RecipeDetailView({
     <WoodBackground className="py-12 sm:py-20 min-h-screen">
       <Container size="narrow" className="space-y-10 sm:space-y-12">
         {/* Breadcrumb Navigation */}
-        <nav aria-label="مسیر راهنما" className="flex items-center justify-center gap-2 text-xs sm:text-sm font-bold text-[#FFFBEB]">
-          <Link href="/" className="text-[#E5D5C5] hover:text-[#FBBF24] transition-colors">
-            صفحه اصلی
-          </Link>
-          <span className="text-white/40" aria-hidden="true">/</span>
-          <Link href="/recipes" className="text-[#E5D5C5] hover:text-[#FBBF24] transition-colors">
-            دستورها و دسرها
-          </Link>
-          <span className="text-white/40" aria-hidden="true">/</span>
-          <span className="text-[#FBBF24] font-black truncate max-w-[200px]">
-            {recipe.nameFa}
-          </span>
-        </nav>
+        <div className="flex justify-center">
+          <nav
+            aria-label="مسیر راهنما"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-xs sm:text-sm font-bold text-white shadow-md"
+          >
+            <Link href="/" className="text-white hover:text-[#FBBF24] transition-colors underline-offset-4 hover:underline">
+              صفحه اصلی
+            </Link>
+            <span className="text-[#FBBF24] font-black" aria-hidden="true">/</span>
+            <Link href="/recipes" className="text-white hover:text-[#FBBF24] transition-colors underline-offset-4 hover:underline">
+              دستورها و دسرها
+            </Link>
+            <span className="text-[#FBBF24] font-black" aria-hidden="true">/</span>
+            <span className="text-[#FDE047] font-black truncate max-w-[200px]">
+              {recipe.nameFa}
+            </span>
+          </nav>
+        </div>
 
         {/* 1. Editorial Hero Card (Warm Artisan Paper Showcase) */}
         <div className="max-w-3xl mx-auto bg-white border border-[#EFE9E0] p-6 sm:p-10 rounded-none shadow-md space-y-6 text-center">
@@ -333,55 +337,6 @@ export function RecipeDetailView({
           </div>
         )}
 
-        {/* 8. Related Items */}
-        {relatedRecipes && relatedRecipes.length > 0 && (
-          <div className="pt-12 sm:pt-16 space-y-8 border-t border-white/15">
-            <div className="text-center space-y-2">
-              <h2 className="text-2xl sm:text-3xl font-black text-[#FFFBEB]">
-                دسرهای مشابه و پیشنهادی
-              </h2>
-              <p className="text-xs sm:text-sm text-[#E5D5C5]">
-                پیشنهادهای خوش‌طعم دیگر از خانواده دسرهای عسل باباخُرم
-              </p>
-            </div>
-
-            <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6 text-right">
-              {relatedRecipes.map((rel, idx) => (
-                <ContentCard
-                  key={rel.id}
-                  title={rel.title}
-                  subtitle={rel.subtitle}
-                  href={rel.href}
-                  imageAsset={rel.imageAsset}
-                  imageUrl={rel.imageUrl || (rel.imageAsset ? null : '/images/recipe-1.jpg')}
-                  theme={rel.theme}
-                  slug={rel.slug}
-                  linkLabel={rel.linkLabel}
-                  variant="vertical"
-                  index={idx}
-                />
-              ))}
-            </div>
-
-            <div className="md:hidden space-y-4 text-right">
-              {relatedRecipes.map((rel, idx) => (
-                <ContentCard
-                  key={rel.id}
-                  title={rel.title}
-                  subtitle={rel.subtitle}
-                  href={rel.href}
-                  imageAsset={rel.imageAsset}
-                  imageUrl={rel.imageUrl || (rel.imageAsset ? null : '/images/recipe-1.jpg')}
-                  theme={rel.theme}
-                  slug={rel.slug}
-                  linkLabel={rel.linkLabel}
-                  variant="horizontal"
-                  index={idx}
-                />
-              ))}
-            </div>
-          </div>
-        )}
       </Container>
     </WoodBackground>
   );

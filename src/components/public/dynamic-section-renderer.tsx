@@ -36,8 +36,8 @@ export function DynamicSectionRenderer({
     const images = Array.isArray(content.images) && content.images.length > 0
       ? content.images
       : [{ url: '/images/hero-1.jpg', alt: '' }];
-    const title = content.title || 'شاهکار بی‌نظیر طبیعت';
-    const subtitle = content.subtitle || 'تغذیه اصیل، طعمی تکرارنشدنی و سرشار از انرژی طلایی برای زندگی روزمره';
+    const title = content.title || 'عسل خالص و طبیعی باباخُرم';
+    const subtitle = content.subtitle || 'برداشت مستقیم از بهترین مراتع ییلاقی ارسباران، با حفظ ۱۰۰٪ خواص زیستی و دارویی';
 
     return (
       <div id={`section-${section.id}`} className="w-full">
@@ -165,7 +165,7 @@ export function DynamicSectionRenderer({
               {kicker}
             </div>
           )}
-          <h2 className="text-3xl sm:text-5xl lg:text-7xl font-black text-[#E08B38] drop-shadow-lg leading-tight">
+          <h2 className="text-3xl sm:text-5xl lg:text-7xl font-black text-[#FBBF24] drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)] leading-tight">
             {heading}
           </h2>
           {body && (

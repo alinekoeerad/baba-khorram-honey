@@ -14,6 +14,9 @@ importers:
       '@prisma/client':
         specifier: 7.0.0
         version: 7.0.0(prisma@7.0.0(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@7.0.2))(typescript@7.0.2)
+      '@types/qrcode':
+        specifier: ^1.5.6
+        version: 1.5.6
       better-auth:
         specifier: 1.2.0
         version: 1.2.0(typescript@7.0.2)
@@ -26,6 +29,9 @@ importers:
       next:
         specifier: 16.4.0
         version: 16.4.0(@babel/core@7.29.7)(@playwright/test@1.64.0)(@types/node@22.10.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      qrcode:
+        specifier: ^1.5.4
+        version: 1.5.4
       react:
         specifier: 19.3.0
         version: 19.3.0
@@ -1075,6 +1081,9 @@ packages:
   '@types/node@22.10.2':
     resolution: {integrity: sha512-Xxr6BBRCAOQixvonOye19wnzyDiUtTeqldOOmj3CkeblonbccA12PFwlufvRdrpjXxqnmUaeiU5EOA+7s5diUQ==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/@types/node/-/node-22.10.2.tgz}
 
+  '@types/qrcode@1.5.6':
+    resolution: {integrity: sha512-te7NQcV2BOvdj2b1hCAHzAoMNuj65kNBMz0KBaxM6c3VGBOhU0dURQKOtH8CFNI/dsKkwlv32p26qYQTWoB5bw==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/@types/qrcode/-/qrcode-1.5.6.tgz}
+
   '@types/react-dom@19.3.0':
     resolution: {integrity: sha512-ZI7bU42mZXXKHn/qNLEw2IrbiINU7X5+vfgdixBHkCNpYWXjKgfQ/P+uyGb5CjOLB9UcnTeg3rylQtV2hym44Q==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/@types/react-dom/-/react-dom-19.3.0.tgz}
     peerDependencies:
@@ -1399,6 +1408,14 @@ packages:
   ajv@6.15.0:
     resolution: {integrity: sha512-fgFx7Hfoq60ytK2c7DhnF8jIvzYgOMxfugjLOSMHjLIPgenqa7S7oaagATUq99mV6IYvN2tRmC0wnTYX6iPbMw==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/ajv/-/ajv-6.15.0.tgz}
 
+  ansi-regex@5.0.1:
+    resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/ansi-regex/-/ansi-regex-5.0.1.tgz}
+    engines: {node: '>=8'}
+
+  ansi-styles@4.3.0:
+    resolution: {integrity: sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/ansi-styles/-/ansi-styles-4.3.0.tgz}
+    engines: {node: '>=8'}
+
   aria-query@5.3.2:
     resolution: {integrity: sha512-COROpnaoap1E2F000S62r6A60uHZnmlvomhfyT2DlTcrY1OrBKn2UhH7qn5wTC9zMvD0AY7csdPSNwKP+7WiQw==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/aria-query/-/aria-query-5.3.2.tgz}
     engines: {node: '>= 0.4'}
@@ -1535,6 +1552,10 @@ packages:
     resolution: {integrity: sha512-+ys997U96po4Kx/ABpBCqhA9EuxJaQWDQg7295H4hBphv3IZg0boBKuwYpt4YXp6MZ5AmZQnU/tyMTlRpaSejg==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/call-bound/-/call-bound-1.0.4.tgz}
     engines: {node: '>= 0.4'}
 
+  camelcase@5.3.1:
+    resolution: {integrity: sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/camelcase/-/camelcase-5.3.1.tgz}
+    engines: {node: '>=6'}
+
   caniuse-lite@1.0.30001815:
     resolution: {integrity: sha512-uDybUEyfgbyJJ93J1vikTylBX31AkdVYeVPeffMQpf8XN7hSfr0oZOn4VFOIMNvtU5+rHvC5Udg2TgtJKHm23Q==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/caniuse-lite/-/caniuse-lite-1.0.30001815.tgz}
 
@@ -1557,6 +1578,9 @@ packages:
 
   client-only@0.0.1:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/client-only/-/client-only-0.0.1.tgz}
+
+  cliui@6.0.0:
+    resolution: {integrity: sha512-t6wbgtoCXvAzst7QgXxJYqPt0usEfbgQdftEPbLL/cvv6HPE5VgvqCuAIDR0NgU52ds6rFwqrgakNLrHEjCbrQ==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/cliui/-/cliui-6.0.0.tgz}
 
   clsx@2.1.1:
     resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/clsx/-/clsx-2.1.1.tgz}
@@ -1631,6 +1655,10 @@ packages:
       supports-color:
         optional: true
 
+  decamelize@1.2.0:
+    resolution: {integrity: sha512-z2S+W9X73hAUUki+N+9Za2lBlun89zigOyGrsax+KUQ6wKW4ZoWpEYBkGhQjwAjjDCkWxhY0VKEhk8wzY7F5cA==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/decamelize/-/decamelize-1.2.0.tgz}
+    engines: {node: '>=0.10.0'}
+
   deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/deep-is/-/deep-is-0.1.4.tgz}
 
@@ -1660,6 +1688,9 @@ packages:
     resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/detect-libc/-/detect-libc-2.1.2.tgz}
     engines: {node: '>=8'}
 
+  dijkstrajs@1.0.3:
+    resolution: {integrity: sha512-qiSlmBq9+BCdCA/L46dw8Uy93mloxsPSbwnm5yrKn2vMPiy8KyAskTF6zuV/j5BMsmOGZDPs7KjU+mjb670kfA==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/dijkstrajs/-/dijkstrajs-1.0.3.tgz}
+
   doctrine@2.1.0:
     resolution: {integrity: sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/doctrine/-/doctrine-2.1.0.tgz}
     engines: {node: '>=0.10.0'}
@@ -1677,6 +1708,9 @@ packages:
 
   electron-to-chromium@1.5.452:
     resolution: {integrity: sha512-cVvk1YBSj6571VmV6hdJTqj94Y79xSu8cj6Y9t6ae4Y4431z8/7EJFvu3rVp90xhfuv9BpPKUmaLfTo4+FOGBg==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/electron-to-chromium/-/electron-to-chromium-1.5.452.tgz}
+
+  emoji-regex@8.0.0:
+    resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/emoji-regex/-/emoji-regex-8.0.0.tgz}
 
   emoji-regex@9.2.2:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/emoji-regex/-/emoji-regex-9.2.2.tgz}
@@ -1898,6 +1932,10 @@ packages:
     resolution: {integrity: sha512-YsGpe3WHLK8ZYi4tWDg2Jy3ebRz2rXowDxnld4bkQB00cc/1Zw9AWnC0i9ztDJitivtQvaI9KaLyKrc+hBW0yg==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/fill-range/-/fill-range-7.1.1.tgz}
     engines: {node: '>=8'}
 
+  find-up@4.1.0:
+    resolution: {integrity: sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/find-up/-/find-up-4.1.0.tgz}
+    engines: {node: '>=8'}
+
   find-up@5.0.0:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/find-up/-/find-up-5.0.0.tgz}
     engines: {node: '>=10'}
@@ -1944,6 +1982,10 @@ packages:
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/gensync/-/gensync-1.0.0-beta.2.tgz}
     engines: {node: '>=6.9.0'}
+
+  get-caller-file@2.0.5:
+    resolution: {integrity: sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/get-caller-file/-/get-caller-file-2.0.5.tgz}
+    engines: {node: 6.* || 8.* || >= 10.*}
 
   get-intrinsic@1.3.0:
     resolution: {integrity: sha512-9fSjSaos/fRIVIp+xSJlE6lfwhES7LNtKaCBIamHsjr2na1BiABJPo0mOjjz8GJDURarmCPGqaiVg5mfjb98CQ==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/get-intrinsic/-/get-intrinsic-1.3.0.tgz}
@@ -2108,6 +2150,10 @@ packages:
   is-finalizationregistry@1.1.1:
     resolution: {integrity: sha512-1pC6N8qWJbWoPtEjgcL2xyhQOP491EQjeUo3qTKcmV8YSDDJrOepfG8pcC7h/QgnQHYSv0mJ3Z/ZWxmatVrysg==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/is-finalizationregistry/-/is-finalizationregistry-1.1.1.tgz}
     engines: {node: '>= 0.4'}
+
+  is-fullwidth-code-point@3.0.0:
+    resolution: {integrity: sha512-zymm5+u+sCsSWyD9qNaejV3DFvhCKclKdizYaJUuHA83RLjb7nSuGnddCHGv0hk+KY7BMAlsWeK4Ueg6EV6XQg==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/is-fullwidth-code-point/-/is-fullwidth-code-point-3.0.0.tgz}
+    engines: {node: '>=8'}
 
   is-generator-function@1.1.2:
     resolution: {integrity: sha512-upqt1SkGkODW9tsGNG5mtXTXtECizwtS2kA161M+gJPc1xdb/Ax629af6YrTwcOeQHbewrPNlE5Dx7kzvXTizA==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/is-generator-function/-/is-generator-function-1.1.2.tgz}
@@ -2378,6 +2424,10 @@ packages:
     resolution: {integrity: sha512-utWOt/GHzuUxnLKxB6dk81RoOeoNeHgbrXiuGk4yyF5qlRz+iIVWu56E2fqGHFrXz0QNUhLB/8nKqvRH66JKGQ==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/lilconfig/-/lilconfig-2.1.0.tgz}
     engines: {node: '>=10'}
 
+  locate-path@5.0.0:
+    resolution: {integrity: sha512-t7hw9pI+WvuwNJXwk5zVHpyhIqzg2qTlklJOf0mVxGSbe3Fp2VieZcduNYjaLDoy6p9uGpQEGWG87WpMKlNq8g==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/locate-path/-/locate-path-5.0.0.tgz}
+    engines: {node: '>=8'}
+
   locate-path@6.0.0:
     resolution: {integrity: sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/locate-path/-/locate-path-6.0.0.tgz}
     engines: {node: '>=10'}
@@ -2548,13 +2598,25 @@ packages:
     resolution: {integrity: sha512-19YVAg7T+WTrxggPukVq7DjTv6+PJ867TmhCvBsYwmbFCsZd344rq2Ld1p0wo8f8Qrrhgp82c6FJRqdXWtSEhg==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/own-keys/-/own-keys-1.0.2.tgz}
     engines: {node: '>= 0.4'}
 
+  p-limit@2.3.0:
+    resolution: {integrity: sha512-//88mFWSJx8lxCzwdAABTJL2MyWB12+eIY7MDL2SqLmAkeKU9qxRvWuSyTjm3FUmpBEMuFfckAIqEaVGUDxb6w==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/p-limit/-/p-limit-2.3.0.tgz}
+    engines: {node: '>=6'}
+
   p-limit@3.1.0:
     resolution: {integrity: sha512-TYOanM3wGwNGsZN2cVTYPArw454xnXj5qmWF1bEoAc4+cU/ol7GVh7odevjp1FNHduHc3KZMcFduxU5Xc6uJRQ==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/p-limit/-/p-limit-3.1.0.tgz}
     engines: {node: '>=10'}
 
+  p-locate@4.1.0:
+    resolution: {integrity: sha512-R79ZZ/0wAxKGu3oYMlz8jy/kbhsNrS7SKZ7PxEHBgJ5+F2mtFW2fK2cOtBh1cHYkQsbzFV7I+EoRKe6Yt0oK7A==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/p-locate/-/p-locate-4.1.0.tgz}
+    engines: {node: '>=8'}
+
   p-locate@5.0.0:
     resolution: {integrity: sha512-LaNjtRWUBY++zB5nE/NwcaoMylSPk+S+ZHNB1TzdbMJMny6dynpAGt7X/tl/QYq3TIeE6nxHppbo2LGymrG5Pw==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/p-locate/-/p-locate-5.0.0.tgz}
     engines: {node: '>=10'}
+
+  p-try@2.2.0:
+    resolution: {integrity: sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/p-try/-/p-try-2.2.0.tgz}
+    engines: {node: '>=6'}
 
   path-exists@4.0.0:
     resolution: {integrity: sha512-ak9Qy5Q7jYb2Wwcey5Fpvg2KoAc/ZIhLSLOSBmRmygPsGwkVVt0fZa0qrtMz+m6tJTAHfZQ8FnmB4MG4LWy7/w==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/path-exists/-/path-exists-4.0.0.tgz}
@@ -2596,6 +2658,10 @@ packages:
     resolution: {integrity: sha512-kVzTnYFYEyQ9RGzBjNCd2+yEqWmVbxl3AHPynv3qQ6JTjv4a+kwRcnqQwIpuP3NnrnIrE/Q6wWAIAvMfIE2/Yg==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/playwright/-/playwright-1.64.0.tgz}
     engines: {node: '>=20'}
     hasBin: true
+
+  pngjs@5.0.0:
+    resolution: {integrity: sha512-40QW5YalBNfQo5yRYmiw7Yz6TKKVr3h6970B2YE+3fQpsWcrbj1PzJgxeJ19DRQjhMbKPIuMY8rFaXc8moolVw==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/pngjs/-/pngjs-5.0.0.tgz}
+    engines: {node: '>=10.13.0'}
 
   possible-typed-array-names@1.1.0:
     resolution: {integrity: sha512-/+5VFTchJDoVj3bhoqi6UeymcD00DAwb1nJwamzPvHEszJ4FpF6SNNbUbOS8yI56qHzdV8eK0qEfOSiodkTdxg==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/possible-typed-array-names/-/possible-typed-array-names-1.1.0.tgz}
@@ -2666,6 +2732,11 @@ packages:
     resolution: {integrity: sha512-+Owyggi9IxT1ePKGafcI87ubSmxol6smwJ+RAHDQlx9+9cPwFWDiKFFCPuWhr9ignlGpZ9vDQLw67N4dcTVFEA==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/qified/-/qified-0.10.1.tgz}
     engines: {node: '>=20'}
 
+  qrcode@1.5.4:
+    resolution: {integrity: sha512-1ca71Zgiu6ORjHqFBDpnSMTR2ReToX4l1Au1VFLyVeBTFavzQnv5JxMFr3ukHVKpSrSA2MCk0lNJSykjUfz7Zg==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/qrcode/-/qrcode-1.5.4.tgz}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
+
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/queue-microtask/-/queue-microtask-1.2.3.tgz}
 
@@ -2704,6 +2775,13 @@ packages:
 
   remeda@2.21.3:
     resolution: {integrity: sha512-XXrZdLA10oEOQhLLzEJEiFFSKi21REGAkHdImIb4rt/XXy8ORGXh5HCcpUOsElfPNDb+X6TA/+wkh+p2KffYmg==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/remeda/-/remeda-2.21.3.tgz}
+
+  require-directory@2.1.1:
+    resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/require-directory/-/require-directory-2.1.1.tgz}
+    engines: {node: '>=0.10.0'}
+
+  require-main-filename@2.0.0:
+    resolution: {integrity: sha512-NKN5kMDylKuldxYLSUfrbo5Tuzh4hd+2E8NPPX02mZtn1VuREQToYe/ZdlJy+J3uCpfaiGF05e7B8W0iXbQHmg==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/require-main-filename/-/require-main-filename-2.0.0.tgz}
 
   resolve-pkg-maps@1.0.0:
     resolution: {integrity: sha512-seS2Tj26TBVOC2NIc2rOe2y2ZO7efxITtLZcGSOnHHNOQ7CkiUBfw0Iw2ck6xkIhPwLhKNLS8BO+hEpngQlqzw==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/resolve-pkg-maps/-/resolve-pkg-maps-1.0.0.tgz}
@@ -2761,6 +2839,9 @@ packages:
 
   seq-queue@0.0.5:
     resolution: {integrity: sha512-hr3Wtp/GZIc/6DAGPDcV4/9WoZhjrkXsi5B/07QgX8tsdc6ilr7BFM6PM6rbdAX1kFSDYeZGLipIZZKyQP0O5Q==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/seq-queue/-/seq-queue-0.0.5.tgz}
+
+  set-blocking@2.0.0:
+    resolution: {integrity: sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/set-blocking/-/set-blocking-2.0.0.tgz}
 
   set-cookie-parser@3.1.3:
     resolution: {integrity: sha512-xletSdAI5efyVJjsatBbzDkXl3M/Zmad3xfnQe7ZXuBB0yNwW7C2WFsNGjdRNfZunmNHQuX79xs/ACMTLCdcew==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/set-cookie-parser/-/set-cookie-parser-3.1.3.tgz}
@@ -2845,6 +2926,10 @@ packages:
     resolution: {integrity: sha512-eLoXW/DHyl62zxY4SCaIgnRhuMr6ri4juEYARS8E6sCEqzKpOiE521Ucofdx+KnDZl5xmvGYaaKCk5FEOxJCoQ==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/stop-iteration-iterator/-/stop-iteration-iterator-1.1.0.tgz}
     engines: {node: '>= 0.4'}
 
+  string-width@4.2.3:
+    resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/string-width/-/string-width-4.2.3.tgz}
+    engines: {node: '>=8'}
+
   string.prototype.includes@2.0.1:
     resolution: {integrity: sha512-o7+c9bW6zpAdJHTtujeePODAhkuicdAryFsfVKwA+wGw89wJ4GTY484WTucM9hLtDEOpOvI+aHnzqnC5lHp4Rg==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/string.prototype.includes/-/string.prototype.includes-2.0.1.tgz}
     engines: {node: '>= 0.4'}
@@ -2867,6 +2952,10 @@ packages:
   string.prototype.trimstart@1.0.8:
     resolution: {integrity: sha512-UXSH262CSZY1tfu3G3Secr6uGLCFVPMhIqHjlgCUtCCcgihYc/xKs9djMTMUOb2j1mVSeU8EU6NWc/iQKU6Gfg==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/string.prototype.trimstart/-/string.prototype.trimstart-1.0.8.tgz}
     engines: {node: '>= 0.4'}
+
+  strip-ansi@6.0.1:
+    resolution: {integrity: sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/strip-ansi/-/strip-ansi-6.0.1.tgz}
+    engines: {node: '>=8'}
 
   strip-bom@3.0.0:
     resolution: {integrity: sha512-vavAMRXOgBVNF6nyEEmL3DBK19iRpDcoIwW+swQ+CbGiu7lju6t+JklA1MHweoWtadgt4ISVUsXLyDq34ddcwA==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/strip-bom/-/strip-bom-3.0.0.tgz}
@@ -3104,6 +3193,9 @@ packages:
     resolution: {integrity: sha512-K4jVyjnBdgvc86Y6BkaLZEN933SwYOuBFkdmBu9ZfkcAbdVbpITnDmjvZ/aQjRXQrv5EPkTnD1s39GiiqbngCw==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/which-collection/-/which-collection-1.0.2.tgz}
     engines: {node: '>= 0.4'}
 
+  which-module@2.0.1:
+    resolution: {integrity: sha512-iBdZ57RDvnOR9AGBhML2vFZf7h8vmBjhoaZqODJBFWHVtKkDmKuHai3cx5PgVMrX5YDNp27AofYbAwctSS+vhQ==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/which-module/-/which-module-2.0.1.tgz}
+
   which-typed-array@1.1.24:
     resolution: {integrity: sha512-wk4Mf4pR5mRP7eYuuTBCIQ9d0ud2Fv2jRLQpfgnRjbOxAFHmjKFValgTpitVKzJJS8ajnYQV2Du1SZ8j6b/EUQ==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/which-typed-array/-/which-typed-array-1.1.24.tgz}
     engines: {node: '>= 0.4'}
@@ -3122,8 +3214,23 @@ packages:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/word-wrap/-/word-wrap-1.2.5.tgz}
     engines: {node: '>=0.10.0'}
 
+  wrap-ansi@6.2.0:
+    resolution: {integrity: sha512-r6lPcBGxZXlIcymEu7InxDMhdW0KDxpLgoFLcguasxCaJ/SOIZwINatK9KY/tf+ZrlywOKU0UDj3ATXUBfxJXA==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/wrap-ansi/-/wrap-ansi-6.2.0.tgz}
+    engines: {node: '>=8'}
+
+  y18n@4.0.3:
+    resolution: {integrity: sha512-JKhqTOwSrqNA1NY5lSztJ1GrBiUodLMmIZuLiDaMRJ+itFd+ABVE8XBjOvIWL+rSqNDC74LCSFmlb/U4UZ4hJQ==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/y18n/-/y18n-4.0.3.tgz}
+
   yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/yallist/-/yallist-3.1.1.tgz}
+
+  yargs-parser@18.1.3:
+    resolution: {integrity: sha512-o50j0JeToy/4K6OZcaQmW6lyXXKhq7csREXcDwk2omFPJEwUNOVtJKvmDr9EI1fAJZUyZcRF7kxGBWmRXudrCQ==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/yargs-parser/-/yargs-parser-18.1.3.tgz}
+    engines: {node: '>=6'}
+
+  yargs@15.4.1:
+    resolution: {integrity: sha512-aePbxDmcYW++PaqBsJ+HYUFwCdv4LVvdnhBy78E57PIor8/OVvhMrADFFEDh8DHDFRv/O9i3lPhsENjO7QX0+A==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/yargs/-/yargs-15.4.1.tgz}
+    engines: {node: '>=8'}
 
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==, tarball: https://package-mirror.liara.ir/repository/npm/api/npm/npm/yocto-queue/-/yocto-queue-0.1.0.tgz}
@@ -4070,6 +4177,10 @@ snapshots:
     dependencies:
       undici-types: 6.20.0
 
+  '@types/qrcode@1.5.6':
+    dependencies:
+      '@types/node': 22.10.2
+
   '@types/react-dom@19.3.0(@types/react@19.3.0)':
     dependencies:
       '@types/react': 19.3.0
@@ -4323,6 +4434,12 @@ snapshots:
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
 
+  ansi-regex@5.0.1: {}
+
+  ansi-styles@4.3.0:
+    dependencies:
+      color-convert: 2.0.1
+
   aria-query@5.3.2: {}
 
   array-buffer-byte-length@1.0.2:
@@ -4518,6 +4635,8 @@ snapshots:
       call-bind-apply-helpers: 1.0.2
       get-intrinsic: 1.3.0
 
+  camelcase@5.3.1: {}
+
   caniuse-lite@1.0.30001815: {}
 
   chai@6.3.0: {}
@@ -4542,6 +4661,12 @@ snapshots:
   citty@0.2.2: {}
 
   client-only@0.0.1: {}
+
+  cliui@6.0.0:
+    dependencies:
+      string-width: 4.2.3
+      strip-ansi: 6.0.1
+      wrap-ansi: 6.2.0
 
   clsx@2.1.1: {}
 
@@ -4607,6 +4732,8 @@ snapshots:
     dependencies:
       ms: 2.1.3
 
+  decamelize@1.2.0: {}
+
   deep-is@0.1.4: {}
 
   deepmerge-ts@7.1.5: {}
@@ -4631,6 +4758,8 @@ snapshots:
 
   detect-libc@2.1.2: {}
 
+  dijkstrajs@1.0.3: {}
+
   doctrine@2.1.0:
     dependencies:
       esutils: 2.0.3
@@ -4649,6 +4778,8 @@ snapshots:
       fast-check: 3.23.2
 
   electron-to-chromium@1.5.452: {}
+
+  emoji-regex@8.0.0: {}
 
   emoji-regex@9.2.2: {}
 
@@ -5019,6 +5150,11 @@ snapshots:
     dependencies:
       to-regex-range: 5.0.1
 
+  find-up@4.1.0:
+    dependencies:
+      locate-path: 5.0.0
+      path-exists: 4.0.0
+
   find-up@5.0.0:
     dependencies:
       locate-path: 6.0.0
@@ -5069,6 +5205,8 @@ snapshots:
   generator-function@2.0.1: {}
 
   gensync@1.0.0-beta.2: {}
+
+  get-caller-file@2.0.5: {}
 
   get-intrinsic@1.3.0:
     dependencies:
@@ -5239,6 +5377,8 @@ snapshots:
   is-finalizationregistry@1.1.1:
     dependencies:
       call-bound: 1.0.4
+
+  is-fullwidth-code-point@3.0.0: {}
 
   is-generator-function@1.1.2:
     dependencies:
@@ -5459,6 +5599,10 @@ snapshots:
 
   lilconfig@2.1.0: {}
 
+  locate-path@5.0.0:
+    dependencies:
+      p-locate: 4.1.0
+
   locate-path@6.0.0:
     dependencies:
       p-locate: 5.0.0
@@ -5641,13 +5785,23 @@ snapshots:
       object-keys: 1.1.1
       safe-push-apply: 1.0.0
 
+  p-limit@2.3.0:
+    dependencies:
+      p-try: 2.2.0
+
   p-limit@3.1.0:
     dependencies:
       yocto-queue: 0.1.0
 
+  p-locate@4.1.0:
+    dependencies:
+      p-limit: 2.3.0
+
   p-locate@5.0.0:
     dependencies:
       p-limit: 3.1.0
+
+  p-try@2.2.0: {}
 
   path-exists@4.0.0: {}
 
@@ -5676,6 +5830,8 @@ snapshots:
   playwright@1.64.0:
     dependencies:
       playwright-core: 1.64.0
+
+  pngjs@5.0.0: {}
 
   possible-typed-array-names@1.1.0: {}
 
@@ -5747,6 +5903,12 @@ snapshots:
     dependencies:
       hookified: 2.2.0
 
+  qrcode@1.5.4:
+    dependencies:
+      dijkstrajs: 1.0.3
+      pngjs: 5.0.0
+      yargs: 15.4.1
+
   queue-microtask@1.2.3: {}
 
   rc9@2.1.2:
@@ -5792,6 +5954,10 @@ snapshots:
   remeda@2.21.3:
     dependencies:
       type-fest: 4.41.0
+
+  require-directory@2.1.1: {}
+
+  require-main-filename@2.0.0: {}
 
   resolve-pkg-maps@1.0.0: {}
 
@@ -5863,6 +6029,8 @@ snapshots:
   semver@7.8.5: {}
 
   seq-queue@0.0.5: {}
+
+  set-blocking@2.0.0: {}
 
   set-cookie-parser@3.1.3: {}
 
@@ -6005,6 +6173,12 @@ snapshots:
       es-errors: 1.3.0
       internal-slot: 1.1.0
 
+  string-width@4.2.3:
+    dependencies:
+      emoji-regex: 8.0.0
+      is-fullwidth-code-point: 3.0.0
+      strip-ansi: 6.0.1
+
   string.prototype.includes@2.0.1:
     dependencies:
       call-bind: 1.0.9
@@ -6055,6 +6229,10 @@ snapshots:
       call-bind: 1.0.9
       define-properties: 1.2.1
       es-object-atoms: 1.1.2
+
+  strip-ansi@6.0.1:
+    dependencies:
+      ansi-regex: 5.0.1
 
   strip-bom@3.0.0: {}
 
@@ -6297,6 +6475,8 @@ snapshots:
       is-weakmap: 2.0.2
       is-weakset: 2.0.4
 
+  which-module@2.0.1: {}
+
   which-typed-array@1.1.24:
     dependencies:
       available-typed-arrays: 1.0.7
@@ -6315,7 +6495,34 @@ snapshots:
 
   word-wrap@1.2.5: {}
 
+  wrap-ansi@6.2.0:
+    dependencies:
+      ansi-styles: 4.3.0
+      string-width: 4.2.3
+      strip-ansi: 6.0.1
+
+  y18n@4.0.3: {}
+
   yallist@3.1.1: {}
+
+  yargs-parser@18.1.3:
+    dependencies:
+      camelcase: 5.3.1
+      decamelize: 1.2.0
+
+  yargs@15.4.1:
+    dependencies:
+      cliui: 6.0.0
+      decamelize: 1.2.0
+      find-up: 4.1.0
+      get-caller-file: 2.0.5
+      require-directory: 2.1.1
+      require-main-filename: 2.0.0
+      set-blocking: 2.0.0
+      string-width: 4.2.3
+      which-module: 2.0.1
+      y18n: 4.0.3
+      yargs-parser: 18.1.3
 
   yocto-queue@0.1.0: {}
 

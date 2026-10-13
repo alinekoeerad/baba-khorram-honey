@@ -16,7 +16,6 @@ import Link from 'next/link';
 import { WoodBackground } from '@/components/ui/wood-background';
 import { Container } from '@/components/ui/container';
 import { Picture } from '@/components/ui/picture';
-import { ContentCard } from '@/components/ui/content-card';
 import { AddToCartSlot } from '@/components/public/add-to-cart-slot';
 import { LabCertificateModal } from '@/components/public/lab-certificate-modal';
 import { MobileStickyBuyBar } from '@/components/public/mobile-sticky-buy-bar';
@@ -71,16 +70,19 @@ export function ProductDetailView({
     <WoodBackground className="py-10 sm:py-16 min-h-screen">
       <Container>
         {/* Breadcrumb Navigation */}
-        <nav aria-label="مسیر راهنما" className="flex items-center gap-2 text-xs sm:text-sm font-bold text-[#FFFBEB] mb-8">
-          <Link href="/" className="text-[#E5D5C5] hover:text-[#FBBF24] transition-colors">
+        <nav
+          aria-label="مسیر راهنما"
+          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-xs sm:text-sm font-bold text-white mb-8 shadow-md"
+        >
+          <Link href="/" className="text-white hover:text-[#FBBF24] transition-colors underline-offset-4 hover:underline">
             صفحه اصلی
           </Link>
-          <span className="text-white/40" aria-hidden="true">/</span>
-          <Link href="/products" className="text-[#E5D5C5] hover:text-[#FBBF24] transition-colors">
+          <span className="text-[#FBBF24] font-black" aria-hidden="true">/</span>
+          <Link href="/products" className="text-white hover:text-[#FBBF24] transition-colors underline-offset-4 hover:underline">
             محصولات
           </Link>
-          <span className="text-white/40" aria-hidden="true">/</span>
-          <span className="text-[#FBBF24] font-black truncate max-w-[240px]">
+          <span className="text-[#FBBF24] font-black" aria-hidden="true">/</span>
+          <span className="text-[#FDE047] font-black truncate max-w-[240px]">
             {product.nameFa}
           </span>
         </nav>
@@ -298,57 +300,6 @@ export function ProductDetailView({
           </div>
         </div>
 
-        {/* Related Products Showcase */}
-        {relatedProducts && relatedProducts.length > 0 && (
-          <div className="pt-16 sm:pt-24 space-y-8 border-t border-white/15 mt-16 text-right">
-            <div className="text-center space-y-2">
-              <h2 className="text-2xl sm:text-4xl font-black text-[#FFFBEB]">
-                محصولات مشابه و پیشنهادی
-              </h2>
-              <p className="text-xs sm:text-sm text-[#E5D5C5] font-medium">
-                پیشنهادهای مرتبط از زنبورستان‌های ارگانیک باباخُرم
-              </p>
-            </div>
-
-            <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {relatedProducts.map((rel, idx) => (
-                <ContentCard
-                  key={rel.id}
-                  title={rel.title}
-                  subtitle={rel.subtitle}
-                  href={rel.href}
-                  imageAsset={rel.imageAsset}
-                  imageUrl={rel.imageUrl || (rel.imageAsset ? null : '/images/honey-jar.jpg')}
-                  theme={rel.theme}
-                  slug={rel.slug}
-                  isAvailable={rel.isAvailable}
-                  linkLabel={rel.linkLabel}
-                  variant="vertical"
-                  index={idx}
-                />
-              ))}
-            </div>
-
-            <div className="md:hidden space-y-4">
-              {relatedProducts.map((rel, idx) => (
-                <ContentCard
-                  key={rel.id}
-                  title={rel.title}
-                  subtitle={rel.subtitle}
-                  href={rel.href}
-                  imageAsset={rel.imageAsset}
-                  imageUrl={rel.imageUrl || (rel.imageAsset ? null : '/images/honey-jar.jpg')}
-                  theme={rel.theme}
-                  slug={rel.slug}
-                  isAvailable={rel.isAvailable}
-                  linkLabel={rel.linkLabel}
-                  variant="horizontal"
-                  index={idx}
-                />
-              ))}
-            </div>
-          </div>
-        )}
       </Container>
 
       {/* [UX-02] Mobile Sticky Buy-Bar */}

@@ -298,3 +298,12 @@ html[data-scroll-behavior="smooth"] {
   outline: 2px solid #F59E0B;
   outline-offset: 2px;
 }
+
+/* Hide scrollbar for Chrome, Safari, Opera, Edge, Firefox */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

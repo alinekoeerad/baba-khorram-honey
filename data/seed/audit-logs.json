@@ -1,5 +1,49 @@
 [
   {
+    "id": "aud_1791894159450_sbcg6",
+    "userId": null,
+    "action": "TEST_FILTER_ACTION",
+    "entityType": "TestEntity",
+    "entityId": null,
+    "summary": "Test filter entry",
+    "ip": null,
+    "userAgent": null,
+    "createdAt": "2026-10-13T12:22:39.450Z"
+  },
+  {
+    "id": "aud_1791894159445_krd3k",
+    "userId": null,
+    "action": "PASSWORD_CHANGE",
+    "entityType": "User",
+    "entityId": "u-123",
+    "summary": "User updated $1=[REDACTED] and $1=[REDACTED]",
+    "ip": "192.168.1.1",
+    "userAgent": "Mozilla/5.0",
+    "createdAt": "2026-10-13T12:22:39.445Z"
+  },
+  {
+    "id": "aud_1791893560820_w8avl",
+    "userId": null,
+    "action": "TEST_FILTER_ACTION",
+    "entityType": "TestEntity",
+    "entityId": null,
+    "summary": "Test filter entry",
+    "ip": null,
+    "userAgent": null,
+    "createdAt": "2026-10-13T12:12:40.820Z"
+  },
+  {
+    "id": "aud_1791893560812_kzxp1",
+    "userId": null,
+    "action": "PASSWORD_CHANGE",
+    "entityType": "User",
+    "entityId": "u-123",
+    "summary": "User updated $1=[REDACTED] and $1=[REDACTED]",
+    "ip": "192.168.1.1",
+    "userAgent": "Mozilla/5.0",
+    "createdAt": "2026-10-13T12:12:40.812Z"
+  },
+  {
     "id": "aud_1791884908212_syl8o",
     "userId": "usr_1791465544331_so4k7",
     "action": "PRODUCT_UPDATE",

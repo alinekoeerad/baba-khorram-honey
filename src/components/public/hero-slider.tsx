@@ -51,12 +51,11 @@ export interface HeroSliderProps {
 }
 
 import { PillButton } from '@/components/ui/pill-button';
-import { ShieldCheck, Sparkles, CheckCircle2 } from 'lucide-react';
 
 export function HeroSlider({
   images,
-  title = 'شاهکار بی‌نظیر طبیعت',
-  subtitle = 'تغذیه اصیل، طعمی تکرارنشدنی و سرشار از انرژی طلایی برای زندگی روزمره',
+  title = 'عسل خالص و طبیعی باباخُرم',
+  subtitle = 'برداشت مستقیم از بهترین مراتع ییلاقی ارسباران، با حفظ ۱۰۰٪ خواص زیستی و دارویی',
 }: HeroSliderProps) {
   const slideImages =
     images && images.length > 0
@@ -110,31 +109,26 @@ export function HeroSlider({
 
       {/* Warm Golden/Dark Amber Gradient Overlay */}
       <div
-        className="absolute inset-0 z-10 bg-gradient-to-b from-[#140a05]/50 via-[#140a05]/65 to-[#140a05]/85 pointer-events-none"
+        className="absolute inset-0 z-10 bg-gradient-to-b from-[#140a05]/65 via-[#140a05]/75 to-[#140a05]/90 pointer-events-none"
         aria-hidden="true"
       />
 
-      {/* Hero Content (Conversion-Oriented with Persian Headline, Trust Micro-copy & CTA) */}
+      {/* Hero Content (Strictly Title, Subtitle, and Two Primary Buttons) */}
       <div className="relative z-20 max-w-4xl mx-auto text-white space-y-6 sm:space-y-8">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F59E0B]/20 border border-[#F59E0B]/40 text-[#FBBF24] text-xs sm:text-sm font-bold backdrop-blur-sm shadow-md">
-          <Sparkles className="w-4 h-4 text-[#FBBF24]" />
-          <span>برداشت مستقیم از زنبورستان‌های مرتفع کوهستان</span>
-        </div>
-
         <h1
           id="hero-heading"
-          className="text-3xl sm:text-5xl lg:text-7xl font-black text-[#FFFBEB] leading-tight tracking-tight drop-shadow-xl"
+          className="text-3xl sm:text-5xl lg:text-7xl font-black text-white leading-tight tracking-tight drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]"
         >
           {title}
         </h1>
 
         {subtitle && (
-          <p className="text-base sm:text-xl lg:text-2xl text-[#E5D5C5] max-w-2xl mx-auto leading-relaxed drop-shadow-md font-medium">
+          <p className="text-base sm:text-xl lg:text-2xl text-[#FEF3C7] max-w-2xl mx-auto leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)] font-bold">
             {subtitle}
           </p>
         )}
 
-        {/* Call to action & trust micro-copy */}
+        {/* Call to action buttons */}
         <div className="pt-2 sm:pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
           <PillButton variant="gold" size="lg" href="/products" className="shadow-2xl font-black text-base px-8 py-3.5">
             خرید عسل طبیعی و خام
@@ -142,22 +136,6 @@ export function HeroSlider({
           <PillButton variant="orange" size="lg" href="/recipes" className="font-bold text-base px-6 py-3.5 shadow-xl">
             دستورهای اختصاصی عسل
           </PillButton>
-        </div>
-
-        {/* Trust Badges Micro-copy */}
-        <div className="pt-4 flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-xs sm:text-sm text-[#E5D5C5]/90 font-medium">
-          <div className="flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4 text-[#F59E0B]" />
-            <span>ضمانت اصالت و برگه آزمایش ساکارز</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <ShieldCheck className="w-4 h-4 text-[#F59E0B]" />
-            <span>۱۰۰٪ خام، حرارت‌ندیده و طبیعی</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4 text-[#F59E0B]" />
-            <span>ضمانت کامل بازگشت وجه</span>
-          </div>
         </div>
       </div>
     </section>

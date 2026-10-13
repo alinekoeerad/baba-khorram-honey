@@ -131,7 +131,9 @@ export function ContentCard({
       >
         <div className="flex flex-row items-center h-28 sm:h-32">
           {/* Image Container - Visual Right in RTL (first in DOM under dir="rtl") */}
-          <div className="relative w-28 sm:w-32 h-full shrink-0 overflow-hidden">
+          <div className={`relative w-28 sm:w-32 h-full shrink-0 overflow-hidden ${
+            isProduct ? 'bg-[#FAF7F2] p-2 flex items-center justify-center' : 'bg-[#FAF7F2]'
+          }`}>
             {imageAsset ? (
               <Picture
                 asset={imageAsset}
@@ -139,14 +141,18 @@ export function ContentCard({
                 height={imageAsset.height}
                 blurDataUrl={imageAsset.blurDataUrl}
                 alt={imageAlt || title}
-                className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transform-none"
+                className={`w-full h-full ${
+                  isProduct ? 'object-contain' : 'object-cover'
+                } object-center transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transform-none`}
                 priority={priority}
               />
             ) : imageUrl ? (
               <img
                 src={imageUrl}
                 alt={imageAlt || title}
-                className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transform-none"
+                className={`w-full h-full ${
+                  isProduct ? 'object-contain' : 'object-cover'
+                } object-center transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transform-none`}
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-[#FAF7F2] text-xs font-bold text-[#5C5248]">
@@ -194,8 +200,10 @@ export function ContentCard({
       href={href}
       className={`group flex flex-col rounded-none border border-[#EFE9E0] shadow-sm hover:shadow-[0_16px_36px_rgba(51,33,21,0.22)] active:scale-[0.99] transition-all duration-300 ease-out hover:-translate-y-1.5 motion-reduce:transform-none overflow-hidden ${currentTheme.bg} ${className}`}
     >
-      {/* Image Area - Aspect 4:3 edge-to-edge photo presentation */}
-      <div className="relative w-full aspect-[4/3] sm:h-60 overflow-hidden shrink-0">
+      {/* Image Area - Aspect 4:3 presentation */}
+      <div className={`relative w-full aspect-[4/3] overflow-hidden shrink-0 ${
+        isProduct ? 'bg-[#FAF7F2] p-4 flex items-center justify-center' : 'bg-[#FAF7F2]'
+      }`}>
         {imageAsset ? (
           <Picture
             asset={imageAsset}
@@ -203,14 +211,18 @@ export function ContentCard({
             height={imageAsset.height}
             blurDataUrl={imageAsset.blurDataUrl}
             alt={imageAlt || title}
-            className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transform-none"
+            className={`w-full h-full ${
+              isProduct ? 'object-contain' : 'object-cover'
+            } object-center transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transform-none`}
             priority={priority}
           />
         ) : imageUrl ? (
           <img
             src={imageUrl}
             alt={imageAlt || title}
-            className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transform-none"
+            className={`w-full h-full ${
+              isProduct ? 'object-contain' : 'object-cover'
+            } object-center transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transform-none`}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-[#FAF7F2] text-sm font-medium text-[#5C5248]">
