@@ -80,16 +80,16 @@
       "نوشیدنی را در یخچال قرار دهید و خنک سرو کنید"
     ],
     "categories": [
-      "sharbat-fruit-drinks",
-      "teas-infusions"
+      "drinks",
+      "desserts"
     ],
     "categoryIds": [
-      "cat_sharbat-fruit-drinks",
-      "cat_teas-infusions"
+      "cat_drinks",
+      "cat_desserts"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.836Z",
-    "searchText": "امالاکی پاناکا amalaki panaka هند برای تهیه 4 لیوان معادل 1000 میلی لیتر امالاکی یا انگور فرنگی هندی عسل اب پودر زنجبیل خشک پودر هل سبز قابل تنظیم بر اساس ترشی میوه چای و دمنوش ها شربت ها و نوشیدنی های میوه ای"
+    "updatedAt": "2026-10-12T22:33:49.636Z",
+    "searchText": "امالاکی پاناکا amalaki panaka هند برای تهیه 4 لیوان معادل 1000 میلی لیتر امالاکی یا انگور فرنگی هندی عسل اب پودر زنجبیل خشک پودر هل سبز قابل تنظیم بر اساس ترشی میوه نوشیدنی دسر"
   },
   {
     "id": "rcp_fengmi-youzi-cha",
@@ -194,16 +194,16 @@
       "با یخ سرو کنید"
     ],
     "categories": [
-      "sharbat-fruit-drinks",
-      "teas-infusions"
+      "drinks",
+      "pastries"
     ],
     "categoryIds": [
-      "cat_sharbat-fruit-drinks",
-      "cat_teas-infusions"
+      "cat_drinks",
+      "cat_pastries"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.843Z",
-    "searchText": "چای پوملو fengmi youzi cha چین برای تهیه حدود 6 تا 8 لیوان نوشیدنی پس از رقیق سازی کنسانتره پوملو تازه عسل شکر سنگی اب اب لیموی تازه اب سرد برای سرو یخ متوسط برای هر لیوان) چای و دمنوش ها شربت ها و نوشیدنی های میوه ای"
+    "updatedAt": "2026-10-12T22:33:49.641Z",
+    "searchText": "چای پوملو fengmi youzi cha چین برای تهیه حدود 6 تا 8 لیوان نوشیدنی پس از رقیق سازی کنسانتره پوملو تازه عسل شکر سنگی اب اب لیموی تازه اب سرد برای سرو یخ متوسط برای هر لیوان) نوشیدنی کیک و شیرینی"
   },
   {
     "id": "rcp_hachimitsu-shogayu",
@@ -282,18 +282,16 @@
       "در صورت تمایل آب لیمو یا آب یوزو اضافه کنید و نوشیدنی را گرم سرو کنید"
     ],
     "categories": [
-      "grain-seed-drinks",
-      "sharbat-fruit-drinks",
-      "teas-infusions"
+      "drinks",
+      "breakfast"
     ],
     "categoryIds": [
-      "cat_grain-seed-drinks",
-      "cat_sharbat-fruit-drinks",
-      "cat_teas-infusions"
+      "cat_drinks",
+      "cat_breakfast"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.848Z",
-    "searchText": "شوگایو hachimitsu shogayu ژاپن برای تهیه 2 فنجان زنجبیل تازه اب عسل نشاسته سیب زمینی یا نشاسته ذرت اب لیمو یا اب یوزو چای و دمنوش ها شربت ها و نوشیدنی های میوه ای نوشیدنی های غلات و دانه ها"
+    "updatedAt": "2026-10-12T22:33:49.647Z",
+    "searchText": "شوگایو hachimitsu shogayu ژاپن برای تهیه 2 فنجان زنجبیل تازه اب عسل نشاسته سیب زمینی یا نشاسته ذرت اب لیمو یا اب یوزو نوشیدنی صبحانه"
   },
   {
     "id": "rcp_nuoc-mot",
@@ -417,16 +415,14 @@
       "هنگام سرو آن را روی یخ بریزید و در صورت تمایل با برگ نعناع یا گلبرگ خوراکی تزئین کنید"
     ],
     "categories": [
-      "sharbat-fruit-drinks",
-      "teas-infusions"
+      "drinks"
     ],
     "categoryIds": [
-      "cat_sharbat-fruit-drinks",
-      "cat_teas-infusions"
+      "cat_drinks"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.851Z",
-    "searchText": "موت هوی ان nuoc mot ویتنام (استان کوانگ نام) برای تهیه 4 لیوان ساقه علف لیمو زنجبیل تازه اب کامکوات یا لیمو ترش عسل گل بابونه خشک چوب دارچین یخ گلبرگ نیلوفر خوراکی متوسط کامکوات یا 2 عدد لیمو ترش کوچک چای و دمنوش ها شربت ها و نوشیدنی های میوه ای"
+    "updatedAt": "2026-10-12T22:33:49.651Z",
+    "searchText": "موت هوی ان nuoc mot ویتنام (استان کوانگ نام) برای تهیه 4 لیوان ساقه علف لیمو زنجبیل تازه اب کامکوات یا لیمو ترش عسل گل بابونه خشک چوب دارچین یخ گلبرگ نیلوفر خوراکی متوسط کامکوات یا 2 عدد لیمو ترش کوچک نوشیدنی"
   },
   {
     "id": "rcp_greek-homemade-lemonad-with-honey",
@@ -524,16 +520,14 @@
       "یخ و در صورت تمایل چند برگ نعناع اضافه کنید"
     ],
     "categories": [
-      "sharbat-fruit-drinks",
-      "teas-infusions"
+      "drinks"
     ],
     "categoryIds": [
-      "cat_sharbat-fruit-drinks",
-      "cat_teas-infusions"
+      "cat_drinks"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.855Z",
-    "searchText": "لیموناد خانگی یونانی greek homemade lemonad with honey یونان برای تهیه 4 تا 8 لیوان اب لیموی تازه اب عسل پوست لیموی تازه اب سرد یا اب گاز دار برای رقیق کردن یخ نعناع تازه چای و دمنوش ها شربت ها و نوشیدنی های میوه ای"
+    "updatedAt": "2026-10-12T22:33:49.654Z",
+    "searchText": "لیموناد خانگی یونانی greek homemade lemonad with honey یونان برای تهیه 4 تا 8 لیوان اب لیموی تازه اب عسل پوست لیموی تازه اب سرد یا اب گاز دار برای رقیق کردن یخ نعناع تازه نوشیدنی"
   },
   {
     "id": "rcp_karkadeh",
@@ -614,14 +608,14 @@
       "برای سرو گرم نوشیدنی را گرم نگه دارید و برای سرو سرد حداقل ۲ ساعت در یخچال قرار دهید و سپس با یخ سرو کنید"
     ],
     "categories": [
-      "teas-infusions"
+      "drinks"
     ],
     "categoryIds": [
-      "cat_teas-infusions"
+      "cat_drinks"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.858Z",
-    "searchText": "کارکاده karkadeh مصر برای تهیه 4 لیوان کاسبرگ خشک گل سرخ سودانی/ هیبیسکوس اب عسل یخ نعناع تازه بسته به ذائقه چای و دمنوش ها"
+    "updatedAt": "2026-10-12T22:33:49.661Z",
+    "searchText": "کارکاده karkadeh مصر برای تهیه 4 لیوان کاسبرگ خشک گل سرخ سودانی/ هیبیسکوس اب عسل یخ نعناع تازه بسته به ذائقه نوشیدنی"
   },
   {
     "id": "rcp_sahlab",
@@ -708,16 +702,16 @@
       "در فنجان بریزید و روی آن دارچین و پسته خرد شده بریزید"
     ],
     "categories": [
-      "milk-drinks",
-      "teas-infusions"
+      "drinks",
+      "desserts"
     ],
     "categoryIds": [
-      "cat_milk-drinks",
-      "cat_teas-infusions"
+      "cat_drinks",
+      "cat_desserts"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.862Z",
-    "searchText": "سحلب sahlab سوریه برای 2 نفر شیر پودر سحلب عسل دارچین پسته خرد شده نارگیل رنده شده چای و دمنوش ها نوشیدنی های شیری"
+    "updatedAt": "2026-10-12T22:33:49.665Z",
+    "searchText": "سحلب sahlab سوریه برای 2 نفر شیر پودر سحلب عسل دارچین پسته خرد شده نارگیل رنده شده نوشیدنی دسر"
   },
   {
     "id": "rcp_chai-noomi-basra",
@@ -785,14 +779,16 @@
       "نوشیدنی را گرم سرو کنید"
     ],
     "categories": [
-      "teas-infusions"
+      "drinks",
+      "pastries"
     ],
     "categoryIds": [
-      "cat_teas-infusions"
+      "cat_drinks",
+      "cat_pastries"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.867Z",
-    "searchText": "چای نومی بصره chai noomi basra عراق برای 2 نفر نومی بصره (لومی خشک) اب عسل زعفران متوسط یا متناسب با ذائقه چای و دمنوش ها"
+    "updatedAt": "2026-10-12T22:33:49.669Z",
+    "searchText": "چای نومی بصره chai noomi basra عراق برای 2 نفر نومی بصره (لومی خشک) اب عسل زعفران متوسط یا متناسب با ذائقه نوشیدنی کیک و شیرینی"
   },
   {
     "id": "rcp_peshawari-kahwa",
@@ -900,14 +896,16 @@
       "با خلال بادام سرو کنید"
     ],
     "categories": [
-      "teas-infusions"
+      "drinks",
+      "pastries"
     ],
     "categoryIds": [
-      "cat_teas-infusions"
+      "cat_drinks",
+      "cat_pastries"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.872Z",
-    "searchText": "قهوا پشاوری peshawari kahwa پاکستان (به ویژه خیبر پختونخوا و پیشاور) برای 2 نفر اب چای سبز هل سبز چوب دارچین میخک زعفران عسل بادام خلال شده برای سرو چای و دمنوش ها"
+    "updatedAt": "2026-10-12T22:33:49.682Z",
+    "searchText": "قهوا پشاوری peshawari kahwa پاکستان (به ویژه خیبر پختونخوا و پیشاور) برای 2 نفر اب چای سبز هل سبز چوب دارچین میخک زعفران عسل بادام خلال شده برای سرو نوشیدنی کیک و شیرینی"
   },
   {
     "id": "rcp_afghan-kahwah",
@@ -1005,14 +1003,16 @@
       "با بادام خلال شده سرو کنید"
     ],
     "categories": [
-      "teas-infusions"
+      "drinks",
+      "pastries"
     ],
     "categoryIds": [
-      "cat_teas-infusions"
+      "cat_drinks",
+      "cat_pastries"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.875Z",
-    "searchText": "قهوا افغانی afghan kahwah افغانستان برای 2 نفر اب چای سبز هل سبز چوب دارچین زعفران عسل بادام خلال شده برای سرو چای و دمنوش ها"
+    "updatedAt": "2026-10-12T22:33:49.686Z",
+    "searchText": "قهوا افغانی afghan kahwah افغانستان برای 2 نفر اب چای سبز هل سبز چوب دارچین زعفران عسل بادام خلال شده برای سرو نوشیدنی کیک و شیرینی"
   },
   {
     "id": "rcp_tashkent-tea",
@@ -1100,16 +1100,16 @@
       "با برش های لیمو سرو کنید"
     ],
     "categories": [
-      "sharbat-fruit-drinks",
-      "teas-infusions"
+      "drinks",
+      "pastries"
     ],
     "categoryIds": [
-      "cat_sharbat-fruit-drinks",
-      "cat_teas-infusions"
+      "cat_drinks",
+      "cat_pastries"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.879Z",
-    "searchText": "چای تاشکند tashkent tea قزاقستان برای 2 نفر اب چای سبز چای سیاه عسل لیموی تازه اب لیموی تازه چای و دمنوش ها شربت ها و نوشیدنی های میوه ای"
+    "updatedAt": "2026-10-12T22:33:49.690Z",
+    "searchText": "چای تاشکند tashkent tea قزاقستان برای 2 نفر اب چای سبز چای سیاه عسل لیموی تازه اب لیموی تازه نوشیدنی کیک و شیرینی"
   },
   {
     "id": "rcp_iskencebi",
@@ -1186,16 +1186,16 @@
       "نوشیدنی را صاف کرده و با یخ سرو کنید"
     ],
     "categories": [
-      "sharbat-fruit-drinks",
-      "teas-infusions"
+      "drinks",
+      "desserts"
     ],
     "categoryIds": [
-      "cat_sharbat-fruit-drinks",
-      "cat_teas-infusions"
+      "cat_drinks",
+      "cat_desserts"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.882Z",
-    "searchText": "ایسکنجه بی iskencebi اذربایجان برای 4 نفر عسل سرکه انگور اب نعناع تازه یخ چای و دمنوش ها شربت ها و نوشیدنی های میوه ای"
+    "updatedAt": "2026-10-12T22:33:49.694Z",
+    "searchText": "ایسکنجه بی iskencebi اذربایجان برای 4 نفر عسل سرکه انگور اب نعناع تازه یخ نوشیدنی دسر"
   },
   {
     "id": "rcp_honey-aroma",
@@ -1274,16 +1274,16 @@
       "برای نسخه گرم، همانطور گرم سرو کنید و برای نسخه سرد پس از خنک شدن با آب سرد و یخ سرو شود"
     ],
     "categories": [
-      "sharbat-fruit-drinks",
-      "teas-infusions"
+      "drinks",
+      "desserts"
     ],
     "categoryIds": [
-      "cat_sharbat-fruit-drinks",
-      "cat_teas-infusions"
+      "cat_drinks",
+      "cat_desserts"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.885Z",
-    "searchText": "عطر عسل honey aroma ارمنستان برای 2 نفر اب مخلوط گیاهان معطر خشک یا تازه عسل توت تازه یا یخ زده اب سرد (برای نسخه سرد) چای و دمنوش ها شربت ها و نوشیدنی های میوه ای"
+    "updatedAt": "2026-10-12T22:33:49.698Z",
+    "searchText": "عطر عسل honey aroma ارمنستان برای 2 نفر اب مخلوط گیاهان معطر خشک یا تازه عسل توت تازه یا یخ زده اب سرد (برای نسخه سرد) نوشیدنی دسر"
   },
   {
     "id": "rcp_qahwa-hadramiya",
@@ -1360,14 +1360,14 @@
       "داغ سرو کنید"
     ],
     "categories": [
-      "teas-infusions"
+      "drinks"
     ],
     "categoryIds": [
-      "cat_teas-infusions"
+      "cat_drinks"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.889Z",
-    "searchText": "قهوه حضرمی qahwa hadramiya یمن برای 4 تا 5 فنجان اب زنجبیل دارچین اسیاب شده هل اسیاب شده عسل چای و دمنوش ها"
+    "updatedAt": "2026-10-12T22:33:49.701Z",
+    "searchText": "قهوه حضرمی qahwa hadramiya یمن برای 4 تا 5 فنجان اب زنجبیل دارچین اسیاب شده هل اسیاب شده عسل نوشیدنی"
   },
   {
     "id": "rcp_bsissa",
@@ -1445,16 +1445,16 @@
       "برای نسخه تابستانی می توان آن را با یخ سرو کرد"
     ],
     "categories": [
-      "grain-seed-drinks",
-      "teas-infusions"
+      "drinks",
+      "breakfast"
     ],
     "categoryIds": [
-      "cat_grain-seed-drinks",
-      "cat_teas-infusions"
+      "cat_drinks",
+      "cat_breakfast"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.892Z",
-    "searchText": "بسیسه bsissa تونس برای 1 نفر پودر بسیسه جو یا گندم عسل اب سرد یا ولرم روغن زیتون فرابکر یخ چای و دمنوش ها نوشیدنی های غلات و دانه ها"
+    "updatedAt": "2026-10-12T22:33:49.705Z",
+    "searchText": "بسیسه bsissa تونس برای 1 نفر پودر بسیسه جو یا گندم عسل اب سرد یا ولرم روغن زیتون فرابکر یخ نوشیدنی صبحانه"
   },
   {
     "id": "rcp_lait-de-poule",
@@ -1551,14 +1551,18 @@
       "نوشیدنی را سرد سرو کنید"
     ],
     "categories": [
-      "milk-drinks"
+      "drinks",
+      "desserts",
+      "breakfast"
     ],
     "categoryIds": [
-      "cat_milk-drinks"
+      "cat_drinks",
+      "cat_desserts",
+      "cat_breakfast"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.895Z",
-    "searchText": "حلیب الدجاج (شیر مرغ) lait de poule الجزایر برای تهیه 1 لیتر شیر زرده تخم مرغ موز بادام کشمش عسل بادام زمینی نوشیدنی های شیری"
+    "updatedAt": "2026-10-12T22:33:49.712Z",
+    "searchText": "حلیب الدجاج (شیر مرغ) lait de poule الجزایر برای تهیه 1 لیتر شیر زرده تخم مرغ موز بادام کشمش عسل بادام زمینی نوشیدنی دسر صبحانه"
   },
   {
     "id": "rcp_the-a-la-menthe-algerien",
@@ -1635,14 +1639,16 @@
       "اجازه دهید دما کمی پایین بیاید سپس عسل را اضافه کنید"
     ],
     "categories": [
-      "teas-infusions"
+      "drinks",
+      "pastries"
     ],
     "categoryIds": [
-      "cat_teas-infusions"
+      "cat_drinks",
+      "cat_pastries"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.899Z",
-    "searchText": "چای نعناع الجزایری the a la menthe algerien الجزایر برای 2 نفر چای سبز نعناع تازه اب عسل مغز کاج چای و دمنوش ها"
+    "updatedAt": "2026-10-12T22:33:49.715Z",
+    "searchText": "چای نعناع الجزایری the a la menthe algerien الجزایر برای 2 نفر چای سبز نعناع تازه اب عسل مغز کاج نوشیدنی کیک و شیرینی"
   },
   {
     "id": "rcp_jus-de-bouye",
@@ -1730,16 +1736,16 @@
       "حداقل ۱ ساعت در یخچال قرار دهید و سرد سرو کنید"
     ],
     "categories": [
-      "milk-drinks",
-      "sharbat-fruit-drinks"
+      "drinks",
+      "desserts"
     ],
     "categoryIds": [
-      "cat_milk-drinks",
-      "cat_sharbat-fruit-drinks"
+      "cat_drinks",
+      "cat_desserts"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.903Z",
-    "searchText": "بویه jus de bouye سنگال برای 2 نفر پودر یا پالپ خشک بائوباب اب سرد عسل شیر وانیل یا اب شکوفه پرتغال یخ شربت ها و نوشیدنی های میوه ای نوشیدنی های شیری"
+    "updatedAt": "2026-10-12T22:33:49.719Z",
+    "searchText": "بویه jus de bouye سنگال برای 2 نفر پودر یا پالپ خشک بائوباب اب سرد عسل شیر وانیل یا اب شکوفه پرتغال یخ نوشیدنی دسر"
   },
   {
     "id": "rcp_zoom-koom",
@@ -1849,18 +1855,14 @@
       "نوشیدنی را با یخ سرو کنید"
     ],
     "categories": [
-      "grain-seed-drinks",
-      "sharbat-fruit-drinks",
-      "teas-infusions"
+      "drinks"
     ],
     "categoryIds": [
-      "cat_grain-seed-drinks",
-      "cat_sharbat-fruit-drinks",
-      "cat_teas-infusions"
+      "cat_drinks"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.908Z",
-    "searchText": "زوم کوم zoom-koom بورکینافاسو برای 2 نفر ارد ارزن اب عسل زنجبیل تازه تمرهندی اب لیمو نعناع تازه یخ چای و دمنوش ها شربت ها و نوشیدنی های میوه ای نوشیدنی های غلات و دانه ها"
+    "updatedAt": "2026-10-12T22:33:49.722Z",
+    "searchText": "زوم کوم zoom-koom بورکینافاسو برای 2 نفر ارد ارزن اب عسل زنجبیل تازه تمرهندی اب لیمو نعناع تازه یخ نوشیدنی"
   },
   {
     "id": "rcp_agua-fresca-de-citricoc",
@@ -1946,14 +1948,14 @@
       "با یخ سرو کنید"
     ],
     "categories": [
-      "sharbat-fruit-drinks"
+      "drinks"
     ],
     "categoryIds": [
-      "cat_sharbat-fruit-drinks"
+      "cat_drinks"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.912Z",
-    "searchText": "اگواس فرسکاس agua fresca de citricoc مکزیک برای تهیه 8 لیوان اب پرتقال لیمو ترش سبز لیمو ترش زرد عسل یخ شربت ها و نوشیدنی های میوه ای"
+    "updatedAt": "2026-10-12T22:33:49.726Z",
+    "searchText": "اگواس فرسکاس agua fresca de citricoc مکزیک برای تهیه 8 لیوان اب پرتقال لیمو ترش سبز لیمو ترش زرد عسل یخ نوشیدنی"
   },
   {
     "id": "rcp_balli-reyhan-serbeti",
@@ -2045,16 +2047,14 @@
       "هنگام سرو می توانید آن را با یخ، برش لیمو ترش، برگ ریحان یا یک تکه چوب دارچین تزئین کنید"
     ],
     "categories": [
-      "sharbat-fruit-drinks",
-      "teas-infusions"
+      "drinks"
     ],
     "categoryIds": [
-      "cat_sharbat-fruit-drinks",
-      "cat_teas-infusions"
+      "cat_drinks"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.915Z",
-    "searchText": "شربت ریحان balli reyhan serbeti ترکیه برای تهیه 1/5 لیتر ریحان تازه لیمو ترش تازه چوب دارچین میخک اب عسل اب گیری شود چای و دمنوش ها شربت ها و نوشیدنی های میوه ای"
+    "updatedAt": "2026-10-12T22:33:49.730Z",
+    "searchText": "شربت ریحان balli reyhan serbeti ترکیه برای تهیه 1/5 لیتر ریحان تازه لیمو ترش تازه چوب دارچین میخک اب عسل اب گیری شود نوشیدنی"
   },
   {
     "id": "rcp_greek-mountain-tea-with-honey-lemon",
@@ -2134,16 +2134,14 @@
       "در صورت تمایل با یک برش لیمو سرو کنید"
     ],
     "categories": [
-      "sharbat-fruit-drinks",
-      "teas-infusions"
+      "drinks"
     ],
     "categoryIds": [
-      "cat_sharbat-fruit-drinks",
-      "cat_teas-infusions"
+      "cat_drinks"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.923Z",
-    "searchText": "چای کوهستانی یونانی greek mountain tea with honey & lemon یونان برای تهیه 2 فنجان چای کوهستانی یونانی خشک اب عسل اب لیموی تازه برش لیمو چای و دمنوش ها شربت ها و نوشیدنی های میوه ای"
+    "updatedAt": "2026-10-12T22:33:49.734Z",
+    "searchText": "چای کوهستانی یونانی greek mountain tea with honey & lemon یونان برای تهیه 2 فنجان چای کوهستانی یونانی خشک اب عسل اب لیموی تازه برش لیمو نوشیدنی"
   },
   {
     "id": "rcp_latte-e-miele",
@@ -2200,16 +2198,16 @@
       "نوشیدنی را گرم سرو کنید"
     ],
     "categories": [
-      "milk-drinks",
-      "teas-infusions"
+      "drinks",
+      "breakfast"
     ],
     "categoryIds": [
-      "cat_milk-drinks",
-      "cat_teas-infusions"
+      "cat_drinks",
+      "cat_breakfast"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.928Z",
-    "searchText": "شیر و عسل latte e miele ایتالیا برای 1 نفر شیر عسل دارچین چای و دمنوش ها نوشیدنی های شیری"
+    "updatedAt": "2026-10-12T22:33:49.739Z",
+    "searchText": "شیر و عسل latte e miele ایتالیا برای 1 نفر شیر عسل دارچین نوشیدنی صبحانه"
   },
   {
     "id": "rcp_atay-b-naanaa",
@@ -2290,14 +2288,16 @@
       "مانند شیوه مراکشی ها چای را از ارتفاع مناسب داخل لیوان های کوچک بریزید تا روی آن کف ظریفی ایجاد شود"
     ],
     "categories": [
-      "teas-infusions"
+      "drinks",
+      "pastries"
     ],
     "categoryIds": [
-      "cat_teas-infusions"
+      "cat_drinks",
+      "cat_pastries"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.934Z",
-    "searchText": "چای نعناع مراکشی atay b naanaa مراکش برای 4 نفر چای سبز نعناع سبز یا نعناع تازه مراکشی اب عسل نعناع تازه برای سرو چای و دمنوش ها"
+    "updatedAt": "2026-10-12T22:33:49.743Z",
+    "searchText": "چای نعناع مراکشی atay b naanaa مراکش برای 4 نفر چای سبز نعناع سبز یا نعناع تازه مراکشی اب عسل نعناع تازه برای سرو نوشیدنی کیک و شیرینی"
   },
   {
     "id": "rcp_limonata-con-miele",
@@ -2374,16 +2374,14 @@
       "در صورت تمایل با چند برگ نعناع یا برش های لیمو سرو کنید"
     ],
     "categories": [
-      "sharbat-fruit-drinks",
-      "teas-infusions"
+      "drinks"
     ],
     "categoryIds": [
-      "cat_sharbat-fruit-drinks",
-      "cat_teas-infusions"
+      "cat_drinks"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.939Z",
-    "searchText": "لیموناد ایتالیایی limonata con miele ایتالیا برای تهیه 5 تا 6 لیوان اب عسل (ترجیحا عسل افتابگردان) اب لیمو تازه یخ برگ نعناع یا برش لیمو چای و دمنوش ها شربت ها و نوشیدنی های میوه ای"
+    "updatedAt": "2026-10-12T22:33:49.747Z",
+    "searchText": "لیموناد ایتالیایی limonata con miele ایتالیا برای تهیه 5 تا 6 لیوان اب عسل (ترجیحا عسل افتابگردان) اب لیمو تازه یخ برگ نعناع یا برش لیمو نوشیدنی"
   },
   {
     "id": "rcp_sekanjabin-sharbat",
@@ -2471,16 +2469,14 @@
       "برای سرو، نوشیدنی را در لیوان بریزید و آب و در صورت تمایل یخ، چند برگ نعناع تازه و برش های خیار را اضافه کنید"
     ],
     "categories": [
-      "sharbat-fruit-drinks",
-      "teas-infusions"
+      "drinks"
     ],
     "categoryIds": [
-      "cat_sharbat-fruit-drinks",
-      "cat_teas-infusions"
+      "cat_drinks"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.943Z",
-    "searchText": "شربت سرکه انگبین (سکنجبین) sekanjabin sharbat ایران برای تهیه حدود 1 لیتر شربت عسل اب سرکه انگور نعناع تازه اب برای رقیق کردن هنگام سرو خیار حدود یک دسته کوچک چای و دمنوش ها شربت ها و نوشیدنی های میوه ای"
+    "updatedAt": "2026-10-12T22:33:49.750Z",
+    "searchText": "شربت سرکه انگبین (سکنجبین) sekanjabin sharbat ایران برای تهیه حدود 1 لیتر شربت عسل اب سرکه انگور نعناع تازه اب برای رقیق کردن هنگام سرو خیار حدود یک دسته کوچک نوشیدنی"
   },
   {
     "id": "rcp_fengmi-juhua-cha",
@@ -2561,16 +2557,16 @@
       "هنگام سرو آن را با یخ و در صورت تمایل یک برش لیمو ترش سرو کنید"
     ],
     "categories": [
-      "sharbat-fruit-drinks",
-      "teas-infusions"
+      "drinks",
+      "pastries"
     ],
     "categoryIds": [
-      "cat_sharbat-fruit-drinks",
-      "cat_teas-infusions"
+      "cat_drinks",
+      "cat_pastries"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.948Z",
-    "searchText": "چای گل داوودی fengmi juhua cha چین برای تهیه 2 لیوان گل داوودی خشک خوراکی اب عسل یخ برش لیمو ترش چای و دمنوش ها شربت ها و نوشیدنی های میوه ای"
+    "updatedAt": "2026-10-12T22:33:49.754Z",
+    "searchText": "چای گل داوودی fengmi juhua cha چین برای تهیه 2 لیوان گل داوودی خشک خوراکی اب عسل یخ برش لیمو ترش نوشیدنی کیک و شیرینی"
   },
   {
     "id": "rcp_tombe-juice",
@@ -2667,16 +2663,14 @@
       "پس از خنک شدن با یخ سرو کنید"
     ],
     "categories": [
-      "sharbat-fruit-drinks",
-      "teas-infusions"
+      "drinks"
     ],
     "categoryIds": [
-      "cat_sharbat-fruit-drinks",
-      "cat_teas-infusions"
+      "cat_drinks"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.951Z",
-    "searchText": "تامبه جوس tombe juice سیرالئون برای 4 لیوان پالپ تمر هندی اب عسل دارچین اب لیمو فلفل قرمز یخ کوچک چای و دمنوش ها شربت ها و نوشیدنی های میوه ای"
+    "updatedAt": "2026-10-12T22:33:49.759Z",
+    "searchText": "تامبه جوس tombe juice سیرالئون برای 4 لیوان پالپ تمر هندی اب عسل دارچین اب لیمو فلفل قرمز یخ کوچک نوشیدنی"
   },
   {
     "id": "rcp_ginger-drink",
@@ -2792,16 +2786,14 @@
       "پس از خنک شدن با یخ سرو کنید"
     ],
     "categories": [
-      "sharbat-fruit-drinks",
-      "teas-infusions"
+      "drinks"
     ],
     "categoryIds": [
-      "cat_sharbat-fruit-drinks",
-      "cat_teas-infusions"
+      "cat_drinks"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.955Z",
-    "searchText": "نوشیدنی زنجبیلی گینه ginger drink گینه برای 4 لیوان زنجبیل تازه اب جوش اب خنک اب لیمو ترش یا لایم اب پرتقال میخک دارچین عسل یخ کوچک چای و دمنوش ها شربت ها و نوشیدنی های میوه ای"
+    "updatedAt": "2026-10-12T22:33:49.763Z",
+    "searchText": "نوشیدنی زنجبیلی گینه ginger drink گینه برای 4 لیوان زنجبیل تازه اب جوش اب خنک اب لیمو ترش یا لایم اب پرتقال میخک دارچین عسل یخ کوچک نوشیدنی"
   },
   {
     "id": "rcp_kuurma-chai",
@@ -2900,18 +2892,16 @@
       "از روی حرارت بردارید و پس از کمی کاهش دما، عسل را اضافه کنید"
     ],
     "categories": [
-      "grain-seed-drinks",
-      "milk-drinks",
-      "teas-infusions"
+      "drinks",
+      "breakfast"
     ],
     "categoryIds": [
-      "cat_grain-seed-drinks",
-      "cat_milk-drinks",
-      "cat_teas-infusions"
+      "cat_drinks",
+      "cat_breakfast"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.960Z",
-    "searchText": "کورما چای kuurma chai قرقیزستان برای 2 نفر اب شیر چای سیاه ارد گندم کره نمک عسل چای و دمنوش ها نوشیدنی های شیری نوشیدنی های غلات و دانه ها"
+    "updatedAt": "2026-10-12T22:33:49.766Z",
+    "searchText": "کورما چای kuurma chai قرقیزستان برای 2 نفر اب شیر چای سیاه ارد گندم کره نمک عسل نوشیدنی صبحانه"
   },
   {
     "id": "rcp_sladkiy-myod",
@@ -3011,14 +3001,16 @@
       "گرم سرو کنید"
     ],
     "categories": [
-      "teas-infusions"
+      "drinks",
+      "desserts"
     ],
     "categoryIds": [
-      "cat_teas-infusions"
+      "cat_drinks",
+      "cat_desserts"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.965Z",
-    "searchText": "شیرین عسل sladkiy myod قرقیزستان برای 2 نفر اب عسل زنجبیل تازه چوب دارچین میخک فلفل سیاه برگ بو کوچک چای و دمنوش ها"
+    "updatedAt": "2026-10-12T22:33:49.771Z",
+    "searchText": "شیرین عسل sladkiy myod قرقیزستان برای 2 نفر اب عسل زنجبیل تازه چوب دارچین میخک فلفل سیاه برگ بو کوچک نوشیدنی دسر"
   },
   {
     "id": "rcp_kok-choy",
@@ -3096,16 +3088,14 @@
       "با برش لیمو سرو کنید"
     ],
     "categories": [
-      "sharbat-fruit-drinks",
-      "teas-infusions"
+      "drinks"
     ],
     "categoryIds": [
-      "cat_sharbat-fruit-drinks",
-      "cat_teas-infusions"
+      "cat_drinks"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.968Z",
-    "searchText": "چای سبز ازبکی ko`k choy ازبکستان برای 2 نفر اب چای سبز عسل اب لیموی تازه لیمو چای و دمنوش ها شربت ها و نوشیدنی های میوه ای"
+    "updatedAt": "2026-10-12T22:33:49.776Z",
+    "searchText": "چای سبز ازبکی ko`k choy ازبکستان برای 2 نفر اب چای سبز عسل اب لیموی تازه لیمو نوشیدنی"
   },
   {
     "id": "rcp_sattu-drink",
@@ -3212,18 +3202,16 @@
       "با یخ و در صورت تمایل نعناع سرو کنید"
     ],
     "categories": [
-      "grain-seed-drinks",
-      "sharbat-fruit-drinks",
-      "teas-infusions"
+      "drinks",
+      "breakfast"
     ],
     "categoryIds": [
-      "cat_grain-seed-drinks",
-      "cat_sharbat-fruit-drinks",
-      "cat_teas-infusions"
+      "cat_drinks",
+      "cat_breakfast"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.973Z",
-    "searchText": "ستو sattu drink پاکستان برای 2 نفر ارد ستو اب سرد اب لیموی تازه زیره سبز برشته و اسیاب شده نمک سیاه عسل نعناع تازه یخ چای و دمنوش ها شربت ها و نوشیدنی های میوه ای نوشیدنی های غلات و دانه ها"
+    "updatedAt": "2026-10-12T22:33:49.780Z",
+    "searchText": "ستو sattu drink پاکستان برای 2 نفر ارد ستو اب سرد اب لیموی تازه زیره سبز برشته و اسیاب شده نمک سیاه عسل نعناع تازه یخ نوشیدنی صبحانه"
   },
   {
     "id": "rcp_",
@@ -3300,16 +3288,14 @@
       "هنگام نوشیدن، عسل و کمی آب لیمو اضافه کنید"
     ],
     "categories": [
-      "sharbat-fruit-drinks",
-      "teas-infusions"
+      "drinks"
     ],
     "categoryIds": [
-      "cat_sharbat-fruit-drinks",
-      "cat_teas-infusions"
+      "cat_drinks"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.978Z",
-    "searchText": "مته سوری المته بالعسل و اللیمون و الزنجبیل سوریه برای 2 نفر مته خشک اب گرم عسل زنجبیل تازه رنده شده اب لیموی تازه چای و دمنوش ها شربت ها و نوشیدنی های میوه ای"
+    "updatedAt": "2026-10-12T22:33:49.784Z",
+    "searchText": "مته سوری المته بالعسل و اللیمون و الزنجبیل سوریه برای 2 نفر مته خشک اب گرم عسل زنجبیل تازه رنده شده اب لیموی تازه نوشیدنی"
   },
   {
     "id": "rcp_shai-bil-nana",
@@ -3388,16 +3374,14 @@
       "گرم سرو کنید"
     ],
     "categories": [
-      "sharbat-fruit-drinks",
-      "teas-infusions"
+      "drinks"
     ],
     "categoryIds": [
-      "cat_sharbat-fruit-drinks",
-      "cat_teas-infusions"
+      "cat_drinks"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.982Z",
-    "searchText": "چای نعناع لبنانی shai bil nana لبنان برای 2 نفر اب چای سیاه نعناع تازه عسل لیمو چای و دمنوش ها شربت ها و نوشیدنی های میوه ای"
+    "updatedAt": "2026-10-12T22:33:49.788Z",
+    "searchText": "چای نعناع لبنانی shai bil nana لبنان برای 2 نفر اب چای سیاه نعناع تازه عسل لیمو نوشیدنی"
   },
   {
     "id": "rcp_cha-takrai",
@@ -3499,16 +3483,14 @@
       "هنگام سرو، آن را در لیوان های پر از یخ بریزید و در صورت تمایل با برگ نعناع تزئین کنید"
     ],
     "categories": [
-      "sharbat-fruit-drinks",
-      "teas-infusions"
+      "drinks"
     ],
     "categoryIds": [
-      "cat_sharbat-fruit-drinks",
-      "cat_teas-infusions"
+      "cat_drinks"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.985Z",
-    "searchText": "چای علف لیمو cha takrai تایلند برای تهیه 4 لیوان ساقه علف لیمو زنجبیل تازه اب اب لیمو ترش تازه عسل برگ نعناع تازه یخ متوسط چای و دمنوش ها شربت ها و نوشیدنی های میوه ای"
+    "updatedAt": "2026-10-12T22:33:49.792Z",
+    "searchText": "چای علف لیمو cha takrai تایلند برای تهیه 4 لیوان ساقه علف لیمو زنجبیل تازه اب اب لیمو ترش تازه عسل برگ نعناع تازه یخ متوسط نوشیدنی"
   },
   {
     "id": "rcp_saenggang-cha",
@@ -3588,15 +3570,13 @@
       "در صورت تمایل کمی آب لیمو اضافه کنید"
     ],
     "categories": [
-      "sharbat-fruit-drinks",
-      "teas-infusions"
+      "drinks"
     ],
     "categoryIds": [
-      "cat_sharbat-fruit-drinks",
-      "cat_teas-infusions"
+      "cat_drinks"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-12T20:04:51.989Z",
-    "searchText": "چای زنجبیل saenggang cha کره جنوبی برای تهیه 2 لیوان زنجبیل تازه اب عسل لیمو ترش تازه خلال یا برش زنجبیل (اختیاری برای تزئین) چای و دمنوش ها شربت ها و نوشیدنی های میوه ای"
+    "updatedAt": "2026-10-12T22:33:49.796Z",
+    "searchText": "چای زنجبیل saenggang cha کره جنوبی برای تهیه 2 لیوان زنجبیل تازه اب عسل لیمو ترش تازه خلال یا برش زنجبیل (اختیاری برای تزئین) نوشیدنی"
   }
 ]

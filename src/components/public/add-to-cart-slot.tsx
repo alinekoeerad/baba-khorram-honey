@@ -93,18 +93,18 @@ export function AddToCartSlot({
   };
 
   return (
-    <div className="max-w-md mx-auto my-6 p-5 sm:p-6 bg-black/35 border-2 border-[#FBBF24]/50 rounded-none shadow-xl text-right space-y-5">
-      <div className="flex items-center justify-between border-b border-white/15 pb-3">
-        <div className="flex items-center gap-2 text-white font-bold text-sm sm:text-base">
-          <ShoppingCart className="w-5 h-5 text-[#FBBF24]" />
+    <div className="max-w-md mx-auto my-4 p-5 sm:p-6 bg-[#FAF7F2] border border-[#FDE68A] rounded-none shadow-sm text-right space-y-5">
+      <div className="flex items-center justify-between border-b border-[#EFE9E0] pb-3">
+        <div className="flex items-center gap-2 text-[#2B2017] font-black text-sm sm:text-base">
+          <ShoppingCart className="w-5 h-5 text-[#D97706]" />
           <span>سفارش اینترنتی محصول</span>
         </div>
-        <span className="text-xs text-[#FBBF24] font-bold">تحویل درب منزل</span>
+        <span className="text-xs text-[#B45309] font-bold">تحویل درب منزل</span>
       </div>
 
       {/* 1. Option Selector */}
       <div className="space-y-2">
-        <label className="block text-xs sm:text-sm font-bold text-[#E8E2D9]">
+        <label className="block text-xs sm:text-sm font-bold text-[#2B2017]">
           انتخاب وزن و بسته‌بندی:
         </label>
         <div className="flex flex-wrap gap-2.5">
@@ -113,17 +113,17 @@ export function AddToCartSlot({
             return (
               <div key={opt.id} className="relative inline-block">
                 {isBestValue && (
-                  <span className="absolute -top-2.5 right-2 bg-[#F59E0B] text-[#2B2017] text-[10px] font-black px-2 py-0.5 rounded-full shadow-md z-10 pointer-events-none">
+                  <span className="absolute -top-2.5 right-2 bg-[#F59E0B] text-[#2B2017] text-[10px] font-black px-2 py-0.5 rounded-full shadow-xs z-10 pointer-events-none">
                     پرفروش‌ترین
                   </span>
                 )}
                 <button
                   type="button"
                   onClick={() => setSelectedOptionId(opt.id)}
-                  className={`px-4 py-2 text-xs sm:text-sm font-bold rounded-none transition-all cursor-pointer ${
+                  className={`px-4 py-2 text-xs sm:text-sm rounded-none transition-all cursor-pointer ${
                     selectedOptionId === opt.id
-                      ? 'bg-[#FBBF24] text-[#2B2017] shadow-md ring-2 ring-white/40 font-black'
-                      : 'bg-black/40 text-white/90 border border-white/20 hover:bg-black/60'
+                      ? 'bg-[#F59E0B] text-[#2B2017] shadow-sm border-2 border-[#D97706] font-black'
+                      : 'bg-white text-[#332115] border border-[#EFE9E0] hover:border-[#D97706] hover:bg-[#FFFBEB] font-bold'
                   }`}
                 >
                   {opt.label}
@@ -136,18 +136,18 @@ export function AddToCartSlot({
 
       {/* 2. Quantity Stepper */}
       <div className="flex items-center justify-between pt-1">
-        <span className="text-xs sm:text-sm font-bold text-[#E8E2D9]">تعداد:</span>
-        <div className="flex items-center gap-3 bg-black/40 border border-white/25 p-1 rounded-none">
+        <span className="text-xs sm:text-sm font-bold text-[#2B2017]">تعداد:</span>
+        <div className="flex items-center gap-3 bg-white border border-[#EFE9E0] p-1 rounded-none shadow-xs">
           <button
             type="button"
             onClick={handleDecrement}
             disabled={quantity <= 1}
             aria-label="کاهش تعداد"
-            className="w-8 h-8 flex items-center justify-center text-white hover:bg-white/10 disabled:opacity-30 transition-colors cursor-pointer"
+            className="w-8 h-8 flex items-center justify-center text-[#2B2017] hover:bg-stone-100 disabled:opacity-30 transition-colors cursor-pointer"
           >
             <Minus className="w-4 h-4" />
           </button>
-          <span className="w-8 text-center font-black text-base text-white select-none">
+          <span className="w-8 text-center font-black text-base text-[#2B2017] select-none">
             {toPersianDigits(quantity)}
           </span>
           <button
@@ -155,7 +155,7 @@ export function AddToCartSlot({
             onClick={handleIncrement}
             disabled={quantity >= 50}
             aria-label="افزایش تعداد"
-            className="w-8 h-8 flex items-center justify-center text-white hover:bg-white/10 disabled:opacity-30 transition-colors cursor-pointer"
+            className="w-8 h-8 flex items-center justify-center text-[#2B2017] hover:bg-stone-100 disabled:opacity-30 transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4" />
           </button>
@@ -168,7 +168,7 @@ export function AddToCartSlot({
           variant="gold"
           size="lg"
           onClick={handleAddToCart}
-          className="w-full justify-center text-center font-black cursor-pointer shadow-xl"
+          className="w-full justify-center text-center font-black cursor-pointer shadow-md"
         >
           افزودن به سبد خرید
         </PillButton>
@@ -180,16 +180,16 @@ export function AddToCartSlot({
       </div>
 
       {confirmedMessage && (
-        <div className="p-3 bg-emerald-950/80 border border-emerald-500/80 text-white text-xs sm:text-sm flex items-center justify-between gap-2 shadow-lg animate-in fade-in duration-200">
+        <div className="p-3 bg-emerald-50 border border-emerald-300 text-emerald-900 text-xs sm:text-sm flex items-center justify-between gap-2 shadow-xs rounded-none animate-in fade-in duration-200">
           <div className="flex items-center gap-2">
-            <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>{confirmedMessage}</span>
+            <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span className="font-bold">{confirmedMessage}</span>
           </div>
           <Link
             href="/cart"
-            className="font-black text-[#FBBF24] hover:underline shrink-0 text-xs"
+            className="font-black text-[#B45309] hover:underline shrink-0 text-xs"
           >
-            مشاهده سبد ←
+            مشاهده سبد خرید
           </Link>
         </div>
       )}

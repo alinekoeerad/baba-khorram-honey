@@ -30,10 +30,10 @@
     "emailVerified": false,
     "image": null,
     "role": "ADMIN",
-    "isActive": true,
+    "isActive": false,
     "lastLoginAt": null,
     "createdAt": "2026-10-12T12:32:12.244Z",
-    "updatedAt": "2026-10-12T12:32:12.244Z"
+    "updatedAt": "2026-10-13T09:47:39.490Z"
   },
   {
     "id": "usr_1791809477828_wg0ft",
@@ -42,9 +42,9 @@
     "emailVerified": false,
     "image": null,
     "role": "ADMIN",
-    "isActive": true,
+    "isActive": false,
     "lastLoginAt": null,
     "createdAt": "2026-10-12T12:51:17.828Z",
-    "updatedAt": "2026-10-12T12:51:17.828Z"
+    "updatedAt": "2026-10-13T09:47:40.587Z"
   }
 ]

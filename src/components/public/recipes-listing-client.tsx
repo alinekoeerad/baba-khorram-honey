@@ -230,15 +230,15 @@ export function RecipesListingClient({
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="جستجو در دسرهای عسل باباخُرم..."
-            className="w-full h-12 pr-11 pl-10 rounded-none bg-black/40 border border-white/25 text-white placeholder-white/70 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-[#FBBF24] focus:border-transparent transition-all shadow-inner"
+            className="w-full h-12 pr-11 pl-10 rounded-none bg-white/95 border border-[#EFE9E0] text-[#2B2017] placeholder-[#5C5248] text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-[#FBBF24] focus:border-[#F59E0B] transition-all shadow-sm"
             dir="rtl"
           />
-          <Search className="absolute right-4 top-3.5 w-5 h-5 text-[#FBBF24] pointer-events-none" />
+          <Search className="absolute right-4 top-3.5 w-5 h-5 text-[#B45309] pointer-events-none" />
           {searchTerm && (
             <button
               type="button"
               onClick={handleClearSearch}
-              className="absolute left-3.5 top-3.5 text-white/60 hover:text-white transition-colors cursor-pointer"
+              className="absolute left-3.5 top-3.5 text-stone-500 hover:text-[#2B2017] transition-colors cursor-pointer"
               aria-label="پاک کردن جستجو"
             >
               <X className="w-5 h-5" />
@@ -248,14 +248,14 @@ export function RecipesListingClient({
 
         {/* Cold / Hot Serving Toggle */}
         <div className="flex items-center justify-center">
-          <div className="inline-flex p-1 rounded-none bg-black/40 border border-white/20 shadow-md">
+          <div className="inline-flex p-1 rounded-none bg-white/90 border border-[#EFE9E0] shadow-md">
             <button
               type="button"
               onClick={() => handleServingToggle('cold')}
               className={`px-6 py-2 rounded-none text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                 serving === 'cold'
                   ? 'bg-[#FBBF24] text-[#2B2017] shadow-sm font-black'
-                  : 'text-white/80 hover:text-white'
+                  : 'text-[#5C5248] hover:text-[#2B2017]'
               }`}
             >
               سرو سرد (خنک و تابستانی)
@@ -266,7 +266,7 @@ export function RecipesListingClient({
               className={`px-6 py-2 rounded-none text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                 serving === 'hot'
                   ? 'bg-[#E08B38] text-white shadow-sm font-black'
-                  : 'text-white/80 hover:text-white'
+                  : 'text-[#5C5248] hover:text-[#2B2017]'
               }`}
             >
               سرو گرم (دمنوش و چای)
@@ -282,7 +282,7 @@ export function RecipesListingClient({
             className={`px-4 py-1.5 sm:px-5 sm:py-2 rounded-none text-xs sm:text-sm font-bold transition-all shadow-sm cursor-pointer ${
               !activeCategory || activeCategory === 'all'
                 ? 'bg-[#FBBF24] text-[#2B2017] shadow-md ring-2 ring-[#FBBF24]/50 font-black'
-                : 'bg-black/40 text-white border border-white/20 hover:bg-black/60 hover:text-white'
+                : 'bg-white/90 text-[#332115] border border-[#EFE9E0] hover:bg-white hover:text-[#2B2017]'
             }`}
           >
             همه دستورها
@@ -295,7 +295,7 @@ export function RecipesListingClient({
               className={`px-4 py-1.5 sm:px-5 sm:py-2 rounded-none text-xs sm:text-sm font-bold transition-all shadow-sm cursor-pointer ${
                 activeCategory === cat.slug
                   ? 'bg-[#FBBF24] text-[#2B2017] shadow-md ring-2 ring-[#FBBF24]/50 font-black'
-                  : 'bg-black/40 text-white border border-white/20 hover:bg-black/60 hover:text-white'
+                  : 'bg-white/90 text-[#332115] border border-[#EFE9E0] hover:bg-white hover:text-[#2B2017]'
               }`}
             >
               {cat.name}
@@ -308,7 +308,7 @@ export function RecipesListingClient({
           <div className="absolute inset-0 flex items-center" aria-hidden="true">
             <div className="w-full border-t border-white/20" />
           </div>
-          <div className="relative px-6 py-1.5 bg-[#2B1B10] border border-white/25 text-[#FBBF24] font-black text-xs sm:text-sm shadow-md">
+          <div className="relative px-6 py-1.5 bg-[#FFFBEB] border border-[#FDE68A] text-[#92400E] font-black text-xs sm:text-sm shadow-md">
             {serving === 'hot' ? 'سرو گرم (دمنوش و چای مقوی)' : 'سرو سرد (نوشیدنی و دسر خنک)'}
           </div>
         </div>
@@ -321,9 +321,9 @@ export function RecipesListingClient({
           <span className="text-sm font-bold">در حال جستجو و فیلتر...</span>
         </div>
       ) : displayedItems.length === 0 ? (
-        <div className="py-20 text-center space-y-4 max-w-md mx-auto bg-black/40 border border-white/15 p-8 shadow-lg">
-          <p className="text-xl font-black text-[#FBBF24]">موردی یافت نشد</p>
-          <p className="text-sm text-[#E6DDD4] leading-relaxed">
+        <div className="py-20 text-center space-y-4 max-w-md mx-auto bg-white border border-[#FDE68A] p-8 shadow-md">
+          <p className="text-xl font-black text-[#2B2017]">موردی یافت نشد</p>
+          <p className="text-sm text-[#5C5248] leading-relaxed">
             دستوری با مشخصات جستجوشده یافت نشد. لطفاً عبارت دیگری را جستجو کنید یا فیلتر دسته‌بندی را تغییر دهید.
           </p>
           {(searchTerm || activeCategory) && (

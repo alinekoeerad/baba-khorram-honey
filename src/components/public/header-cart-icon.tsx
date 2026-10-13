@@ -26,7 +26,7 @@ export function HeaderCartIcon({ cartEnabled }: { cartEnabled: boolean }) {
     <Link
       href="/cart"
       aria-label={`سبد خرید${totalQuantity > 0 ? ` (${toPersianDigits(totalQuantity)} مورد)` : ''}`}
-      className="relative p-2.5 rounded-xl text-white hover:bg-black/20 transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+      className="relative p-2.5 rounded-none text-white hover:bg-black/20 transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
     >
       <ShoppingCart className="w-5 h-5 text-white drop-shadow-sm" />
       {totalQuantity > 0 && (

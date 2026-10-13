@@ -79,23 +79,23 @@ export function OrderShareView({
         </div>
 
         {/* Expiry Warning Notice */}
-        <div className="flex items-center gap-2 p-3 bg-black/40 border border-white/20 text-[#E8E2D9] text-xs justify-center shadow-sm">
-          <Clock className="w-4 h-4 text-[#FBBF24] shrink-0" />
+        <div className="flex items-center gap-2 p-3 bg-[#FFFBEB] border border-[#FDE68A] text-[#92400E] text-xs justify-center shadow-xs rounded-none font-bold">
+          <Clock className="w-4 h-4 text-[#D97706] shrink-0" />
           <span>اعتبار این صفحه موقت بوده و تا ۳۰ دقیقه پس از صدور منقضی خواهد شد.</span>
         </div>
 
-        {/* Order Message Box */}
-        <div className="bg-black/35 border-2 border-white/20 p-5 sm:p-6 space-y-4 shadow-xl">
-          <div className="flex items-center justify-between text-xs text-[#E8E2D9] border-b border-white/15 pb-2.5">
-            <span className="font-bold">متن آماده سفارش ({channelName}):</span>
+        {/* Order Message Box: Warm Ivory Artisan Sheet */}
+        <div className="bg-white border border-[#FDE68A] p-5 sm:p-6 space-y-4 shadow-xl rounded-none text-right">
+          <div className="flex items-center justify-between text-xs text-[#2B2017] border-b border-[#EFE9E0] pb-2.5">
+            <span className="font-black text-sm">متن آماده سفارش ({channelName}):</span>
             <button
               type="button"
               onClick={handleCopy}
-              className="flex items-center gap-1.5 text-[#FBBF24] hover:text-white font-bold transition-colors"
+              className="flex items-center gap-1.5 text-[#D97706] hover:text-[#B45309] font-black transition-colors cursor-pointer"
             >
               {copied ? (
                 <>
-                  <Check className="w-4 h-4 text-[#4ADE80]" />
+                  <Check className="w-4 h-4 text-emerald-600" />
                   <span>کپی شد!</span>
                 </>
               ) : (
@@ -108,7 +108,7 @@ export function OrderShareView({
           </div>
 
           <pre
-            className="w-full max-h-80 overflow-y-auto whitespace-pre-wrap font-sans text-xs sm:text-sm text-white/95 leading-relaxed bg-black/40 p-4 border border-white/10 select-all"
+            className="w-full max-h-80 overflow-y-auto whitespace-pre-wrap font-sans text-xs sm:text-sm text-[#2B2017] leading-relaxed bg-[#FAF7F2] p-4 border border-[#EFE9E0] select-all rounded-none font-medium"
             dir="rtl"
           >
             {messageText}

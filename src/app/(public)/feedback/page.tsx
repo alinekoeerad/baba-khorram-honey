@@ -11,6 +11,7 @@ import React, { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { Container } from '@/components/ui/container';
 import { PillButton } from '@/components/ui/pill-button';
+import { WoodBackground } from '@/components/ui/wood-background';
 import { submitFeedbackAction } from '@/server/actions/feedback-actions';
 import { CheckCircle2, MessageSquareHeart, ShieldCheck, Sparkles, Copy, Check } from 'lucide-react';
 
@@ -80,7 +81,7 @@ export default function FeedbackPage() {
   };
 
   return (
-    <div className="py-14 sm:py-20 bg-[#FDFBF8]">
+    <WoodBackground className="py-14 sm:py-20 min-h-screen">
       <Container size="narrow">
         {/* Page Header */}
         <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
@@ -88,17 +89,17 @@ export default function FeedbackPage() {
             <MessageSquareHeart className="w-3.5 h-3.5" />
             <span>صدای شما، سرمایه ماست</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-black text-[#2B2017] tracking-tight">
+          <h1 className="text-3xl sm:text-5xl font-black text-[#FFFBEB] tracking-tight drop-shadow-md">
             انتقادات و پیشنهادات
           </h1>
-          <p className="text-base sm:text-lg text-[#5C5248] leading-relaxed">
+          <p className="text-base sm:text-lg text-[#E5D5C5] leading-relaxed font-medium">
             دیدگاه‌ها، پیشنهادات و انتقادات شما مستقیماً توسط مدیریت مجموعه باباخُرم بررسی می‌شود. نظرات شما به ما در ارتقای کیفیت محصولات و خدمات کمک شایانی می‌کند.
           </p>
         </div>
 
         {/* Success View */}
         {successCode ? (
-          <div className="bg-white border-2 border-[#D97706]/40 p-8 sm:p-12 shadow-md rounded-none text-center space-y-6 animate-in fade-in duration-200">
+          <div className="bg-white border-2 border-[#FDE68A] p-8 sm:p-12 shadow-2xl rounded-none text-center space-y-6 animate-in fade-in duration-200">
             <div className="w-16 h-16 bg-[#ECFDF5] text-[#059669] rounded-full flex items-center justify-center mx-auto shadow-xs">
               <CheckCircle2 className="w-10 h-10" />
             </div>
@@ -145,7 +146,7 @@ export default function FeedbackPage() {
           </div>
         ) : (
           /* Form Container */
-          <div className="bg-white border border-[#EFE9E0] p-6 sm:p-10 shadow-sm rounded-none">
+          <div className="bg-white border-2 border-[#FDE68A] p-6 sm:p-10 shadow-2xl rounded-none">
             {/* Error Banner */}
             {errorMessage && (
               <div
@@ -283,6 +284,6 @@ export default function FeedbackPage() {
           </div>
         )}
       </Container>
-    </div>
+    </WoodBackground>
   );
 }

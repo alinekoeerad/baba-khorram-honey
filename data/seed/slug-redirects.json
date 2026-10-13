@@ -47,5 +47,33 @@
     "oldSlug": "thyme-honey-test-slug",
     "targetId": "prd_thyme-honey-test-slug",
     "createdAt": "2026-10-12T20:04:52.009Z"
+  },
+  {
+    "id": "red_1791838134514_xdd71",
+    "entityType": "PRODUCT",
+    "oldSlug": "thyme-honey-test-slug",
+    "targetId": "prd_thyme-honey-test-slug",
+    "createdAt": "2026-10-12T20:48:54.514Z"
+  },
+  {
+    "id": "red_1791839444264_hhnjx",
+    "entityType": "PRODUCT",
+    "oldSlug": "thyme-honey-test-slug",
+    "targetId": "prd_thyme-honey-test-slug",
+    "createdAt": "2026-10-12T21:10:44.264Z"
+  },
+  {
+    "id": "red_1791843511613_jzq11",
+    "entityType": "PRODUCT",
+    "oldSlug": "thyme-honey-test-slug",
+    "targetId": "prd_thyme-honey-test-slug",
+    "createdAt": "2026-10-12T22:18:31.613Z"
+  },
+  {
+    "id": "red_1791844429813_mlfom",
+    "entityType": "PRODUCT",
+    "oldSlug": "thyme-honey-test-slug",
+    "targetId": "prd_thyme-honey-test-slug",
+    "createdAt": "2026-10-12T22:33:49.813Z"
   }
 ]

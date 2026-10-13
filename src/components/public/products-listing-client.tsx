@@ -222,15 +222,15 @@ export function ProductsListingClient({
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="جستجو در محصولات باباخُرم..."
-            className="w-full h-12 pr-11 pl-10 rounded-none bg-black/40 border border-white/25 text-white placeholder-white/70 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-[#FBBF24] focus:border-transparent transition-all shadow-inner"
+            className="w-full h-12 pr-11 pl-10 rounded-none bg-white/95 border border-[#EFE9E0] text-[#2B2017] placeholder-[#5C5248] text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-[#FBBF24] focus:border-[#F59E0B] transition-all shadow-sm"
             dir="rtl"
           />
-          <Search className="absolute right-4 top-3.5 w-5 h-5 text-[#FBBF24] pointer-events-none" />
+          <Search className="absolute right-4 top-3.5 w-5 h-5 text-[#B45309] pointer-events-none" />
           {searchTerm && (
             <button
               type="button"
               onClick={handleClearSearch}
-              className="absolute left-3.5 top-3.5 text-white/60 hover:text-white transition-colors cursor-pointer"
+              className="absolute left-3.5 top-3.5 text-stone-500 hover:text-[#2B2017] transition-colors cursor-pointer"
               aria-label="پاک کردن جستجو"
             >
               <X className="w-5 h-5" />
@@ -246,7 +246,7 @@ export function ProductsListingClient({
             className={`shrink-0 px-4 py-1.5 sm:px-5 sm:py-2 rounded-none text-xs sm:text-sm font-bold transition-all shadow-sm cursor-pointer whitespace-nowrap ${
               !activeCategory || activeCategory === 'all'
                 ? 'bg-[#FBBF24] text-[#2B2017] shadow-md ring-2 ring-[#FBBF24]/50 font-black'
-                : 'bg-black/40 text-white border border-white/20 hover:bg-black/60 hover:text-white'
+                : 'bg-white/90 text-[#332115] border border-[#EFE9E0] hover:bg-white hover:text-[#2B2017]'
             }`}
           >
             همه محصولات
@@ -259,7 +259,7 @@ export function ProductsListingClient({
               className={`shrink-0 px-4 py-1.5 sm:px-5 sm:py-2 rounded-none text-xs sm:text-sm font-bold transition-all shadow-sm cursor-pointer whitespace-nowrap ${
                 activeCategory === cat.slug
                   ? 'bg-[#FBBF24] text-[#2B2017] shadow-md ring-2 ring-[#FBBF24]/50 font-black'
-                  : 'bg-black/40 text-white border border-white/20 hover:bg-black/60 hover:text-white'
+                  : 'bg-white/90 text-[#332115] border border-[#EFE9E0] hover:bg-white hover:text-[#2B2017]'
               }`}
             >
               {cat.name}
@@ -275,10 +275,10 @@ export function ProductsListingClient({
             className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-none text-xs sm:text-sm font-bold border transition-all cursor-pointer ${
               inStockOnly
                 ? 'bg-emerald-600/90 text-white border-emerald-400 shadow-md ring-2 ring-emerald-500/40'
-                : 'bg-black/40 text-[#E5D5C5] border-white/20 hover:text-white hover:bg-black/60'
+                : 'bg-white/90 text-[#332115] border border-[#EFE9E0] hover:bg-white'
             }`}
           >
-            <span className={`w-2 h-2 rounded-full ${inStockOnly ? 'bg-emerald-300 animate-pulse' : 'bg-stone-500'}`} />
+            <span className={`w-2 h-2 rounded-full ${inStockOnly ? 'bg-emerald-300 animate-pulse' : 'bg-stone-400'}`} />
             <span>فقط کالاهای موجود در انبار</span>
           </button>
         </div>
@@ -291,9 +291,9 @@ export function ProductsListingClient({
           <span className="text-sm font-bold">در حال جستجو و فیلتر...</span>
         </div>
       ) : displayedItems.length === 0 ? (
-        <div className="py-20 text-center space-y-4 max-w-md mx-auto bg-black/40 border border-white/15 p-8 shadow-lg">
-          <p className="text-xl font-black text-[#FBBF24]">موردی یافت نشد</p>
-          <p className="text-sm text-[#E6DDD4] leading-relaxed">
+        <div className="py-20 text-center space-y-4 max-w-md mx-auto bg-white border border-[#FDE68A] p-8 shadow-md">
+          <p className="text-xl font-black text-[#2B2017]">موردی یافت نشد</p>
+          <p className="text-sm text-[#5C5248] leading-relaxed">
             محصولی با مشخصات جستجوشده یافت نشد. لطفاً عبارت دیگری را جستجو کنید یا فیلتر دسته‌بندی را تغییر دهید.
           </p>
           {(searchTerm || activeCategory) && (
@@ -323,7 +323,7 @@ export function ProductsListingClient({
                 subtitle={item.subtitle}
                 href={item.href}
                 imageAsset={item.imageAsset}
-                imageUrl={item.imageUrl || (item.imageAsset ? null : '/images/honey-jar.jpg')}
+                imageUrl={item.imageUrl || (item.slug ? `/images/products/${item.slug}.jpg` : (item.imageAsset ? null : '/images/honey-jar.jpg'))}
                 theme={item.theme || item.cardTheme}
                 slug={item.slug}
                 isAvailable={item.isAvailable}
@@ -343,7 +343,7 @@ export function ProductsListingClient({
                 subtitle={item.subtitle}
                 href={item.href}
                 imageAsset={item.imageAsset}
-                imageUrl={item.imageUrl || (item.imageAsset ? null : '/images/honey-jar.jpg')}
+                imageUrl={item.imageUrl || (item.slug ? `/images/products/${item.slug}.jpg` : (item.imageAsset ? null : '/images/honey-jar.jpg'))}
                 theme={item.theme || item.cardTheme}
                 slug={item.slug}
                 isAvailable={item.isAvailable}

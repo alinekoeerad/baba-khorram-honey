@@ -34,47 +34,47 @@ const defaultCategories = [
   "createdAt": "2026-10-08T00:00:00.000Z",
   "updatedAt": "2026-10-08T00:00:00.000Z"
 },
-  // Recipe Categories (Brief Section 16)
+  // Official Recipe Categories (Client Export)
   {
-  "id": "cat_teas-infusions",
-  "name": "چای و دمنوش‌ها",
-  "slug": "teas-infusions",
-  "type": "RECIPE",
-  "status": "ACTIVE",
-  "sortOrder": 0,
-  "createdAt": "2026-10-08T00:00:00.000Z",
-  "updatedAt": "2026-10-08T00:00:00.000Z"
-},
+    "id": "cat_drinks",
+    "name": "نوشیدنی",
+    "slug": "drinks",
+    "type": "RECIPE",
+    "status": "ACTIVE",
+    "sortOrder": 0,
+    "createdAt": "2026-10-08T00:00:00.000Z",
+    "updatedAt": "2026-10-08T00:00:00.000Z"
+  },
   {
-  "id": "cat_sharbat-fruit-drinks",
-  "name": "شربت‌ها و نوشیدنی‌های میوه‌ای",
-  "slug": "sharbat-fruit-drinks",
-  "type": "RECIPE",
-  "status": "ACTIVE",
-  "sortOrder": 1,
-  "createdAt": "2026-10-08T00:00:00.000Z",
-  "updatedAt": "2026-10-08T00:00:00.000Z"
-},
+    "id": "cat_desserts",
+    "name": "دسر",
+    "slug": "desserts",
+    "type": "RECIPE",
+    "status": "ACTIVE",
+    "sortOrder": 1,
+    "createdAt": "2026-10-08T00:00:00.000Z",
+    "updatedAt": "2026-10-08T00:00:00.000Z"
+  },
   {
-  "id": "cat_milk-drinks",
-  "name": "نوشیدنی‌های شیری",
-  "slug": "milk-drinks",
-  "type": "RECIPE",
-  "status": "ACTIVE",
-  "sortOrder": 2,
-  "createdAt": "2026-10-08T00:00:00.000Z",
-  "updatedAt": "2026-10-08T00:00:00.000Z"
-},
+    "id": "cat_breakfast",
+    "name": "صبحانه",
+    "slug": "breakfast",
+    "type": "RECIPE",
+    "status": "ACTIVE",
+    "sortOrder": 2,
+    "createdAt": "2026-10-08T00:00:00.000Z",
+    "updatedAt": "2026-10-08T00:00:00.000Z"
+  },
   {
-  "id": "cat_grain-seed-drinks",
-  "name": "نوشیدنی‌های غلات و دانه‌ها",
-  "slug": "grain-seed-drinks",
-  "type": "RECIPE",
-  "status": "ACTIVE",
-  "sortOrder": 3,
-  "createdAt": "2026-10-08T00:00:00.000Z",
-  "updatedAt": "2026-10-08T00:00:00.000Z"
-},
+    "id": "cat_pastries",
+    "name": "کیک و شیرینی",
+    "slug": "pastries",
+    "type": "RECIPE",
+    "status": "ACTIVE",
+    "sortOrder": 3,
+    "createdAt": "2026-10-08T00:00:00.000Z",
+    "updatedAt": "2026-10-08T00:00:00.000Z"
+  },
 ];
 
 const placeholderSiteSettings = {

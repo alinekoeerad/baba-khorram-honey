@@ -127,10 +127,10 @@ export function SearchResultsClient({
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder="جستجوی مجدد در محصولات و دستورها..."
-            className="w-full h-12 pr-12 pl-28 rounded-full bg-black/40 border border-white/25 text-white placeholder-white/60 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-[#FBBF24] shadow-inner"
+            className="w-full h-12 pr-12 pl-28 rounded-full bg-white/95 border border-[#EFE9E0] text-[#2B2017] placeholder-[#5C5248] text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-[#FBBF24] shadow-sm"
             dir="rtl"
           />
-          <Search className="absolute right-4 top-3.5 w-5 h-5 text-[#FBBF24] pointer-events-none" />
+          <Search className="absolute right-4 top-3.5 w-5 h-5 text-[#B45309] pointer-events-none" />
           <button
             type="submit"
             className="absolute left-1.5 top-1.5 bottom-1.5 px-5 rounded-full bg-[#FBBF24] hover:bg-[#F59E0B] text-[#2B2017] font-black text-xs sm:text-sm transition-colors shadow"
@@ -142,11 +142,11 @@ export function SearchResultsClient({
 
       {/* Empty State */}
       {totalResults === 0 ? (
-        <div className="text-center py-16 px-4 max-w-lg mx-auto bg-black/30 border border-white/15 p-8 space-y-4">
-          <p className="text-xl sm:text-2xl font-black text-[#FBBF24]">
+        <div className="text-center py-16 px-4 max-w-lg mx-auto bg-white border border-[#FDE68A] p-8 space-y-4 shadow-md">
+          <p className="text-xl sm:text-2xl font-black text-[#2B2017]">
             موردی یافت نشد
           </p>
-          <p className="text-sm text-[#E8E2D9] leading-relaxed">
+          <p className="text-sm text-[#5C5248] leading-relaxed">
             هیچ محصول یا دستوری مطابق با عبارت «{initialQuery}» یافت نشد. لطفاً عبارت دیگری را امتحان کرده یا املای آن را بررسی فرمایید.
           </p>
           <div className="pt-2 flex flex-wrap justify-center gap-3">

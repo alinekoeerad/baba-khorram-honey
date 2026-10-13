@@ -41,8 +41,6 @@ import {
   Minus,
   AlertTriangle,
   Info,
-  Smartphone,
-  Monitor,
   Copy,
   Check,
   ExternalLink,
@@ -76,9 +74,8 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
   const [rememberMe, setRememberMe] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
-  // Device detection state (Mobile vs Desktop)
-  const [isMobileDevice, setIsMobileDevice] = useState(true);
-  const [manualDeviceMode, setManualDeviceMode] = useState<'auto' | 'mobile' | 'desktop'>('auto');
+  // Automatic device detection (Mobile vs Desktop) - zero manual questioning
+  const [isMobileClient, setIsMobileClient] = useState(false);
 
   // Order submission state
   const [selectedChannelId, setSelectedChannelId] = useState<string>('');
@@ -88,7 +85,7 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
   const [isCopied, setIsCopied] = useState(false);
   const [showConfirmSent, setShowConfirmSent] = useState(false);
 
-  // 1. Initial Customer "Remember Me" Load
+  // 1. Initial Customer "Remember Me" Load & Auto Device Detection
   useEffect(() => {
     const saved = getSavedCustomer();
     if (saved) {
@@ -96,14 +93,12 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
       setRememberMe(true);
     }
 
-    // Detect device
-    const isMobileUA =
-      typeof window !== 'undefined' &&
-      (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
-      ) ||
-        window.innerWidth < 768);
-    setIsMobileDevice(isMobileUA);
+    // Auto-detect mobile device without asking user
+    const isMobile =
+      typeof window !== 'undefined'
+        ? window.innerWidth < 768 || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)
+        : false;
+    setIsMobileClient(isMobile);
   }, []);
 
   // 2. Fetch fresh cart data on mount and whenever lines change
@@ -134,14 +129,10 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
     };
   }, [lines]);
 
-  // Determine effective device mode
-  const effectiveIsMobile =
-    manualDeviceMode === 'auto' ? isMobileDevice : manualDeviceMode === 'mobile';
-
-  // Filter channels based on effective device
+  // Filter channels based on detected device
   // Desktop cannot use SMS (PHONE)
   const availableChannels = orderChannels.filter((ch) => {
-    if (!effectiveIsMobile && ch.type === 'PHONE') {
+    if (!isMobileClient && ch.type === 'PHONE') {
       return false;
     }
     return true;
@@ -221,7 +212,7 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
         lines,
         customer,
         channelId: selectedChannelId,
-        createShareLink: !effectiveIsMobile, // Desktop needs share link for QR
+        createShareLink: !isMobileClient, // Desktop needs share link for QR
       });
 
       if (result.success) {
@@ -229,7 +220,7 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
         setShowConfirmSent(true);
 
         // If mobile with prefill link: open deep link automatically
-        if (effectiveIsMobile && result.directUrl && result.directUrl !== '#') {
+        if (isMobileClient && result.directUrl && result.directUrl !== '#') {
           window.location.href = result.directUrl;
         }
       } else {
@@ -264,14 +255,14 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
   if (lines.length === 0 && !orderResult) {
     return (
       <WoodBackground className="py-20 min-h-screen">
-        <Container size="narrow" className="text-center space-y-6 bg-black/35 p-8 sm:p-12 border border-white/20 shadow-2xl">
-          <div className="w-16 h-16 rounded-full bg-[#FBBF24]/20 flex items-center justify-center mx-auto text-[#FBBF24]">
+        <Container size="narrow" className="text-center space-y-6 bg-white p-8 sm:p-12 border border-[#FDE68A] shadow-xl rounded-none">
+          <div className="w-16 h-16 rounded-full bg-[#FEF3C7] border border-[#F59E0B] flex items-center justify-center mx-auto text-[#D97706] shadow-2xs">
             <ShoppingCart className="w-8 h-8" />
           </div>
-          <h1 className="text-2xl sm:text-4xl font-black text-white">
+          <h1 className="text-2xl sm:text-4xl font-black text-[#2B2017]">
             سبد خرید شما خالی است
           </h1>
-          <p className="text-sm sm:text-base text-[#E8E2D9] max-w-md mx-auto leading-relaxed">
+          <p className="text-sm sm:text-base text-[#5C5248] max-w-md mx-auto leading-relaxed font-medium">
             محصولی به سبد خرید اضافه نشده است. می‌توانید با مراجعه به فهرست محصولات، انواع عسل طبیعی باباخُرم را بررسی و سفارش دهید.
           </p>
           <div className="pt-4">
@@ -289,36 +280,36 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
       <Container size="narrow" className="space-y-10 sm:space-y-12">
         {/* Page Title */}
         <div className="text-center space-y-3">
-          <h1 className="text-3xl sm:text-5xl font-black text-white leading-tight">
+          <h1 className="text-3xl sm:text-5xl font-black text-[#FFFBEB] leading-tight drop-shadow-md">
             سبد خرید و ثبت سفارش
           </h1>
-          <p className="text-xs sm:text-sm text-[#E8E2D9]">
+          <p className="text-xs sm:text-sm text-[#E5D5C5]">
             تعداد کل اقلام: {toPersianDigits(totalQuantity)} عدد (بدون نیاز به پرداخت آنلاین)
           </p>
         </div>
 
         {/* Private Mode In-Memory Warning */}
         {warning && (
-          <div className="flex items-center gap-3 p-4 bg-[#D97706]/20 border border-[#D97706] text-[#FEF3C7] text-xs sm:text-sm leading-relaxed">
-            <Info className="w-5 h-5 shrink-0 text-[#FBBF24]" />
+          <div className="flex items-center gap-3 p-4 bg-[#FEF3C7] border border-[#F59E0B] text-[#92400E] text-xs sm:text-sm leading-relaxed rounded-none shadow-xs font-medium">
+            <Info className="w-5 h-5 shrink-0 text-[#D97706]" />
             <span>{warning}</span>
           </div>
         )}
 
-        {/* 1. Cart Lines Items Section */}
-        <div className="bg-black/35 border-2 border-white/20 p-5 sm:p-8 space-y-6 shadow-2xl">
-          <h2 className="text-xl sm:text-2xl font-black text-[#FBBF24] border-b border-white/15 pb-3">
+        {/* 1. Cart Lines Items Section: Warm Ivory Card */}
+        <div className="bg-white border border-[#FDE68A] p-5 sm:p-8 space-y-6 shadow-lg rounded-none text-right">
+          <h2 className="text-xl sm:text-2xl font-black text-[#2B2017] border-b border-[#EFE9E0] pb-3">
             اقلام انتخابی شما
           </h2>
 
           {isLoadingFresh && (
-            <div className="py-4 flex items-center justify-center gap-2 text-xs text-[#E8E2D9]">
-              <Loader2 className="w-4 h-4 animate-spin text-[#FBBF24]" />
+            <div className="py-4 flex items-center justify-center gap-2 text-xs text-[#5C5248]">
+              <Loader2 className="w-4 h-4 animate-spin text-[#D97706]" />
               <span>در حال به‌روزرسانی موجودی و مشخصات...</span>
             </div>
           )}
 
-          <div className="divide-y divide-white/15">
+          <div className="divide-y divide-[#EFE9E0]">
             {lines.map((line) => {
               const fresh = freshItems.find((f) => f.optionId === line.optionId);
               const title = fresh?.productNameFa || 'عسل طبیعی';
@@ -330,22 +321,22 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
                 <div
                   key={line.optionId}
                   className={`py-4 sm:py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
-                    !isAvailable ? 'bg-red-950/30 p-3 border border-red-500/50' : ''
+                    !isAvailable ? 'bg-rose-50 p-3 border border-rose-300' : ''
                   }`}
                 >
                   {/* Item Image and Name */}
                   <div className="flex items-center gap-3 sm:gap-4">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-black/30 border border-white/20 shrink-0 overflow-hidden">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-[#FAF7F2] border border-[#EFE9E0] shrink-0 overflow-hidden flex items-center justify-center">
                       {fresh?.mainImage ? (
                         <Picture
                           asset={fresh.mainImage}
                           alt={title}
                           width={100}
                           height={100}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-contain p-1"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-[10px] text-white/60">
+                        <div className="w-full h-full flex items-center justify-center text-[10px] text-[#786455] font-bold">
                           باباخُرم
                         </div>
                       )}
@@ -354,15 +345,15 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
                     <div className="space-y-1 min-w-0">
                       <Link
                         href={`/products/${fresh?.productSlug || ''}`}
-                        className="font-black text-sm sm:text-base text-white hover:text-[#FBBF24] transition-colors truncate block"
+                        className="font-black text-sm sm:text-base text-[#2B2017] hover:text-[#D97706] transition-colors truncate block"
                       >
                         {title}
                       </Link>
-                      <div className="text-xs text-[#FBBF24] font-bold">
+                      <div className="text-xs text-[#B45309] font-bold">
                         بسته‌بندی: {optionLabel}
                       </div>
                       {!isAvailable && (
-                        <div className="text-xs text-[#FCA5A5] font-bold flex items-center gap-1">
+                        <div className="text-xs text-rose-700 font-bold flex items-center gap-1">
                           <AlertTriangle className="w-3.5 h-3.5" />
                           <span>{invalidReason || 'این مورد ناموجود است.'}</span>
                         </div>
@@ -372,17 +363,17 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
 
                   {/* Quantity Stepper & Remove */}
                   <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0">
-                    <div className="flex items-center gap-2 bg-black/40 border border-white/20 p-1">
+                    <div className="flex items-center gap-2 bg-[#FAF7F2] border border-[#EFE9E0] p-1 rounded-none shadow-2xs">
                       <button
                         type="button"
                         onClick={() => actions.updateQuantity(line.optionId, line.qty - 1)}
                         disabled={line.qty <= 1}
                         aria-label="کاهش"
-                        className="w-7 h-7 flex items-center justify-center text-white hover:bg-white/10 disabled:opacity-30"
+                        className="w-7 h-7 flex items-center justify-center text-[#2B2017] hover:bg-stone-200 disabled:opacity-30 cursor-pointer"
                       >
                         <Minus className="w-3.5 h-3.5" />
                       </button>
-                      <span className="w-7 text-center font-black text-sm text-white select-none">
+                      <span className="w-7 text-center font-black text-sm text-[#2B2017] select-none">
                         {toPersianDigits(line.qty)}
                       </span>
                       <button
@@ -390,7 +381,7 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
                         onClick={() => actions.updateQuantity(line.optionId, line.qty + 1)}
                         disabled={line.qty >= 50}
                         aria-label="افزایش"
-                        className="w-7 h-7 flex items-center justify-center text-white hover:bg-white/10 disabled:opacity-30"
+                        className="w-7 h-7 flex items-center justify-center text-[#2B2017] hover:bg-stone-200 disabled:opacity-30 cursor-pointer"
                       >
                         <Plus className="w-3.5 h-3.5" />
                       </button>
@@ -400,7 +391,7 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
                       type="button"
                       onClick={() => actions.removeItem(line.optionId)}
                       aria-label="حذف از سبد"
-                      className="p-2 text-red-400 hover:text-red-300 hover:bg-red-950/40 rounded transition-colors"
+                      className="p-2 text-rose-600 hover:text-rose-700 hover:bg-rose-50 rounded-none transition-colors cursor-pointer"
                       title="حذف این مورد"
                     >
                       <Trash2 className="w-5 h-5" />
@@ -412,22 +403,22 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
           </div>
 
           {/* Cart Notice Box */}
-          <div className="p-4 bg-black/40 border border-[#FBBF24]/40 text-[#FBBF24] text-xs sm:text-sm leading-relaxed flex items-start gap-2.5">
-            <Info className="w-5 h-5 shrink-0 mt-0.5" />
+          <div className="p-4 bg-[#FFFBEB] border border-[#FDE68A] text-[#92400E] text-xs sm:text-sm leading-relaxed flex items-start gap-2.5 rounded-none shadow-2xs">
+            <Info className="w-5 h-5 shrink-0 mt-0.5 text-[#D97706]" />
             <div>
-              <span className="font-bold">یادداشت فروشگاه: </span>
-              <span>{cartNotice}</span>
+              <span className="font-black text-[#2B2017]">یادداشت فروشگاه: </span>
+              <span className="font-medium">{cartNotice}</span>
             </div>
           </div>
         </div>
 
-        {/* 2. Customer Delivery Form (Delivery Only) */}
-        <div className="bg-black/35 border-2 border-white/20 p-5 sm:p-8 space-y-6 shadow-2xl">
-          <div className="space-y-1 border-b border-white/15 pb-3">
-            <h2 className="text-xl sm:text-2xl font-black text-[#FBBF24]">
+        {/* 2. Customer Delivery Form (Delivery Only): Warm Ivory Card */}
+        <div className="bg-white border border-[#FDE68A] p-5 sm:p-8 space-y-6 shadow-lg rounded-none text-right">
+          <div className="space-y-1 border-b border-[#EFE9E0] pb-3">
+            <h2 className="text-xl sm:text-2xl font-black text-[#2B2017]">
               مشخصات و نشانی تحویل (فقط ارسال پستی)
             </h2>
-            <p className="text-xs text-[#E8E2D9]/70">
+            <p className="text-xs text-[#786455] font-medium">
               تحویل سفارشات صرفاً به صورت ارسال پستی و درب منزل می‌باشد و امکان دریافت حضوری وجود ندارد.
             </p>
           </div>
@@ -435,95 +426,95 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             {/* First Name */}
             <div className="space-y-1.5">
-              <label className="block text-xs sm:text-sm font-bold text-white">
-                نام <span className="text-red-400">*</span>
+              <label className="block text-xs sm:text-sm font-bold text-[#2B2017]">
+                نام <span className="text-[#9E3556]">*</span>
               </label>
               <input
                 type="text"
                 value={customer.firstName}
                 onChange={(e) => setCustomer({ ...customer, firstName: e.target.value })}
-                className="w-full h-11 px-3.5 bg-black/40 border border-white/25 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FBBF24]"
+                className="w-full h-11 px-3.5 bg-[#FAF7F2] border border-[#EFE9E0] text-[#2B2017] text-sm focus:outline-none focus:border-[#D97706] focus:bg-white rounded-none transition-colors"
                 dir="rtl"
               />
               {formErrors.firstName && (
-                <p className="text-xs text-red-400 font-bold">{formErrors.firstName}</p>
+                <p className="text-xs text-rose-700 font-bold">{formErrors.firstName}</p>
               )}
             </div>
 
             {/* Last Name */}
             <div className="space-y-1.5">
-              <label className="block text-xs sm:text-sm font-bold text-white">
-                نام خانوادگی <span className="text-red-400">*</span>
+              <label className="block text-xs sm:text-sm font-bold text-[#2B2017]">
+                نام خانوادگی <span className="text-[#9E3556]">*</span>
               </label>
               <input
                 type="text"
                 value={customer.lastName}
                 onChange={(e) => setCustomer({ ...customer, lastName: e.target.value })}
-                className="w-full h-11 px-3.5 bg-black/40 border border-white/25 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FBBF24]"
+                className="w-full h-11 px-3.5 bg-[#FAF7F2] border border-[#EFE9E0] text-[#2B2017] text-sm focus:outline-none focus:border-[#D97706] focus:bg-white rounded-none transition-colors"
                 dir="rtl"
               />
               {formErrors.lastName && (
-                <p className="text-xs text-red-400 font-bold">{formErrors.lastName}</p>
+                <p className="text-xs text-rose-700 font-bold">{formErrors.lastName}</p>
               )}
             </div>
 
             {/* Mobile Number */}
             <div className="space-y-1.5">
-              <label className="block text-xs sm:text-sm font-bold text-white">
-                شماره موبایل (۰۹xxxxxxxxx) <span className="text-red-400">*</span>
+              <label className="block text-xs sm:text-sm font-bold text-[#2B2017]">
+                شماره موبایل (۰۹xxxxxxxxx) <span className="text-[#9E3556]">*</span>
               </label>
               <input
                 type="tel"
                 value={customer.mobile}
                 onChange={(e) => setCustomer({ ...customer, mobile: e.target.value })}
                 placeholder="09123456789"
-                className="w-full h-11 px-3.5 bg-black/40 border border-white/25 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FBBF24]"
+                className="w-full h-11 px-3.5 bg-[#FAF7F2] border border-[#EFE9E0] text-[#2B2017] text-sm focus:outline-none focus:border-[#D97706] focus:bg-white rounded-none transition-colors text-right"
                 dir="ltr"
               />
               {formErrors.mobile && (
-                <p className="text-xs text-red-400 font-bold">{formErrors.mobile}</p>
+                <p className="text-xs text-rose-700 font-bold">{formErrors.mobile}</p>
               )}
             </div>
 
             {/* Province */}
             <div className="space-y-1.5">
-              <label className="block text-xs sm:text-sm font-bold text-white">
-                استان <span className="text-red-400">*</span>
+              <label className="block text-xs sm:text-sm font-bold text-[#2B2017]">
+                استان <span className="text-[#9E3556]">*</span>
               </label>
               <input
                 type="text"
                 value={customer.province}
                 onChange={(e) => setCustomer({ ...customer, province: e.target.value })}
                 placeholder="مثال: آذربایجان شرقی"
-                className="w-full h-11 px-3.5 bg-black/40 border border-white/25 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FBBF24]"
+                className="w-full h-11 px-3.5 bg-[#FAF7F2] border border-[#EFE9E0] text-[#2B2017] text-sm focus:outline-none focus:border-[#D97706] focus:bg-white rounded-none transition-colors"
                 dir="rtl"
               />
               {formErrors.province && (
-                <p className="text-xs text-red-400 font-bold">{formErrors.province}</p>
+                <p className="text-xs text-rose-700 font-bold">{formErrors.province}</p>
               )}
             </div>
 
             {/* City */}
             <div className="space-y-1.5">
-              <label className="block text-xs sm:text-sm font-bold text-white">
-                شهر <span className="text-red-400">*</span>
+              <label className="block text-xs sm:text-sm font-bold text-[#2B2017]">
+                شهر <span className="text-[#9E3556]">*</span>
               </label>
               <input
                 type="text"
                 value={customer.city}
                 onChange={(e) => setCustomer({ ...customer, city: e.target.value })}
                 placeholder="مثال: تبریز"
-                className="w-full h-11 px-3.5 bg-black/40 border border-white/25 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FBBF24]"
+                className="w-full h-11 px-3.5 bg-[#FAF7F2] border border-[#EFE9E0] text-[#2B2017] text-sm focus:outline-none focus:border-[#D97706] focus:bg-white rounded-none transition-colors"
                 dir="rtl"
               />
               {formErrors.city && (
-                <p className="text-xs text-red-400 font-bold">{formErrors.city}</p>
+                <p className="text-xs text-rose-700 font-bold">{formErrors.city}</p>
               )}
             </div>
 
             {/* Postal Code (Optional) */}
             <div className="space-y-1.5">
-              <label className="block text-xs sm:text-sm font-bold text-white">
+              <label className="block text-xs sm:text-sm font-bold text-[#2B2017]">
                 کد پستی (۱۰ رقم - اختیاری)
               </label>
               <input
@@ -532,35 +523,35 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
                 value={customer.postalCode || ''}
                 onChange={(e) => setCustomer({ ...customer, postalCode: e.target.value })}
                 placeholder="کد پستی ۱۰ رقمی"
-                className="w-full h-11 px-3.5 bg-black/40 border border-white/25 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FBBF24]"
+                className="w-full h-11 px-3.5 bg-[#FAF7F2] border border-[#EFE9E0] text-[#2B2017] text-sm focus:outline-none focus:border-[#D97706] focus:bg-white rounded-none transition-colors text-right"
                 dir="ltr"
               />
               {formErrors.postalCode && (
-                <p className="text-xs text-red-400 font-bold">{formErrors.postalCode}</p>
+                <p className="text-xs text-rose-700 font-bold">{formErrors.postalCode}</p>
               )}
             </div>
 
             {/* Address */}
             <div className="sm:col-span-2 space-y-1.5">
-              <label className="block text-xs sm:text-sm font-bold text-white">
-                نشانی دقیق پستی (خیابان، کوچه، پلاک، واحد) <span className="text-red-400">*</span>
+              <label className="block text-xs sm:text-sm font-bold text-[#2B2017]">
+                نشانی دقیق پستی (خیابان، کوچه، پلاک، واحد) <span className="text-[#9E3556]">*</span>
               </label>
               <textarea
                 rows={3}
                 value={customer.address}
                 onChange={(e) => setCustomer({ ...customer, address: e.target.value })}
                 maxLength={500}
-                className="w-full p-3 bg-black/40 border border-white/25 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FBBF24]"
+                className="w-full p-3 bg-[#FAF7F2] border border-[#EFE9E0] text-[#2B2017] text-sm focus:outline-none focus:border-[#D97706] focus:bg-white rounded-none transition-colors leading-relaxed"
                 dir="rtl"
               />
               {formErrors.address && (
-                <p className="text-xs text-red-400 font-bold">{formErrors.address}</p>
+                <p className="text-xs text-rose-700 font-bold">{formErrors.address}</p>
               )}
             </div>
 
             {/* Notes (Optional) */}
             <div className="sm:col-span-2 space-y-1.5">
-              <label className="block text-xs sm:text-sm font-bold text-white">
+              <label className="block text-xs sm:text-sm font-bold text-[#2B2017]">
                 توضیحات تکمیلی (اختیاری - حداکثر ۳۰۰ کاراکتر)
               </label>
               <textarea
@@ -568,69 +559,39 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
                 value={customer.notes || ''}
                 onChange={(e) => setCustomer({ ...customer, notes: e.target.value })}
                 maxLength={300}
-                className="w-full p-3 bg-black/40 border border-white/25 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FBBF24]"
+                className="w-full p-3 bg-[#FAF7F2] border border-[#EFE9E0] text-[#2B2017] text-sm focus:outline-none focus:border-[#D97706] focus:bg-white rounded-none transition-colors leading-relaxed"
                 dir="rtl"
               />
             </div>
           </div>
 
           {/* Remember Me Checkbox & Privacy Policy Line */}
-          <div className="space-y-3 pt-2 border-t border-white/10">
-            <label className="flex items-center gap-2.5 text-xs sm:text-sm text-white cursor-pointer select-none">
+          <div className="space-y-3 pt-2 border-t border-[#EFE9E0]">
+            <label className="flex items-center gap-2.5 text-xs sm:text-sm text-[#2B2017] cursor-pointer select-none font-medium">
               <input
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
-                className="w-4 h-4 rounded text-[#FBBF24] focus:ring-[#FBBF24] bg-black/40 border-white/30"
+                className="w-4 h-4 rounded-none text-[#F59E0B] focus:ring-[#F59E0B] bg-white border-[#EFE9E0]"
               />
               <span>مرا به خاطر بسپار (ذخیره اطلاعات نشانی در مرورگر شما برای سفارش‌های بعدی)</span>
             </label>
 
-            <p className="text-[11px] sm:text-xs text-[#E8E2D9]/70 leading-relaxed">
+            <p className="text-[11px] sm:text-xs text-[#786455] leading-relaxed">
               🔒 حریم خصوصی: اطلاعات شما به هیچ وجه در دیتابیس سایت ذخیره نمی‌شود و صرفاً جهت ساخت متن پیام سفارش استفاده می‌گردد (در حالت بارکد QR، به مدت ۳۰ دقیقه به صورت رمزنگاری‌شده نگهداری می‌شود).
             </p>
           </div>
         </div>
 
-        {/* 3. Channel Chooser & Device Override */}
-        <div className="bg-black/35 border-2 border-white/20 p-5 sm:p-8 space-y-6 shadow-2xl">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/15 pb-3">
-            <div>
-              <h2 className="text-xl sm:text-2xl font-black text-[#FBBF24]">
-                انتخاب روش و کانال ارسال سفارش
-              </h2>
-              <p className="text-xs text-[#E8E2D9]/70 mt-1">
-                سفارش شما مستقیماً به دست کارشناسان فروش باباخُرم خواهد رسید.
-              </p>
-            </div>
-
-            {/* Device Switcher Override */}
-            <div className="inline-flex rounded-full bg-black/50 p-1 border border-white/20 self-start sm:self-auto text-xs">
-              <button
-                type="button"
-                onClick={() => setManualDeviceMode('mobile')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all ${
-                  effectiveIsMobile
-                    ? 'bg-[#FBBF24] text-[#2B2017] font-black'
-                    : 'text-white/70 hover:text-white'
-                }`}
-              >
-                <Smartphone className="w-3.5 h-3.5" />
-                <span>با گوشی هستم</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setManualDeviceMode('desktop')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all ${
-                  !effectiveIsMobile
-                    ? 'bg-[#FBBF24] text-[#2B2017] font-black'
-                    : 'text-white/70 hover:text-white'
-                }`}
-              >
-                <Monitor className="w-3.5 h-3.5" />
-                <span>با کامپیوتر هستم</span>
-              </button>
-            </div>
+        {/* 3. Channel Chooser: Warm Ivory Card */}
+        <div className="bg-white border border-[#FDE68A] p-5 sm:p-8 space-y-6 shadow-lg rounded-none text-right">
+          <div className="border-b border-[#EFE9E0] pb-3">
+            <h2 className="text-xl sm:text-2xl font-black text-[#2B2017]">
+              انتخاب روش و کانال ارسال سفارش
+            </h2>
+            <p className="text-xs text-[#786455] mt-1 font-medium">
+              سفارش شما مستقیماً به دست کارشناسان فروش باباخُرم خواهد رسید.
+            </p>
           </div>
 
           {/* Channels Selection */}
@@ -643,31 +604,31 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
                 <div
                   key={channel.id}
                   onClick={() => channel.id && setSelectedChannelId(channel.id)}
-                  className={`p-4 border cursor-pointer transition-all flex items-center justify-between gap-3 ${
+                  className={`p-4 border cursor-pointer transition-all flex items-center justify-between gap-3 rounded-none ${
                     isSelected
-                      ? 'bg-[#FBBF24]/20 border-[#FBBF24] shadow-md ring-1 ring-[#FBBF24]'
-                      : 'bg-black/30 border-white/20 hover:bg-black/50'
+                      ? 'bg-[#FFFBEB] border-2 border-[#D97706] shadow-sm'
+                      : 'bg-[#FAF7F2] border-[#EFE9E0] hover:bg-[#FFFBEB] hover:border-[#D97706]'
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <div
                       className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                        isSelected ? 'border-[#FBBF24] bg-[#FBBF24]' : 'border-white/40'
+                        isSelected ? 'border-[#D97706] bg-[#D97706]' : 'border-stone-400'
                       }`}
                     >
-                      {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-[#2B2017]" />}
+                      {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                     </div>
                     <div>
-                      <div className="font-bold text-sm sm:text-base text-white">
+                      <div className="font-black text-sm sm:text-base text-[#2B2017]">
                         {channel.label || channel.type}
                       </div>
-                      <div className="text-xs text-[#E8E2D9]/70">
+                      <div className="text-xs text-[#786455] font-medium">
                         {isSms ? 'ارسال از طریق پیامک متنی' : 'ارسال در گفتگوی پیام‌رسان'}
                       </div>
                     </div>
                   </div>
                   {isSms && (
-                    <span className="text-[10px] px-2 py-0.5 bg-[#D97706]/30 text-[#FBBF24] border border-[#D97706]/40 font-bold">
+                    <span className="text-[10px] px-2 py-0.5 bg-[#FEF3C7] text-[#92400E] border border-[#FDE68A] font-bold rounded-none">
                       پیامک گوشی
                     </span>
                   )}
@@ -677,7 +638,7 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
           </div>
 
           {submitError && (
-            <div className="p-3 bg-red-950/60 border border-red-500 text-white text-xs sm:text-sm">
+            <div className="p-3 bg-rose-50 border border-rose-300 text-rose-800 text-xs sm:text-sm rounded-none font-bold">
               {submitError}
             </div>
           )}
@@ -689,7 +650,7 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
               size="lg"
               onClick={handleProceedToOrder}
               disabled={isSubmitting || hasUnavailable}
-              className="w-full sm:w-auto px-12 font-black text-base shadow-xl"
+              className="w-full sm:w-auto px-12 font-black text-base shadow-lg cursor-pointer"
             >
               {isSubmitting ? (
                 <span className="flex items-center gap-2">
@@ -704,13 +665,13 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
         </div>
 
         {/* 4. Desktop Output Panel (Messenger Open + Copy + QR Code) */}
-        {!effectiveIsMobile && orderResult && (
-          <div className="bg-black/40 border-2 border-[#FBBF24] p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in duration-300">
-            <div className="border-b border-white/15 pb-3">
-              <h3 className="text-xl sm:text-2xl font-black text-[#FBBF24]">
+        {!isMobileClient && orderResult && (
+          <div className="bg-white border-2 border-[#FDE68A] p-6 sm:p-8 space-y-6 shadow-xl rounded-none text-right animate-in fade-in duration-300">
+            <div className="border-b border-[#EFE9E0] pb-3">
+              <h3 className="text-xl sm:text-2xl font-black text-[#2B2017]">
                 سفارش شما با کد {orderResult.orderCode} آماده ارسال است
               </h3>
-              <p className="text-xs text-[#E8E2D9] mt-1">
+              <p className="text-xs text-[#786455] mt-1 font-medium">
                 می‌توانید پیام‌رسان را باز کنید، متن را کپی فرمایید، یا بارکد را با گوشی اسکن کنید:
               </p>
             </div>
@@ -719,19 +680,19 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
               {/* Left Column: Actions & Copy */}
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between text-xs text-[#E8E2D9]">
+                  <div className="flex items-center justify-between text-xs text-[#2B2017]">
                     <span className="font-bold">متن سفارش:</span>
                     <button
                       type="button"
                       onClick={handleCopyText}
-                      className="flex items-center gap-1.5 text-[#FBBF24] hover:text-white font-bold"
+                      className="flex items-center gap-1.5 text-[#D97706] hover:text-[#B45309] font-black cursor-pointer"
                     >
-                      {isCopied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
+                      {isCopied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
                       <span>{isCopied ? 'کپی شد!' : 'کپی متن'}</span>
                     </button>
                   </div>
                   <pre
-                    className="w-full max-h-48 overflow-y-auto whitespace-pre-wrap font-sans text-xs text-white/90 bg-black/50 p-3 border border-white/10 select-all"
+                    className="w-full max-h-48 overflow-y-auto whitespace-pre-wrap font-sans text-xs text-[#2B2017] bg-[#FAF7F2] p-3 border border-[#EFE9E0] select-all rounded-none font-medium leading-relaxed"
                     dir="rtl"
                   >
                     {orderResult.messageText}
@@ -755,14 +716,14 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
                     variant="gold"
                     size="md"
                     onClick={handleCopyText}
-                    className="w-full justify-center font-bold"
+                    className="w-full justify-center font-bold cursor-pointer"
                   >
                     {isCopied ? 'متن کپی شد' : 'کپی متن سفارش برای ارسال دستی'}
                   </PillButton>
                 </div>
 
                 {orderResult.instructionsFa && (
-                  <p className="text-xs text-[#E8E2D9]/80 leading-relaxed">
+                  <p className="text-xs text-[#786455] leading-relaxed font-medium">
                     💡 {orderResult.instructionsFa}
                   </p>
                 )}
@@ -770,18 +731,18 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
 
               {/* Right Column: In-Browser SVG QR Code */}
               {orderResult.shareUrl && (
-                <div className="flex flex-col items-center justify-center p-6 bg-white/95 rounded-none border border-white text-center space-y-3">
+                <div className="flex flex-col items-center justify-center p-6 bg-[#FAF7F2] rounded-none border border-[#EFE9E0] text-center space-y-3">
                   <div
                     dangerouslySetInnerHTML={{
                       __html: generateQrSvg(orderResult.shareUrl, 200),
                     }}
-                    className="p-1 bg-white"
+                    className="p-2 bg-white border border-[#EFE9E0] shadow-2xs"
                   />
-                  <div className="space-y-1 text-black">
+                  <div className="space-y-1 text-[#2B2017]">
                     <p className="font-black text-xs sm:text-sm">
                       اسکن و ارسال سریع با گوشی
                     </p>
-                    <p className="text-[11px] text-stone-600">
+                    <p className="text-[11px] text-[#786455]">
                       دوربین گوشی را روی تصویر بالا بگیرید تا صفحه سفارش با یک لمس باز شود.
                     </p>
                   </div>
@@ -791,28 +752,28 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
           </div>
         )}
 
-        {/* 5. Persistent After-Send Confirmation Dialog (Addendum A3/A9) */}
+        {/* 5. Persistent After-Send Confirmation Dialog */}
         {showConfirmSent && (
-          <div className="p-6 bg-[#15803D]/20 border-2 border-[#22C55E]/60 space-y-4 shadow-xl text-center">
-            <div className="flex items-center justify-center gap-2 text-white font-black text-lg">
-              <CheckCircle2 className="w-6 h-6 text-[#4ADE80]" />
+          <div className="p-6 bg-emerald-50 border-2 border-emerald-400 space-y-4 shadow-lg text-center rounded-none">
+            <div className="flex items-center justify-center gap-2 text-emerald-950 font-black text-lg">
+              <CheckCircle2 className="w-6 h-6 text-emerald-600" />
               <span>سفارش را ارسال کردید؟</span>
             </div>
-            <p className="text-xs sm:text-sm text-[#E8E2D9] max-w-md mx-auto leading-relaxed">
+            <p className="text-xs sm:text-sm text-emerald-800 max-w-md mx-auto leading-relaxed font-medium">
               اگر پیام سفارش را در پیام‌رسان یا پیامک برای ما فرستادید، می‌توانید سبد خرید خود را خالی فرمایید.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
               <button
                 type="button"
                 onClick={handleConfirmClearCart}
-                className="px-6 py-2.5 rounded-full bg-[#15803D] hover:bg-[#166534] text-white font-black text-xs sm:text-sm shadow transition-all"
+                className="px-6 py-2.5 rounded-full bg-[#15803D] hover:bg-[#166534] text-white font-black text-xs sm:text-sm shadow-md transition-all cursor-pointer"
               >
                 بله، سبد را خالی کن
               </button>
               <button
                 type="button"
                 onClick={() => setShowConfirmSent(false)}
-                className="px-6 py-2.5 rounded-full bg-black/40 hover:bg-black/60 text-white font-bold text-xs sm:text-sm border border-white/20 transition-all"
+                className="px-6 py-2.5 rounded-full bg-white hover:bg-stone-100 text-[#2B2017] font-bold text-xs sm:text-sm border border-[#EFE9E0] transition-all cursor-pointer"
               >
                 نه، هنوز
               </button>

@@ -143,6 +143,7 @@ for (let i = 0; i < productBlocks.length; i++) {
     options: [], // Imported products get NO options
     categorySlug,
     categoryIds: ['cat_' + categorySlug],
+    imageUrl: '/images/products/' + slug + '.jpg',
     createdAt: '2026-10-08T00:00:00.000Z',
     updatedAt: '2026-10-08T00:00:00.000Z',
   });
@@ -294,26 +295,18 @@ function parseIngredientLine(rawLine) {
 }
 
 function assignRecipeCategories(nameFa, nameOrig, textBlock) {
-  const cats = [];
-  // 1. milk as main liquid
-  if (['شیر ', 'شیر:', 'شیر،', 'شیر\n', 'حلیب'].some((k) => textBlock.includes(k))) {
-    cats.push('milk-drinks');
+  const cats = ['drinks']; // All items are beverages
+  // Desserts
+  if (['سحلب', 'شیرین عسل', 'بویه', 'آمالاکی', 'ایسکَنجه‌بی', 'عطر عسل', 'حَلیب'].some((k) => textBlock.includes(k) || nameFa.includes(k))) {
+    cats.push('desserts');
   }
-  // 2. flour/powder of grain, seed or cereal as base
-  if (['آرد ارزن', 'آرد گندم', 'آرد سَتو', 'پودر بسیسه', 'نشاسته'].some((k) => textBlock.includes(k))) {
-    cats.push('grain-seed-drinks');
+  // Breakfast
+  if (['شیر و عسل', 'بسیسه', 'سَتو', 'کورما', 'حَلیب', 'شوگایو'].some((k) => textBlock.includes(k) || nameFa.includes(k))) {
+    cats.push('breakfast');
   }
-  // 3. fruit, citrus, fruit puree/concentrate or vinegar-syrup
-  if (['سرکه', 'لیمو', 'پوملو', 'پرتقال', 'آمالاکی', 'تمر هندی', 'بائوباب', 'توت'].some((k) => textBlock.includes(k))) {
-    cats.push('sharbat-fruit-drinks');
-  }
-  // 4. leaves/herbs/flowers/spices steeped or boiled in water
-  if (['چای', 'قهوه', 'قهوا', 'علف لیمو', 'نعناع', 'ریحان', 'هیبیسکوس', 'داوودی', 'بابونه', 'هل', 'دارچین', 'زنجبیل', 'میخک', 'متّه', 'زعفران', 'نومی بصره', 'گیاهان معطر'].some((k) => textBlock.includes(k))) {
-    cats.push('teas-infusions');
-  }
-
-  if (cats.length === 0) {
-    cats.push('teas-infusions');
+  // Cakes & Pastries
+  if (['پوملو', 'تاشکند', 'پشاوری', 'افغانی', 'مراکشی', 'الجزایری', 'نومی بصره', 'داوودی'].some((k) => textBlock.includes(k) || nameFa.includes(k))) {
+    cats.push('pastries');
   }
 
   return Array.from(new Set(cats)).sort();
@@ -435,10 +428,10 @@ fs.writeFileSync(path.join(seedDir, 'recipes.json'), JSON.stringify(parsedRecipe
 // 4. Generate ./import-report.md
 // -----------------------------------------------------------------
 const categoryFaNames = {
-  'teas-infusions': 'چای و دمنوش‌ها',
-  'sharbat-fruit-drinks': 'شربت‌ها و نوشیدنی‌های میوه‌ای',
-  'milk-drinks': 'نوشیدنی‌های شیری',
-  'grain-seed-drinks': 'نوشیدنی‌های غلات و دانه‌ها',
+  'drinks': 'نوشیدنی',
+  'desserts': 'دسر',
+  'breakfast': 'صبحانه',
+  'pastries': 'کیک و شیرینی',
   'honey-types': 'انواع عسل',
   'other-bee-products': 'فرآورده‌های دیگر زنبور',
 };

@@ -15,16 +15,32 @@ import React, { useState, useEffect } from 'react';
 
 const DEFAULT_HERO_IMAGES = [
   {
-    src: '/images/hero-1.jpg',
-    alt: 'شهد زرین و کوهستان‌های سرسبز زنبورداری',
+    src: '/images/hero/photo_35.jpg',
+    alt: 'شهد زرین و کندوهای عسل طبیعی باباخُرم',
   },
   {
-    src: '/images/beekeeping.jpg',
-    alt: 'زنبوردار حرفه‌ای در حال سرکشی به کندوهای عسل در مراتع سرسبز',
+    src: '/images/hero/photo_32.jpg',
+    alt: 'مراتع سرسبز کوهستانی و زنبورداری سنتی',
   },
   {
-    src: '/images/bees-banner.jpg',
-    alt: 'با افتخار کارِ زنبورها و تولید عسل طبیعی',
+    src: '/images/hero/photo_33.jpg',
+    alt: 'زنبورداران پرتلاش و متعهد باباخُرم',
+  },
+  {
+    src: '/images/hero/photo_34.jpg',
+    alt: 'برداشت مستقیم عسل خالص از شان',
+  },
+  {
+    src: '/images/hero/photo_36.jpg',
+    alt: 'کلونی‌های فعال زنبور عسل در طبیعت بکر',
+  },
+  {
+    src: '/images/hero/photo_37.jpg',
+    alt: 'عسل کوهستان با بالاترین درجه خلوص و اصالت',
+  },
+  {
+    src: '/images/hero/photo_38.jpg',
+    alt: 'شهد ناب و طبیعی دامنه کوهستان',
   },
 ];
 
@@ -45,7 +61,7 @@ export function HeroSlider({
   const slideImages =
     images && images.length > 0
       ? images.map((img) => ({
-          src: img.url || img.src || '/images/hero-1.jpg',
+          src: img.url || img.src || '/images/hero/photo_35.jpg',
           alt: img.alt || title,
         }))
       : DEFAULT_HERO_IMAGES;

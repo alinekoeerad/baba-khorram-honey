@@ -92,14 +92,14 @@ export function RecipeDetailView({
 
   return (
     <WoodBackground className="py-12 sm:py-20 min-h-screen">
-      <Container size="narrow" className="text-center space-y-10 sm:space-y-12">
+      <Container size="narrow" className="space-y-10 sm:space-y-12">
         {/* Breadcrumb Navigation */}
-        <nav aria-label="مسیر راهنما" className="flex items-center justify-center gap-2 text-xs sm:text-sm font-bold text-[#E5D5C5]">
-          <Link href="/" className="hover:text-[#FBBF24] transition-colors">
+        <nav aria-label="مسیر راهنما" className="flex items-center justify-center gap-2 text-xs sm:text-sm font-bold text-[#FFFBEB]">
+          <Link href="/" className="text-[#E5D5C5] hover:text-[#FBBF24] transition-colors">
             صفحه اصلی
           </Link>
           <span className="text-white/40" aria-hidden="true">/</span>
-          <Link href="/recipes" className="hover:text-[#FBBF24] transition-colors">
+          <Link href="/recipes" className="text-[#E5D5C5] hover:text-[#FBBF24] transition-colors">
             دستورها و دسرها
           </Link>
           <span className="text-white/40" aria-hidden="true">/</span>
@@ -108,83 +108,88 @@ export function RecipeDetailView({
           </span>
         </nav>
 
-        {/* 1. Main Image */}
-        <div className="max-w-md mx-auto aspect-4/3 rounded-none overflow-hidden border-2 border-white/20 shadow-2xl bg-black/20 flex items-center justify-center">
-          {recipe.mainImage ? (
-            <Picture
-              asset={recipe.mainImage}
-              width={recipe.mainImage.width ?? 800}
-              height={recipe.mainImage.height ?? 600}
-              blurDataUrl={recipe.mainImage.blurDataUrl}
-              alt={recipe.nameFa}
-              priority={true}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <img
-              src="/images/recipe-1.jpg"
-              alt={recipe.nameFa}
-              className="w-full h-full object-cover"
-            />
-          )}
-        </div>
+        {/* 1. Editorial Hero Card (Warm Artisan Paper Showcase) */}
+        <div className="max-w-3xl mx-auto bg-white border border-[#EFE9E0] p-6 sm:p-10 rounded-none shadow-md space-y-6 text-center">
+          {/* Recipe Photography */}
+          <div className="max-w-md mx-auto aspect-4/3 rounded-none overflow-hidden border-4 border-[#FAF7F2] shadow-md bg-[#FAF7F2] flex items-center justify-center">
+            {recipe.mainImage ? (
+              <Picture
+                asset={recipe.mainImage}
+                width={recipe.mainImage.width ?? 800}
+                height={recipe.mainImage.height ?? 600}
+                blurDataUrl={recipe.mainImage.blurDataUrl}
+                alt={recipe.nameFa}
+                priority={true}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <img
+                src="/images/recipe-1.jpg"
+                alt={recipe.nameFa}
+                className="w-full h-full object-cover"
+              />
+            )}
+          </div>
 
-        {/* 2. Titles */}
-        <div className="space-y-2">
-          <h1 className="text-3xl sm:text-5xl font-black text-[#FFFBEB] drop-shadow-md leading-tight">
-            {recipe.nameFa}
-          </h1>
-          {recipe.nameOriginal && (
-            <p className="text-sm sm:text-base text-[#D4C3B3] font-mono tracking-wide drop-shadow-sm" dir="ltr">
-              {recipe.nameOriginal}
-            </p>
-          )}
-        </div>
+          {/* Titles */}
+          <div className="space-y-2">
+            <h1 className="text-3xl sm:text-4xl font-black text-[#2B2017] leading-tight">
+              {recipe.nameFa}
+            </h1>
+            {recipe.nameOriginal && (
+              <p className="text-xs sm:text-sm text-[#786455] font-mono tracking-wide" dir="ltr">
+                {recipe.nameOriginal}
+              </p>
+            )}
+          </div>
 
-        {/* 3. Meta Area: Country, Serving Chips, Yield */}
-        <div className="flex flex-wrap items-center justify-center gap-2.5 max-w-xl mx-auto">
-          {recipe.country && recipe.country.trim().length > 0 && (
-            <div className="px-3.5 py-1.5 bg-black/40 border border-white/25 text-[#E5D5C5] text-xs sm:text-sm rounded-none shadow-sm font-bold">
-              <span className="text-[#FBBF24] font-black ml-1.5">خاستگاه:</span>
-              <span>{recipe.country}</span>
-            </div>
-          )}
-
-          {recipe.servingTypes && recipe.servingTypes.length > 0 && (
-            recipe.servingTypes.map((st) => (
-              <div
-                key={st}
-                className="px-3.5 py-1.5 bg-[#E08B38]/40 border border-[#E08B38]/60 text-white text-xs sm:text-sm font-black rounded-none shadow-sm"
-              >
-                {SERVING_LABELS[st] || st}
+          {/* Metadata Badges on Warm Ivory Pills */}
+          <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2">
+            {recipe.country && recipe.country.trim().length > 0 && (
+              <div className="px-3.5 py-1.5 bg-[#FFFBEB] border border-[#FDE68A] text-[#2B2017] text-xs sm:text-sm rounded-full font-bold shadow-2xs">
+                <span className="text-[#B45309] font-black ml-1.5">خاستگاه:</span>
+                <span>{recipe.country}</span>
               </div>
-            ))
-          )}
+            )}
 
-          {recipe.yieldText && recipe.yieldText.trim().length > 0 && (
-            <div className="px-3.5 py-1.5 bg-black/40 border border-white/25 text-[#E5D5C5] text-xs sm:text-sm rounded-none shadow-sm font-bold">
-              <span className="text-[#FBBF24] font-black ml-1.5">مقدار بازدهی:</span>
-              <span>{recipe.yieldText}</span>
-            </div>
-          )}
+            {recipe.servingTypes && recipe.servingTypes.length > 0 && (
+              recipe.servingTypes.map((st) => (
+                <div
+                  key={st}
+                  className="px-3.5 py-1.5 bg-[#FEF3C7] border border-[#F59E0B] text-[#92400E] text-xs sm:text-sm font-black rounded-full shadow-2xs"
+                >
+                  {SERVING_LABELS[st] || st}
+                </div>
+              ))
+            )}
+
+            {recipe.yieldText && recipe.yieldText.trim().length > 0 && (
+              <div className="px-3.5 py-1.5 bg-[#FFFBEB] border border-[#FDE68A] text-[#2B2017] text-xs sm:text-sm rounded-full font-bold shadow-2xs">
+                <span className="text-[#B45309] font-black ml-1.5">مقدار بازدهی:</span>
+                <span>{recipe.yieldText}</span>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* [UX-03] Recipe-to-Product Bridge: Recommended Honey Pairing Card */}
-        <div className="max-w-2xl mx-auto p-5 sm:p-6 bg-black/40 border-2 border-[#F59E0B] rounded-none shadow-2xl text-right space-y-4">
-          <div className="flex items-center justify-between border-b border-white/15 pb-3">
-            <div className="flex items-center gap-2 text-[#FFFBEB] font-black text-sm sm:text-base">
-              <Sparkles className="w-5 h-5 text-[#F59E0B]" />
+        {/* 2. [UX-03] Chef's Recommended Honey Box (Parchment Card) */}
+        <div className="max-w-3xl mx-auto p-5 sm:p-6 bg-gradient-to-l from-[#FFFBEB] to-[#FEF3C7] border border-[#F59E0B]/40 rounded-none shadow-sm text-right space-y-4">
+          <div className="flex items-center justify-between border-b border-[#FDE68A] pb-3">
+            <div className="flex items-center gap-2 text-[#2B2017] font-black text-sm sm:text-base">
+              <Sparkles className="w-5 h-5 text-[#D97706]" />
               <span>عسل پیشنهادی سرآشپز برای این دستور</span>
             </div>
-            <span className="text-xs text-[#FBBF24] font-bold">بسته‌بندی شیشه‌ای</span>
+            <span className="text-xs text-[#92400E] font-black bg-white px-2.5 py-0.5 border border-[#FDE68A] rounded-full">
+              بسته‌بندی شیشه‌ای
+            </span>
           </div>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="space-y-1">
-              <h3 className="text-base sm:text-lg font-black text-[#FFFBEB]">
+              <h3 className="text-base sm:text-lg font-black text-[#2B2017]">
                 {recommendedHoney.name}
               </h3>
-              <p className="text-xs sm:text-sm text-[#E5D5C5] font-medium leading-relaxed">
+              <p className="text-xs sm:text-sm text-[#5C5248] font-medium leading-relaxed">
                 طعم ملایم، طبع معتدل و بافت مخملی این عسل طعم نوشیدنی و دسر را بدون تلخی یا شیرینی زننده تکمیل می‌کند.
               </p>
             </div>
@@ -194,7 +199,7 @@ export function RecipeDetailView({
                 variant="gold"
                 size="md"
                 onClick={handleAddHoneyToCart}
-                className="w-full sm:w-auto font-black text-xs sm:text-sm justify-center shadow-lg"
+                className="w-full sm:w-auto font-black text-xs sm:text-sm justify-center shadow-md cursor-pointer"
               >
                 {honeyAdded ? (
                   <span className="flex items-center gap-1.5 text-emerald-950 font-black">
@@ -212,57 +217,57 @@ export function RecipeDetailView({
           </div>
         </div>
 
-        {/* 4. Optional Descriptions */}
+        {/* 3. Story & Long Description */}
         {(recipe.shortDescription || recipe.longDescription) && (
-          <div className="max-w-2xl mx-auto space-y-4 text-[#E5D5C5] leading-relaxed text-sm sm:text-base bg-black/40 p-6 sm:p-8 border border-white/20 rounded-none shadow-lg text-right">
+          <div className="max-w-3xl mx-auto space-y-4 text-right bg-white p-6 sm:p-8 border border-[#EFE9E0] rounded-none shadow-sm">
             {recipe.shortDescription && (
-              <p className="font-black text-[#FBBF24] text-base sm:text-lg">
+              <p className="font-black text-[#B45309] text-base sm:text-lg border-b border-[#FDE68A] pb-3">
                 {recipe.shortDescription}
               </p>
             )}
             {recipe.longDescription && (
-              <div className="whitespace-pre-line text-[#FFFBEB] font-medium leading-loose">
+              <div className="whitespace-pre-line text-[#332115] font-medium leading-loose text-sm sm:text-base">
                 {recipe.longDescription}
               </div>
             )}
           </div>
         )}
 
-        {/* 5. Ingredients */}
+        {/* 4. Ingredients Checklist (Clean Ivory Card) */}
         {recipe.ingredients && recipe.ingredients.length > 0 && (
-          <div className="max-w-2xl mx-auto text-right space-y-6 bg-black/40 p-6 sm:p-8 border border-white/20 rounded-none shadow-lg">
-            <h2 className="text-2xl font-black text-[#FFFBEB] text-center drop-shadow-sm">
+          <div className="max-w-3xl mx-auto text-right space-y-6 bg-white p-6 sm:p-8 border border-[#EFE9E0] rounded-none shadow-sm">
+            <h2 className="text-2xl font-black text-[#2B2017] text-center border-b border-[#EFE9E0] pb-4">
               مواد لازم
             </h2>
-            <div className="divide-y divide-white/10">
+            <div className="divide-y divide-[#EFE9E0]">
               {recipe.ingredients.map((ing, idx) => (
                 <div
                   key={ing.id || idx}
-                  className="py-3 flex flex-wrap items-center justify-between gap-3 text-sm sm:text-base"
+                  className="py-3.5 flex flex-wrap items-center justify-between gap-3 text-sm sm:text-base"
                 >
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[#FBBF24] shrink-0" />
-                    <span className="font-black text-white">{ing.name}</span>
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#D97706] shrink-0" />
+                    <span className="font-black text-[#2B2017]">{ing.name}</span>
                     {ing.isOptional && (
-                      <span className="text-xs text-[#FBBF24] font-normal">
+                      <span className="text-xs text-[#B45309] font-bold">
                         (اختیاری)
                       </span>
                     )}
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-[#E5D5C5] font-bold">
+                  <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-[#5C5248] font-bold">
                     {(ing.quantityText || ing.unit) && (
-                      <span className="bg-black/30 px-2 py-0.5 border border-white/10 text-[#FDFBF8]">
+                      <span className="bg-[#FFFBEB] px-3 py-1 border border-[#FDE68A] text-[#92400E] font-black rounded-none">
                         {[ing.quantityText, ing.unit].filter(Boolean).join(' ')}
                       </span>
                     )}
                     {ing.equivalentText && (
-                      <span className="text-white/70">
+                      <span className="text-[#786455]">
                         ({ing.equivalentText})
                       </span>
                     )}
                     {ing.note && (
-                      <span className="text-[#FBBF24] italic text-xs">
+                      <span className="text-[#D97706] font-bold">
                         - {ing.note}
                       </span>
                     )}
@@ -273,10 +278,10 @@ export function RecipeDetailView({
           </div>
         )}
 
-        {/* 6. Steps */}
+        {/* 5. Step-by-Step Cooking Guide (Continuous Cookbook Timeline) */}
         {recipe.steps && recipe.steps.length > 0 && (
-          <div className="max-w-2xl mx-auto text-right space-y-6 bg-black/40 p-6 sm:p-8 border border-white/20 rounded-none shadow-lg">
-            <h2 className="text-2xl font-black text-[#FFFBEB] text-center drop-shadow-sm">
+          <div className="max-w-3xl mx-auto text-right space-y-6 bg-white p-6 sm:p-10 border border-[#EFE9E0] rounded-none shadow-sm">
+            <h2 className="text-2xl font-black text-[#2B2017] text-center border-b border-[#EFE9E0] pb-4">
               دستور تهیه گام‌به‌گام
             </h2>
             <div className="space-y-4">
@@ -288,12 +293,12 @@ export function RecipeDetailView({
                 return (
                   <div
                     key={idx}
-                    className="flex items-start gap-4 p-4 bg-black/30 border border-white/10"
+                    className="flex items-start gap-4 p-4 sm:p-5 bg-[#FAF7F2] border border-[#EFE9E0] rounded-none"
                   >
-                    <div className="w-8 h-8 rounded-none bg-[#FBBF24] text-[#2B2017] font-black flex items-center justify-center shrink-0 text-sm shadow">
+                    <div className="w-9 h-9 rounded-full bg-[#FEF3C7] text-[#92400E] font-black border border-[#F59E0B] flex items-center justify-center shrink-0 shadow-2xs text-sm">
                       {toPersianDigits(idx + 1)}
                     </div>
-                    <div className="flex-1 text-sm sm:text-base text-[#FFFBEB] leading-relaxed pt-0.5 whitespace-pre-line font-medium">
+                    <div className="flex-1 text-[#332115] text-base leading-relaxed pt-1 whitespace-pre-line font-medium">
                       {stepText}
                     </div>
                   </div>
@@ -303,17 +308,17 @@ export function RecipeDetailView({
           </div>
         )}
 
-        {/* 7. Gallery */}
+        {/* 6. Gallery */}
         {recipe.gallery && recipe.gallery.length > 0 && (
-          <div className="space-y-6 pt-4">
-            <h2 className="text-xl sm:text-2xl font-black text-[#FBBF24]">
+          <div className="space-y-6 pt-4 max-w-3xl mx-auto text-center">
+            <h2 className="text-xl sm:text-2xl font-black text-[#FFFBEB] drop-shadow-sm">
               تصاویر مراحل و آماده‌سازی
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {recipe.gallery.map((item) => (
                 <div
                   key={item.id}
-                  className="aspect-square bg-black/20 border border-white/20 overflow-hidden shadow-md"
+                  className="aspect-square bg-[#FAF7F2] border-2 border-white/30 overflow-hidden shadow-md rounded-none"
                 >
                   <Picture
                     asset={item.asset}

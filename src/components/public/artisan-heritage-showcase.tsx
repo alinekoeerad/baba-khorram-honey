@@ -62,16 +62,16 @@ export function ArtisanHeritageShowcase() {
             return (
               <div
                 key={idx}
-                className="bg-black/40 border border-white/10 p-6 sm:p-8 rounded-none text-right flex flex-col justify-between hover:border-[#F59E0B]/50 transition-colors shadow-xl"
+                className="bg-white/95 border-2 border-[#FDE68A] p-6 sm:p-8 rounded-none text-right flex flex-col justify-between hover:border-[#F59E0B] transition-colors shadow-xl"
               >
                 <div className="space-y-4">
-                  <div className="w-12 h-12 rounded-none bg-[#F59E0B]/20 border border-[#F59E0B]/40 flex items-center justify-center text-[#FBBF24]">
+                  <div className="w-12 h-12 rounded-none bg-[#FEF3C7] border border-[#FDE68A] flex items-center justify-center text-[#B45309]">
                     <Icon className="w-6 h-6" />
                   </div>
-                  <h3 className="text-lg sm:text-xl font-black text-[#FFFBEB]">
+                  <h3 className="text-lg sm:text-xl font-black text-[#2B2017]">
                     {pillar.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-[#E5D5C5] leading-loose font-medium">
+                  <p className="text-xs sm:text-sm text-[#5C5248] leading-loose font-medium">
                     {pillar.desc}
                   </p>
                 </div>

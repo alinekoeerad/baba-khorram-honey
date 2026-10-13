@@ -251,8 +251,23 @@ export function Header({
 
       {/* 3. Main Header Container */}
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3 sm:gap-6 relative">
-        {/* Right Section in RTL: Brand Logo Emblem & Title (shrink-0 min-w-max, never squeezed) + Hamburger */}
+        {/* Right Section in RTL: Hamburger Button directly at far-right edge, followed by Brand Logo & Title */}
         <div className="flex items-center gap-2 sm:gap-4 shrink-0 min-w-max">
+          {/* Hamburger Trigger: "منو" on mobile, "دسته‌بندی‌ها" on desktop */}
+          <button
+            ref={hamburgerButtonRef}
+            type="button"
+            onClick={onOpenHamburger}
+            aria-label="باز کردن منوی سایت"
+            className="flex flex-col items-center justify-center p-1.5 sm:p-2 rounded-none hover:bg-black/20 text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer select-none shrink-0 group ml-1 sm:ml-2"
+          >
+            <Menu className="w-5 h-5 sm:w-6 sm:h-6 drop-shadow-sm group-hover:scale-105 transition-transform" />
+            <span className="text-[10px] sm:text-xs font-black text-white mt-0.5 tracking-tight whitespace-nowrap">
+              <span className="lg:hidden">منو</span>
+              <span className="hidden lg:inline">دسته‌بندی‌ها</span>
+            </span>
+          </button>
+
           <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0 min-w-max">
             {/* Dedicated Brand Emblem */}
             <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-none bg-gradient-to-br from-[#FDE68A] to-[#F59E0B] text-[#332115] flex items-center justify-center shadow-md border border-white/30 group-hover:scale-105 transition-transform shrink-0">
@@ -270,21 +285,6 @@ export function Header({
               </span>
             </div>
           </Link>
-
-          {/* Hamburger Trigger: "منو" on mobile, "دسته‌بندی‌ها" on desktop */}
-          <button
-            ref={hamburgerButtonRef}
-            type="button"
-            onClick={onOpenHamburger}
-            aria-label="باز کردن منوی سایت"
-            className="flex flex-col items-center justify-center p-1.5 sm:p-2 rounded-none hover:bg-black/20 text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer select-none shrink-0 group mr-1 sm:mr-2"
-          >
-            <Menu className="w-5 h-5 sm:w-6 sm:h-6 drop-shadow-sm group-hover:scale-105 transition-transform" />
-            <span className="text-[10px] sm:text-xs font-black text-white mt-0.5 tracking-tight whitespace-nowrap">
-              <span className="lg:hidden">منو</span>
-              <span className="hidden lg:inline">دسته‌بندی‌ها</span>
-            </span>
-          </button>
         </div>
 
         {/* Center Section: Desktop Main Navigation with "|" Dividers and Search */}

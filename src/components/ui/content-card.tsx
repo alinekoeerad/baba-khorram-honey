@@ -131,9 +131,7 @@ export function ContentCard({
       >
         <div className="flex flex-row items-center h-28 sm:h-32">
           {/* Image Container - Visual Right in RTL (first in DOM under dir="rtl") */}
-          <div className={`relative w-28 sm:w-32 h-full shrink-0 overflow-hidden ${
-            isProduct ? 'bg-[#FAF7F2] p-2 flex items-center justify-center' : 'bg-black/5'
-          }`}>
+          <div className="relative w-28 sm:w-32 h-full shrink-0 overflow-hidden">
             {imageAsset ? (
               <Picture
                 asset={imageAsset}
@@ -141,27 +139,23 @@ export function ContentCard({
                 height={imageAsset.height}
                 blurDataUrl={imageAsset.blurDataUrl}
                 alt={imageAlt || title}
-                className={`transition-transform duration-300 ease-out group-hover:scale-[1.05] motion-reduce:transform-none ${
-                  isProduct ? 'w-full h-full max-h-full object-contain' : 'w-full h-full object-cover'
-                }`}
+                className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transform-none"
                 priority={priority}
               />
             ) : imageUrl ? (
               <img
                 src={imageUrl}
                 alt={imageAlt || title}
-                className={`transition-transform duration-300 ease-out group-hover:scale-[1.05] motion-reduce:transform-none ${
-                  isProduct ? 'w-full h-full max-h-full object-contain' : 'w-full h-full object-cover'
-                }`}
+                className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transform-none"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center bg-black/10 text-xs font-bold">
+              <div className="w-full h-full flex items-center justify-center bg-[#FAF7F2] text-xs font-bold text-[#5C5248]">
                 <span>عسل باباخُرم</span>
               </div>
             )}
 
             {!isAvailable && (
-              <div className="absolute top-2 right-2 bg-black/75 text-white text-[10px] font-bold px-2 py-0.5 rounded-none z-10">
+              <div className="absolute top-2 right-2 bg-[#9E3556] text-white text-[10px] font-bold px-2 py-0.5 rounded-none z-10 shadow-xs">
                 ناموجود
               </div>
             )}
@@ -200,12 +194,8 @@ export function ContentCard({
       href={href}
       className={`group flex flex-col rounded-none border border-[#EFE9E0] shadow-sm hover:shadow-[0_16px_36px_rgba(51,33,21,0.22)] active:scale-[0.99] transition-all duration-300 ease-out hover:-translate-y-1.5 motion-reduce:transform-none overflow-hidden ${currentTheme.bg} ${className}`}
     >
-      {/* Image Area - Zero cropping for honey jar on products, aspect-4/3 for recipes */}
-      <div className={`relative w-full overflow-hidden shrink-0 ${
-        isProduct
-          ? 'h-52 sm:h-60 bg-[#FAF7F2] p-3 sm:p-4 flex items-center justify-center'
-          : 'aspect-4/3 sm:h-60 bg-black/5'
-      }`}>
+      {/* Image Area - Aspect 4:3 edge-to-edge photo presentation */}
+      <div className="relative w-full aspect-[4/3] sm:h-60 overflow-hidden shrink-0">
         {imageAsset ? (
           <Picture
             asset={imageAsset}
@@ -213,28 +203,24 @@ export function ContentCard({
             height={imageAsset.height}
             blurDataUrl={imageAsset.blurDataUrl}
             alt={imageAlt || title}
-            className={`transition-transform duration-300 ease-out group-hover:scale-[1.05] motion-reduce:transform-none ${
-              isProduct ? 'w-full h-full max-h-full object-contain' : 'w-full h-full object-cover'
-            }`}
+            className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transform-none"
             priority={priority}
           />
         ) : imageUrl ? (
           <img
             src={imageUrl}
             alt={imageAlt || title}
-            className={`transition-transform duration-300 ease-out group-hover:scale-[1.05] motion-reduce:transform-none ${
-              isProduct ? 'w-full h-full max-h-full object-contain' : 'w-full h-full object-cover'
-            }`}
+            className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transform-none"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-black/10 text-sm font-medium text-stone-600">
+          <div className="w-full h-full flex items-center justify-center bg-[#FAF7F2] text-sm font-medium text-[#5C5248]">
             <span>عسل باباخُرم</span>
           </div>
         )}
 
         {/* Out of Stock Badge */}
         {!isAvailable && (
-          <div className="absolute top-3 right-3 bg-black/80 text-white text-xs font-bold px-2.5 py-1 rounded-none shadow-xs z-10">
+          <div className="absolute top-3 right-3 bg-[#9E3556] text-white text-xs font-bold px-2.5 py-1 rounded-none shadow-xs z-10">
             ناموجود
           </div>
         )}

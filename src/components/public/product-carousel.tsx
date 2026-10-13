@@ -193,7 +193,7 @@ export function ProductCarousel({
                   : rawTheme;
               const theme = THEME_CLASSES[themeKey] || THEME_CLASSES.GREEN;
               const titleText = p.nameFa || p.title || 'عسل ممتاز باباخُرم';
-              const imageSrc = p.imageUrl || '/images/honey-jar.jpg';
+              const imageSrc = p.imageUrl || (p.slug ? `/images/products/${p.slug}.jpg` : '/images/honey-jar.jpg');
 
               return (
                 <article
@@ -202,18 +202,18 @@ export function ProductCarousel({
                   className="shrink-0 w-[270px] xs:w-[290px] sm:w-[320px] md:w-[340px] rounded-none overflow-hidden shadow-lg border border-black/10 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_36px_rgba(51,33,21,0.24)] group cursor-pointer bg-white flex flex-col"
                 >
                   <Link href={`/products/${p.slug}`} className="flex flex-col h-full">
-                    {/* Image Wrap - Zero cropping soft container */}
-                    <div className="w-full h-48 sm:h-60 overflow-hidden bg-[#FAF7F2] p-3 sm:p-4 shrink-0 relative flex items-center justify-center">
+                    {/* Image Wrap - Edge-to-edge lifestyle presentation */}
+                    <div className="w-full h-48 sm:h-60 overflow-hidden shrink-0 relative">
                       <img
                         src={imageSrc}
                         alt={titleText}
-                        className="w-full h-full max-h-full object-contain transition-transform duration-500 ease-out group-hover:scale-105"
+                        className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
                         loading="lazy"
                         width={360}
                         height={240}
                       />
                       {p.isAvailable === false && (
-                        <div className="absolute top-3 right-3 bg-black/80 text-white text-xs font-black px-2.5 py-1 z-10">
+                        <div className="absolute top-3 right-3 bg-[#9E3556] text-white text-xs font-black px-2.5 py-1 z-10 shadow-xs">
                           ناموجود
                         </div>
                       )}

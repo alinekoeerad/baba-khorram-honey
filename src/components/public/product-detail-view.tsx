@@ -71,12 +71,12 @@ export function ProductDetailView({
     <WoodBackground className="py-10 sm:py-16 min-h-screen">
       <Container>
         {/* Breadcrumb Navigation */}
-        <nav aria-label="مسیر راهنما" className="flex items-center gap-2 text-xs sm:text-sm font-bold text-[#E5D5C5] mb-8">
-          <Link href="/" className="hover:text-[#FBBF24] transition-colors">
+        <nav aria-label="مسیر راهنما" className="flex items-center gap-2 text-xs sm:text-sm font-bold text-[#FFFBEB] mb-8">
+          <Link href="/" className="text-[#E5D5C5] hover:text-[#FBBF24] transition-colors">
             صفحه اصلی
           </Link>
           <span className="text-white/40" aria-hidden="true">/</span>
-          <Link href="/products" className="hover:text-[#FBBF24] transition-colors">
+          <Link href="/products" className="text-[#E5D5C5] hover:text-[#FBBF24] transition-colors">
             محصولات
           </Link>
           <span className="text-white/40" aria-hidden="true">/</span>
@@ -87,10 +87,10 @@ export function ProductDetailView({
 
         {/* [UX-01] Two-Column Desktop Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-          {/* RIGHT COLUMN (7 Cols): Gallery, Trust Certificate, Nutritional Specs & Description */}
+          {/* RIGHT COLUMN (7 Cols): Gallery, Trust Seals, Certificate, Specs & Description */}
           <div className="lg:col-span-7 space-y-8 text-right">
             {/* 1. Main High-Resolution Image (Full Jar Presentation, Zero Cropping) */}
-            <div className="w-full aspect-4/3 rounded-none overflow-hidden border-2 border-white/20 shadow-2xl bg-[#FAF7F2] p-4 sm:p-6 flex items-center justify-center relative">
+            <div className="w-full aspect-4/3 rounded-none overflow-hidden border border-[#EFE9E0] shadow-md bg-[#FAF7F2] p-6 flex items-center justify-center relative">
               {product.mainImage ? (
                 <Picture
                   asset={product.mainImage}
@@ -103,7 +103,7 @@ export function ProductDetailView({
                 />
               ) : (
                 <img
-                  src="/images/honey-jar.jpg"
+                  src={(product as any).imageUrl || `/images/products/${product.slug}.jpg`}
                   alt={product.nameFa}
                   className="w-full h-full max-h-full object-contain"
                 />
@@ -121,7 +121,7 @@ export function ProductDetailView({
                 {product.gallery.map((item) => (
                   <div
                     key={item.id}
-                    className="aspect-square bg-[#FAF7F2] p-1.5 flex items-center justify-center border border-white/20 rounded-none overflow-hidden shadow-md"
+                    className="aspect-square bg-[#FAF7F2] p-2 flex items-center justify-center border border-[#EFE9E0] rounded-none overflow-hidden shadow-xs hover:border-[#F59E0B] transition-colors"
                   >
                     <Picture
                       asset={item.asset}
@@ -135,22 +135,48 @@ export function ProductDetailView({
               </div>
             )}
 
+            {/* Authentic Heritage Postal & Wax Seals */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 bg-[#FFFBEB] border border-[#FDE68A] rounded-none shadow-xs text-center">
+              <div className="flex items-center sm:flex-col justify-center gap-2 p-2 bg-white border border-[#EFE9E0]">
+                <ShieldCheck className="w-6 h-6 text-[#D97706]" />
+                <div>
+                  <div className="text-xs font-black text-[#2B2017]">۱۰۰٪ خام و گرما‌ندیده</div>
+                  <div className="text-[10px] text-[#786455] font-bold">حفظ کامل آنزیم‌های فعال</div>
+                </div>
+              </div>
+              <div className="flex items-center sm:flex-col justify-center gap-2 p-2 bg-white border border-[#EFE9E0]">
+                <Sparkles className="w-6 h-6 text-[#D97706]" />
+                <div>
+                  <div className="text-xs font-black text-[#2B2017]">پوشش گیاهی کوهستان</div>
+                  <div className="text-[10px] text-[#786455] font-bold">شهد گون، آویشن و سدر</div>
+                </div>
+              </div>
+              <div className="flex items-center sm:flex-col justify-center gap-2 p-2 bg-white border border-[#EFE9E0]">
+                <CheckCircle2 className="w-6 h-6 text-emerald-600" />
+                <div>
+                  <div className="text-xs font-black text-[#2B2017]">ساکارز آزمایشگاهی &lt; ۳٪</div>
+                  <div className="text-[10px] text-[#786455] font-bold">تضمین بازگشت بی قید وجه</div>
+                </div>
+              </div>
+            </div>
+
             {/* [SEC-01] Laboratory Purity & Sucrose Certificate */}
             <LabCertificateModal productName={product.nameFa} />
 
-            {/* Nutritional Chips */}
+            {/* Nutritional Chips: Mountain Flora & Physical Characteristics */}
             {metaChips.length > 0 && (
-              <div className="bg-black/40 border border-white/15 p-5 rounded-none shadow-lg space-y-3">
-                <h3 className="text-sm font-black text-[#FBBF24]">
-                  مشخصات فیزیکی و ویژگی‌های اقلیمی:
+              <div className="bg-white border border-[#EFE9E0] p-6 rounded-none shadow-sm space-y-4">
+                <h3 className="text-base font-black text-[#2B2017] flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-[#D97706]" />
+                  <span>مشخصات فیزیکی و ویژگی‌های اقلیمی:</span>
                 </h3>
                 <div className="flex flex-wrap gap-2.5">
                   {metaChips.map((chip, idx) => (
                     <div
                       key={idx}
-                      className="px-3.5 py-1.5 bg-black/50 border border-white/20 text-[#E5D5C5] text-xs sm:text-sm rounded-none font-bold"
+                      className="px-3.5 py-1.5 bg-[#FFFBEB] border border-[#FDE68A] text-[#2B2017] text-xs sm:text-sm rounded-none font-bold"
                     >
-                      <span className="text-[#FBBF24] font-black ml-1.5">{chip.label}:</span>
+                      <span className="text-[#B45309] font-black ml-1.5">{chip.label}:</span>
                       <span>{chip.value}</span>
                     </div>
                   ))}
@@ -160,24 +186,24 @@ export function ProductDetailView({
 
             {/* Description & Sensory Notes */}
             {(product.shortDescription || product.description) && (
-              <div className="space-y-4 text-[#E5D5C5] leading-relaxed text-sm sm:text-base bg-black/40 p-6 sm:p-8 border border-white/15 rounded-none shadow-xl">
+              <div className="space-y-4 text-right bg-white p-6 sm:p-8 border border-[#EFE9E0] rounded-none shadow-sm">
                 {product.shortDescription && (
-                  <p className="font-black text-[#FBBF24] text-base sm:text-lg">
+                  <p className="font-black text-[#B45309] text-base sm:text-lg border-b border-[#FDE68A] pb-3">
                     {product.shortDescription}
                   </p>
                 )}
                 {product.description && (
-                  <div className="whitespace-pre-line text-[#FFFBEB] font-medium leading-loose">
+                  <div className="whitespace-pre-line text-[#332115] font-medium leading-loose text-sm sm:text-base">
                     {product.description}
                   </div>
                 )}
               </div>
             )}
 
-            {/* Benefits List */}
+            {/* Benefits List (خواص و فواید درمانی) */}
             {product.benefits && product.benefits.length > 0 && (
-              <div className="text-right space-y-4 bg-black/40 p-6 sm:p-8 border border-white/15 rounded-none shadow-xl">
-                <h2 className="text-xl sm:text-2xl font-black text-[#FFFBEB] mb-4">
+              <div className="text-right space-y-4 bg-white p-6 sm:p-8 border border-[#EFE9E0] rounded-none shadow-sm">
+                <h2 className="text-xl sm:text-2xl font-black text-[#2B2017] mb-4 border-b border-[#EFE9E0] pb-3">
                   خواص و فواید درمانی
                 </h2>
                 <ul className="space-y-3">
@@ -188,8 +214,8 @@ export function ProductDetailView({
                         : (benefit?.text || '');
                     const cleanText = benefitText.replace(/^[🔸🔹\s]+/, '');
                     return (
-                      <li key={idx} className="flex items-start gap-3 text-sm sm:text-base text-[#FFFBEB] leading-relaxed font-medium">
-                        <CheckCircle2 className="w-5 h-5 text-[#F59E0B] shrink-0 mt-0.5" />
+                      <li key={idx} className="flex items-start gap-3 text-sm sm:text-base text-[#332115] leading-relaxed font-medium">
+                        <CheckCircle2 className="w-5 h-5 text-[#D97706] shrink-0 mt-0.5" />
                         <span>{cleanText}</span>
                       </li>
                     );
@@ -200,46 +226,46 @@ export function ProductDetailView({
 
             {/* Usage Warning Box */}
             {product.usageWarning && product.usageWarning.trim().length > 0 && (
-              <div className="p-5 sm:p-6 bg-[#991B1B]/40 border-2 border-[#EF4444]/60 text-right rounded-none shadow-lg">
-                <div className="flex items-center gap-2.5 text-[#FCA5A5] font-black text-base mb-2">
+              <div className="p-5 sm:p-6 bg-[#FEF2F2] border-2 border-[#EF4444]/40 text-right rounded-none shadow-sm">
+                <div className="flex items-center gap-2.5 text-[#991B1B] font-black text-base mb-2">
                   <AlertTriangle className="w-5 h-5 shrink-0" />
                   <span>نکات و موارد منع مصرف</span>
                 </div>
-                <p className="text-xs sm:text-sm text-[#FEE2E2] leading-relaxed font-medium">
+                <p className="text-xs sm:text-sm text-[#7F1D1D] leading-relaxed font-medium">
                   {product.usageWarning}
                 </p>
               </div>
             )}
           </div>
 
-          {/* LEFT COLUMN (5 Cols): Sticky Purchasing Sidebar */}
+          {/* LEFT COLUMN (5 Cols): Sticky Purchasing Card on Warm Parchment */}
           <div className="lg:col-span-5 lg:sticky lg:top-28 space-y-6 text-right">
-            <div className="bg-black/50 border-2 border-[#F59E0B] p-6 sm:p-8 rounded-none shadow-2xl space-y-6">
+            <div className="bg-white border-2 border-[#FDE68A] p-6 sm:p-8 rounded-none shadow-xl space-y-6">
               {/* Product Title & Original Name */}
-              <div className="space-y-2 border-b border-white/15 pb-5">
+              <div className="space-y-2 border-b border-[#EFE9E0] pb-5">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-bold text-[#F59E0B] uppercase tracking-wider">
+                  <span className="text-xs font-bold text-[#D97706] uppercase tracking-wider">
                     عسل ارگانیک کوهستان
                   </span>
                   <div>
                     {!product.isAvailable ? (
-                      <span className="inline-block px-3 py-1 bg-[#B91C1C] text-white text-xs font-black rounded-none shadow-sm">
+                      <span className="inline-block px-3 py-1 bg-rose-100 text-rose-800 border border-rose-300 text-xs font-black rounded-none shadow-2xs">
                         ناموجود
                       </span>
                     ) : (
-                      <span className="inline-block px-3 py-1 bg-emerald-700 text-white text-xs font-black rounded-none shadow-sm">
+                      <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-800 border border-emerald-300 text-xs font-black rounded-none shadow-2xs">
                         موجود در انبار
                       </span>
                     )}
                   </div>
                 </div>
 
-                <h1 className="text-2xl sm:text-4xl font-black text-[#FFFBEB] leading-tight">
+                <h1 className="text-2xl sm:text-4xl font-black text-[#2B2017] leading-tight">
                   {product.nameFa}
                 </h1>
 
                 {product.nameOriginal && (
-                  <p className="text-xs sm:text-sm text-[#D4C3B3] font-mono tracking-wide" dir="ltr">
+                  <p className="text-xs sm:text-sm text-[#786455] font-mono tracking-wide" dir="ltr">
                     {product.nameOriginal}
                   </p>
                 )}
@@ -254,18 +280,18 @@ export function ProductDetailView({
               />
 
               {/* Trust & Delivery Micro-Features */}
-              <div className="pt-4 border-t border-white/15 space-y-3 text-xs sm:text-sm text-[#E5D5C5]">
+              <div className="pt-4 border-t border-[#EFE9E0] space-y-3 text-xs sm:text-sm text-[#5C5248]">
                 <div className="flex items-center gap-2.5">
-                  <Truck className="w-4 h-4 text-[#F59E0B] shrink-0" />
-                  <span>ارسال سریع و رایگان برای سفارش‌های بالای ۱ کیلوگرم</span>
+                  <Truck className="w-4 h-4 text-[#D97706] shrink-0" />
+                  <span className="text-[#332115] font-medium">ارسال سریع و رایگان برای سفارش‌های بالای ۱ کیلوگرم</span>
                 </div>
                 <div className="flex items-center gap-2.5">
-                  <ShieldCheck className="w-4 h-4 text-[#F59E0B] shrink-0" />
-                  <span>ضمانت ۱۰۰٪ اصالت و برگه آزمایش همراه بسته</span>
+                  <ShieldCheck className="w-4 h-4 text-[#D97706] shrink-0" />
+                  <span className="text-[#332115] font-medium">ضمانت ۱۰۰٪ اصالت و برگه آزمایش همراه بسته</span>
                 </div>
                 <div className="flex items-center gap-2.5">
-                  <Sparkles className="w-4 h-4 text-[#F59E0B] shrink-0" />
-                  <span>بسته‌بندی ایمن ضدنشت در ظروف شیشه‌ای استاندارد</span>
+                  <Sparkles className="w-4 h-4 text-[#D97706] shrink-0" />
+                  <span className="text-[#332115] font-medium">بسته‌بندی ایمن ضدنشت در ظروف شیشه‌ای استاندارد</span>
                 </div>
               </div>
             </div>

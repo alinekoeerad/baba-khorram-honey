@@ -15,16 +15,32 @@
       "subtitle": "برداشت مستقیم از بهترین مراتع ییلاقی ارسباران، با حفظ ۱۰۰٪ خواص زیستی و دارویی",
       "images": [
         {
-          "url": "/images/hero-1.jpg",
-          "alt": "طبیعت کوهستان ارسباران و کندوهای عسل"
+          "url": "/images/hero/photo_35.jpg",
+          "alt": "شهد زرین و کندوهای عسل طبیعی باباخُرم"
         },
         {
-          "url": "/images/bees-banner.jpg",
-          "alt": "زنبورداری سنتی و شهد خالص"
+          "url": "/images/hero/photo_32.jpg",
+          "alt": "مراتع سرسبز کوهستانی و زنبورداری سنتی"
         },
         {
-          "url": "/images/beekeeping.jpg",
-          "alt": "برداشت عسل طبیعی از شان"
+          "url": "/images/hero/photo_33.jpg",
+          "alt": "زنبورداران پرتلاش و متعهد باباخُرم"
+        },
+        {
+          "url": "/images/hero/photo_34.jpg",
+          "alt": "برداشت مستقیم عسل خالص از شان"
+        },
+        {
+          "url": "/images/hero/photo_36.jpg",
+          "alt": "کلونی‌های فعال زنبور عسل در طبیعت بکر"
+        },
+        {
+          "url": "/images/hero/photo_37.jpg",
+          "alt": "عسل کوهستان با بالاترین درجه خلوص و اصالت"
+        },
+        {
+          "url": "/images/hero/photo_38.jpg",
+          "alt": "شهد ناب و طبیعی دامنه کوهستان"
         }
       ]
     },
@@ -43,8 +59,8 @@
       "template": "image-text-rect",
       "schemaVersion": 1,
       "image": {
-        "url": "/images/beekeeping.jpg",
-        "alt": "زنبورستان سنتی باباخُرم"
+        "url": "/images/hero/feature-honey.jpg",
+        "alt": "عسل اصیل و طبیعی باباخُرم"
       },
       "kicker": "تولید پایدار و اخلاق‌مدار",
       "title": "هماهنگی با طبیعت، احترامی به زندگی زنبورها",

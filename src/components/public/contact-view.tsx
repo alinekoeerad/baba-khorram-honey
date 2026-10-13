@@ -44,60 +44,60 @@ export function ContactView({
       <Container size="default" className="space-y-12 sm:space-y-16">
         {/* Page Header */}
         <div className="text-center space-y-4 max-w-2xl mx-auto">
-          <h1 className="text-3xl sm:text-5xl font-black text-white leading-tight">
+          <h1 className="text-3xl sm:text-5xl font-black text-[#FFFBEB] leading-tight drop-shadow-md">
             تماس با ما
           </h1>
-          <p className="text-sm sm:text-base text-[#E8E2D9] leading-relaxed">
+          <p className="text-sm sm:text-base text-[#E5D5C5] leading-relaxed">
             ارتباط مستقیم با دفتر مرکزی و کارگاه عسل طبیعی باباخُرم؛ پاسخگوی سؤالات، مشاوره‌های تغذیه‌ای و پیگیری سفارش‌های شما هستیم.
           </p>
         </div>
 
-        {/* Info Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Info Cards Grid: Warm Ivory Heritage Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-right">
           {/* 1. Address Card */}
-          <div className="bg-black/35 border-2 border-white/20 p-6 space-y-3 shadow-xl">
-            <div className="w-10 h-10 rounded-full bg-[#FBBF24]/20 flex items-center justify-center text-[#FBBF24]">
+          <div className="bg-white border border-[#FDE68A] p-6 sm:p-7 space-y-3.5 shadow-md rounded-none">
+            <div className="w-11 h-11 rounded-full bg-[#FEF3C7] border border-[#F59E0B] flex items-center justify-center text-[#D97706] shadow-2xs">
               <MapPin className="w-5 h-5" />
             </div>
-            <h2 className="text-lg font-black text-white">نشانی دفتر مرکزی</h2>
-            <p className="text-xs sm:text-sm text-[#E8E2D9] leading-relaxed">
+            <h2 className="text-lg font-black text-[#2B2017]">نشانی دفتر مرکزی</h2>
+            <p className="text-xs sm:text-sm text-[#5C5248] leading-relaxed font-medium">
               {address}
             </p>
           </div>
 
           {/* 2. Working Hours Card */}
-          <div className="bg-black/35 border-2 border-white/20 p-6 space-y-3 shadow-xl">
-            <div className="w-10 h-10 rounded-full bg-[#FBBF24]/20 flex items-center justify-center text-[#FBBF24]">
+          <div className="bg-white border border-[#FDE68A] p-6 sm:p-7 space-y-3.5 shadow-md rounded-none">
+            <div className="w-11 h-11 rounded-full bg-[#FEF3C7] border border-[#F59E0B] flex items-center justify-center text-[#D97706] shadow-2xs">
               <Clock className="w-5 h-5" />
             </div>
-            <h2 className="text-lg font-black text-white">ساعت کاری و پاسخگویی</h2>
-            <p className="text-xs sm:text-sm text-[#E8E2D9] leading-relaxed">
+            <h2 className="text-lg font-black text-[#2B2017]">ساعت کاری و پاسخگویی</h2>
+            <p className="text-xs sm:text-sm text-[#5C5248] leading-relaxed font-medium">
               {workingHours}
             </p>
           </div>
 
           {/* 3. Direct Contact Channels */}
-          <div className="bg-black/35 border-2 border-white/20 p-6 space-y-3 shadow-xl">
-            <div className="w-10 h-10 rounded-full bg-[#FBBF24]/20 flex items-center justify-center text-[#FBBF24]">
+          <div className="bg-white border border-[#FDE68A] p-6 sm:p-7 space-y-3.5 shadow-md rounded-none">
+            <div className="w-11 h-11 rounded-full bg-[#FEF3C7] border border-[#F59E0B] flex items-center justify-center text-[#D97706] shadow-2xs">
               <Phone className="w-5 h-5" />
             </div>
-            <h2 className="text-lg font-black text-white">راه‌های ارتباطی</h2>
-            <div className="space-y-2 pt-1">
+            <h2 className="text-lg font-black text-[#2B2017]">راه‌های ارتباطی</h2>
+            <div className="space-y-2 pt-1 divide-y divide-[#EFE9E0]">
               {channels.map((ch) => (
                 <a
                   key={ch.id}
                   href={ch.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between text-xs sm:text-sm text-[#E8E2D9] hover:text-[#FBBF24] transition-colors py-1 group"
+                  className="flex items-center justify-between text-xs sm:text-sm text-[#332115] hover:text-[#D97706] transition-colors pt-2 group font-medium"
                 >
                   <div className="flex items-center gap-2">
-                    <ChannelIcon type={ch.type} className="w-4 h-4 text-[#FBBF24]" />
-                    <span className="font-bold">{ch.label || ch.type}:</span>
+                    <ChannelIcon type={ch.type} className="w-4 h-4 text-[#D97706]" />
+                    <span className="font-bold text-[#2B2017]">{ch.label || ch.type}:</span>
                   </div>
-                  <div className="flex items-center gap-1 font-mono text-xs" dir="ltr">
+                  <div className="flex items-center gap-1 font-mono text-xs text-[#786455] group-hover:text-[#D97706]" dir="ltr">
                     <span>{ch.value}</span>
-                    <ExternalLink className="w-3 h-3 opacity-50 group-hover:opacity-100" />
+                    <ExternalLink className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100" />
                   </div>
                 </a>
               ))}
@@ -106,12 +106,12 @@ export function ContactView({
         </div>
 
         {/* Map & Navigation Section */}
-        <div className="bg-black/35 border-2 border-white/20 p-6 sm:p-10 space-y-8 shadow-2xl">
-          <div className="space-y-1 border-b border-white/15 pb-4">
-            <h2 className="text-2xl sm:text-3xl font-black text-[#FBBF24]">
+        <div className="bg-white border border-[#FDE68A] p-6 sm:p-10 space-y-8 shadow-xl rounded-none text-right">
+          <div className="space-y-1 border-b border-[#EFE9E0] pb-4">
+            <h2 className="text-2xl sm:text-3xl font-black text-[#2B2017]">
               موقعیت مکانی روی نقشه
             </h2>
-            <p className="text-xs sm:text-sm text-[#E8E2D9]/80">
+            <p className="text-xs sm:text-sm text-[#786455]">
               جهت مراجعه حضوری و هماهنگی قبلی یا مسیریابی دقیق با نرم‌افزارهای ناوبری
             </p>
           </div>

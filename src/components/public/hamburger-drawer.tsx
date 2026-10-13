@@ -152,7 +152,7 @@ export function HamburgerDrawer({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex justify-end"
+      className="fixed inset-0 z-50 flex justify-start"
       role="dialog"
       aria-modal="true"
       aria-label="منوی سایت"
@@ -167,12 +167,12 @@ export function HamburgerDrawer({
       {/* Drawer Container (Right side in RTL) */}
       <div
         ref={drawerRef}
-        className="relative w-[85vw] sm:w-[380px] max-w-md h-full bg-[#FDFBF8] text-[#2B2017] shadow-2xl z-10 flex flex-col overflow-hidden animate-in slide-in-from-right duration-300 ease-out border-l border-[#EFE9E0]"
+        className="relative w-[85vw] sm:w-[380px] max-w-md h-full bg-[#FDFBF8] text-[#2B2017] shadow-2xl z-10 flex flex-col overflow-hidden animate-in slide-in-from-right duration-300 ease-out border-l border-[#EFE9E0] rounded-none"
       >
         {/* Drawer Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-[#EFE9E0] bg-white">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-[#F59E0B] text-white flex items-center justify-center font-black shadow-xs">
+            <div className="w-8 h-8 rounded-none bg-[#F59E0B] text-white flex items-center justify-center font-black shadow-xs">
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 2L4 6.5V17.5L12 22L20 17.5V6.5L12 2ZM12 4.3L18 7.7V16.3L12 19.7L6 16.3V7.7L12 4.3ZM12 7L8 9.3V14.7L12 17L16 14.7V9.3L12 7Z" />
               </svg>
@@ -190,7 +190,7 @@ export function HamburgerDrawer({
               triggerRef?.current?.focus();
             }}
             aria-label="بستن منو"
-            className="p-2 text-[#5C5248] hover:text-[#2B2017] hover:bg-stone-100 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] cursor-pointer"
+            className="p-2 text-[#5C5248] hover:text-[#2B2017] hover:bg-stone-100 rounded-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -209,7 +209,7 @@ export function HamburgerDrawer({
                 key={item.href}
                 href={item.href}
                 onClick={onClose}
-                className={`group flex items-center justify-between p-3.5 sm:p-4 rounded-xl border transition-all duration-200 cursor-pointer ${
+                className={`group flex items-center justify-between p-3.5 sm:p-4 rounded-none border transition-all duration-200 cursor-pointer ${
                   isActive
                     ? 'bg-[#FEF3C7] border-[#F59E0B] text-[#92400E] shadow-sm font-black'
                     : 'bg-white hover:bg-[#FFFBEB] border-[#EFE9E0] hover:border-[#FBBF24] text-[#2B2017]'
@@ -217,7 +217,7 @@ export function HamburgerDrawer({
               >
                 <div className="flex items-center gap-3.5 min-w-0">
                   <div
-                    className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
+                    className={`w-10 h-10 rounded-none flex items-center justify-center shrink-0 transition-colors ${
                       isActive
                         ? 'bg-[#F59E0B] text-white'
                         : 'bg-stone-100 text-[#D97706] group-hover:bg-[#FDE68A] group-hover:text-[#92400E]'
@@ -249,10 +249,10 @@ export function HamburgerDrawer({
             <button
               type="button"
               onClick={onOpenSearch}
-              className="w-full group flex items-center justify-between p-3.5 sm:p-4 rounded-xl border bg-white hover:bg-[#FFFBEB] border-[#EFE9E0] hover:border-[#FBBF24] text-[#2B2017] transition-all duration-200 cursor-pointer text-right"
+              className="w-full group flex items-center justify-between p-3.5 sm:p-4 rounded-none border bg-white hover:bg-[#FFFBEB] border-[#EFE9E0] hover:border-[#FBBF24] text-[#2B2017] transition-all duration-200 cursor-pointer text-right"
             >
               <div className="flex items-center gap-3.5 min-w-0">
-                <div className="w-10 h-10 rounded-lg bg-stone-100 text-[#D97706] group-hover:bg-[#FDE68A] group-hover:text-[#92400E] flex items-center justify-center shrink-0 transition-colors">
+                <div className="w-10 h-10 rounded-none bg-stone-100 text-[#D97706] group-hover:bg-[#FDE68A] group-hover:text-[#92400E] flex items-center justify-center shrink-0 transition-colors">
                   <Search className="w-5 h-5" />
                 </div>
                 <div className="flex flex-col min-w-0">
@@ -281,7 +281,7 @@ export function HamburgerDrawer({
                     key={cat.id}
                     href={"/products?category=" + cat.slug}
                     onClick={onClose}
-                    className="px-3 py-1 bg-white hover:bg-[#FEF3C7] border border-[#EFE9E0] text-xs font-bold text-[#5C5248] hover:text-[#92400E] rounded-md transition-colors"
+                    className="px-3 py-1 bg-white hover:bg-[#FEF3C7] border border-[#EFE9E0] text-xs font-bold text-[#5C5248] hover:text-[#92400E] rounded-none transition-colors"
                   >
                     {cat.name}
                   </Link>
@@ -300,7 +300,7 @@ export function HamburgerDrawer({
                     key={cat.id}
                     href={"/recipes?category=" + cat.slug}
                     onClick={onClose}
-                    className="px-3 py-1 bg-white hover:bg-[#FEF3C7] border border-[#EFE9E0] text-xs font-bold text-[#5C5248] hover:text-[#92400E] rounded-md transition-colors"
+                    className="px-3 py-1 bg-white hover:bg-[#FEF3C7] border border-[#EFE9E0] text-xs font-bold text-[#5C5248] hover:text-[#92400E] rounded-none transition-colors"
                   >
                     {cat.name}
                   </Link>

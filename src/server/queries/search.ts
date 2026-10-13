@@ -136,7 +136,7 @@ export async function searchGlobal({
       usageWarning: p.usageWarning,
       href: `/products/${p.slug}`,
       imageAsset,
-      imageUrl: null,
+      imageUrl: (p as any).imageUrl || (p.slug ? `/images/products/${p.slug}.jpg` : null),
       imageAlt: p.nameFa,
       linkLabel: 'مشاهده محصول',
       categories: p.categories.map((c: any) => c.category),

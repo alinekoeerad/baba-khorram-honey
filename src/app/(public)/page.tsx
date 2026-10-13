@@ -251,8 +251,8 @@ export default async function HomePage() {
             <div className="lg:col-span-5 flex justify-center">
               <div className="w-full max-w-md lg:max-w-none overflow-hidden rounded-none shadow-md">
                 <img
-                  src="/images/beekeeping.jpg"
-                  alt="زنبوردار حرفه‌ای در حال سرکشی به کندوهای عسل در مزرعه آفتابی"
+                  src="/images/hero/feature-honey.jpg"
+                  alt="عسل اصیل و طبیعی باباخُرم"
                   className="w-full h-auto object-cover"
                   loading="lazy"
                   width={600}
@@ -343,11 +343,11 @@ export default async function HomePage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 lg:gap-16 items-center">
               {/* Circular Framed Image */}
               <div className="lg:col-span-5 flex justify-center">
-                <div className="w-56 h-56 sm:w-80 sm:h-80 lg:w-92 lg:h-92 rounded-full overflow-hidden border-4 sm:border-8 border-white shadow-2xl bg-[#332115] flex items-center justify-center p-3 sm:p-4">
+                <div className="w-56 h-56 sm:w-80 sm:h-80 lg:w-92 lg:h-92 rounded-full overflow-hidden border-4 sm:border-8 border-white shadow-2xl">
                   <img
                     src="/images/honey-jar.jpg"
                     alt="شیشه عسل طبیعی کهربایی شفاف با قاشق چوبی مخصوص عسل"
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-cover object-center rounded-full"
                     loading="lazy"
                     width={350}
                     height={350}

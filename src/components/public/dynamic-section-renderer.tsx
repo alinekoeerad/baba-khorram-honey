@@ -90,8 +90,8 @@ export function DynamicSectionRenderer({
     const imageBlock = (
       <div className="lg:col-span-5 flex justify-center">
         {isCircle ? (
-          <div className="w-56 h-56 sm:w-80 sm:h-80 lg:w-92 lg:h-92 rounded-full overflow-hidden border-4 sm:border-8 border-white shadow-2xl bg-[#332115] flex items-center justify-center p-3 sm:p-4">
-            <img src={imageUrl} alt={imageAlt} className="w-full h-full object-contain" />
+          <div className="w-56 h-56 sm:w-80 sm:h-80 lg:w-92 lg:h-92 rounded-full overflow-hidden border-4 sm:border-8 border-white shadow-2xl">
+            <img src={imageUrl} alt={imageAlt} className="w-full h-full object-cover object-center rounded-full" />
           </div>
         ) : (
           <div className="w-full max-w-md lg:max-w-none overflow-hidden rounded-none shadow-md">

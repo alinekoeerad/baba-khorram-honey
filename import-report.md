@@ -49,43 +49,43 @@
 
 | ردیف | نام فارسی دستور | نام اصلی (لاتین) | نوع سرو | دسته‌بندی‌های تخصیص‌یافته |
 |---|---|---|---|---|
-| 1 | آمالاکی پاناکا | Amalaki Panaka | COLD | شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 2 | چای پوملو | Fengmi Youzi Cha | COLD | شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 3 | شوگایو | Hachimitsu Shogayu | HOT | نوشیدنی‌های غلات و دانه‌ها (`grain-seed-drinks`) • شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 4 | موت هوی‌آن | Nuoc Mot | COLD | شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 5 | لیموناد خانگی یونانی | Greek Homemade Lemonad with Honey | COLD | شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 6 | کارکاده | Karkadeh | HOT, COLD | چای و دمنوش‌ها (`teas-infusions`) |
-| 7 | سحلب | Sahlab | HOT | نوشیدنی‌های شیری (`milk-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 8 | چای نومی بصره | Chai Noomi Basra | HOT | چای و دمنوش‌ها (`teas-infusions`) |
-| 9 | قهوا پشاوری | Peshawari Kahwa | HOT | چای و دمنوش‌ها (`teas-infusions`) |
-| 10 | قهوا افغانی | Afghan Kahwah | HOT | چای و دمنوش‌ها (`teas-infusions`) |
-| 11 | چای تاشکند | Tashkent Tea | HOT | شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 12 | ایسکَنجه‌بی | Iskencebi | COLD | شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 13 | عطر عسل | Honey Aroma | HOT, COLD | شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 14 | قهوه حَضرمی | Qahwa Hadramiya | HOT | چای و دمنوش‌ها (`teas-infusions`) |
-| 15 | بسیسه | Bsissa | COLD, WARM | نوشیدنی‌های غلات و دانه‌ها (`grain-seed-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 16 | حَلیب الدجاج (شیر مرغ) | Lait de poule | COLD | نوشیدنی‌های شیری (`milk-drinks`) |
-| 17 | چای نعناع الجزایری | The a la menthe algerien | HOT | چای و دمنوش‌ها (`teas-infusions`) |
-| 18 | بویه | Jus de Bouye | COLD | نوشیدنی‌های شیری (`milk-drinks`) • شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) |
-| 19 | زوم کوم | Zoom-Koom | COLD | نوشیدنی‌های غلات و دانه‌ها (`grain-seed-drinks`) • شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 20 | آگواس فرسکاس | Agua Fresca de citricoc | COLD | شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) |
-| 21 | شربت ریحان | Balli Reyhan Serbeti | COLD | شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 22 | چای کوهستانی یونانی | Greek Mountain Tea with Honey & Lemon | HOT | شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 23 | شیر و عسل | Latte e Miele | HOT | نوشیدنی‌های شیری (`milk-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 24 | چای نعناع مراکشی | Atay B Naanaa | HOT | چای و دمنوش‌ها (`teas-infusions`) |
-| 25 | لیموناد ایتالیایی | Limonata con Miele | COLD | شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 26 | شربت سرکه انگبین (سکنجبین) | Sekanjabin Sharbat | COLD | شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 27 | چای گل داوودی | Fengmi juhua cha | COLD | شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 28 | تامبه جوس | Tombe Juice | COLD | شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 29 | نوشیدنی زنجبیلی گینه | Ginger Drink | COLD | شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 30 | کورما چای | Kuurma Chai | HOT | نوشیدنی‌های غلات و دانه‌ها (`grain-seed-drinks`) • نوشیدنی‌های شیری (`milk-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 31 | شیرین عسل | Sladkiy Myod | HOT | چای و دمنوش‌ها (`teas-infusions`) |
-| 32 | چای سبز ازبکی | Ko`k Choy | HOT | شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 33 | سَتو | Sattu Drink | COLD | نوشیدنی‌های غلات و دانه‌ها (`grain-seed-drinks`) • شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 34 | متّه سوری | المتّه بالعسل و اللیمون و الزنجبیل | HOT | شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 35 | چای نعناع لبنانی | Shai bil Nana | HOT | شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 36 | چای علف لیمو | Cha Takrai | COLD | شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
-| 37 | چای زنجبیل | Saenggang Cha | HOT | شربت‌ها و نوشیدنی‌های میوه‌ای (`sharbat-fruit-drinks`) • چای و دمنوش‌ها (`teas-infusions`) |
+| 1 | آمالاکی پاناکا | Amalaki Panaka | COLD | دسر (`desserts`) • نوشیدنی (`drinks`) |
+| 2 | چای پوملو | Fengmi Youzi Cha | COLD | نوشیدنی (`drinks`) • کیک و شیرینی (`pastries`) |
+| 3 | شوگایو | Hachimitsu Shogayu | HOT | صبحانه (`breakfast`) • نوشیدنی (`drinks`) |
+| 4 | موت هوی‌آن | Nuoc Mot | COLD | نوشیدنی (`drinks`) |
+| 5 | لیموناد خانگی یونانی | Greek Homemade Lemonad with Honey | COLD | نوشیدنی (`drinks`) |
+| 6 | کارکاده | Karkadeh | HOT, COLD | نوشیدنی (`drinks`) |
+| 7 | سحلب | Sahlab | HOT | دسر (`desserts`) • نوشیدنی (`drinks`) |
+| 8 | چای نومی بصره | Chai Noomi Basra | HOT | نوشیدنی (`drinks`) • کیک و شیرینی (`pastries`) |
+| 9 | قهوا پشاوری | Peshawari Kahwa | HOT | نوشیدنی (`drinks`) • کیک و شیرینی (`pastries`) |
+| 10 | قهوا افغانی | Afghan Kahwah | HOT | نوشیدنی (`drinks`) • کیک و شیرینی (`pastries`) |
+| 11 | چای تاشکند | Tashkent Tea | HOT | نوشیدنی (`drinks`) • کیک و شیرینی (`pastries`) |
+| 12 | ایسکَنجه‌بی | Iskencebi | COLD | دسر (`desserts`) • نوشیدنی (`drinks`) |
+| 13 | عطر عسل | Honey Aroma | HOT, COLD | دسر (`desserts`) • نوشیدنی (`drinks`) |
+| 14 | قهوه حَضرمی | Qahwa Hadramiya | HOT | نوشیدنی (`drinks`) |
+| 15 | بسیسه | Bsissa | COLD, WARM | صبحانه (`breakfast`) • نوشیدنی (`drinks`) |
+| 16 | حَلیب الدجاج (شیر مرغ) | Lait de poule | COLD | صبحانه (`breakfast`) • دسر (`desserts`) • نوشیدنی (`drinks`) |
+| 17 | چای نعناع الجزایری | The a la menthe algerien | HOT | نوشیدنی (`drinks`) • کیک و شیرینی (`pastries`) |
+| 18 | بویه | Jus de Bouye | COLD | دسر (`desserts`) • نوشیدنی (`drinks`) |
+| 19 | زوم کوم | Zoom-Koom | COLD | نوشیدنی (`drinks`) |
+| 20 | آگواس فرسکاس | Agua Fresca de citricoc | COLD | نوشیدنی (`drinks`) |
+| 21 | شربت ریحان | Balli Reyhan Serbeti | COLD | نوشیدنی (`drinks`) |
+| 22 | چای کوهستانی یونانی | Greek Mountain Tea with Honey & Lemon | HOT | نوشیدنی (`drinks`) |
+| 23 | شیر و عسل | Latte e Miele | HOT | صبحانه (`breakfast`) • نوشیدنی (`drinks`) |
+| 24 | چای نعناع مراکشی | Atay B Naanaa | HOT | نوشیدنی (`drinks`) • کیک و شیرینی (`pastries`) |
+| 25 | لیموناد ایتالیایی | Limonata con Miele | COLD | نوشیدنی (`drinks`) |
+| 26 | شربت سرکه انگبین (سکنجبین) | Sekanjabin Sharbat | COLD | نوشیدنی (`drinks`) |
+| 27 | چای گل داوودی | Fengmi juhua cha | COLD | نوشیدنی (`drinks`) • کیک و شیرینی (`pastries`) |
+| 28 | تامبه جوس | Tombe Juice | COLD | نوشیدنی (`drinks`) |
+| 29 | نوشیدنی زنجبیلی گینه | Ginger Drink | COLD | نوشیدنی (`drinks`) |
+| 30 | کورما چای | Kuurma Chai | HOT | صبحانه (`breakfast`) • نوشیدنی (`drinks`) |
+| 31 | شیرین عسل | Sladkiy Myod | HOT | دسر (`desserts`) • نوشیدنی (`drinks`) |
+| 32 | چای سبز ازبکی | Ko`k Choy | HOT | نوشیدنی (`drinks`) |
+| 33 | سَتو | Sattu Drink | COLD | صبحانه (`breakfast`) • نوشیدنی (`drinks`) |
+| 34 | متّه سوری | المتّه بالعسل و اللیمون و الزنجبیل | HOT | نوشیدنی (`drinks`) |
+| 35 | چای نعناع لبنانی | Shai bil Nana | HOT | نوشیدنی (`drinks`) |
+| 36 | چای علف لیمو | Cha Takrai | COLD | نوشیدنی (`drinks`) |
+| 37 | چای زنجبیل | Saenggang Cha | HOT | نوشیدنی (`drinks`) |
 
 ---
 
