@@ -19,30 +19,34 @@ import { Picture } from '@/components/ui/picture';
 import { AddToCartSlot } from '@/components/public/add-to-cart-slot';
 import { LabCertificateModal } from '@/components/public/lab-certificate-modal';
 import { MobileStickyBuyBar } from '@/components/public/mobile-sticky-buy-bar';
-import { toPersianDigits, getCardThemeForSlug } from '@/lib/domain-utils';
+import { toPersianDigits, resolveItemCardTheme } from '@/lib/domain-utils';
 import { AlertTriangle, ShieldCheck, Truck, Sparkles, CheckCircle2 } from 'lucide-react';
 import type { ProductCardViewModel } from '@/server/queries/products';
 
-const THEME_BREADCRUMB_COLORS: Record<string, { primary: string; hover: string; muted: string }> = {
+const THEME_BREADCRUMB_COLORS: Record<string, { primary: string; hover: string; muted: string; hex: string }> = {
   GREEN: {
     primary: 'text-[#4CA849]',
     hover: 'hover:text-[#4CA849]',
     muted: 'text-[#4CA849]/70',
+    hex: '#4CA849',
   },
   ORANGE: {
     primary: 'text-[#E08B38]',
     hover: 'hover:text-[#E08B38]',
     muted: 'text-[#E08B38]/70',
+    hex: '#E08B38',
   },
   YELLOW: {
     primary: 'text-[#F5A623]',
     hover: 'hover:text-[#F5A623]',
     muted: 'text-[#F5A623]/70',
+    hex: '#F5A623',
   },
   BURGUNDY: {
     primary: 'text-[#9E3556]',
     hover: 'hover:text-[#9E3556]',
     muted: 'text-[#9E3556]/70',
+    hex: '#9E3556',
   },
 };
 
@@ -89,27 +93,37 @@ export function ProductDetailView({
     { label: 'رنگ عسل', value: product.color },
   ].filter((chip) => chip.value && chip.value.trim().length > 0);
 
-  const rawTheme = (product.cardTheme || 'AUTO').toUpperCase();
-  const resolvedThemeKey = rawTheme === 'AUTO' || !THEME_BREADCRUMB_COLORS[rawTheme] ? getCardThemeForSlug(product.slug) : rawTheme;
-  const themeColors = THEME_BREADCRUMB_COLORS[resolvedThemeKey] || THEME_BREADCRUMB_COLORS.YELLOW;
+  const resolvedThemeKey = resolveItemCardTheme(product);
+  const themeColors = THEME_BREADCRUMB_COLORS[resolvedThemeKey] || THEME_BREADCRUMB_COLORS.GREEN;
 
   return (
     <WoodBackground className="py-10 sm:py-16 min-h-screen">
       <Container>
-        {/* Breadcrumb Navigation - Transparent with dynamic theme primary color */}
+        {/* Breadcrumb Navigation - Transparent with dynamic theme primary color matching its card */}
         <nav
           aria-label="مسیر راهنما"
           className="flex items-center gap-2 text-xs sm:text-sm font-black mb-8 bg-transparent"
         >
-          <Link href="/" className={`${themeColors.primary} hover:underline underline-offset-4 transition-colors`}>
+          <Link
+            href="/"
+            style={{ color: themeColors.hex }}
+            className="hover:underline underline-offset-4 transition-colors font-black"
+          >
             صفحه اصلی
           </Link>
-          <span className={themeColors.muted} aria-hidden="true">/</span>
-          <Link href="/products" className={`${themeColors.primary} hover:underline underline-offset-4 transition-colors`}>
+          <span style={{ color: themeColors.hex, opacity: 0.7 }} aria-hidden="true">/</span>
+          <Link
+            href="/products"
+            style={{ color: themeColors.hex }}
+            className="hover:underline underline-offset-4 transition-colors font-black"
+          >
             محصولات
           </Link>
-          <span className={themeColors.muted} aria-hidden="true">/</span>
-          <span className={`${themeColors.primary} truncate max-w-[240px]`}>
+          <span style={{ color: themeColors.hex, opacity: 0.7 }} aria-hidden="true">/</span>
+          <span
+            style={{ color: themeColors.hex }}
+            className="truncate max-w-[240px] font-black"
+          >
             {product.nameFa}
           </span>
         </nav>

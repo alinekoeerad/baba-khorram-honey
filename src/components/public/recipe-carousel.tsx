@@ -20,7 +20,7 @@ import Link from 'next/link';
 import { WoodBackground } from '@/components/ui/wood-background';
 import { Container } from '@/components/ui/container';
 import { PillButton } from '@/components/ui/pill-button';
-import { getCardThemeForSlug, getBalancedCardTheme } from '@/lib/domain-utils';
+import { getCardThemeForSlug, getBalancedCardTheme, resolveItemCardTheme } from '@/lib/domain-utils';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 
 interface RecipeItem {
@@ -30,6 +30,7 @@ interface RecipeItem {
   imageUrl?: string;
   theme?: string;
   cardTheme?: string;
+  sortOrder?: number;
 }
 
 const THEME_CLASSES: Record<string, { bg: string; text: string }> = {
@@ -156,11 +157,7 @@ export function RecipeCarousel({
           }}
         >
           {displayItems.map((r, idx) => {
-            const rawTheme = (r.theme || r.cardTheme || 'AUTO').toUpperCase();
-            const themeKey =
-              rawTheme === 'AUTO' || !THEME_CLASSES[rawTheme]
-                ? getBalancedCardTheme(idx)
-                : rawTheme;
+            const themeKey = resolveItemCardTheme({ ...r, index: idx });
             const theme = THEME_CLASSES[themeKey] || THEME_CLASSES.GREEN;
 
             return (

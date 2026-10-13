@@ -20,7 +20,7 @@ import Link from 'next/link';
 import { WoodBackground } from '@/components/ui/wood-background';
 import { Container } from '@/components/ui/container';
 import { PillButton } from '@/components/ui/pill-button';
-import { getCardThemeForSlug, getBalancedCardTheme } from '@/lib/domain-utils';
+import { getCardThemeForSlug, getBalancedCardTheme, resolveItemCardTheme } from '@/lib/domain-utils';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 
 interface ProductItem {
@@ -31,6 +31,7 @@ interface ProductItem {
   imageUrl?: string;
   theme?: string;
   cardTheme?: string;
+  sortOrder?: number;
   isAvailable?: boolean;
 }
 
@@ -158,11 +159,7 @@ export function ProductCarousel({
           }}
         >
           {displayItems.map((p, idx) => {
-            const rawTheme = (p.theme || p.cardTheme || 'AUTO').toUpperCase();
-            const themeKey =
-              rawTheme === 'AUTO' || !THEME_CLASSES[rawTheme]
-                ? getBalancedCardTheme(idx)
-                : rawTheme;
+            const themeKey = resolveItemCardTheme({ ...p, index: idx });
             const theme = THEME_CLASSES[themeKey] || THEME_CLASSES.GREEN;
             const titleText = p.nameFa || p.title || 'عسل ممتاز باباخُرم';
             const imageSrc = p.imageUrl || (p.slug ? `/images/products/${p.slug}.jpg` : '/images/honey-jar.jpg');

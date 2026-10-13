@@ -111,9 +111,10 @@ export function HeroSlider({
       <div className="relative z-20 max-w-4xl mx-auto text-white space-y-6 sm:space-y-8">
         <h1
           id="hero-heading"
-          className="text-3xl sm:text-5xl lg:text-7xl font-black text-white leading-tight tracking-tight"
+          className="hero-title-white text-3xl sm:text-5xl lg:text-7xl font-black !text-white leading-tight tracking-tight"
           style={{
-            textShadow: '2px 2px 4px rgba(0,0,0,0.85), 0 0 16px rgba(0,0,0,0.7)',
+            color: '#ffffff',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.9), 0 0 16px rgba(0,0,0,0.8)',
           }}
         >
           {title}
@@ -121,9 +122,10 @@ export function HeroSlider({
 
         {subtitle && (
           <p
-            className="text-base sm:text-xl lg:text-2xl text-white max-w-2xl mx-auto leading-relaxed font-bold"
+            className="hero-subtitle-white text-base sm:text-xl lg:text-2xl !text-white max-w-2xl mx-auto leading-relaxed font-bold"
             style={{
-              textShadow: '2px 2px 4px rgba(0,0,0,0.85), 0 0 10px rgba(0,0,0,0.6)',
+              color: '#ffffff',
+              textShadow: '2px 2px 4px rgba(0,0,0,0.9), 0 0 12px rgba(0,0,0,0.7)',
             }}
           >
             {subtitle}

@@ -136,22 +136,34 @@ body {
 }
 
 /* Persian Web Standard Typography Hierarchy */
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Vazirmatn', var(--font-vazirmatn), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-weight: 900;
-  line-height: 1.35;
-  letter-spacing: normal !important;
-  color: var(--text);
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Vazirmatn', var(--font-vazirmatn), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 900;
+    line-height: 1.35;
+    letter-spacing: normal !important;
+    color: var(--text);
+  }
+
+  b, strong {
+    font-weight: 800;
+  }
+
+  p {
+    line-height: 1.85;
+    font-weight: 500;
+    color: #332115;
+  }
 }
 
-b, strong {
-  font-weight: 800;
+/* Explicit Hero Text Styling */
+#hero-heading,
+.hero-title-white {
+  color: #ffffff !important;
 }
 
-p {
-  line-height: 1.85;
-  font-weight: 500;
-  color: #332115;
+.hero-subtitle-white {
+  color: #ffffff !important;
 }
 
 /* Cards: sharp 90-degree corners, subtle shadow, lift 6px & scale image */

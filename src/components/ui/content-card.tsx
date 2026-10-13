@@ -15,7 +15,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { CardTheme, getCardThemeForSlug, getBalancedCardTheme } from '@/lib/domain-utils';
+import { CardTheme, getCardThemeForSlug, getBalancedCardTheme, resolveItemCardTheme } from '@/lib/domain-utils';
 import { Picture } from './picture';
 import { DottedArrowIcon } from './dotted-arrow-icon';
 
@@ -39,6 +39,7 @@ export interface ContentCardProps {
   className?: string;
   priority?: boolean;
   index?: number;
+  sortOrder?: number;
   itemType?: 'product' | 'recipe';
 }
 
@@ -110,14 +111,16 @@ export function ContentCard({
   className = '',
   priority = false,
   index,
+  sortOrder,
   itemType,
 }: ContentCardProps) {
-  // Resolve card theme: supports index-based balanced alternation, AUTO, uppercase, lowercase
-  const rawTheme = theme ? String(theme).toUpperCase() : 'AUTO';
-  const resolvedTheme: string =
-    rawTheme === 'AUTO' || !THEME_STYLES[rawTheme]
-      ? (index !== undefined ? getBalancedCardTheme(index) : getCardThemeForSlug(slug || title))
-      : rawTheme;
+  // Resolve card theme consistently matching detail page breadcrumbs
+  const resolvedTheme: string = resolveItemCardTheme({
+    cardTheme: theme,
+    sortOrder: typeof sortOrder === 'number' ? sortOrder : index,
+    slug: slug || title,
+    index,
+  });
 
   const currentTheme = THEME_STYLES[resolvedTheme] || THEME_STYLES.GREEN;
   const isProduct = itemType === 'product' || (itemType === undefined && href.startsWith('/products'));

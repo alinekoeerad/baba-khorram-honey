@@ -135,6 +135,42 @@ export function getBalancedCardTheme(index: number, explicitTheme?: string | nul
   return themes[Math.abs(index) % themes.length];
 }
 
+/**
+ * Unified resolver for card theme. Guarantees that an item's card color
+ * in carousels, catalog listings, search results, and its breadcrumb on detail pages
+ * are 100% consistent and identical.
+ */
+export function resolveItemCardTheme(item?: {
+  cardTheme?: string | null;
+  theme?: string | null;
+  sortOrder?: number | null;
+  slug?: string | null;
+  index?: number | null;
+} | null): CardThemeType {
+  if (!item) return 'GREEN';
+  const raw = (item.cardTheme || item.theme || 'AUTO').toUpperCase();
+  const validThemes: CardThemeType[] = ['GREEN', 'ORANGE', 'YELLOW', 'BURGUNDY'];
+  if (raw !== 'AUTO' && validThemes.includes(raw as CardThemeType)) {
+    return raw as CardThemeType;
+  }
+  const orderIndex =
+    typeof item.sortOrder === 'number' && !isNaN(item.sortOrder)
+      ? item.sortOrder
+      : typeof item.index === 'number' && !isNaN(item.index)
+      ? item.index
+      : undefined;
+
+  if (orderIndex !== undefined) {
+    return getBalancedCardTheme(orderIndex);
+  }
+
+  if (item.slug) {
+    return getCardThemeForSlug(item.slug);
+  }
+
+  return 'GREEN';
+}
+
 export type ServingTypeValue = 'HOT' | 'WARM' | 'COLD';
 
 /**

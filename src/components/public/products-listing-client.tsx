@@ -330,6 +330,7 @@ export function ProductsListingClient({
                 linkLabel={item.linkLabel}
                 variant="vertical"
                 index={idx}
+                sortOrder={item.sortOrder}
               />
             ))}
           </div>
@@ -350,6 +351,7 @@ export function ProductsListingClient({
                 linkLabel={item.linkLabel}
                 variant="horizontal"
                 index={idx}
+                sortOrder={item.sortOrder}
               />
             ))}
           </div>

@@ -359,6 +359,7 @@ export function RecipesListingClient({
                 linkLabel={item.linkLabel}
                 variant="vertical"
                 index={idx}
+                sortOrder={item.sortOrder}
               />
             ))}
           </div>
@@ -378,6 +379,7 @@ export function RecipesListingClient({
                 linkLabel={item.linkLabel}
                 variant="horizontal"
                 index={idx}
+                sortOrder={item.sortOrder}
               />
             ))}
           </div>

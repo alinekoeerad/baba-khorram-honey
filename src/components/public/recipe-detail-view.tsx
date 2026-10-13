@@ -17,30 +17,34 @@ import { Container } from '@/components/ui/container';
 import { Picture } from '@/components/ui/picture';
 import { PillButton } from '@/components/ui/pill-button';
 import { useCartStore } from '@/lib/cart-store';
-import { toPersianDigits, ServingTypeValue, getCardThemeForSlug } from '@/lib/domain-utils';
+import { toPersianDigits, ServingTypeValue, resolveItemCardTheme } from '@/lib/domain-utils';
 import { ShoppingCart, Check, Sparkles } from 'lucide-react';
 import type { RecipeCardViewModel } from '@/server/queries/recipes';
 
-const THEME_BREADCRUMB_COLORS: Record<string, { primary: string; hover: string; muted: string }> = {
+const THEME_BREADCRUMB_COLORS: Record<string, { primary: string; hover: string; muted: string; hex: string }> = {
   GREEN: {
     primary: 'text-[#4CA849]',
     hover: 'hover:text-[#4CA849]',
     muted: 'text-[#4CA849]/70',
+    hex: '#4CA849',
   },
   ORANGE: {
     primary: 'text-[#E08B38]',
     hover: 'hover:text-[#E08B38]',
     muted: 'text-[#E08B38]/70',
+    hex: '#E08B38',
   },
   YELLOW: {
     primary: 'text-[#F5A623]',
     hover: 'hover:text-[#F5A623]',
     muted: 'text-[#F5A623]/70',
+    hex: '#F5A623',
   },
   BURGUNDY: {
     primary: 'text-[#9E3556]',
     hover: 'hover:text-[#9E3556]',
     muted: 'text-[#9E3556]/70',
+    hex: '#9E3556',
   },
 };
 
@@ -112,28 +116,38 @@ export function RecipeDetailView({
     }
   };
 
-  const rawTheme = (recipe.cardTheme || 'AUTO').toUpperCase();
-  const resolvedThemeKey = rawTheme === 'AUTO' || !THEME_BREADCRUMB_COLORS[rawTheme] ? getCardThemeForSlug(recipe.slug) : rawTheme;
+  const resolvedThemeKey = resolveItemCardTheme(recipe);
   const themeColors = THEME_BREADCRUMB_COLORS[resolvedThemeKey] || THEME_BREADCRUMB_COLORS.GREEN;
 
   return (
     <WoodBackground className="py-12 sm:py-20 min-h-screen">
       <Container size="narrow" className="space-y-10 sm:space-y-12">
-        {/* Breadcrumb Navigation - Transparent with dynamic theme primary color */}
+        {/* Breadcrumb Navigation - Transparent with dynamic theme primary color matching its card */}
         <div className="flex justify-center">
           <nav
             aria-label="مسیر راهنما"
             className="flex items-center gap-2 text-xs sm:text-sm font-black bg-transparent"
           >
-            <Link href="/" className={`${themeColors.primary} hover:underline underline-offset-4 transition-colors`}>
+            <Link
+              href="/"
+              style={{ color: themeColors.hex }}
+              className="hover:underline underline-offset-4 transition-colors font-black"
+            >
               صفحه اصلی
             </Link>
-            <span className={themeColors.muted} aria-hidden="true">/</span>
-            <Link href="/recipes" className={`${themeColors.primary} hover:underline underline-offset-4 transition-colors`}>
+            <span style={{ color: themeColors.hex, opacity: 0.7 }} aria-hidden="true">/</span>
+            <Link
+              href="/recipes"
+              style={{ color: themeColors.hex }}
+              className="hover:underline underline-offset-4 transition-colors font-black"
+            >
               دستورها و دسرها
             </Link>
-            <span className={themeColors.muted} aria-hidden="true">/</span>
-            <span className={`${themeColors.primary} truncate max-w-[200px]`}>
+            <span style={{ color: themeColors.hex, opacity: 0.7 }} aria-hidden="true">/</span>
+            <span
+              style={{ color: themeColors.hex }}
+              className="truncate max-w-[200px] font-black"
+            >
               {recipe.nameFa}
             </span>
           </nav>
