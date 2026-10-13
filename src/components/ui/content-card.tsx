@@ -43,56 +43,82 @@ export interface ContentCardProps {
   itemType?: 'product' | 'recipe';
 }
 
-const THEME_STYLES: Record<string, { bg: string; text: string; subtext: string; badgeBg: string }> = {
+const THEME_STYLES: Record<
+  string,
+  {
+    topBar: string;
+    badgeBg: string;
+    badgeText: string;
+    hoverBorder: string;
+    textHover: string;
+    hex: string;
+  }
+> = {
   // Uppercase keys
   GREEN: {
-    bg: 'bg-[#4CA849]',
-    text: 'text-white',
-    subtext: 'text-white/85',
-    badgeBg: 'bg-black/40 text-white',
+    topBar: 'bg-[#4CA849]',
+    badgeBg: 'bg-[#4CA849]',
+    badgeText: 'text-white',
+    hoverBorder: 'hover:border-[#4CA849]',
+    textHover: 'group-hover:text-[#4CA849]',
+    hex: '#4CA849',
   },
   ORANGE: {
-    bg: 'bg-[#E08B38]',
-    text: 'text-white',
-    subtext: 'text-white/85',
-    badgeBg: 'bg-black/40 text-white',
+    topBar: 'bg-[#E08B38]',
+    badgeBg: 'bg-[#E08B38]',
+    badgeText: 'text-white',
+    hoverBorder: 'hover:border-[#E08B38]',
+    textHover: 'group-hover:text-[#E08B38]',
+    hex: '#E08B38',
   },
   YELLOW: {
-    bg: 'bg-[#F5A623]',
-    text: 'text-[#2B2017]',
-    subtext: 'text-[#2B2017]/85',
-    badgeBg: 'bg-black/30 text-white',
+    topBar: 'bg-[#D9A441]',
+    badgeBg: 'bg-[#D9A441]',
+    badgeText: 'text-[#2E1F14]',
+    hoverBorder: 'hover:border-[#D9A441]',
+    textHover: 'group-hover:text-[#C58A2A]',
+    hex: '#D9A441',
   },
   BURGUNDY: {
-    bg: 'bg-[#9E3556]',
-    text: 'text-white',
-    subtext: 'text-white/85',
-    badgeBg: 'bg-black/40 text-white',
+    topBar: 'bg-[#9E3556]',
+    badgeBg: 'bg-[#9E3556]',
+    badgeText: 'text-white',
+    hoverBorder: 'hover:border-[#9E3556]',
+    textHover: 'group-hover:text-[#9E3556]',
+    hex: '#9E3556',
   },
   // Lowercase keys
   green: {
-    bg: 'bg-[#4CA849]',
-    text: 'text-white',
-    subtext: 'text-white/85',
-    badgeBg: 'bg-black/40 text-white',
+    topBar: 'bg-[#4CA849]',
+    badgeBg: 'bg-[#4CA849]',
+    badgeText: 'text-white',
+    hoverBorder: 'hover:border-[#4CA849]',
+    textHover: 'group-hover:text-[#4CA849]',
+    hex: '#4CA849',
   },
   orange: {
-    bg: 'bg-[#E08B38]',
-    text: 'text-white',
-    subtext: 'text-white/85',
-    badgeBg: 'bg-black/40 text-white',
+    topBar: 'bg-[#E08B38]',
+    badgeBg: 'bg-[#E08B38]',
+    badgeText: 'text-white',
+    hoverBorder: 'hover:border-[#E08B38]',
+    textHover: 'group-hover:text-[#E08B38]',
+    hex: '#E08B38',
   },
   yellow: {
-    bg: 'bg-[#F5A623]',
-    text: 'text-[#2B2017]',
-    subtext: 'text-[#2B2017]/85',
-    badgeBg: 'bg-black/30 text-white',
+    topBar: 'bg-[#D9A441]',
+    badgeBg: 'bg-[#D9A441]',
+    badgeText: 'text-[#2E1F14]',
+    hoverBorder: 'hover:border-[#D9A441]',
+    textHover: 'group-hover:text-[#C58A2A]',
+    hex: '#D9A441',
   },
   burgundy: {
-    bg: 'bg-[#9E3556]',
-    text: 'text-white',
-    subtext: 'text-white/85',
-    badgeBg: 'bg-black/40 text-white',
+    topBar: 'bg-[#9E3556]',
+    badgeBg: 'bg-[#9E3556]',
+    badgeText: 'text-white',
+    hoverBorder: 'hover:border-[#9E3556]',
+    textHover: 'group-hover:text-[#9E3556]',
+    hex: '#9E3556',
   },
 };
 
@@ -130,11 +156,14 @@ export function ContentCard({
     return (
       <Link
         href={href}
-        className={`group block rounded-none border border-[#EFE9E0] shadow-sm hover:shadow-[0_12px_28px_rgba(51,33,21,0.20)] active:scale-[0.99] transition-all duration-300 ease-out hover:-translate-y-1.5 motion-reduce:transform-none overflow-hidden ${currentTheme.bg} ${className}`}
+        className={`group block rounded-none border border-[#DFD3C3] shadow-[0_2px_10px_rgba(63,42,29,0.06)] hover:shadow-[0_12px_28px_rgba(63,42,29,0.16)] active:scale-[0.99] transition-all duration-300 ease-out hover:-translate-y-1.5 motion-reduce:transform-none overflow-hidden bg-[#FAF6EE] ${currentTheme.hoverBorder} ${className}`}
       >
-        <div className="flex flex-row items-center h-28 sm:h-32">
+        <div className="flex flex-row items-center h-28 sm:h-32 relative">
+          {/* 4px Theme Accent Bar on right edge in RTL */}
+          <div className={`absolute top-0 bottom-0 right-0 w-1 ${currentTheme.topBar} z-10`} />
+
           {/* Image Container - Visual Right in RTL (first in DOM under dir="rtl") */}
-          <div className="relative w-28 sm:w-32 h-full shrink-0 overflow-hidden">
+          <div className="relative w-28 sm:w-32 h-full shrink-0 overflow-hidden bg-[#F2ECE0]">
             {imageAsset ? (
               <Picture
                 asset={imageAsset}
@@ -152,7 +181,7 @@ export function ContentCard({
                 className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transform-none"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center bg-[#FAF7F2] text-xs font-bold text-[#5C5248]">
+              <div className="w-full h-full flex items-center justify-center bg-[#FAF6EE] text-xs font-bold text-[#5C3A21]">
                 <span>عسل باباخُرم</span>
               </div>
             )}
@@ -165,24 +194,24 @@ export function ContentCard({
           </div>
 
           {/* Content Area - Visual Left in RTL */}
-          <div className="flex-1 p-3 sm:p-4 flex flex-col justify-between h-full min-w-0 text-right">
+          <div className="flex-1 p-3 sm:p-4 flex flex-col justify-between h-full min-w-0 text-right bg-[#FAF6EE]">
             <div>
-              <h3 className={`font-black text-xs sm:text-sm leading-snug line-clamp-2 ${currentTheme.text}`}>
+              <h3 className="font-black text-xs sm:text-sm leading-snug line-clamp-2 text-[#3F2A1D] group-hover:text-[#5C3A21] transition-colors">
                 {title}
               </h3>
               {subtitle && (
-                <p className={`text-[11px] sm:text-xs mt-1 truncate font-bold ${currentTheme.subtext}`}>
+                <p className="text-[11px] sm:text-xs mt-1 truncate font-bold text-[#5C3A21]/90">
                   {subtitle}
                 </p>
               )}
             </div>
 
             {/* Link Label with Dotted Arrow */}
-            <div className={`text-xs font-black flex items-center justify-between pt-1 border-t border-black/10 mt-1 ${currentTheme.text}`}>
+            <div className="text-xs font-black flex items-center justify-between pt-1 border-t border-[#DFD3C3] mt-1 text-[#3F2A1D] group-hover:text-[#C58A2A] transition-colors">
               <span>{linkLabel}</span>
               <DottedArrowIcon
                 direction="left"
-                className="w-4 h-4 transition-transform group-hover:-translate-x-1.5"
+                className="w-4 h-4 transition-transform group-hover:-translate-x-1.5 text-[#C58A2A]"
               />
             </div>
           </div>
@@ -195,10 +224,13 @@ export function ContentCard({
   return (
     <Link
       href={href}
-      className={`group flex flex-col rounded-none border border-[#EFE9E0] shadow-sm hover:shadow-[0_16px_36px_rgba(51,33,21,0.22)] active:scale-[0.99] transition-all duration-300 ease-out hover:-translate-y-1.5 motion-reduce:transform-none overflow-hidden ${currentTheme.bg} ${className}`}
+      className={`group flex flex-col rounded-none border border-[#DFD3C3] shadow-[0_4px_16px_rgba(63,42,29,0.08)] hover:shadow-[0_16px_36px_rgba(63,42,29,0.18)] active:scale-[0.99] transition-all duration-300 ease-out hover:-translate-y-1.5 motion-reduce:transform-none overflow-hidden bg-[#FAF6EE] ${currentTheme.hoverBorder} ${className}`}
     >
+      {/* 4px Theme Color Accent Top Stripe */}
+      <div className={`h-1 w-full ${currentTheme.topBar} shrink-0`} />
+
       {/* Image Area - Aspect 4:3 presentation */}
-      <div className="relative w-full aspect-[4/3] overflow-hidden shrink-0">
+      <div className="relative w-full aspect-[4/3] overflow-hidden shrink-0 bg-[#F2ECE0]">
         {imageAsset ? (
           <Picture
             asset={imageAsset}
@@ -216,7 +248,7 @@ export function ContentCard({
             className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transform-none"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-[#FAF7F2] text-sm font-medium text-[#5C5248]">
+          <div className="w-full h-full flex items-center justify-center bg-[#FAF6EE] text-sm font-medium text-[#5C3A21]">
             <span>عسل باباخُرم</span>
           </div>
         )}
@@ -230,24 +262,24 @@ export function ContentCard({
       </div>
 
       {/* Card Body */}
-      <div className="p-5 flex-1 flex flex-col justify-between text-right">
+      <div className="p-5 flex-1 flex flex-col justify-between text-right bg-[#FAF6EE]">
         <div>
-          <h3 className={`font-black text-lg sm:text-xl leading-tight line-clamp-2 ${currentTheme.text}`}>
+          <h3 className="font-black text-lg sm:text-xl leading-tight line-clamp-2 text-[#3F2A1D] group-hover:text-[#5C3A21] transition-colors">
             {title}
           </h3>
           {subtitle && (
-            <p className={`text-xs sm:text-sm mt-1.5 line-clamp-1 font-bold ${currentTheme.subtext}`}>
+            <p className="text-xs sm:text-sm mt-1.5 line-clamp-1 font-bold text-[#5C3A21]/90">
               {subtitle}
             </p>
           )}
         </div>
 
         {/* Card Footer Link Label with signature Dotted Arrow */}
-        <div className={`mt-5 pt-3 border-t border-black/10 flex items-center justify-between text-sm font-black ${currentTheme.text}`}>
+        <div className="mt-5 pt-3 border-t border-[#DFD3C3] flex items-center justify-between text-sm font-black text-[#3F2A1D] group-hover:text-[#C58A2A] transition-colors">
           <span>{linkLabel}</span>
           <DottedArrowIcon
             direction="left"
-            className="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-2"
+            className="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-2 text-[#C58A2A]"
           />
         </div>
       </div>

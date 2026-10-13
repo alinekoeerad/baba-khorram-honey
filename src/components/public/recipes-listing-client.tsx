@@ -230,15 +230,15 @@ export function RecipesListingClient({
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="جستجو در دسرهای عسل باباخُرم..."
-            className="w-full h-12 pr-11 pl-10 rounded-none bg-white/95 border border-[#EFE9E0] text-[#2B2017] placeholder-[#5C5248] text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-[#FBBF24] focus:border-[#F59E0B] transition-all shadow-sm"
+            className="w-full h-12 pr-11 pl-10 rounded-none bg-[#FAF6EE] border border-[#DFD3C3] text-[#3F2A1D] placeholder-[#7A6553] text-sm sm:text-base focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#D9A441]/40 focus:border-[#C58A2A] transition-all shadow-xs"
             dir="rtl"
           />
-          <Search className="absolute right-4 top-3.5 w-5 h-5 text-[#B45309] pointer-events-none" />
+          <Search className="absolute right-4 top-3.5 w-5 h-5 text-[#C58A2A] pointer-events-none" />
           {searchTerm && (
             <button
               type="button"
               onClick={handleClearSearch}
-              className="absolute left-3.5 top-3.5 text-stone-500 hover:text-[#2B2017] transition-colors cursor-pointer"
+              className="absolute left-3.5 top-3.5 text-[#7A6553] hover:text-[#3F2A1D] transition-colors cursor-pointer"
               aria-label="پاک کردن جستجو"
             >
               <X className="w-5 h-5" />
@@ -248,14 +248,14 @@ export function RecipesListingClient({
 
         {/* Cold / Hot Serving Toggle */}
         <div className="flex items-center justify-center">
-          <div className="inline-flex p-1 rounded-none bg-white/90 border border-[#EFE9E0] shadow-md">
+          <div className="inline-flex p-1.5 rounded-none bg-[#F5EFE6] border border-[#DFD3C3] shadow-xs">
             <button
               type="button"
               onClick={() => handleServingToggle('cold')}
               className={`px-6 py-2 rounded-none text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                 serving === 'cold'
-                  ? 'bg-[#FBBF24] text-[#2B2017] shadow-sm font-black'
-                  : 'text-[#5C5248] hover:text-[#2B2017]'
+                  ? 'bg-[#D9A441] text-[#2E1F14] shadow-sm font-black'
+                  : 'text-[#5C3A21] hover:text-[#3F2A1D]'
               }`}
             >
               سرو سرد (خنک و تابستانی)
@@ -265,8 +265,8 @@ export function RecipesListingClient({
               onClick={() => handleServingToggle('hot')}
               className={`px-6 py-2 rounded-none text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                 serving === 'hot'
-                  ? 'bg-[#E08B38] text-white shadow-sm font-black'
-                  : 'text-[#5C5248] hover:text-[#2B2017]'
+                  ? 'bg-[#C58A2A] text-white shadow-sm font-black'
+                  : 'text-[#5C3A21] hover:text-[#3F2A1D]'
               }`}
             >
               سرو گرم (دمنوش و چای)
@@ -279,10 +279,10 @@ export function RecipesListingClient({
           <button
             type="button"
             onClick={() => handleCategoryClick('')}
-            className={`px-4 py-1.5 sm:px-5 sm:py-2 rounded-none text-xs sm:text-sm font-bold transition-all shadow-sm cursor-pointer ${
+            className={`px-4 py-1.5 sm:px-5 sm:py-2 rounded-none text-xs sm:text-sm transition-all shadow-xs cursor-pointer ${
               !activeCategory || activeCategory === 'all'
-                ? 'bg-[#FBBF24] text-[#2B2017] shadow-md ring-2 ring-[#FBBF24]/50 font-black'
-                : 'bg-white/90 text-[#332115] border border-[#EFE9E0] hover:bg-white hover:text-[#2B2017]'
+                ? 'bg-[#D9A441] text-[#2E1F14] border border-[#C58A2A] shadow-md ring-2 ring-[#D9A441]/30 font-black'
+                : 'bg-[#FAF6EE] text-[#5C3A21] border border-[#DFD3C3] hover:bg-[#F2ECE0] hover:text-[#3F2A1D] hover:border-[#C58A2A]/50 font-bold'
             }`}
           >
             همه دستورها
@@ -292,10 +292,10 @@ export function RecipesListingClient({
               key={cat.id}
               type="button"
               onClick={() => handleCategoryClick(cat.slug)}
-              className={`px-4 py-1.5 sm:px-5 sm:py-2 rounded-none text-xs sm:text-sm font-bold transition-all shadow-sm cursor-pointer ${
+              className={`px-4 py-1.5 sm:px-5 sm:py-2 rounded-none text-xs sm:text-sm transition-all shadow-xs cursor-pointer ${
                 activeCategory === cat.slug
-                  ? 'bg-[#FBBF24] text-[#2B2017] shadow-md ring-2 ring-[#FBBF24]/50 font-black'
-                  : 'bg-white/90 text-[#332115] border border-[#EFE9E0] hover:bg-white hover:text-[#2B2017]'
+                  ? 'bg-[#D9A441] text-[#2E1F14] border border-[#C58A2A] shadow-md ring-2 ring-[#D9A441]/30 font-black'
+                  : 'bg-[#FAF6EE] text-[#5C3A21] border border-[#DFD3C3] hover:bg-[#F2ECE0] hover:text-[#3F2A1D] hover:border-[#C58A2A]/50 font-bold'
               }`}
             >
               {cat.name}
@@ -306,9 +306,9 @@ export function RecipesListingClient({
         {/* Centered Divider with Serving Label per Brief Section 8 & 9 */}
         <div className="relative flex items-center justify-center my-6">
           <div className="absolute inset-0 flex items-center" aria-hidden="true">
-            <div className="w-full border-t border-white/20" />
+            <div className="w-full border-t border-[#DFD3C3]" />
           </div>
-          <div className="relative px-6 py-1.5 bg-[#FFFBEB] border border-[#FDE68A] text-[#92400E] font-black text-xs sm:text-sm shadow-md">
+          <div className="relative px-6 py-1.5 bg-[#FAF6EE] border border-[#D9A441]/50 text-[#5C3A21] font-black text-xs sm:text-sm shadow-xs">
             {serving === 'hot' ? 'سرو گرم (دمنوش و چای مقوی)' : 'سرو سرد (نوشیدنی و دسر خنک)'}
           </div>
         </div>
@@ -316,14 +316,14 @@ export function RecipesListingClient({
 
       {/* 2. Results Container */}
       {isPending && displayedItems.length === 0 ? (
-        <div className="py-20 flex flex-col items-center justify-center gap-3 text-white">
-          <Loader2 className="w-8 h-8 animate-spin text-[#FBBF24]" />
+        <div className="py-20 flex flex-col items-center justify-center gap-3 text-[#5C3A21]">
+          <Loader2 className="w-8 h-8 animate-spin text-[#C58A2A]" />
           <span className="text-sm font-bold">در حال جستجو و فیلتر...</span>
         </div>
       ) : displayedItems.length === 0 ? (
-        <div className="py-20 text-center space-y-4 max-w-md mx-auto bg-white border border-[#FDE68A] p-8 shadow-md">
-          <p className="text-xl font-black text-[#2B2017]">موردی یافت نشد</p>
-          <p className="text-sm text-[#5C5248] leading-relaxed">
+        <div className="py-20 text-center space-y-4 max-w-md mx-auto bg-[#FAF6EE] border border-[#DFD3C3] p-8 shadow-sm">
+          <p className="text-xl font-black text-[#3F2A1D]">موردی یافت نشد</p>
+          <p className="text-sm text-[#5C3A21] leading-relaxed">
             دستوری با مشخصات جستجوشده یافت نشد. لطفاً عبارت دیگری را جستجو کنید یا فیلتر دسته‌بندی را تغییر دهید.
           </p>
           {(searchTerm || activeCategory) && (
@@ -399,7 +399,7 @@ export function RecipesListingClient({
                 type="button"
                 onClick={handleLoadMore}
                 disabled={isLoadingMore}
-                className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-[#F5A623] hover:bg-[#E08B38] text-[#2B2017] hover:text-white font-black text-sm sm:text-base transition-all duration-200 shadow-lg disabled:opacity-50 cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-[#D9A441] hover:bg-[#C58A2A] text-[#2E1F14] hover:text-white font-black text-sm sm:text-base transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 cursor-pointer"
               >
                 {isLoadingMore ? (
                   <>
@@ -415,15 +415,15 @@ export function RecipesListingClient({
               <button
                 type="button"
                 onClick={handleShowLess}
-                className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-[#382013] hover:bg-[#4A2C1B] text-[#FBBF24] border border-[#FBBF24]/40 font-black text-sm sm:text-base transition-all duration-200 shadow-lg cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-[#FAF6EE] hover:bg-[#F2ECE0] text-[#5C3A21] border border-[#DFD3C3] font-black text-sm sm:text-base transition-all duration-200 shadow-xs hover:shadow-sm cursor-pointer"
               >
-                <ChevronUp className="w-5 h-5" />
+                <ChevronUp className="w-5 h-5 text-[#C58A2A]" />
                 <span>نمایش کمتر</span>
               </button>
             ) : null}
 
             {!hasMore && items.length > 0 && (
-              <div className="text-center text-xs text-[#E6DDD4]/80 pt-2 font-bold">
+              <div className="text-center text-xs text-[#5C3A21] pt-2 font-bold">
                 تمام موارد نمایش داده شد ({toPersianDigits(items.length)} دستور)
               </div>
             )}
