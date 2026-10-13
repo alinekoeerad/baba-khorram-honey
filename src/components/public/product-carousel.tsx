@@ -177,12 +177,12 @@ export function ProductCarousel({
                 }}
               >
                 <Link href={`/products/${p.slug}`} className="flex flex-col h-full">
-                  {/* Image Wrap - Product jar presentation */}
-                  <div className="w-full aspect-[4/3] overflow-hidden shrink-0 relative bg-[#FAF7F2] flex items-center justify-center p-3 sm:p-4">
+                  {/* Image Wrap - Edge-to-edge card presentation */}
+                  <div className="w-full aspect-[4/3] overflow-hidden shrink-0 relative">
                     <img
                       src={imageSrc}
                       alt={titleText}
-                      className="w-full h-full object-contain object-center transition-transform duration-500 ease-out group-hover:scale-105"
+                      className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
                       loading="lazy"
                       width={360}
                       height={270}

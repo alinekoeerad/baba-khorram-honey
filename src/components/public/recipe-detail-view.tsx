@@ -17,9 +17,32 @@ import { Container } from '@/components/ui/container';
 import { Picture } from '@/components/ui/picture';
 import { PillButton } from '@/components/ui/pill-button';
 import { useCartStore } from '@/lib/cart-store';
-import { toPersianDigits, ServingTypeValue } from '@/lib/domain-utils';
+import { toPersianDigits, ServingTypeValue, getCardThemeForSlug } from '@/lib/domain-utils';
 import { ShoppingCart, Check, Sparkles } from 'lucide-react';
 import type { RecipeCardViewModel } from '@/server/queries/recipes';
+
+const THEME_BREADCRUMB_COLORS: Record<string, { primary: string; hover: string; muted: string }> = {
+  GREEN: {
+    primary: 'text-[#4CA849]',
+    hover: 'hover:text-[#4CA849]',
+    muted: 'text-[#4CA849]/70',
+  },
+  ORANGE: {
+    primary: 'text-[#E08B38]',
+    hover: 'hover:text-[#E08B38]',
+    muted: 'text-[#E08B38]/70',
+  },
+  YELLOW: {
+    primary: 'text-[#F5A623]',
+    hover: 'hover:text-[#F5A623]',
+    muted: 'text-[#F5A623]/70',
+  },
+  BURGUNDY: {
+    primary: 'text-[#9E3556]',
+    hover: 'hover:text-[#9E3556]',
+    muted: 'text-[#9E3556]/70',
+  },
+};
 
 export interface RecipeDetailViewProps {
   recipe: {
@@ -89,24 +112,28 @@ export function RecipeDetailView({
     }
   };
 
+  const rawTheme = (recipe.cardTheme || 'AUTO').toUpperCase();
+  const resolvedThemeKey = rawTheme === 'AUTO' || !THEME_BREADCRUMB_COLORS[rawTheme] ? getCardThemeForSlug(recipe.slug) : rawTheme;
+  const themeColors = THEME_BREADCRUMB_COLORS[resolvedThemeKey] || THEME_BREADCRUMB_COLORS.GREEN;
+
   return (
     <WoodBackground className="py-12 sm:py-20 min-h-screen">
       <Container size="narrow" className="space-y-10 sm:space-y-12">
-        {/* Breadcrumb Navigation */}
+        {/* Breadcrumb Navigation - Transparent with dynamic theme primary color */}
         <div className="flex justify-center">
           <nav
             aria-label="مسیر راهنما"
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-xs sm:text-sm font-bold text-white shadow-md"
+            className="flex items-center gap-2 text-xs sm:text-sm font-black bg-transparent"
           >
-            <Link href="/" className="text-white hover:text-[#FBBF24] transition-colors underline-offset-4 hover:underline">
+            <Link href="/" className={`${themeColors.primary} hover:underline underline-offset-4 transition-colors`}>
               صفحه اصلی
             </Link>
-            <span className="text-[#FBBF24] font-black" aria-hidden="true">/</span>
-            <Link href="/recipes" className="text-white hover:text-[#FBBF24] transition-colors underline-offset-4 hover:underline">
+            <span className={themeColors.muted} aria-hidden="true">/</span>
+            <Link href="/recipes" className={`${themeColors.primary} hover:underline underline-offset-4 transition-colors`}>
               دستورها و دسرها
             </Link>
-            <span className="text-[#FBBF24] font-black" aria-hidden="true">/</span>
-            <span className="text-[#FDE047] font-black truncate max-w-[200px]">
+            <span className={themeColors.muted} aria-hidden="true">/</span>
+            <span className={`${themeColors.primary} truncate max-w-[200px]`}>
               {recipe.nameFa}
             </span>
           </nav>

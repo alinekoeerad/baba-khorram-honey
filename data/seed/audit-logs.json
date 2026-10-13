@@ -1,5 +1,27 @@
 [
   {
+    "id": "aud_1791894848204_d47cf",
+    "userId": null,
+    "action": "TEST_FILTER_ACTION",
+    "entityType": "TestEntity",
+    "entityId": null,
+    "summary": "Test filter entry",
+    "ip": null,
+    "userAgent": null,
+    "createdAt": "2026-10-13T12:34:08.204Z"
+  },
+  {
+    "id": "aud_1791894848198_3qvwt",
+    "userId": null,
+    "action": "PASSWORD_CHANGE",
+    "entityType": "User",
+    "entityId": "u-123",
+    "summary": "User updated $1=[REDACTED] and $1=[REDACTED]",
+    "ip": "192.168.1.1",
+    "userAgent": "Mozilla/5.0",
+    "createdAt": "2026-10-13T12:34:08.198Z"
+  },
+  {
     "id": "aud_1791894159450_sbcg6",
     "userId": null,
     "action": "TEST_FILTER_ACTION",

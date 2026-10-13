@@ -19,9 +19,32 @@ import { Picture } from '@/components/ui/picture';
 import { AddToCartSlot } from '@/components/public/add-to-cart-slot';
 import { LabCertificateModal } from '@/components/public/lab-certificate-modal';
 import { MobileStickyBuyBar } from '@/components/public/mobile-sticky-buy-bar';
-import { toPersianDigits } from '@/lib/domain-utils';
+import { toPersianDigits, getCardThemeForSlug } from '@/lib/domain-utils';
 import { AlertTriangle, ShieldCheck, Truck, Sparkles, CheckCircle2 } from 'lucide-react';
 import type { ProductCardViewModel } from '@/server/queries/products';
+
+const THEME_BREADCRUMB_COLORS: Record<string, { primary: string; hover: string; muted: string }> = {
+  GREEN: {
+    primary: 'text-[#4CA849]',
+    hover: 'hover:text-[#4CA849]',
+    muted: 'text-[#4CA849]/70',
+  },
+  ORANGE: {
+    primary: 'text-[#E08B38]',
+    hover: 'hover:text-[#E08B38]',
+    muted: 'text-[#E08B38]/70',
+  },
+  YELLOW: {
+    primary: 'text-[#F5A623]',
+    hover: 'hover:text-[#F5A623]',
+    muted: 'text-[#F5A623]/70',
+  },
+  BURGUNDY: {
+    primary: 'text-[#9E3556]',
+    hover: 'hover:text-[#9E3556]',
+    muted: 'text-[#9E3556]/70',
+  },
+};
 
 export interface ProductDetailViewProps {
   product: {
@@ -66,23 +89,27 @@ export function ProductDetailView({
     { label: 'رنگ عسل', value: product.color },
   ].filter((chip) => chip.value && chip.value.trim().length > 0);
 
+  const rawTheme = (product.cardTheme || 'AUTO').toUpperCase();
+  const resolvedThemeKey = rawTheme === 'AUTO' || !THEME_BREADCRUMB_COLORS[rawTheme] ? getCardThemeForSlug(product.slug) : rawTheme;
+  const themeColors = THEME_BREADCRUMB_COLORS[resolvedThemeKey] || THEME_BREADCRUMB_COLORS.YELLOW;
+
   return (
     <WoodBackground className="py-10 sm:py-16 min-h-screen">
       <Container>
-        {/* Breadcrumb Navigation */}
+        {/* Breadcrumb Navigation - Transparent with dynamic theme primary color */}
         <nav
           aria-label="مسیر راهنما"
-          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-xs sm:text-sm font-bold text-white mb-8 shadow-md"
+          className="flex items-center gap-2 text-xs sm:text-sm font-black mb-8 bg-transparent"
         >
-          <Link href="/" className="text-white hover:text-[#FBBF24] transition-colors underline-offset-4 hover:underline">
+          <Link href="/" className={`${themeColors.primary} hover:underline underline-offset-4 transition-colors`}>
             صفحه اصلی
           </Link>
-          <span className="text-[#FBBF24] font-black" aria-hidden="true">/</span>
-          <Link href="/products" className="text-white hover:text-[#FBBF24] transition-colors underline-offset-4 hover:underline">
+          <span className={themeColors.muted} aria-hidden="true">/</span>
+          <Link href="/products" className={`${themeColors.primary} hover:underline underline-offset-4 transition-colors`}>
             محصولات
           </Link>
-          <span className="text-[#FBBF24] font-black" aria-hidden="true">/</span>
-          <span className="text-[#FDE047] font-black truncate max-w-[240px]">
+          <span className={themeColors.muted} aria-hidden="true">/</span>
+          <span className={`${themeColors.primary} truncate max-w-[240px]`}>
             {product.nameFa}
           </span>
         </nav>

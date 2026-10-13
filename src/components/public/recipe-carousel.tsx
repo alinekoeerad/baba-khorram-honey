@@ -174,7 +174,7 @@ export function RecipeCarousel({
               >
                 <Link href={`/recipes/${r.slug}`} className="flex flex-col h-full">
                   {/* Image Wrap - Balanced aspect ratio with clean borders */}
-                  <div className="w-full aspect-[4/3] overflow-hidden bg-[#2B1B10] shrink-0 relative">
+                  <div className="w-full aspect-[4/3] overflow-hidden shrink-0 relative">
                     <img
                       src={r.imageUrl || `/images/recipe-${((idx % 6) + 1)}.jpg`}
                       alt={r.title}

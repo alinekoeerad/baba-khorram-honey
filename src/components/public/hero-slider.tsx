@@ -107,23 +107,25 @@ export function HeroSlider({
         })}
       </div>
 
-      {/* Warm Golden/Dark Amber Gradient Overlay */}
-      <div
-        className="absolute inset-0 z-10 bg-gradient-to-b from-[#140a05]/65 via-[#140a05]/75 to-[#140a05]/90 pointer-events-none"
-        aria-hidden="true"
-      />
-
       {/* Hero Content (Strictly Title, Subtitle, and Two Primary Buttons) */}
       <div className="relative z-20 max-w-4xl mx-auto text-white space-y-6 sm:space-y-8">
         <h1
           id="hero-heading"
-          className="text-3xl sm:text-5xl lg:text-7xl font-black text-white leading-tight tracking-tight drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]"
+          className="text-3xl sm:text-5xl lg:text-7xl font-black text-white leading-tight tracking-tight"
+          style={{
+            textShadow: '2px 2px 4px rgba(0,0,0,0.85), 0 0 16px rgba(0,0,0,0.7)',
+          }}
         >
           {title}
         </h1>
 
         {subtitle && (
-          <p className="text-base sm:text-xl lg:text-2xl text-[#FEF3C7] max-w-2xl mx-auto leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)] font-bold">
+          <p
+            className="text-base sm:text-xl lg:text-2xl text-white max-w-2xl mx-auto leading-relaxed font-bold"
+            style={{
+              textShadow: '2px 2px 4px rgba(0,0,0,0.85), 0 0 10px rgba(0,0,0,0.6)',
+            }}
+          >
             {subtitle}
           </p>
         )}
