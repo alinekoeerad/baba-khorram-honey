@@ -40,14 +40,27 @@ export function ContactView({
   tileUrl,
 }: ContactViewProps) {
   return (
-    <WoodBackground className="py-12 sm:py-20 min-h-screen">
+    <WoodBackground className="py-12 sm:py-20 min-h-screen text-[#3F2A1D]">
       <Container size="default" className="space-y-12 sm:space-y-16">
         {/* Page Header */}
-        <div className="text-center space-y-4 max-w-2xl mx-auto">
-          <h1 className="text-3xl sm:text-5xl font-black text-[#FFFBEB] leading-tight drop-shadow-md">
+        <div className="text-center space-y-3 max-w-2xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#FAF5EB] border border-[#D9A441]/40 text-[#C58A2A] text-xs font-black shadow-xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#D9A441] animate-pulse" aria-hidden="true" />
+            <span>دفتر مرکزی و کارگاه عسل طبیعی</span>
+          </div>
+
+          <h1 className="text-3xl sm:text-5xl font-black text-[#3F2A1D] leading-tight tracking-tight">
             تماس با ما
           </h1>
-          <p className="text-sm sm:text-base text-[#E5D5C5] leading-relaxed">
+
+          {/* Honeycomb / Diamond Accent Divider */}
+          <div className="flex items-center justify-center gap-2 pt-1 pb-1" aria-hidden="true">
+            <span className="h-0.5 w-10 sm:w-16 bg-gradient-to-l from-[#D9A441] to-transparent" />
+            <span className="w-2 h-2 rotate-45 bg-[#D9A441]" />
+            <span className="h-0.5 w-10 sm:w-16 bg-gradient-to-r from-[#D9A441] to-transparent" />
+          </div>
+
+          <p className="text-sm sm:text-base text-[#5C3A21] leading-relaxed font-semibold">
             ارتباط مستقیم با دفتر مرکزی و کارگاه عسل طبیعی باباخُرم؛ پاسخگوی سؤالات، مشاوره‌های تغذیه‌ای و پیگیری سفارش‌های شما هستیم.
           </p>
         </div>
@@ -55,47 +68,47 @@ export function ContactView({
         {/* Info Cards Grid: Warm Ivory Heritage Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-right">
           {/* 1. Address Card */}
-          <div className="bg-white border border-[#FDE68A] p-6 sm:p-7 space-y-3.5 shadow-md rounded-none">
-            <div className="w-11 h-11 rounded-full bg-[#FEF3C7] border border-[#F59E0B] flex items-center justify-center text-[#D97706] shadow-2xs">
+          <div className="bg-[#FAF6EE] border border-[#DFD3C3] p-6 sm:p-7 space-y-3.5 shadow-md rounded-none">
+            <div className="w-11 h-11 rounded-full bg-[#FEF3C7] border border-[#D9A441] flex items-center justify-center text-[#B45309] shadow-2xs">
               <MapPin className="w-5 h-5" />
             </div>
-            <h2 className="text-lg font-black text-[#2B2017]">نشانی دفتر مرکزی</h2>
-            <p className="text-xs sm:text-sm text-[#5C5248] leading-relaxed font-medium">
+            <h2 className="text-lg font-black text-[#3F2A1D]">نشانی دفتر مرکزی</h2>
+            <p className="text-xs sm:text-sm text-[#5C3A21] leading-relaxed font-medium">
               {address}
             </p>
           </div>
 
           {/* 2. Working Hours Card */}
-          <div className="bg-white border border-[#FDE68A] p-6 sm:p-7 space-y-3.5 shadow-md rounded-none">
-            <div className="w-11 h-11 rounded-full bg-[#FEF3C7] border border-[#F59E0B] flex items-center justify-center text-[#D97706] shadow-2xs">
+          <div className="bg-[#FAF6EE] border border-[#DFD3C3] p-6 sm:p-7 space-y-3.5 shadow-md rounded-none">
+            <div className="w-11 h-11 rounded-full bg-[#FEF3C7] border border-[#D9A441] flex items-center justify-center text-[#B45309] shadow-2xs">
               <Clock className="w-5 h-5" />
             </div>
-            <h2 className="text-lg font-black text-[#2B2017]">ساعت کاری و پاسخگویی</h2>
+            <h2 className="text-lg font-black text-[#3F2A1D]">ساعت کاری و پاسخگویی</h2>
             <p className="text-xs sm:text-sm text-[#5C5248] leading-relaxed font-medium">
               {workingHours}
             </p>
           </div>
 
           {/* 3. Direct Contact Channels */}
-          <div className="bg-white border border-[#FDE68A] p-6 sm:p-7 space-y-3.5 shadow-md rounded-none">
-            <div className="w-11 h-11 rounded-full bg-[#FEF3C7] border border-[#F59E0B] flex items-center justify-center text-[#D97706] shadow-2xs">
+          <div className="bg-[#FAF6EE] border border-[#DFD3C3] p-6 sm:p-7 space-y-3.5 shadow-md rounded-none">
+            <div className="w-11 h-11 rounded-full bg-[#FEF3C7] border border-[#D9A441] flex items-center justify-center text-[#B45309] shadow-2xs">
               <Phone className="w-5 h-5" />
             </div>
-            <h2 className="text-lg font-black text-[#2B2017]">راه‌های ارتباطی</h2>
-            <div className="space-y-2 pt-1 divide-y divide-[#EFE9E0]">
+            <h2 className="text-lg font-black text-[#3F2A1D]">راه‌های ارتباطی</h2>
+            <div className="space-y-2 pt-1 divide-y divide-[#DFD3C3]">
               {channels.map((ch) => (
                 <a
                   key={ch.id}
                   href={ch.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between text-xs sm:text-sm text-[#332115] hover:text-[#D97706] transition-colors pt-2 group font-medium"
+                  className="flex items-center justify-between text-xs sm:text-sm text-[#3F2A1D] hover:text-[#C58A2A] transition-colors pt-2 group font-medium"
                 >
                   <div className="flex items-center gap-2">
-                    <ChannelIcon type={ch.type} className="w-4 h-4 text-[#D97706]" />
-                    <span className="font-bold text-[#2B2017]">{ch.label || ch.type}:</span>
+                    <ChannelIcon type={ch.type} className="w-4 h-4 text-[#C58A2A]" />
+                    <span className="font-bold text-[#3F2A1D] group-hover:text-[#C58A2A]">{ch.label || ch.type}:</span>
                   </div>
-                  <div className="flex items-center gap-1 font-mono text-xs text-[#786455] group-hover:text-[#D97706]" dir="ltr">
+                  <div className="flex items-center gap-1 font-mono text-xs text-[#5C3A21] group-hover:text-[#C58A2A]" dir="ltr">
                     <span>{ch.value}</span>
                     <ExternalLink className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100" />
                   </div>
