@@ -9,7 +9,10 @@ import React, { useState } from 'react';
 import { WoodBackground } from '@/components/ui/wood-background';
 import { Container } from '@/components/ui/container';
 import { PillButton } from '@/components/ui/pill-button';
-import { Copy, Check, ExternalLink, Clock, AlertCircle } from 'lucide-react';
+import { Copy, Check, ExternalLink, Clock, Share2 } from 'lucide-react';
+import { copyTextSync, copyTextToClipboard, isIosDevice, buildSmsUri } from '@/lib/clipboard';
+import { buildChannelOrderUrl } from '@/lib/contact-channels';
+import { SmartHandoffPanel } from './smart-handoff-panel';
 import type { ChannelType } from '@prisma/client';
 
 export interface OrderShareViewProps {
@@ -29,6 +32,7 @@ const CHANNEL_NAMES: Record<ChannelType, string> = {
   BALE: 'بله',
   RUBIKA: 'روبیکا',
   INSTAGRAM: 'اینستاگرام',
+  YOUTUBE: 'یوتیوب',
 };
 
 export function OrderShareView({
@@ -40,26 +44,60 @@ export function OrderShareView({
   expiresAt,
 }: OrderShareViewProps) {
   const [copied, setCopied] = useState(false);
+  const [canShare, setCanShare] = useState(false);
+
+  React.useEffect(() => {
+    if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
+      setCanShare(true);
+    }
+  }, []);
+
+  const handleShare = async () => {
+    if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
+      try {
+        await navigator.share({
+          title: `سفارش ${orderCode}`,
+          text: messageText,
+        });
+      } catch {}
+    }
+  };
+
+  const isIranianMessenger =
+    channelType === 'EITAA' ||
+    channelType === 'BALE' ||
+    channelType === 'RUBIKA';
 
   const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(messageText);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 3000);
-    } catch {
-      // Fallback for older browsers
-      const textarea = document.createElement('textarea');
-      textarea.value = messageText;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
+    copyTextSync(messageText);
+    const success = await copyTextToClipboard(messageText);
+    if (success) {
       setCopied(true);
       setTimeout(() => setCopied(false), 3000);
     }
   };
 
+  // Compute platform-aware direct URL with pre-filled text parameter
+  const getComputedDirectUrl = () => {
+    return buildChannelOrderUrl(channelType, channelValue, messageText, {
+      isIos: isIosDevice(),
+    });
+  };
+
+  const computedUrl = getComputedDirectUrl();
   const channelName = CHANNEL_NAMES[channelType] || 'پیام‌رسان';
+
+  const handleOpenChannel = (e?: React.MouseEvent) => {
+    // 1. Dual-Safety: Synchronously copy messageText to clipboard first
+    copyTextSync(messageText);
+    copyTextToClipboard(messageText);
+    setCopied(true);
+
+    // 2. Dual-Safety: Synchronous navigation immediately without awaiting
+    if (computedUrl && computedUrl !== '#') {
+      window.location.href = computedUrl;
+    }
+  };
 
   return (
     <WoodBackground className="py-12 sm:py-20 min-h-screen">
@@ -83,6 +121,8 @@ export function OrderShareView({
           <Clock className="w-4 h-4 text-[#D97706] shrink-0" />
           <span>اعتبار این صفحه موقت بوده و تا ۳۰ دقیقه پس از صدور منقضی خواهد شد.</span>
         </div>
+
+
 
         {/* Order Message Box: Warm Ivory Artisan Sheet */}
         <div className="bg-white border border-[#FDE68A] p-5 sm:p-6 space-y-4 shadow-xl rounded-none text-right">
@@ -115,29 +155,70 @@ export function OrderShareView({
           </pre>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-          {directUrl && directUrl !== '#' && (
-            <a
-              href={directUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-[#15803D] hover:bg-[#166534] text-white font-black text-sm sm:text-base shadow-lg transition-all"
-            >
-              <ExternalLink className="w-5 h-5" />
-              <span>ارسال در {channelName}</span>
-            </a>
-          )}
+        {/* Action Buttons: Smart Handoff for Eitaa/Bale/Rubika vs Direct Prefill for WhatsApp/Telegram/SMS */}
+        {isIranianMessenger ? (
+          <div className="space-y-4">
+            <SmartHandoffPanel
+              orderCode={orderCode}
+              messageText={messageText}
+              channelType={channelType}
+              channelValue={channelValue}
+              channelLabel={channelName}
+              directUrl={computedUrl}
+            />
 
-          <PillButton
-            variant="gold"
-            size="lg"
-            onClick={handleCopy}
-            className="w-full sm:w-auto justify-center font-black"
-          >
-            {copied ? 'متن کپی شد' : 'کپی مجدد متن سفارش'}
-          </PillButton>
-        </div>
+            {canShare && (
+              <div className="text-center pt-2">
+                <button
+                  type="button"
+                  onClick={handleShare}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-[#D97706] hover:bg-[#B45309] text-white font-black text-sm sm:text-base shadow-lg transition-all cursor-pointer"
+                >
+                  <Share2 className="w-5 h-5" />
+                  <span>ارسال مستقیم به تمام پیام‌رسان‌ها (اشتراک‌گذاری)</span>
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+            {canShare && (
+              <button
+                type="button"
+                onClick={handleShare}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-[#D97706] hover:bg-[#B45309] text-white font-black text-sm sm:text-base shadow-lg transition-all cursor-pointer"
+              >
+                <Share2 className="w-5 h-5" />
+                <span>ارسال مستقیم به تمام پیام‌رسان‌ها (اشتراک‌گذاری)</span>
+              </button>
+            )}
+
+            {computedUrl && computedUrl !== '#' && (
+              <a
+                href={computedUrl}
+                onClick={() => {
+                  copyTextSync(messageText);
+                  copyTextToClipboard(messageText);
+                  setCopied(true);
+                }}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-[#15803D] hover:bg-[#166534] text-white font-black text-sm sm:text-base shadow-lg transition-all cursor-pointer"
+              >
+                <ExternalLink className="w-5 h-5" />
+                <span>ارسال در {channelName}</span>
+              </a>
+            )}
+
+
+            <PillButton
+              variant="gold"
+              size="lg"
+              onClick={handleCopy}
+              className="w-full sm:w-auto justify-center font-black"
+            >
+              {copied ? 'متن کپی شد' : 'کپی مجدد متن سفارش'}
+            </PillButton>
+          </div>
+        )}
       </Container>
     </WoodBackground>
   );

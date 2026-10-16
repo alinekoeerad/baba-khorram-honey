@@ -14,7 +14,8 @@ export type ChannelType =
   | 'EITAA'
   | 'RUBIKA'
   | 'BALE'
-  | 'INSTAGRAM';
+  | 'INSTAGRAM'
+  | 'YOUTUBE';
 
 export interface ChannelTypeMeta {
   type: ChannelType;
@@ -22,6 +23,7 @@ export interface ChannelTypeMeta {
   defaultLabel: string;
   iconName: string;
   allowedOrderChannel: boolean;
+  canAcceptOrders?: boolean;
   orderChannelHintFa?: string;
   placeholderFa: string;
   example: string;
@@ -89,9 +91,21 @@ export const CHANNEL_TYPES_META: Record<ChannelType, ChannelTypeMeta> = {
     defaultLabel: 'اینستاگرام',
     iconName: 'instagram',
     allowedOrderChannel: false,
+    canAcceptOrders: false,
     orderChannelHintFa: 'اینستاگرام امکان دریافت خودکار پیش‌فاکتور یا سفارش را ندارد.',
     placeholderFa: 'نام کاربری بدون @',
     example: 'babakhorram_honey',
+  },
+  YOUTUBE: {
+    type: 'YOUTUBE',
+    titleFa: 'یوتیوب',
+    defaultLabel: 'کانال یوتیوب',
+    iconName: 'youtube',
+    allowedOrderChannel: false,
+    canAcceptOrders: false,
+    orderChannelHintFa: 'یوتیوب امکان دریافت سفارش را ندارد.',
+    placeholderFa: 'نام کاربری کانال (مثال: baba.khoram)',
+    example: 'baba.khoram',
   },
 };
 
@@ -100,6 +114,9 @@ export const CHANNEL_TYPES_META: Record<ChannelType, ChannelTypeMeta> = {
  */
 export function normalizeChannelValue(type: ChannelType, rawValue: string): string {
   let val = rawValue.trim();
+  if (type === 'YOUTUBE') {
+    val = val.replace(/^(https?:\/\/)?(www\.)?youtube\.com\/(@)?/i, '');
+  }
   // Strip leading @ for social handles
   if (val.startsWith('@')) {
     val = val.substring(1);
@@ -126,12 +143,12 @@ export function validateChannel(
     return { isValid: false, normalizedValue: '', errorFa: 'مقدار کانال ارتباطی الزامی است.' };
   }
 
-  // Addendum A2 rule: INSTAGRAM can never accept orders
-  if (type === 'INSTAGRAM' && acceptsOrders) {
+  // Addendum A2 rule: INSTAGRAM and YOUTUBE can never accept orders
+  if ((type === 'INSTAGRAM' || type === 'YOUTUBE') && acceptsOrders) {
     return {
       isValid: false,
       normalizedValue: value,
-      errorFa: 'اینستاگرام نمی‌تواند به عنوان کانال دریافت سفارش فعال شود.',
+      errorFa: `${CHANNEL_TYPES_META[type].titleFa} نمی‌تواند به عنوان کانال دریافت سفارش فعال شود.`,
     };
   }
 
@@ -210,16 +227,95 @@ export function validateChannel(
       return { isValid: true, normalizedValue: value };
     }
 
+    case 'YOUTUBE': {
+      if (!/^[A-Za-z0-9_.-]{3,50}$/.test(value)) {
+        return {
+          isValid: false,
+          normalizedValue: value,
+          errorFa: 'شناسه کانال یوتیوب باید ۳ تا ۵۰ نویسه شامل حروف انگلیسی، ارقام، نقطه، خط تیره و زیرخط باشد.',
+        };
+      }
+      return { isValid: true, normalizedValue: value };
+    }
+
     default:
       return { isValid: true, normalizedValue: value };
   }
 }
 
 /**
+ * Builds the pre-filled order deep-link URL for messengers and SMS with URL-encoded orderText.
+ */
+export function buildChannelOrderUrl(
+  type: ChannelType,
+  rawValue: string,
+  orderText: string,
+  options?: { isIos?: boolean }
+): string {
+  const encodedText = encodeURIComponent(orderText);
+  const value = normalizeChannelValue(type, rawValue);
+
+  switch (type) {
+    case 'PHONE': {
+      const cleanPhone = value.replace(/[^0-9+]/g, '');
+      const separator = options?.isIos ? '&' : '?';
+      return `sms:${cleanPhone}${separator}body=${encodedText}`;
+    }
+    case 'WHATSAPP': {
+      let cleanPhone = value.replace(/[^0-9]/g, '');
+      if (cleanPhone.startsWith('00')) {
+        cleanPhone = cleanPhone.substring(2);
+      } else if (cleanPhone.startsWith('0')) {
+        cleanPhone = '98' + cleanPhone.substring(1);
+      } else if (!cleanPhone.startsWith('98') && cleanPhone.length === 10) {
+        cleanPhone = '98' + cleanPhone;
+      }
+      return `https://wa.me/${cleanPhone}?text=${encodedText}`;
+    }
+    case 'TELEGRAM': {
+      const cleanUsername = value.replace(/^@/, '').trim();
+      return `https://t.me/${cleanUsername}?text=${encodedText}`;
+    }
+    case 'EITAA': {
+      const cleanUsername = value.replace(/^@/, '').trim();
+      return `https://eitaa.com/${cleanUsername}?text=${encodedText}`;
+    }
+    case 'BALE': {
+      const cleanUsername = value.replace(/^@/, '').trim();
+      return `https://ble.ir/${cleanUsername}?text=${encodedText}`;
+    }
+    case 'RUBIKA': {
+      const cleanUsername = value.replace(/^@/, '').trim();
+      return `https://rubika.ir/${cleanUsername}?text=${encodedText}`;
+    }
+    case 'INSTAGRAM':
+      return `https://instagram.com/${value}`;
+    case 'YOUTUBE': {
+      let clean = value;
+      clean = clean.replace(/^(https?:\/\/)?(www\.)?youtube\.com\/(@)?/i, '');
+      if (clean.startsWith('@')) clean = clean.substring(1);
+      return `https://youtube.com/@${clean}`;
+    }
+    default:
+      return '#';
+  }
+}
+
+/**
  * Builds the canonical public URL for a given contact channel
  * Constructed strictly server-side using the verified pattern table.
+ * If orderText is provided, returns the prefilled order deep-link.
  */
-export function buildChannelUrl(type: ChannelType, rawValue: string): string {
+export function buildChannelUrl(
+  type: ChannelType,
+  rawValue: string,
+  orderText?: string,
+  options?: { isIos?: boolean }
+): string {
+  if (orderText) {
+    return buildChannelOrderUrl(type, rawValue, orderText, options);
+  }
+
   const value = normalizeChannelValue(type, rawValue);
 
   switch (type) {
@@ -239,7 +335,17 @@ export function buildChannelUrl(type: ChannelType, rawValue: string): string {
       return `https://ble.ir/${value}`;
     case 'INSTAGRAM':
       return `https://instagram.com/${value}`;
+    case 'YOUTUBE': {
+      let clean = value;
+      clean = clean.replace(/^(https?:\/\/)?(www\.)?youtube\.com\/(@)?/i, '');
+      if (clean.startsWith('@')) clean = clean.substring(1);
+      return `https://youtube.com/@${clean}`;
+    }
     default:
       return '#';
   }
 }
+
+// Re-export order link generator and clipboard helpers for centralized access
+export { buildChannelOrderLink } from './order-builder';
+export { copyTextToClipboard, isIosDevice, buildSmsUri } from './clipboard';

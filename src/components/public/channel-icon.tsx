@@ -1,6 +1,6 @@
 import React from 'react';
 import { ChannelType } from '@/lib/contact-channels';
-import { Phone, MessageCircle, Send, Instagram } from 'lucide-react';
+import { Phone, MessageCircle, Send, Instagram, Youtube } from 'lucide-react';
 
 interface ChannelIconProps {
   type: ChannelType;
@@ -17,6 +17,8 @@ export function ChannelIcon({ type, className = 'w-4 h-4' }: ChannelIconProps) {
       return <Send className={className} />;
     case 'INSTAGRAM':
       return <Instagram className={className} />;
+    case 'YOUTUBE':
+      return <Youtube className={className} />;
     case 'EITAA':
       return (
         <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">

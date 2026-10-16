@@ -39,6 +39,7 @@ export interface FreshCartLineItem {
     blurDataUrl?: string | null;
   } | null;
   availableOptions: Array<{ id: string; label: string }>;
+  options?: Array<{ id: string; label: string; isAvailable: boolean }>;
 }
 
 export interface CartLookupResult {
@@ -123,7 +124,20 @@ export async function getFreshCartItems(
       hasUnavailableItems = true;
     }
 
-    const availableOpts = (prod.options || [])
+    const rawOptions = (prod.options && prod.options.length > 0)
+      ? prod.options
+      : [
+          { id: `${prod.id}_1000g`, label: 'یک کیلوگرم (ظرف شیشه‌ای)', isAvailable: prod.isAvailable },
+          { id: `${prod.id}_500g`, label: 'نیم کیلوگرم (ظرف شیشه‌ای)', isAvailable: prod.isAvailable },
+        ];
+
+    const allOptions = rawOptions.map((o: any) => ({
+      id: o.id,
+      label: o.label,
+      isAvailable: Boolean(o.isAvailable && prod.isAvailable),
+    }));
+
+    const availableOpts = allOptions
       .filter((o: any) => o.isAvailable)
       .map((o: any) => ({ id: o.id, label: o.label }));
 
@@ -155,6 +169,7 @@ export async function getFreshCartItems(
       optionLabel: opt.label,
       mainImage: imageAsset,
       availableOptions: availableOpts,
+      options: allOptions,
     };
   });
 

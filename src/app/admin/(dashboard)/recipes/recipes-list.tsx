@@ -8,11 +8,17 @@
  * - [ADM-UI-02] Unified AdminBadge status matrix.
  */
 
-import React, { useState, useTransition } from 'react';
+import React, { useState, useEffect, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { uiStringsFa } from '@/content/ui-strings.fa';
-import { duplicateRecipeAction, deleteRecipeAction, updateRecipeAction } from '@/server/actions/recipe-actions';
+import {
+  duplicateRecipeAction,
+  deleteRecipeAction,
+  updateRecipeAction,
+  bulkDeleteRecipesAction,
+  bulkUpdateRecipeStatusAction,
+} from '@/server/actions/recipe-actions';
 import { useToast } from '@/components/admin/toast-provider';
 import { ConfirmModal } from '@/components/admin/confirm-modal';
 import { AdminBadge } from '@/components/admin/admin-badge';
@@ -49,6 +55,11 @@ export function RecipesList({ initialRecipes, categories, totalCount }: RecipesL
   const [isPending, startTransition] = useTransition();
 
   const [recipes, setRecipes] = useState<RecipeListItem[]>(initialRecipes);
+
+  useEffect(() => {
+    setRecipes(initialRecipes);
+  }, [initialRecipes]);
+
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
@@ -64,7 +75,14 @@ export function RecipesList({ initialRecipes, categories, totalCount }: RecipesL
 
   const filtered = recipes.filter((r) => {
     if (statusFilter && r.status !== statusFilter) return false;
-    if (categoryFilter && !r.categoryIds?.includes(`cat_${categoryFilter}`) && !r.categories?.some((c: any) => c.slug === categoryFilter)) return false;
+    if (categoryFilter) {
+      const matchCat =
+        (r as any).categorySlug === categoryFilter ||
+        r.categoryIds?.includes(categoryFilter) ||
+        r.categoryIds?.includes(`cat_${categoryFilter}`) ||
+        r.categories?.some((c: any) => c.slug === categoryFilter || c.category?.slug === categoryFilter);
+      if (!matchCat) return false;
+    }
     if (search) {
       const q = search.toLowerCase();
       const match =
@@ -104,16 +122,16 @@ export function RecipesList({ initialRecipes, categories, totalCount }: RecipesL
     if (ids.length === 0) return;
 
     startTransition(async () => {
-      let updatedCount = 0;
-      for (const id of ids) {
-        const res = await updateRecipeAction({ id, input: { status: newStatus } });
-        if (res.success) updatedCount++;
+      const res = await bulkUpdateRecipeStatusAction({ ids, status: newStatus });
+      if (res.success) {
+        setRecipes((prev) =>
+          prev.map((r) => (selectedIds.has(r.id) ? { ...r, status: newStatus } : r))
+        );
+        setSelectedIds(new Set());
+        toast.success(`${res.data?.count ?? ids.length} دستور به وضعیت «${newStatus === 'ARCHIVED' ? 'بایگانی‌شده' : 'منتشرشده'}» تغییر یافت.`);
+      } else {
+        toast.error(res.error || 'خطا در تغییر وضعیت دسته‌ای');
       }
-      setRecipes((prev) =>
-        prev.map((r) => (selectedIds.has(r.id) ? { ...r, status: newStatus } : r))
-      );
-      setSelectedIds(new Set());
-      toast.success(`${updatedCount} دستور به وضعیت «${newStatus === 'ARCHIVED' ? 'بایگانی‌شده' : 'منتشرشده'}» تغییر یافت.`);
     });
   };
 
@@ -121,6 +139,7 @@ export function RecipesList({ initialRecipes, categories, totalCount }: RecipesL
     startTransition(async () => {
       const res = await duplicateRecipeAction(recipe.id);
       if (res.success && res.data) {
+        setRecipes((prev) => [res.data, ...prev]);
         toast.success(uiStringsFa.adminRecipes.duplicatedSuccess);
         router.refresh();
       } else {
@@ -133,15 +152,15 @@ export function RecipesList({ initialRecipes, categories, totalCount }: RecipesL
     if (confirmDelete.isBulk) {
       const idsToDelete = Array.from(selectedIds);
       startTransition(async () => {
-        let deletedCount = 0;
-        for (const id of idsToDelete) {
-          const res = await deleteRecipeAction(id);
-          if (res.success) deletedCount++;
+        const res = await bulkDeleteRecipesAction(idsToDelete);
+        if (res.success) {
+          setRecipes((prev) => prev.filter((r) => !selectedIds.has(r.id)));
+          setSelectedIds(new Set());
+          setConfirmDelete({ isOpen: false });
+          toast.success(`${res.data?.count ?? idsToDelete.length} دستور با موفقیت حذف گردید.`);
+        } else {
+          toast.error(res.error || 'خطا در حذف دسته‌ای');
         }
-        setRecipes((prev) => prev.filter((r) => !selectedIds.has(r.id)));
-        setSelectedIds(new Set());
-        setConfirmDelete({ isOpen: false });
-        toast.success(`${deletedCount} دستور با موفقیت حذف گردید.`);
       });
       return;
     }
@@ -342,14 +361,40 @@ export function RecipesList({ initialRecipes, categories, totalCount }: RecipesL
                       />
                     </td>
                     <td className="py-3 px-4 font-bold text-[#332115]">
-                      <Link href={`/admin/recipes/${r.id}`} className="hover:text-[#D97706]">
-                        {r.nameFa}
-                      </Link>
-                      {r.isFeatured && (
-                        <span className="ms-1.5 px-1 py-0.5 text-[9px] bg-[#FEF3C7] text-[#C86A00] font-bold">
-                          ویژه
-                        </span>
-                      )}
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <Link href={`/admin/recipes/${r.id}`} className="hover:text-[#D97706]">
+                          {r.nameFa}
+                        </Link>
+                        {r.isFeatured && (
+                          <span className="px-1 py-0.5 text-[9px] bg-[#FEF3C7] text-[#C86A00] font-bold">
+                            ویژه
+                          </span>
+                        )}
+                      </div>
+                      {/* Assigned Category Badges */}
+                      {(() => {
+                        const assigned = categories.filter((c) =>
+                          r.categoryIds?.includes(c.id) ||
+                          r.categoryIds?.includes(c.slug) ||
+                          r.categoryIds?.includes(`cat_${c.slug}`) ||
+                          (r as any).categorySlug === c.slug ||
+                          r.categories?.some((rc: any) => rc.id === c.id || rc.slug === c.slug || rc.category?.id === c.id || rc.category?.slug === c.slug)
+                        );
+                        return (
+                          <div className="flex flex-wrap items-center gap-1 mt-1 font-normal">
+                            {assigned.map((c) => (
+                              <span key={c.id} className="px-1.5 py-0.5 bg-stone-100 text-stone-600 text-[10px] border border-stone-200">
+                                {c.name}
+                              </span>
+                            ))}
+                            {r.status === 'PUBLISHED' && assigned.length === 0 && (
+                              <span className="px-1.5 py-0.5 bg-amber-50 text-amber-800 text-[10px] border border-amber-300">
+                                بدون دسته‌بندی فعال
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })()}
                     </td>
                     <td className="py-3 px-4 text-[#5C5248] font-mono text-[11px]" dir="ltr">
                       {r.nameOriginal || r.slug}

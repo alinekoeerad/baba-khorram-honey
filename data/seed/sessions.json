@@ -18,5 +18,15 @@
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
     "createdAt": "2026-10-12T22:37:38.447Z",
     "updatedAt": "2026-10-12T22:37:38.447Z"
+  },
+  {
+    "id": "sess_1791987758280_xjc5h",
+    "userId": "usr_1791465544331_so4k7",
+    "token": "3028b86c4a60f0fc443d6851390882607bbdd41b75965a9940b415a82a3e6b44",
+    "expiresAt": "2026-10-21T14:22:38.279Z",
+    "ipAddress": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+    "createdAt": "2026-10-14T14:22:38.280Z",
+    "updatedAt": "2026-10-14T14:22:38.280Z"
   }
 ]

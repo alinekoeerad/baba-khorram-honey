@@ -143,7 +143,10 @@ export default async function RecipeDetailPage({ params }: RecipePageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <RecipeDetailView recipe={recipe} relatedRecipes={relatedRecipes} />
+      <RecipeDetailView
+        recipe={recipe}
+        relatedRecipes={relatedRecipes}
+      />
     </>
   );
 }

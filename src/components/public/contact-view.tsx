@@ -19,23 +19,23 @@ import type { PublicChannelItem } from '@/server/queries/settings';
 import { MapPin, Clock, Phone, ExternalLink } from 'lucide-react';
 
 export interface ContactViewProps {
-  siteNameFa: string;
-  address: string;
-  workingHours: string;
-  latitude: number;
-  longitude: number;
-  zoom: number;
+  siteNameFa?: string;
+  address?: string;
+  workingHours?: string;
+  latitude?: number;
+  longitude?: number;
+  zoom?: number;
   channels: PublicChannelItem[];
   tileUrl?: string;
 }
 
 export function ContactView({
-  siteNameFa,
-  address,
-  workingHours,
-  latitude,
-  longitude,
-  zoom,
+  siteNameFa = 'عسل باباخُرم',
+  address = 'کرج، جهانشهر، بلوار مولانا',
+  workingHours = 'همه‌روزه از ساعت ۹:۰۰ الی ۲۱:۰۰',
+  latitude = 35.8415,
+  longitude = 50.9850,
+  zoom = 15,
   channels,
   tileUrl,
 }: ContactViewProps) {

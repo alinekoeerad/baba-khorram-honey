@@ -83,6 +83,42 @@ export const TEMPLATE_REGISTRY: Record<string, TemplateDefinition> = {
     thumbnail: '/images/recipe-2.jpg',
     defaultBackground: 'NONE',
   },
+  'heritage-default': {
+    id: 'heritage-default',
+    name: 'اصالت، میراث و فرآیند تولید عسل',
+    sectionType: 'ARTISAN_HERITAGE',
+    description: 'معرفی اصالت زنبورداری سنتی، استانداردهای آزمایشگاهی و فرآیند برداشت طبیعی',
+    supportedFields: ['title', 'subtitle', 'features'],
+    thumbnail: '/images/beekeeping.jpg',
+    defaultBackground: 'NONE',
+  },
+  'honey-finder-default': {
+    id: 'honey-finder-default',
+    name: 'راهنمای هوشمند انتخاب عسل',
+    sectionType: 'HONEY_FINDER',
+    description: 'ابزار تعاملی پیشنهاد عسل بر اساس طبع، فواید درمانی و کاربرد مورد نظر کاربر',
+    supportedFields: ['title', 'subtitle'],
+    thumbnail: '/images/honey-jar.jpg',
+    defaultBackground: 'NONE',
+  },
+  'testimonials-default': {
+    id: 'testimonials-default',
+    name: 'دیدگاه‌ها و رضایت مشتریان',
+    sectionType: 'TESTIMONIALS',
+    description: 'نمایش تجربیات و بازخوردهای خریداران واقعی از کیفیت و خلوص عسل باباخُرم',
+    supportedFields: ['title', 'subtitle', 'items'],
+    thumbnail: '/images/hero-1.jpg',
+    defaultBackground: 'NONE',
+  },
+  'faq-default': {
+    id: 'faq-default',
+    name: 'پرسش‌های متداول مشتریان',
+    sectionType: 'FAQ_SECTION',
+    description: 'پاسخ به سوالات رایج درباره شکرک زدن، روش مصرف و ارسال سفارشات',
+    supportedFields: ['title', 'subtitle', 'items'],
+    thumbnail: '/images/blog-honey.jpg',
+    defaultBackground: 'NONE',
+  },
 };
 
 // Aliases for equivalent field names (e.g. title <-> heading)

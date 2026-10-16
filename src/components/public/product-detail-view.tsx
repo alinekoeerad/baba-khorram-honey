@@ -4,10 +4,10 @@
  * ProductDetailView Component
  *
  * Implements:
- * - [UX-01] Desktop 2-Column Responsive Layout (Right: Gallery & Specs, Left: Sticky Purchasing Sidebar).
- * - [UX-02] Mobile Sticky Buy-Bar.
- * - [SEC-01] Laboratory Purity & Sucrose Certificate Modal.
- * - [UI-01] Color Palette Harmonization: Warm Ivory & Amber text over wood (no neon green).
+ * - Desktop 2-Column Responsive Layout (Right: Gallery & Specs, Left: Sticky Purchasing Sidebar).
+ * - Mobile Sticky Buy-Bar.
+ * - Auto-scrolling Related Products Carousel.
+ * - Color Palette Harmonization: Dark contrast text over light wood.
  * - Sharp 90-degree geometric identity (rounded-none).
  */
 
@@ -17,8 +17,8 @@ import { WoodBackground } from '@/components/ui/wood-background';
 import { Container } from '@/components/ui/container';
 import { Picture } from '@/components/ui/picture';
 import { AddToCartSlot } from '@/components/public/add-to-cart-slot';
-import { LabCertificateModal } from '@/components/public/lab-certificate-modal';
 import { MobileStickyBuyBar } from '@/components/public/mobile-sticky-buy-bar';
+import { ProductCarousel } from '@/components/public/product-carousel';
 import { toPersianDigits, resolveItemCardTheme } from '@/lib/domain-utils';
 import { AlertTriangle, ShieldCheck, Truck, Sparkles, CheckCircle2 } from 'lucide-react';
 import type { ProductCardViewModel } from '@/server/queries/products';
@@ -128,9 +128,9 @@ export function ProductDetailView({
           </span>
         </nav>
 
-        {/* [UX-01] Two-Column Desktop Grid Layout */}
+        {/* Two-Column Desktop Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-          {/* RIGHT COLUMN (7 Cols): Gallery, Trust Seals, Certificate, Specs & Description */}
+          {/* RIGHT COLUMN (7 Cols): Gallery, Trust Seals, Specs & Description */}
           <div className="lg:col-span-7 space-y-8 text-right">
             {/* 1. Main High-Resolution Image (Full Jar Presentation, Zero Cropping) */}
             <div className="w-full aspect-4/3 rounded-none overflow-hidden border border-[#EFE9E0] shadow-md bg-[#FAF7F2] p-6 flex items-center justify-center relative">
@@ -202,9 +202,6 @@ export function ProductDetailView({
                 </div>
               </div>
             </div>
-
-            {/* [SEC-01] Laboratory Purity & Sucrose Certificate */}
-            <LabCertificateModal productName={product.nameFa} />
 
             {/* Nutritional Chips: Mountain Flora & Physical Characteristics */}
             {metaChips.length > 0 && (
@@ -340,10 +337,14 @@ export function ProductDetailView({
             </div>
           </div>
         </div>
-
       </Container>
 
-      {/* [UX-02] Mobile Sticky Buy-Bar */}
+      {/* Related Products Carousel */}
+      {relatedProducts && relatedProducts.length > 0 && (
+        <ProductCarousel products={relatedProducts} noBackground={true} />
+      )}
+
+      {/* Mobile Sticky Buy-Bar */}
       <MobileStickyBuyBar
         productId={product.id}
         productName={product.nameFa}

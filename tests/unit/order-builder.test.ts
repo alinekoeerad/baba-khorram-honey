@@ -85,10 +85,14 @@ describe('Order Message Builders & Link Patterns (Phase 9 Task 6/10 & Addendum A
   });
 
   describe('buildChannelOrderLink', () => {
-    it('generates valid SMS protocol link', () => {
-      const res = buildChannelOrderLink('PHONE', '09123456789', 'متن پیام');
-      expect(res.directUrl).toContain('sms:09123456789?body=');
-      expect(res.isPrefillSupported).toBe(true);
+    it('generates valid SMS protocol link (Android & iOS formats)', () => {
+      const resAndroid = buildChannelOrderLink('PHONE', '09123456789', 'متن پیام');
+      expect(resAndroid.directUrl).toContain('sms:09123456789?body=');
+      expect(resAndroid.isPrefillSupported).toBe(true);
+
+      const resIos = buildChannelOrderLink('PHONE', '09123456789', 'متن پیام', { isIos: true });
+      expect(resIos.directUrl).toContain('sms:09123456789&body=');
+      expect(resIos.isPrefillSupported).toBe(true);
     });
 
     it('generates valid WhatsApp wa.me link with international phone digits', () => {
@@ -97,16 +101,28 @@ describe('Order Message Builders & Link Patterns (Phase 9 Task 6/10 & Addendum A
       expect(res.isPrefillSupported).toBe(true);
     });
 
-    it('generates direct link and copy-then-open fallback for Telegram', () => {
+    it('generates direct link with pre-filled text parameter for Telegram', () => {
       const res = buildChannelOrderLink('TELEGRAM', '@babakhorram', 'متن پیام');
-      expect(res.directUrl).toBe('https://t.me/babakhorram');
-      expect(res.isPrefillSupported).toBe(false);
+      expect(res.directUrl).toContain('https://t.me/babakhorram?text=');
+      expect(res.isPrefillSupported).toBe(true);
     });
 
-    it('generates direct link and copy-then-open fallback for Eitaa', () => {
+    it('generates direct link with pre-filled text parameter for Eitaa', () => {
       const res = buildChannelOrderLink('EITAA', '@babakhorram', 'متن پیام');
-      expect(res.directUrl).toBe('https://eitaa.com/babakhorram');
-      expect(res.isPrefillSupported).toBe(false);
+      expect(res.directUrl).toBe('https://eitaa.com/babakhorram?text=' + encodeURIComponent('متن پیام'));
+      expect(res.isPrefillSupported).toBe(true);
+    });
+
+    it('generates direct link with pre-filled text parameter for Bale', () => {
+      const res = buildChannelOrderLink('BALE', '@babakhorram', 'متن پیام');
+      expect(res.directUrl).toBe('https://ble.ir/babakhorram?text=' + encodeURIComponent('متن پیام'));
+      expect(res.isPrefillSupported).toBe(true);
+    });
+
+    it('generates direct link with pre-filled text parameter for Rubika', () => {
+      const res = buildChannelOrderLink('RUBIKA', '@babakhorram', 'متن پیام');
+      expect(res.directUrl).toBe('https://rubika.ir/babakhorram?text=' + encodeURIComponent('متن پیام'));
+      expect(res.isPrefillSupported).toBe(true);
     });
   });
 

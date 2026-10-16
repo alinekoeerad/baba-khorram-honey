@@ -131,13 +131,14 @@ export async function updateFeedbackStatusAction(input: FeedbackStatusUpdateInpu
     };
   }
 
-  const { id, status, adminNote } = parseResult.data;
+  const { id, status, adminNote, publicReply } = parseResult.data;
 
   const updated = await db.feedback.update({
     where: { id },
     data: {
       status,
       adminNote: adminNote !== undefined ? adminNote : undefined,
+      publicReply: publicReply !== undefined ? publicReply : undefined,
     },
   });
 
@@ -154,6 +155,72 @@ export async function updateFeedbackStatusAction(input: FeedbackStatusUpdateInpu
   return {
     success: true,
     feedback: updated,
+  };
+}
+
+/**
+ * Public action: Track feedback status and read admin's public reply
+ */
+export async function trackFeedbackAction(input: import('@/server/validation/feedback-schemas').TrackFeedbackInput) {
+  let ip = '127.0.0.1';
+  try {
+    const headersList = await headers();
+    ip = headersList.get('x-forwarded-for')?.split(',')[0].trim() || '127.0.0.1';
+  } catch {}
+
+  const rateLimitKey = `feedback-track:${ip}`;
+  const rateLimitCheck = checkRateLimit(rateLimitKey, {
+    windowMs: 10 * 60 * 1000,
+    maxAttempts: 20,
+  });
+
+  if (!rateLimitCheck.success) {
+    return {
+      success: false,
+      error: 'تعداد تلاش‌های پیگیری بیش از حد مجاز است. لطفاً چند دقیقه بعد امتحان فرمایید.',
+    };
+  }
+
+  const { trackFeedbackSchema } = await import('@/server/validation/feedback-schemas');
+  const parseResult = trackFeedbackSchema.safeParse(input);
+  if (!parseResult.success) {
+    return {
+      success: false,
+      error: parseResult.error.issues[0]?.message || 'کد پیگیری یا شماره تماس نامعتبر است.',
+    };
+  }
+
+  const { trackingCode, phone } = parseResult.data;
+  const rawPhone = phone.replace(/^\+98/, '0').replace(/^9/, '09');
+
+  const record = await db.feedback.findFirst({
+    where: { trackingCode },
+  });
+
+  if (!record) {
+    return {
+      success: false,
+      error: 'پیامی با این مشخصات یافت نشد. لطفاً کد پیگیری و شماره همراه را بررسی نمایید.',
+    };
+  }
+
+  const recordPhone = record.phone.replace(/^\+98/, '0').replace(/^9/, '09');
+  if (recordPhone !== rawPhone) {
+    return {
+      success: false,
+      error: 'شماره همراه با کد پیگیری واردشده مطابقت ندارد.',
+    };
+  }
+
+  return {
+    success: true,
+    data: {
+      trackingCode: record.trackingCode,
+      status: record.status,
+      type: record.type,
+      createdAt: record.createdAt,
+      publicReply: record.publicReply || null,
+    },
   };
 }
 

@@ -73,6 +73,16 @@ export function AdminHeader({ user }: AdminHeaderProps) {
             <Menu className="w-5 h-5" />
           </button>
 
+          <Link href="/admin" className="md:hidden flex items-center gap-2">
+            <img
+              src="/images/header-logo.webp"
+              alt="عسل باباخُرم"
+              width={36}
+              height={36}
+              className="w-9 h-9 object-contain"
+            />
+          </Link>
+
           {/* Dynamic Breadcrumbs */}
           <nav aria-label="مسیر صفحه" className="hidden sm:flex items-center gap-1.5 text-xs font-bold text-stone-500">
             {breadcrumbs.map((crumb, idx) => {

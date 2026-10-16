@@ -118,6 +118,16 @@ export class ProductService {
       throw new Error(`محصولی با شناسه لاتین «${validated.slug}» از قبل وجود دارد.`);
     }
 
+    // Circular redirect loop prevention
+    try {
+      await db.slugRedirect.deleteMany({
+        where: {
+          entityType: 'PRODUCT',
+          oldSlug: validated.slug,
+        },
+      });
+    } catch {}
+
     // Compute normalized search text
     const searchText = buildProductSearchText({
       nameFa: validated.nameFa,
@@ -216,6 +226,16 @@ export class ProductService {
       if (conflict && conflict.id !== id) {
         throw new Error(`محصول دیگری با شناسه لاتین «${newSlug}» ثبت شده است.`);
       }
+
+      // Circular redirect loop prevention
+      try {
+        await db.slugRedirect.deleteMany({
+          where: {
+            entityType: 'PRODUCT',
+            oldSlug: newSlug,
+          },
+        });
+      } catch {}
 
       // Create permanent 301 redirect entry
       await db.slugRedirect.create({
@@ -405,5 +425,59 @@ export class ProductService {
     });
 
     return deleted;
+  }
+
+  /**
+   * Bulk deletes multiple products in a single operation.
+   */
+  static async bulkDeleteProducts(ids: string[], userId?: string) {
+    if (!ids || ids.length === 0) return { count: 0 };
+    const res = await db.product.deleteMany({
+      where: { id: { in: ids } },
+    });
+    const deletedCount = res?.count ?? 0;
+
+    try {
+      revalidateTag('products', 'max');
+      revalidatePath('/products');
+      revalidatePath('/admin/products');
+    } catch {}
+
+    await recordAuditLog({
+      userId,
+      action: 'PRODUCT_BULK_DELETE',
+      entityType: 'Product',
+      entityId: ids.join(','),
+      summary: `حذف دسته‌ای ${deletedCount} محصول`,
+    });
+
+    return { count: deletedCount };
+  }
+
+  /**
+   * Bulk updates product availability in a single operation.
+   */
+  static async bulkToggleProductAvailability(ids: string[], isAvailable: boolean, userId?: string) {
+    if (!ids || ids.length === 0) return { count: 0 };
+    const res = await db.product.updateMany({
+      where: { id: { in: ids } },
+      data: { isAvailable },
+    });
+    const updatedCount = res?.count ?? 0;
+
+    try {
+      revalidateTag('products', 'max');
+      revalidatePath('/admin/products');
+    } catch {}
+
+    await recordAuditLog({
+      userId,
+      action: 'PRODUCT_BULK_AVAILABILITY_CHANGE',
+      entityType: 'Product',
+      entityId: ids.join(','),
+      summary: `تغییر وضعیت موجودی دسته‌ای ${updatedCount} محصول به ${isAvailable ? 'موجود' : 'ناموجود'}`,
+    });
+
+    return { count: updatedCount };
   }
 }

@@ -13,6 +13,7 @@ import {
   deleteHomepageSectionAction,
   toggleHomepageSectionStatusAction,
   reorderHomepageSectionAction,
+  seedDefaultHomepageSectionsAction,
 } from '@/server/actions/homepage-actions';
 import { TemplateSwitchModal } from '@/components/admin/homepage/template-switch-modal';
 import {
@@ -37,6 +38,7 @@ export function HomepageSectionsClient({
   initialSections: HomepageSectionViewModel[];
 }) {
   const [sections, setSections] = useState<HomepageSectionViewModel[]>(initialSections);
+  const [isSeeding, setIsSeeding] = useState(false);
   const [activeModalSection, setActiveModalSection] = useState<HomepageSectionViewModel | null>(null);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -111,6 +113,18 @@ export function HomepageSectionsClient({
     }
   };
 
+  const handleSeedDefaults = async () => {
+    setIsSeeding(true);
+    const res = await seedDefaultHomepageSectionsAction();
+    setIsSeeding(false);
+    if (res.success) {
+      toast.success('چیدمان پیش‌فرض صفحه اصلی با موفقیت بارگذاری شد.');
+      router.refresh();
+    } else {
+      toast.error(res.error || 'خطا در بارگذاری سکشن‌های پیش‌فرض');
+    }
+  };
+
   return (
     <div className="space-y-6 text-right">
       {/* Page Header */}
@@ -153,9 +167,18 @@ export function HomepageSectionsClient({
           </div>
           <h3 className="font-black text-lg text-stone-800">هنوز هیچ سکشنی در دیتابیس ثبت نشده است</h3>
           <p className="text-xs sm:text-sm text-stone-500 max-w-md mx-auto leading-relaxed font-bold">
-            در حال حاضر صفحه اصلی عمومی از چیدمان پیش‌فرض سیستم استفاده می‌کند. با کلیک بر روی دکمه «افزودن بخش جدید» می‌توانید سکشن‌های دلخواه خود را بسازید.
+            در حال حاضر صفحه اصلی عمومی از چیدمان پیش‌فرض سیستم استفاده می‌کند. با کلیک بر روی دکمه «بارگذاری چیدمان پیش‌فرض صفحه اصلی» می‌توانید سکشن‌های استاندارد را به دیتابیس منتقل و ویرایش کنید.
           </p>
-          <div className="pt-2">
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+            <button
+              type="button"
+              disabled={isSeeding}
+              onClick={handleSeedDefaults}
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl border-2 border-[#F59E0B] text-[#B45309] hover:bg-amber-50 font-black text-xs sm:text-sm transition-all shadow-xs cursor-pointer disabled:opacity-50"
+            >
+              {isSeeding ? <Loader2 className="w-4 h-4 animate-spin text-[#F59E0B]" /> : <Sparkles className="w-4 h-4 text-[#F59E0B]" />}
+              <span>{isSeeding ? 'در حال بارگذاری...' : 'بارگذاری چیدمان پیش‌فرض صفحه اصلی'}</span>
+            </button>
             <Link
               href="/admin/homepage/new"
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#F59E0B] hover:bg-[#D97706] text-white font-black text-xs sm:text-sm transition-all shadow-md"

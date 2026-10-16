@@ -24,14 +24,16 @@ import { createRecipeAction, updateRecipeAction } from '@/server/actions/recipe-
 import { MediaAssetRecord } from '@/server/db/client';
 import { useToast } from '@/components/admin/toast-provider';
 import { recipeInputSchema } from '@/server/validation';
+import { AlertTriangle, ArrowUp, ArrowDown, Plus } from 'lucide-react';
 
 export interface RecipeFormProps {
   initialData?: any;
   categories: Array<{ id: string; name: string; slug: string; status: string }>;
+  products?: Array<{ id: string; nameFa: string; slug: string; status?: string; isAvailable?: boolean }>;
   isEdit?: boolean;
 }
 
-export function RecipeForm({ initialData, categories, isEdit = false }: RecipeFormProps) {
+export function RecipeForm({ initialData, categories, products = [], isEdit = false }: RecipeFormProps) {
   const router = useRouter();
   const toast = useToast();
   const [isPending, startTransition] = useTransition();
@@ -82,7 +84,7 @@ export function RecipeForm({ initialData, categories, isEdit = false }: RecipeFo
     }))
   );
 
-  // Steps (Add at end, edit, delete, NO reorder, NO insert in middle)
+  // Steps
   const [steps, setSteps] = useState<Array<{ id?: string; text: string }>>(
     (initialData?.steps || []).map((s: any) => ({
       id: s.id,
@@ -96,6 +98,7 @@ export function RecipeForm({ initialData, categories, isEdit = false }: RecipeFo
 
   // UI state
   const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [conflictError, setConflictError] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [isDirty, setIsDirty] = useState(false);
   const originalSlug = initialData?.slug;
@@ -184,6 +187,33 @@ export function RecipeForm({ initialData, categories, isEdit = false }: RecipeFo
     markDirty();
   };
 
+  const handleMoveStepUp = (idx: number) => {
+    if (idx === 0) return;
+    const updated = [...steps];
+    const temp = updated[idx];
+    updated[idx] = updated[idx - 1];
+    updated[idx - 1] = temp;
+    setSteps(updated);
+    markDirty();
+  };
+
+  const handleMoveStepDown = (idx: number) => {
+    if (idx >= steps.length - 1) return;
+    const updated = [...steps];
+    const temp = updated[idx];
+    updated[idx] = updated[idx + 1];
+    updated[idx + 1] = temp;
+    setSteps(updated);
+    markDirty();
+  };
+
+  const handleInsertStepAfter = (idx: number) => {
+    const updated = [...steps];
+    updated.splice(idx + 1, 0, { text: '' });
+    setSteps(updated);
+    markDirty();
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setNotification(null);
@@ -247,6 +277,7 @@ export function RecipeForm({ initialData, categories, isEdit = false }: RecipeFo
       }
 
       if (res.success && res.data) {
+        setConflictError(false);
         setIsDirty(false);
         toast.success(uiStringsFa.adminRecipes.savedSuccess);
         setNotification({ type: 'success', message: uiStringsFa.adminRecipes.savedSuccess });
@@ -256,6 +287,9 @@ export function RecipeForm({ initialData, categories, isEdit = false }: RecipeFo
           router.refresh();
         }
       } else {
+        if ((res as any).isConflict) {
+          setConflictError(true);
+        }
         const errorMsg = res.error || 'خطا در ذخیره‌سازی اطلاعات دستور';
         toast.error(errorMsg);
         setNotification({
@@ -304,6 +338,35 @@ export function RecipeForm({ initialData, categories, isEdit = false }: RecipeFo
           </button>
         </div>
       </div>
+
+      {/* Concurrency Conflict Alert Banner */}
+      {conflictError && (
+        <div className="p-4 bg-amber-50 border-2 border-amber-500 rounded-none text-right space-y-3">
+          <div className="flex items-center gap-2 text-amber-900 font-black text-sm">
+            <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
+            <span>هشدار تداخل ویرایش همزمان (Concurrency Conflict)</span>
+          </div>
+          <p className="text-xs sm:text-sm text-amber-800 font-medium leading-relaxed">
+            این دستور از زمان باز شدن توسط کاربر یا تب دیگری تغییر یافته است. برای جلوگیری از پاک شدن تغییرات سایرین، می‌توانید نسخه جدید را در تب دیگر مشاهده و مقایسه کنید.
+          </p>
+          <div className="flex items-center gap-3 pt-1">
+            <button
+              type="button"
+              onClick={() => window.open(window.location.href, '_blank')}
+              className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-colors cursor-pointer"
+            >
+              باز کردن نسخه جدید در تب دیگر
+            </button>
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 border border-amber-600 text-amber-800 hover:bg-amber-100 text-xs font-bold transition-colors cursor-pointer"
+            >
+              بارگذاری مجدد صفحه
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Notification Banner */}
       {notification && (
@@ -741,7 +804,7 @@ export function RecipeForm({ initialData, categories, isEdit = false }: RecipeFo
           <div>
             <h2 className="text-sm font-bold text-[#332115]">{uiStringsFa.adminRecipes.steps}</h2>
             <p className="text-xs text-[#5C5248] mt-0.5">
-              مراحل تهیه با ترتیب خطی ثابت (اضافه کردن به انتها، ویرایش و حذف)
+              مراحل تهیه با امکان جابجایی ترتیب و درج مرحله در بین خطوط
             </p>
           </div>
           <span className="text-xs font-bold text-[#D97706]">{steps.length} مرحله</span>
@@ -749,10 +812,33 @@ export function RecipeForm({ initialData, categories, isEdit = false }: RecipeFo
 
         <div className="space-y-3">
           {steps.map((st, idx) => (
-            <div key={idx} className="flex gap-3 items-start p-3 bg-[#FDFBF8] border border-[#EFE9E0]">
-              <span className="px-2 py-1 bg-[#D97706] text-white font-bold text-xs shrink-0">
+            <div key={idx} className="flex gap-2.5 items-start p-3 bg-[#FDFBF8] border border-[#EFE9E0]">
+              {/* Reordering Controls */}
+              <div className="flex flex-col gap-1 shrink-0 pt-0.5">
+                <button
+                  type="button"
+                  disabled={idx === 0}
+                  onClick={() => handleMoveStepUp(idx)}
+                  className="p-1 text-stone-600 hover:text-stone-900 hover:bg-stone-100 disabled:opacity-30 border border-stone-200 cursor-pointer disabled:cursor-not-allowed"
+                  title="انتقال به بالا"
+                >
+                  <ArrowUp className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
+                  disabled={idx === steps.length - 1}
+                  onClick={() => handleMoveStepDown(idx)}
+                  className="p-1 text-stone-600 hover:text-stone-900 hover:bg-stone-100 disabled:opacity-30 border border-stone-200 cursor-pointer disabled:cursor-not-allowed"
+                  title="انتقال به پایین"
+                >
+                  <ArrowDown className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              <span className="px-2 py-1 bg-[#D97706] text-white font-bold text-xs shrink-0 mt-0.5">
                 {idx + 1}
               </span>
+
               <textarea
                 rows={2}
                 required
@@ -761,14 +847,27 @@ export function RecipeForm({ initialData, categories, isEdit = false }: RecipeFo
                 placeholder={uiStringsFa.adminRecipes.stepPlaceholder}
                 className="flex-1 px-3 py-1.5 border border-[#EFE9E0] text-xs bg-white leading-relaxed"
               />
-              <button
-                type="button"
-                onClick={() => handleRemoveStep(idx)}
-                className="text-xs font-bold text-[#9E3556] hover:bg-[#FEF2F2] p-1.5 border border-[#FECACA] shrink-0"
-                aria-label={`حذف مرحله ${idx + 1}`}
-              >
-                ✕
-              </button>
+
+              {/* Insert After & Remove Controls */}
+              <div className="flex flex-col gap-1 shrink-0 pt-0.5">
+                <button
+                  type="button"
+                  onClick={() => handleInsertStepAfter(idx)}
+                  className="p-1 text-xs font-bold text-[#2E6930] hover:bg-[#F0FDF4] border border-[#BBF7D0] cursor-pointer"
+                  title="افزودن مرحله در ادامه این خط (+)"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveStep(idx)}
+                  className="text-xs font-bold text-[#9E3556] hover:bg-[#FEF2F2] p-1 border border-[#FECACA] shrink-0 cursor-pointer"
+                  aria-label={`حذف مرحله ${idx + 1}`}
+                  title="حذف مرحله"
+                >
+                  ✕
+                </button>
+              </div>
             </div>
           ))}
         </div>

@@ -15,8 +15,11 @@ export interface SiteSettingsData {
   siteNameEn?: string | null;
   tagline?: string | null;
   logoId?: string | null;
+  logo?: any;
   footerLogoId?: string | null;
+  footerLogo?: any;
   ogImageId?: string | null;
+  ogImage?: any;
   address?: string | null;
   workingHours?: string | null;
   latitude?: number | null;
@@ -53,11 +56,11 @@ const DEFAULT_SETTINGS: SiteSettingsData = {
   logoId: null,
   footerLogoId: null,
   ogImageId: null,
-  address: 'ایران، آذربایجان شرقی، کلیبر، خیابان امام، پلاک ۴۲',
+  address: 'کرج، جهانشهر، بلوار مولانا',
   workingHours: 'همه‌روزه از ساعت ۹:۰۰ الی ۲۱:۰۰',
-  latitude: 38.8711,
-  longitude: 47.0354,
-  mapZoom: 14,
+  latitude: 35.8415,
+  longitude: 50.9850,
+  mapZoom: 15,
   copyrightText: 'تمامی حقوق برای برند عسل باباخُرم محفوظ است. طراحی و توسعه ۱۴۰۵.',
   seoTitle: 'عسل باباخُرم | طعم اصیل و طبیعی کوهستان',
   seoDescription: 'تولید و عرضه مستقیم انواع عسل طبیعی و ارگانیک از دامنه‌های ارسباران و قره‌داغ.',
@@ -65,15 +68,116 @@ const DEFAULT_SETTINGS: SiteSettingsData = {
   cartNotice: 'قیمت و هزینه‌ی ارسال پس از تأیید اعلام می‌شود.',
   orderIntroText: null,
   orderOutroText: null,
-  isPlaceholder: true,
+  isPlaceholder: false,
 };
+
+export const DEFAULT_CONTACT_CHANNELS: ContactChannelData[] = [
+  {
+    id: 'ch_phone_main',
+    type: 'PHONE',
+    value: '09389196010',
+    label: 'تماس مستقیم و پیامک',
+    isActive: true,
+    sortOrder: 0,
+    showInContactBar: true,
+    showInFooter: true,
+    showInContactPage: true,
+    acceptsOrders: true,
+  },
+  {
+    id: 'ch_whatsapp_main',
+    type: 'WHATSAPP',
+    value: '989389196010',
+    label: 'واتساپ',
+    isActive: true,
+    sortOrder: 1,
+    showInContactBar: true,
+    showInFooter: true,
+    showInContactPage: true,
+    acceptsOrders: true,
+  },
+  {
+    id: 'ch_telegram_support',
+    type: 'TELEGRAM',
+    value: 'Babakhoram9',
+    label: 'تلگرام (ثبت سفارش و پشتیبانی)',
+    isActive: true,
+    sortOrder: 2,
+    showInContactBar: true,
+    showInFooter: true,
+    showInContactPage: true,
+    acceptsOrders: true,
+  },
+  {
+    id: 'ch_telegram_channel',
+    type: 'TELEGRAM',
+    value: 'Babakhoramhoney',
+    label: 'کانال تلگرام',
+    isActive: true,
+    sortOrder: 3,
+    showInContactBar: true,
+    showInFooter: true,
+    showInContactPage: true,
+    acceptsOrders: false,
+  },
+  {
+    id: 'ch_eitaa_main',
+    type: 'EITAA',
+    value: 'Babakhoram',
+    label: 'ایتا',
+    isActive: true,
+    sortOrder: 4,
+    showInContactBar: true,
+    showInFooter: true,
+    showInContactPage: true,
+    acceptsOrders: true,
+  },
+  {
+    id: 'ch_bale_main',
+    type: 'BALE',
+    value: 'Babakhoram',
+    label: 'بله',
+    isActive: true,
+    sortOrder: 5,
+    showInContactBar: true,
+    showInFooter: true,
+    showInContactPage: true,
+    acceptsOrders: true,
+  },
+  {
+    id: 'ch_instagram_main',
+    type: 'INSTAGRAM',
+    value: 'baba.khoram.honey',
+    label: 'اینستاگرام',
+    isActive: true,
+    sortOrder: 6,
+    showInContactBar: true,
+    showInFooter: true,
+    showInContactPage: true,
+    acceptsOrders: false,
+  },
+  {
+    id: 'ch_youtube_main',
+    type: 'YOUTUBE',
+    value: 'baba.khoram',
+    label: 'یوتیوب',
+    isActive: true,
+    sortOrder: 7,
+    showInContactBar: true,
+    showInFooter: true,
+    showInContactPage: true,
+    acceptsOrders: false,
+  },
+];
 
 export class SettingsService {
   /**
    * Fetches singleton site settings with safe default fallback
    */
   static async getSettings(): Promise<SiteSettingsData> {
-    const raw = await db.siteSettings.findFirst();
+    const raw = await db.siteSettings.findFirst({
+      include: { logo: true, footerLogo: true, ogImage: true },
+    });
     if (!raw || Object.keys(raw).length === 0) {
       return DEFAULT_SETTINGS;
     }
@@ -102,11 +206,12 @@ export class SettingsService {
       throw new Error('پیام اطلاع‌رسانی سبد خرید نباید بیشتر از ۵۰۰ نویسه باشد.');
     }
 
+    const { logo, footerLogo, ogImage, ...dataToSave } = input as any;
     const current = await this.getSettings();
     const updated = await db.siteSettings.upsert({
       where: { id: 1 },
-      create: { ...DEFAULT_SETTINGS, ...input, id: 1 },
-      update: { ...input, isPlaceholder: false },
+      create: { ...DEFAULT_SETTINGS, ...dataToSave, id: 1 },
+      update: { ...dataToSave, isPlaceholder: false },
     });
 
     const changedKeys = Object.keys(input).filter((k) => (input as any)[k] !== (current as any)[k]);

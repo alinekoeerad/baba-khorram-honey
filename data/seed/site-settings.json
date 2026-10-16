@@ -3,9 +3,20 @@
   "siteNameFa": "عسل باباخُرم",
   "siteNameEn": "Baba Khorram Honey",
   "tagline": "طعم اصیل و طبیعی کوهستان",
-  "isPlaceholder": true,
+  "isPlaceholder": false,
   "cartEnabled": true,
   "cartNotice": "قیمت و هزینه‌ی ارسال پس از تأیید اعلام می‌شود.",
   "orderIntroText": null,
-  "orderOutroText": null
+  "orderOutroText": null,
+  "logoId": null,
+  "footerLogoId": null,
+  "ogImageId": null,
+  "address": "کرج، جهانشهر، بلوار مولانا",
+  "workingHours": "همه‌روزه از ساعت ۹:۰۰ الی ۲۱:۰۰",
+  "latitude": 35.8415,
+  "longitude": 50.985,
+  "mapZoom": 15,
+  "copyrightText": "تمامی حقوق برای برند عسل باباخُرم محفوظ است. طراحی و توسعه ۱۴۰۵.",
+  "seoTitle": "عسل باباخُرم | طعم اصیل و طبیعی کوهستان",
+  "seoDescription": "تولید و عرضه مستقیم انواع عسل طبیعی و ارگانیک از دامنه‌های ارسباران و قره‌داغ."
 }

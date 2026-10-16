@@ -34,7 +34,8 @@ export async function updateProductAction(params: {
     );
     return { success: true, data: product };
   } catch (err: any) {
-    return { success: false, error: err.message || 'خطا در به‌روزرسانی محصول' };
+    const isConflict = err.name === 'ConcurrencyConflictError' || err?.message?.includes('دیگری ویرایش شده است');
+    return { success: false, error: err.message || 'خطا در به‌روزرسانی محصول', isConflict };
   }
 }
 
@@ -65,6 +66,33 @@ export async function duplicateProductAction(id: string) {
   }
 }
 
+export async function bulkDeleteProductsAction(ids: string[]) {
+  try {
+    const { user } = await requireAdmin({ allowRedirect: false });
+    const res = await ProductService.bulkDeleteProducts(ids, user.id);
+    return { success: true, data: res };
+  } catch (err: any) {
+    return { success: false, error: err.message || 'خطا در حذف دسته‌ای محصولات' };
+  }
+}
+
+export async function bulkToggleProductAvailabilityAction(params: {
+  ids: string[];
+  isAvailable: boolean;
+}) {
+  try {
+    const { user } = await requireAdmin({ allowRedirect: false });
+    const res = await ProductService.bulkToggleProductAvailability(
+      params.ids,
+      params.isAvailable,
+      user.id
+    );
+    return { success: true, data: res };
+  } catch (err: any) {
+    return { success: false, error: err.message || 'خطا در به‌روزرسانی دسته‌ای موجودی' };
+  }
+}
+
 export async function deleteProductAction(id: string) {
   try {
     const { user } = await requireAdmin({ allowRedirect: false });
@@ -74,3 +102,5 @@ export async function deleteProductAction(id: string) {
     return { success: false, error: err.message || 'خطا در حذف محصول' };
   }
 }
+
+

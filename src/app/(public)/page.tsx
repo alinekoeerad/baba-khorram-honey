@@ -137,6 +137,39 @@ export default async function HomePage() {
   const displayProducts = dbProducts.length > 0 ? dbProducts : CANONICAL_PRODUCTS;
   const displayRecipes = dbRecipes.length >= 4 ? dbRecipes : CANONICAL_RECIPES;
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://babakhorram.com';
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        '@id': `${siteUrl}/#organization`,
+        name: 'عسل باباخُرم',
+        url: siteUrl,
+        logo: `${siteUrl}/images/footer-logo.webp`,
+        description: 'تولید و عرضه مستقیم انواع عسل طبیعی و ارگانیک با برگه آزمایش ساکارز',
+        address: {
+          '@type': 'PostalAddress',
+          addressCountry: 'IR',
+        },
+      },
+      {
+        '@type': 'WebSite',
+        '@id': `${siteUrl}/#website`,
+        url: siteUrl,
+        name: 'عسل باباخُرم',
+        publisher: {
+          '@id': `${siteUrl}/#organization`,
+        },
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: `${siteUrl}/search?q={search_term_string}`,
+          'query-input': 'required name=search_term_string',
+        },
+      },
+    ],
+  };
+
   // If active CMS database sections exist, render them dynamically
   if (dbSections.length > 0) {
     // Group consecutive sections by background === 'WOOD' for seamless merging
@@ -153,6 +186,10 @@ export default async function HomePage() {
 
     return (
       <div className="flex flex-col w-full overflow-hidden">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         {groupedSections.map((group, gIdx) => {
           if (group.isWood) {
             return (
@@ -183,39 +220,6 @@ export default async function HomePage() {
   }
 
   // Canonical Fallback Rendering
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://babakhorram.com';
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'Organization',
-        '@id': `${siteUrl}/#organization`,
-        name: 'عسل باباخُرم',
-        url: siteUrl,
-        logo: `${siteUrl}/images/homepage-footer-logo-png@2x.png`,
-        description: 'تولید و عرضه مستقیم انواع عسل طبیعی و ارگانیک با برگه آزمایش ساکارز',
-        address: {
-          '@type': 'PostalAddress',
-          addressCountry: 'IR',
-        },
-      },
-      {
-        '@type': 'WebSite',
-        '@id': `${siteUrl}/#website`,
-        url: siteUrl,
-        name: 'عسل باباخُرم',
-        publisher: {
-          '@id': `${siteUrl}/#organization`,
-        },
-        potentialAction: {
-          '@type': 'SearchAction',
-          target: `${siteUrl}/products?q={search_term_string}`,
-          'query-input': 'required name=search_term_string',
-        },
-      },
-    ],
-  };
-
   return (
     <div className="flex flex-col w-full overflow-hidden">
       <script
@@ -324,7 +328,7 @@ export default async function HomePage() {
       </section>
 
       {/* 5. Interactive Honey Finder Widget (SEC-04) */}
-      <HoneyFinder />
+      <HoneyFinder products={displayProducts} />
 
       {/* 
         Consecutive Wood Sections (6, 7, 8):

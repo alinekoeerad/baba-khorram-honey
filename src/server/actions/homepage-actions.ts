@@ -33,6 +33,7 @@ import {
   HomepageSectionInput,
 } from '@/server/validation/homepage-schemas';
 import { switchSectionTemplate, TEMPLATE_REGISTRY } from '@/server/services/homepage-template-service';
+import { DEFAULT_SECTIONS_INIT } from '@/server/queries/homepage-sections';
 import { SectionStatus, SectionBackground, SectionType } from '@prisma/client';
 
 export interface ActionResponse<T = any> {
@@ -55,6 +56,11 @@ function validateSectionContent(type: string, content: any): Record<string, any>
       return cardCarouselContentSchema.parse(content);
     case 'CONTENT_GRID':
       return contentGridContentSchema.parse(content);
+    case 'ARTISAN_HERITAGE':
+    case 'HONEY_FINDER':
+    case 'TESTIMONIALS':
+    case 'FAQ_SECTION':
+      return content || {};
     default:
       throw new Error(`نوع سکشن نامعتبر است: ${type}`);
   }
@@ -332,3 +338,50 @@ export async function switchHomepageSectionTemplateAction(
     return { success: false, error: err.message || 'خطا در تغییر قالب' };
   }
 }
+
+/**
+ * Seed canonical default homepage sections if none exist.
+ */
+export async function seedDefaultHomepageSectionsAction(): Promise<ActionResponse<{ count: number }>> {
+  try {
+    const admin = await requireAdmin({ allowRedirect: false });
+
+    const existingCount = await db.homepageSection.count();
+    if (existingCount > 0) {
+      return { success: false, error: 'سکشن‌های صفحه اصلی در حال حاضر موجود هستند.' };
+    }
+
+    let created = 0;
+    for (const section of DEFAULT_SECTIONS_INIT) {
+      await db.homepageSection.create({
+        data: {
+          internalName: section.internalName,
+          type: section.type,
+          template: section.template,
+          status: section.status,
+          sortOrder: section.sortOrder,
+          background: section.background,
+          content: section.content,
+        },
+      });
+      created++;
+    }
+
+    await recordAuditLog({
+      userId: admin.user.id,
+      action: 'CREATE',
+      entityType: 'HOMEPAGE_SECTION',
+      entityId: 'seed-defaults',
+      summary: `${created} سکشن پیش‌فرض صفحه اصلی بارگذاری شد.`,
+    });
+
+    revalidatePath('/');
+    revalidatePath('/admin/homepage');
+    revalidatePath('/admin/preview/homepage');
+
+    return { success: true, data: { count: created } };
+  } catch (err: any) {
+    return { success: false, error: err.message || 'خطا در بارگذاری سکشن‌های پیش‌فرض' };
+  }
+}
+

@@ -25,6 +25,12 @@ interface FooterProps {
 
 export function Footer({ settings, channels }: FooterProps) {
   const currentYear = 1405; // Solar Hijri brand year
+  const footerLogoSrc =
+    typeof settings.footerLogo === 'string'
+      ? settings.footerLogo
+      : settings.footerLogo?.storageKey
+        ? `/uploads/${settings.footerLogo.storageKey}`
+        : (settings.footerLogo?.url || '/images/footer-logo.webp');
 
   return (
     <footer className="bg-[#332115] text-[#E6DDD4] border-t-4 border-[#F59E0B] pt-14 pb-10 select-none">
@@ -140,11 +146,11 @@ export function Footer({ settings, channels }: FooterProps) {
             <ul className="space-y-2.5 text-xs sm:text-sm font-black flex flex-col text-white/95">
               <li>
                 <a
-                  href="tel:09120000000"
+                  href="tel:09389196010"
                   className="hover:text-white transition-colors font-mono font-bold text-white"
                   dir="ltr"
                 >
-                  ۰۹۱۲-۰۰۰-۰۰۰۰
+                  ۰۹۳۸-۹۱۹-۶۰۱۰
                 </a>
               </li>
               {channels && channels.length > 0 ? (
@@ -164,19 +170,19 @@ export function Footer({ settings, channels }: FooterProps) {
               ) : (
                 <>
                   <li>
-                    <a href="https://wa.me/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors flex items-center gap-2">
+                    <a href="https://wa.me/989389196010" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors flex items-center gap-2">
                       <ChannelIcon type="WHATSAPP" className="w-3.5 h-3.5 text-[#FBBF24]" />
                       <span>پیام‌رسان واتساپ</span>
                     </a>
                   </li>
                   <li>
-                    <a href="https://t.me/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors flex items-center gap-2">
+                    <a href="https://t.me/Babakhoram9" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors flex items-center gap-2">
                       <ChannelIcon type="TELEGRAM" className="w-3.5 h-3.5 text-[#FBBF24]" />
-                      <span>کانال تلگرام</span>
+                      <span>تلگرام پشتیبانی</span>
                     </a>
                   </li>
                   <li>
-                    <a href="https://eitaa.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors flex items-center gap-2">
+                    <a href="https://eitaa.com/Babakhoram" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors flex items-center gap-2">
                       <ChannelIcon type="EITAA" className="w-3.5 h-3.5 text-[#FBBF24]" />
                       <span>کانال ایتا</span>
                     </a>
@@ -190,21 +196,23 @@ export function Footer({ settings, channels }: FooterProps) {
         {/* Row 2: Bottom Row with Brand Logo, Circular Social Buttons, and Copyright */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Brand Logo & Name */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#FBBF24] text-[#332115] flex items-center justify-center font-black text-xl shadow-md">
-              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L4 6.5V17.5L12 22L20 17.5V6.5L12 2ZM12 4.3L18 7.7V16.3L12 19.7L6 16.3V7.7L12 4.3ZM12 7L8 9.3V14.7L12 17L16 14.7V9.3L12 7Z" />
-              </svg>
-            </div>
+          <Link href="/" className="flex items-center gap-3 group">
+            <img
+              src={footerLogoSrc}
+              alt={settings.siteNameFa}
+              width={96}
+              height={96}
+              className="w-20 h-20 sm:w-24 sm:h-24 object-contain shadow-md"
+            />
             <div className="flex flex-col text-right">
-              <span className="text-lg font-black text-white tracking-tight">
+              <span className="text-lg font-black text-white tracking-tight group-hover:text-[#FBBF24] transition-colors">
                 {settings.siteNameFa}
               </span>
               <span className="text-[10px] text-[#FEF3C7] font-semibold tracking-wider uppercase">
                 {settings.tagline || 'طعم اصیل و طبیعی کوهستان'}
               </span>
             </div>
-          </div>
+          </Link>
 
           {/* Social Links (Authentic honey.com Circle Icon Buttons) */}
           <div className="flex items-center gap-2.5" aria-label="شبکه‌های اجتماعی">

@@ -34,3 +34,6 @@ pnpm-debug.log*
 
 # Local media uploads
 /uploads/
+
+# TypeScript build info
+*.tsbuildinfo

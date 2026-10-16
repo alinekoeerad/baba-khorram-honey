@@ -127,6 +127,7 @@ let feedbacksStore: any[] = loadJson('feedbacks.json', []);
 let homepageSectionsStore: any[] = loadJson('homepage-sections.json', []);
 let productOptionsStore: any[] = loadJson('product-options.json', []);
 let orderShareLinksStore: any[] = loadJson('order-share-links.json', []);
+let recipeProductsStore: any[] = loadJson('recipe-products.json', []);
 
 // Create fallback Prisma-compatible client
 function createFallbackClient() {
@@ -454,6 +455,17 @@ function createFallbackClient() {
           }
           res.options = opts;
         }
+        if (args.include?.recommendedInRecipes) {
+          const rps = loadJson('recipe-products.json', recipeProductsStore).filter((rp: any) => rp.productId === res.id);
+          res.recommendedInRecipes = rps.map((rp: any) => {
+            const copy = { ...rp };
+            if (args.include.recommendedInRecipes?.include?.recipe) {
+              const rec = recipesStore.find((r) => r.id === rp.recipeId);
+              copy.recipe = rec ? { ...rec } : null;
+            }
+            return copy;
+          });
+        }
         return res;
       },
       async findUniqueOrThrow(args: { where: { id?: string; slug?: string }; include?: any }) {
@@ -602,6 +614,35 @@ function createFallbackClient() {
         saveJson('products.json', productsStore);
         return deleted;
       },
+      async updateMany(args: { where?: any; data: any }) {
+        let count = 0;
+        const ids = args.where?.id?.in;
+        for (let i = 0; i < productsStore.length; i++) {
+          if (!ids || ids.includes(productsStore[i].id)) {
+            productsStore[i] = {
+              ...productsStore[i],
+              ...args.data,
+              updatedAt: new Date().toISOString(),
+            };
+            count++;
+          }
+        }
+        saveJson('products.json', productsStore);
+        return { count };
+      },
+      async deleteMany(args?: { where?: any }) {
+        let count = 0;
+        const ids = args?.where?.id?.in;
+        productsStore = productsStore.filter((p) => {
+          if (!ids || ids.includes(p.id)) {
+            count++;
+            return false;
+          }
+          return true;
+        });
+        saveJson('products.json', productsStore);
+        return { count };
+      },
     },
 
     recipe: {
@@ -628,6 +669,17 @@ function createFallbackClient() {
           const allOpts = loadJson('product-options.json', productOptionsStore);
           const opts = allOpts.filter((o: any) => o.productId === res.id);
           res.options = opts.length > 0 ? opts : (res.options || []);
+        }
+        if (args.include?.recommendedProducts) {
+          const rps = loadJson('recipe-products.json', recipeProductsStore).filter((rp: any) => rp.recipeId === res.id);
+          res.recommendedProducts = rps.map((rp: any) => {
+            const copy = { ...rp };
+            if (args.include.recommendedProducts?.include?.product) {
+              const prod = productsStore.find((p) => p.id === rp.productId);
+              copy.product = prod ? { ...prod } : null;
+            }
+            return copy;
+          });
         }
         return res;
       },
@@ -788,6 +840,35 @@ function createFallbackClient() {
         const [deleted] = recipesStore.splice(idx, 1);
         saveJson('recipes.json', recipesStore);
         return deleted;
+      },
+      async updateMany(args: { where?: any; data: any }) {
+        let count = 0;
+        const ids = args.where?.id?.in;
+        for (let i = 0; i < recipesStore.length; i++) {
+          if (!ids || ids.includes(recipesStore[i].id)) {
+            recipesStore[i] = {
+              ...recipesStore[i],
+              ...args.data,
+              updatedAt: new Date().toISOString(),
+            };
+            count++;
+          }
+        }
+        saveJson('recipes.json', recipesStore);
+        return { count };
+      },
+      async deleteMany(args?: { where?: any }) {
+        let count = 0;
+        const ids = args?.where?.id?.in;
+        recipesStore = recipesStore.filter((r) => {
+          if (!ids || ids.includes(r.id)) {
+            count++;
+            return false;
+          }
+          return true;
+        });
+        saveJson('recipes.json', recipesStore);
+        return { count };
       },
     },
 
@@ -1152,6 +1233,67 @@ function createFallbackClient() {
       },
     },
 
+    recipeProduct: {
+      async findMany(args?: { where?: any; orderBy?: any; include?: any }) {
+        let list = loadJson('recipe-products.json', recipeProductsStore);
+        if (args?.where) {
+          const w = args.where;
+          if (w.recipeId) {
+            list = list.filter((rp: any) => rp.recipeId === w.recipeId);
+          }
+          if (w.productId) {
+            list = list.filter((rp: any) => rp.productId === w.productId);
+          }
+        }
+        if (args?.orderBy?.sortOrder === 'asc') {
+          list.sort((a: any, b: any) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+        }
+        return list.map((rp: any) => {
+          const copy = { ...rp };
+          if (args?.include?.product) {
+            const p = productsStore.find((x) => x.id === rp.productId);
+            copy.product = p ? { ...p } : null;
+          }
+          if (args?.include?.recipe) {
+            const r = recipesStore.find((x) => x.id === rp.recipeId);
+            copy.recipe = r ? { ...r } : null;
+          }
+          return copy;
+        });
+      },
+      async create(args: { data: any }) {
+        const list = loadJson('recipe-products.json', recipeProductsStore);
+        const item = { ...args.data };
+        list.push(item);
+        recipeProductsStore = list;
+        saveJson('recipe-products.json', recipeProductsStore);
+        return { ...item };
+      },
+      async createMany(args: { data: any[] }) {
+        const list = loadJson('recipe-products.json', recipeProductsStore);
+        const newItems = args.data.map((d: any) => ({ ...d }));
+        list.push(...newItems);
+        recipeProductsStore = list;
+        saveJson('recipe-products.json', recipeProductsStore);
+        return { count: newItems.length };
+      },
+      async deleteMany(args?: { where?: any }) {
+        let list = loadJson('recipe-products.json', recipeProductsStore);
+        const lenBefore = list.length;
+        if (args?.where) {
+          if (args.where.recipeId) {
+            list = list.filter((x: any) => x.recipeId !== args.where.recipeId);
+          }
+          if (args.where.productId) {
+            list = list.filter((x: any) => x.productId !== args.where.productId);
+          }
+        }
+        recipeProductsStore = list;
+        saveJson('recipe-products.json', recipeProductsStore);
+        return { count: lenBefore - list.length };
+      },
+    },
+
     feedback: {
       async findMany(args?: { where?: any; orderBy?: any; take?: number; skip?: number }) {
         let list = [...feedbacksStore];
@@ -1179,6 +1321,18 @@ function createFallbackClient() {
         const item = feedbacksStore.find(
           (f) => (args.where.id && f.id === args.where.id) || (args.where.trackingCode && f.trackingCode === args.where.trackingCode)
         );
+        return item ? { ...item } : null;
+      },
+      async findFirst(args?: { where?: any }) {
+        if (!args?.where) return feedbacksStore[0] ? { ...feedbacksStore[0] } : null;
+        const w = args.where;
+        const item = feedbacksStore.find((f) => {
+          if (w.id && f.id !== w.id) return false;
+          if (w.trackingCode && f.trackingCode !== w.trackingCode) return false;
+          if (w.phone && f.phone !== w.phone) return false;
+          if (w.status && f.status !== w.status) return false;
+          return true;
+        });
         return item ? { ...item } : null;
       },
       async create(args: { data: any }) {

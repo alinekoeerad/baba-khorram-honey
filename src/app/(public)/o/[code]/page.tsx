@@ -27,6 +27,7 @@ export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'لینک موقت سفارش | عسل باباخُرم',
+  referrer: 'no-referrer',
   robots: {
     index: false,
     follow: false,

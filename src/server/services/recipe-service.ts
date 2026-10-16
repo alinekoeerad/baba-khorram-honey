@@ -84,7 +84,10 @@ export class RecipeService {
   static async getRecipeById(id: string) {
     return await db.recipe.findUnique({
       where: { id },
-      include: { categories: true, mainImage: true },
+      include: {
+        categories: true,
+        mainImage: true,
+      },
     });
   }
 
@@ -103,6 +106,16 @@ export class RecipeService {
     if (existingSlug) {
       throw new Error(`دستوری با شناسه لاتین «${validated.slug}» از قبل وجود دارد.`);
     }
+
+    // Circular redirect loop prevention
+    try {
+      await db.slugRedirect.deleteMany({
+        where: {
+          entityType: 'RECIPE',
+          oldSlug: validated.slug,
+        },
+      });
+    } catch {}
 
     const ingredientNames = validated.ingredients.map((i) => i.name);
     const ingredientNotes = validated.ingredients.map((i) => i.note).filter(Boolean) as string[];
@@ -198,6 +211,16 @@ export class RecipeService {
       if (conflict && conflict.id !== id) {
         throw new Error(`دستور دیگری با شناسه لاتین «${newSlug}» ثبت شده است.`);
       }
+
+      // Circular redirect loop prevention
+      try {
+        await db.slugRedirect.deleteMany({
+          where: {
+            entityType: 'RECIPE',
+            oldSlug: newSlug,
+          },
+        });
+      } catch {}
 
       // Create permanent 301 redirect entry
       await db.slugRedirect.create({
@@ -350,5 +373,64 @@ export class RecipeService {
     });
 
     return deleted;
+  }
+
+  /**
+   * Bulk deletes multiple recipes in a single operation.
+   */
+  static async bulkDeleteRecipes(ids: string[], userId?: string) {
+    if (!ids || ids.length === 0) return { count: 0 };
+    const res = await db.recipe.deleteMany({
+      where: { id: { in: ids } },
+    });
+    const deletedCount = res?.count ?? 0;
+
+    try {
+      revalidateTag('recipes', 'max');
+      revalidatePath('/recipes');
+      revalidatePath('/admin/recipes');
+    } catch {}
+
+    await recordAuditLog({
+      userId,
+      action: 'RECIPE_BULK_DELETE',
+      entityType: 'Recipe',
+      entityId: ids.join(','),
+      summary: `حذف دسته‌ای ${deletedCount} دستور پخت`,
+    });
+
+    return { count: deletedCount };
+  }
+
+  /**
+   * Bulk updates recipe statuses in a single operation.
+   */
+  static async bulkUpdateRecipeStatus(
+    ids: string[],
+    status: 'PUBLISHED' | 'ARCHIVED' | 'DRAFT',
+    userId?: string
+  ) {
+    if (!ids || ids.length === 0) return { count: 0 };
+    const res = await db.recipe.updateMany({
+      where: { id: { in: ids } },
+      data: { status },
+    });
+    const updatedCount = res?.count ?? 0;
+
+    try {
+      revalidateTag('recipes', 'max');
+      revalidatePath('/recipes');
+      revalidatePath('/admin/recipes');
+    } catch {}
+
+    await recordAuditLog({
+      userId,
+      action: 'RECIPE_BULK_STATUS_CHANGE',
+      entityType: 'Recipe',
+      entityId: ids.join(','),
+      summary: `تغییر وضعیت دسته‌ای ${updatedCount} دستور پخت به ${status}`,
+    });
+
+    return { count: updatedCount };
   }
 }

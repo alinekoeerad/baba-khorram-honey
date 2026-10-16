@@ -31,13 +31,30 @@ describe('Contact Channels URL Builders (Phase 5, Task 1 & 6)', () => {
   it('correctly builds Instagram profile URLs without @', () => {
     expect(buildChannelUrl('INSTAGRAM', 'babakhorram_honey')).toBe('https://instagram.com/babakhorram_honey');
   });
+
+  it('correctly builds YouTube channel URLs', () => {
+    expect(buildChannelUrl('YOUTUBE', 'baba.khoram')).toBe('https://youtube.com/@baba.khoram');
+    expect(buildChannelUrl('YOUTUBE', '@baba.khoram')).toBe('https://youtube.com/@baba.khoram');
+    expect(buildChannelUrl('YOUTUBE', 'https://youtube.com/@baba.khoram')).toBe('https://youtube.com/@baba.khoram');
+    expect(buildChannelUrl('YOUTUBE', 'youtube.com/@baba.khoram')).toBe('https://youtube.com/@baba.khoram');
+  });
 });
 
 describe('Contact Channel Validation Rules (Brief Section 6 & Addendum A2)', () => {
-  it('strictly forbids acceptsOrders on INSTAGRAM', () => {
-    const res = validateChannel('INSTAGRAM', 'babakhorram_honey', true);
-    expect(res.isValid).toBe(false);
-    expect(res.errorFa).toContain('اینستاگرام');
+  it('strictly forbids acceptsOrders on INSTAGRAM and YOUTUBE', () => {
+    const resInsta = validateChannel('INSTAGRAM', 'babakhorram_honey', true);
+    expect(resInsta.isValid).toBe(false);
+    expect(resInsta.errorFa).toContain('اینستاگرام');
+
+    const resYt = validateChannel('YOUTUBE', 'baba.khoram', true);
+    expect(resYt.isValid).toBe(false);
+    expect(resYt.errorFa).toContain('یوتیوب');
+  });
+
+  it('validates YouTube channel handles correctly', () => {
+    expect(validateChannel('YOUTUBE', 'baba.khoram', false).isValid).toBe(true);
+    expect(validateChannel('YOUTUBE', '@baba.khoram', false).isValid).toBe(true);
+    expect(validateChannel('YOUTUBE', 'ab', false).isValid).toBe(false); // too short
   });
 
   it('permits acceptsOrders on valid messengers (WhatsApp, Telegram, Eitaa, Bale, Rubika)', () => {
@@ -74,5 +91,13 @@ describe('SiteSettings Validation & Length Limits (Addendum A2)', () => {
     await expect(SettingsService.updateSettings({ orderOutroText: longText })).rejects.toThrow(
       'متن پایانی سفارش نباید بیشتر از ۲۰۰ نویسه باشد'
     );
+  });
+
+  it('returns official store location in Karaj (Jahanshahr, Blvd Molana) by default', async () => {
+    const settings = await SettingsService.getSettings();
+    expect(settings.address).toContain('کرج، جهانشهر، بلوار مولانا');
+    expect(settings.latitude).toBeCloseTo(35.8415, 4);
+    expect(settings.longitude).toBeCloseTo(50.9850, 4);
+    expect(settings.mapZoom).toBe(15);
   });
 });

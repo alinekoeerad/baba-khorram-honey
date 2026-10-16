@@ -47,16 +47,13 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-md bg-white border border-[#EFE9E0] p-8 shadow-md rounded-none">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex w-14 h-14 items-center justify-center rounded-2xl bg-[#FEF3C7] text-[#D97706] mb-4 shadow-xs">
-            <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-              />
-            </svg>
-          </div>
+          <img
+            src="/images/header-logo.webp"
+            alt={uiStringsFa.brand.name}
+            width={64}
+            height={64}
+            className="w-16 h-16 object-contain mx-auto mb-4"
+          />
           <h1 className="text-2xl font-black text-[#332115]">{uiStringsFa.adminAuth.loginTitle}</h1>
           <p className="text-sm text-[#5C5248] mt-2 font-medium">{uiStringsFa.adminAuth.loginSubtitle}</p>
         </div>

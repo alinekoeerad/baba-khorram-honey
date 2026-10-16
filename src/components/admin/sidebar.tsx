@@ -66,15 +66,19 @@ export function AdminSidebar({ onClose }: { onClose?: () => void }) {
   return (
     <aside className="h-full flex flex-col bg-[#332115] text-[#E8E2D9] border-s border-black/20 select-none">
       {/* Brand Header */}
-      <div className="h-20 flex items-center px-6 border-b border-white/10 gap-3">
-        <div className="w-10 h-10 rounded-xl bg-[#FBBF24] text-[#332115] flex items-center justify-center font-black text-lg">
-          ع
-        </div>
+      <Link href="/admin" onClick={onClose} className="h-20 flex items-center px-6 border-b border-white/10 gap-3 group">
+        <img
+          src="/images/header-logo.webp"
+          alt="عسل باباخُرم"
+          width={36}
+          height={36}
+          className="w-9 h-9 object-contain shrink-0 group-hover:scale-105 transition-transform"
+        />
         <div className="flex flex-col">
-          <span className="font-black text-base text-white tracking-tight">عسل باباخُرم</span>
+          <span className="font-black text-base text-white tracking-tight group-hover:text-[#FBBF24] transition-colors">عسل باباخُرم</span>
           <span className="text-[10px] text-[#FBBF24] font-medium tracking-wide">پنل مدیریت یکپارچه</span>
         </div>
-      </div>
+      </Link>
 
       {/* Nav List */}
       <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-1.5" aria-label="منوی مدیریت">

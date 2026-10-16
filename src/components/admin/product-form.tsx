@@ -24,6 +24,7 @@ import { createProductAction, updateProductAction } from '@/server/actions/produ
 import { MediaAssetRecord } from '@/server/db/client';
 import { useToast } from '@/components/admin/toast-provider';
 import { productInputSchema } from '@/server/validation';
+import { AlertTriangle } from 'lucide-react';
 
 export interface ProductFormProps {
   initialData?: any;
@@ -64,7 +65,14 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
   const [newBenefitText, setNewBenefitText] = useState('');
 
   const [options, setOptions] = useState<Array<{ id?: string; label: string; isAvailable: boolean; sortOrder?: number }>>(
-    initialData?.options || []
+    initialData?.options && initialData.options.length > 0
+      ? initialData.options
+      : !isEdit
+      ? [
+          { label: 'یک کیلوگرم', isAvailable: true, sortOrder: 0 },
+          { label: 'نیم کیلوگرم', isAvailable: true, sortOrder: 1 },
+        ]
+      : []
   );
   const [newOptionLabel, setNewOptionLabel] = useState('');
 
@@ -73,6 +81,7 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
 
   // UI state
   const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [conflictError, setConflictError] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [isDirty, setIsDirty] = useState(false);
   const originalSlug = initialData?.slug;
@@ -220,6 +229,7 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
       }
 
       if (res.success && res.data) {
+        setConflictError(false);
         setIsDirty(false);
         toast.success(uiStringsFa.adminProducts.savedSuccess);
         setNotification({ type: 'success', message: uiStringsFa.adminProducts.savedSuccess });
@@ -229,6 +239,9 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
           router.refresh();
         }
       } else {
+        if ((res as any).isConflict) {
+          setConflictError(true);
+        }
         const errorMsg = res.error || 'خطا در ذخیره‌سازی اطلاعات محصول';
         toast.error(errorMsg);
         setNotification({
@@ -277,6 +290,35 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
           </button>
         </div>
       </div>
+
+      {/* Concurrency Conflict Alert Banner */}
+      {conflictError && (
+        <div className="p-4 bg-amber-50 border-2 border-amber-500 rounded-none text-right space-y-3">
+          <div className="flex items-center gap-2 text-amber-900 font-black text-sm">
+            <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
+            <span>هشدار تداخل ویرایش همزمان (Concurrency Conflict)</span>
+          </div>
+          <p className="text-xs sm:text-sm text-amber-800 font-medium leading-relaxed">
+            این محصول از زمان باز شدن توسط کاربر یا تب دیگری تغییر یافته است. برای جلوگیری از پاک شدن تغییرات سایرین، می‌توانید نسخه جدید را در تب دیگر مشاهده و مقایسه کنید.
+          </p>
+          <div className="flex items-center gap-3 pt-1">
+            <button
+              type="button"
+              onClick={() => window.open(window.location.href, '_blank')}
+              className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-colors cursor-pointer"
+            >
+              باز کردن نسخه جدید در تب دیگر
+            </button>
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 border border-amber-600 text-amber-800 hover:bg-amber-100 text-xs font-bold transition-colors cursor-pointer"
+            >
+              بارگذاری مجدد صفحه
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Notification Banner */}
       {notification && (
@@ -675,7 +717,25 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
 
         {/* Quick Add Weight Presets [ADM-MOD-02] */}
         <div className="flex flex-wrap items-center gap-2 pt-1 pb-1">
-          <span className="text-[11px] font-bold text-[#5C5248]">پیش‌فرض‌های سریع وزن:</span>
+          <button
+            type="button"
+            onClick={() => {
+              const standard = [
+                { label: 'یک کیلوگرم', isAvailable: true, sortOrder: 0 },
+                { label: 'نیم کیلوگرم', isAvailable: true, sortOrder: 1 },
+              ];
+              setOptions((prev) => {
+                const existingLabels = new Set(prev.map((o) => o.label));
+                const toAdd = standard.filter((s) => !existingLabels.has(s.label));
+                return [...prev, ...toAdd];
+              });
+              markDirty();
+            }}
+            className="px-3 py-1 text-[11px] font-bold bg-[#F59E0B] text-white hover:bg-[#D97706] transition-colors rounded-none shadow-xs"
+          >
+            + افزودن سریع وزن‌های استاندارد
+          </button>
+          <span className="text-[11px] font-bold text-[#5C5248] mr-1">پیش‌فرض‌های سریع وزن:</span>
           {[
             'ظرف ۱ کیلوگرمی',
             'شیشه ۵۰۰ گرمی',

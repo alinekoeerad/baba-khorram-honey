@@ -10,6 +10,7 @@ import {
   updateFeedbackStatusAction,
   deleteFeedbackAction,
 } from '@/server/actions/feedback-actions';
+import { copyTextToClipboard } from '@/lib/clipboard';
 import {
   Phone,
   Calendar,
@@ -37,6 +38,7 @@ interface FeedbackItem {
   message: string;
   status: string;
   adminNote?: string | null;
+  publicReply?: string | null;
   createdAt: string;
 }
 
@@ -51,6 +53,7 @@ export function FeedbacksManagerClient({
   const [typeFilter, setTypeFilter] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [notesState, setNotesState] = useState<Record<string, string>>({});
+  const [publicReplyState, setPublicReplyState] = useState<Record<string, string>>({});
   const [isPending, startTransition] = useTransition();
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<{ isOpen: boolean; id?: string; trackingCode?: string }>({
@@ -87,23 +90,29 @@ export function FeedbacksManagerClient({
     });
   };
 
-  const handleSaveNote = (id: string) => {
-    const note = notesState[id] !== undefined ? notesState[id] : '';
+  const handleSaveNotes = (id: string) => {
+    const currentItem = feedbacks.find((x) => x.id === id);
+    if (!currentItem) return;
+
+    const note = notesState[id] !== undefined ? notesState[id] : (currentItem.adminNote || '');
+    const reply = publicReplyState[id] !== undefined ? publicReplyState[id] : (currentItem.publicReply || '');
+
     startTransition(async () => {
-      const currentItem = feedbacks.find((x) => x.id === id);
-      if (!currentItem) return;
       const res = await updateFeedbackStatusAction({
         id,
         status: currentItem.status as any,
         adminNote: note,
+        publicReply: reply,
       });
       if (res.success && res.feedback) {
         setFeedbacks((prev) =>
-          prev.map((item) => (item.id === id ? { ...item, adminNote: note } : item))
+          prev.map((item) =>
+            item.id === id ? { ...item, adminNote: note, publicReply: reply } : item
+          )
         );
-        toast.success('یادداشت داخلی با موفقیت ذخیره شد.');
+        toast.success('پاسخ عمومی و یادداشت محرمانه با موفقیت ذخیره گردید.');
       } else {
-        toast.error('خطا در ذخیره یادداشت');
+        toast.error('خطا در ذخیره پاسخ');
       }
     });
   };
@@ -129,23 +138,42 @@ export function FeedbacksManagerClient({
   };
 
   const handleExportCsv = () => {
-    const headers = ['کد پیگیری', 'نام فرستنده', 'شماره تماس', 'نوع پیام', 'متن پیام', 'وضعیت', 'یادداشت ادمین', 'تاریخ ثبت'];
+    const typeDictionary: Record<string, string> = {
+      SUGGESTION: 'پیشنهاد سازنده',
+      CRITICISM: 'انتقاد یا شکایت',
+      PRODUCT_QUALITY: 'کیفیت محصول',
+      OTHER: 'سایر موارد',
+    };
+
+    const headers = [
+      'کد پیگیری',
+      'نام فرستنده',
+      'شماره تماس',
+      'نوع پیام',
+      'متن پیام',
+      'وضعیت',
+      'یادداشت محرمانه مدیر',
+      'پاسخ عمومی',
+      'تاریخ ثبت',
+    ];
+
     const rows = filtered.map((f) => [
       f.trackingCode,
       f.name,
       f.phone,
-      f.type === 'SUGGESTION' ? 'پیشنهاد' : 'انتقاد/شکایت',
+      typeDictionary[f.type] || 'سایر موارد',
       f.message,
       f.status,
       f.adminNote || '',
+      f.publicReply || '',
       new Date(f.createdAt).toLocaleDateString('fa-IR'),
     ]);
     exportToCsv('feedbacks_export', headers, rows);
     toast.success('فایل اکسل نظرات با موفقیت دانلود شد.');
   };
 
-  const handleCopyPhone = (phone: string, id: string) => {
-    navigator.clipboard.writeText(phone);
+  const handleCopyPhone = async (phone: string, id: string) => {
+    await copyTextToClipboard(phone);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
@@ -325,7 +353,7 @@ export function FeedbacksManagerClient({
 
                 {/* Contact and Message */}
                 <div className="space-y-4">
-                  <div className="flex items-center gap-3 text-xs font-bold text-[#332115]">
+                  <div className="flex flex-wrap items-center gap-3 text-xs font-bold text-[#332115]">
                     <span className="text-[#5C5248]">شماره تماس:</span>
                     <a
                       href={`tel:${item.phone}`}
@@ -346,6 +374,39 @@ export function FeedbacksManagerClient({
                         <Copy className="w-3.5 h-3.5" />
                       )}
                     </button>
+
+                    {/* Quick WhatsApp & SMS Action */}
+                    {(() => {
+                      const rawPhone = (item.phone || '').trim();
+                      const cleanDigits = rawPhone.replace(/\D/g, '');
+                      const intlPhone = cleanDigits.startsWith('0')
+                        ? `98${cleanDigits.slice(1)}`
+                        : cleanDigits.startsWith('98')
+                        ? cleanDigits
+                        : `98${cleanDigits}`;
+                      const greeting = `سلام ${item.name} عزیز، در خصوص پیام ثبت‌شده شما در عسل باباخُرم با کد پیگیری ${item.trackingCode}:`;
+                      const waUrl = `https://wa.me/${intlPhone}?text=${encodeURIComponent(greeting)}`;
+                      const smsUrl = `sms:${rawPhone}?body=${encodeURIComponent(greeting)}`;
+
+                      return (
+                        <div className="flex items-center gap-1.5 ms-2">
+                          <a
+                            href={waUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-2 py-0.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200 text-[10px] font-bold rounded-none"
+                          >
+                            واتساپ
+                          </a>
+                          <a
+                            href={smsUrl}
+                            className="px-2 py-0.5 bg-sky-50 text-sky-800 hover:bg-sky-100 border border-sky-200 text-[10px] font-bold rounded-none"
+                          >
+                            پیامک (SMS)
+                          </a>
+                        </div>
+                      );
+                    })()}
                   </div>
 
                   {/* Message content */}
@@ -354,59 +415,86 @@ export function FeedbacksManagerClient({
                   </div>
                 </div>
 
-                {/* Footer Controls: Status Changer & Admin Note */}
-                <div className="mt-6 pt-4 border-t border-[#EFE9E0] grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+                {/* Footer Controls: Status Changer & Notes / Public Reply */}
+                <div className="mt-6 pt-4 border-t border-[#EFE9E0] space-y-4">
                   {/* Status buttons */}
-                  <div className="lg:col-span-5 flex items-center gap-2">
-                    <span className="text-xs font-bold text-[#5C5248]">تغییر وضعیت:</span>
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => handleStatusChange(item.id, 'REVIEWED')}
-                        disabled={isPending || item.status === 'REVIEWED'}
-                        className="px-2.5 py-1 text-xs font-bold bg-emerald-50 text-emerald-800 hover:bg-emerald-100 disabled:opacity-40 transition-colors border border-emerald-200 cursor-pointer"
-                      >
-                        بررسی شد
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleStatusChange(item.id, 'ARCHIVED')}
-                        disabled={isPending || item.status === 'ARCHIVED'}
-                        className="px-2.5 py-1 text-xs font-bold bg-stone-100 text-stone-700 hover:bg-stone-200 disabled:opacity-40 transition-colors border border-stone-200 cursor-pointer"
-                      >
-                        بایگانی
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleStatusChange(item.id, 'UNREAD')}
-                        disabled={isPending || item.status === 'UNREAD'}
-                        className="px-2.5 py-1 text-xs font-bold bg-rose-50 text-rose-800 hover:bg-rose-100 disabled:opacity-40 transition-colors border border-rose-200 cursor-pointer"
-                      >
-                        خوانده‌نشده
-                      </button>
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-[#5C5248]">تغییر وضعیت:</span>
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => handleStatusChange(item.id, 'REVIEWED')}
+                          disabled={isPending || item.status === 'REVIEWED'}
+                          className="px-2.5 py-1 text-xs font-bold bg-emerald-50 text-emerald-800 hover:bg-emerald-100 disabled:opacity-40 transition-colors border border-emerald-200 cursor-pointer"
+                        >
+                          بررسی شد
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleStatusChange(item.id, 'ARCHIVED')}
+                          disabled={isPending || item.status === 'ARCHIVED'}
+                          className="px-2.5 py-1 text-xs font-bold bg-stone-100 text-stone-700 hover:bg-stone-200 disabled:opacity-40 transition-colors border border-stone-200 cursor-pointer"
+                        >
+                          بایگانی
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleStatusChange(item.id, 'UNREAD')}
+                          disabled={isPending || item.status === 'UNREAD'}
+                          className="px-2.5 py-1 text-xs font-bold bg-rose-50 text-rose-800 hover:bg-rose-100 disabled:opacity-40 transition-colors border border-rose-200 cursor-pointer"
+                        >
+                          خوانده‌نشده
+                        </button>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Internal Admin Note */}
-                  <div className="lg:col-span-7 flex items-center gap-2">
-                    <input
-                      type="text"
-                      placeholder="یادداشت داخلی ادمین برای این پیام..."
-                      value={currentNote}
-                      onChange={(e) =>
-                        setNotesState((prev) => ({ ...prev, [item.id]: e.target.value }))
-                      }
-                      className="flex-1 px-3 py-1.5 bg-stone-50 border border-[#EFE9E0] text-xs focus:outline-none focus:border-[#D97706] focus:bg-white"
-                    />
                     <button
                       type="button"
-                      onClick={() => handleSaveNote(item.id)}
+                      onClick={() => handleSaveNotes(item.id)}
                       disabled={isPending}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#332115] hover:bg-[#4A2C1B] text-white text-xs font-bold transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#332115] hover:bg-[#4A2C1B] text-white text-xs font-black transition-colors cursor-pointer"
                     >
-                      <Save className="w-3 h-3" />
-                      <span>ثبت</span>
+                      <Save className="w-3.5 h-3.5" />
+                      <span>ذخیره پاسخ و یادداشت</span>
                     </button>
+                  </div>
+
+                  {/* Dual Notes Row */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                    <div>
+                      <label className="block text-[11px] font-bold text-[#5C5248] mb-1">
+                        یادداشت محرمانه مدیر (داخلی):
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="یادداشت داخلی برای ادمین‌ها..."
+                        value={currentNote}
+                        onChange={(e) =>
+                          setNotesState((prev) => ({ ...prev, [item.id]: e.target.value }))
+                        }
+                        className="w-full px-3 py-1.5 bg-stone-50 border border-[#EFE9E0] text-xs focus:outline-none focus:border-[#D97706] focus:bg-white"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-[#D97706] mb-1">
+                        پاسخ عمومی به کاربر (قابل مشاهده با کد رهگیری):
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="متن پاسخی که کاربر با کد رهگیری خود مشاهده خواهد کرد..."
+                        value={
+                          publicReplyState[item.id] !== undefined
+                            ? publicReplyState[item.id]
+                            : item.publicReply || ''
+                        }
+                        onChange={(e) =>
+                          setPublicReplyState((prev) => ({ ...prev, [item.id]: e.target.value }))
+                        }
+                        className="w-full px-3 py-1.5 bg-amber-50/40 border border-amber-200 text-xs focus:outline-none focus:border-[#D97706] focus:bg-white"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

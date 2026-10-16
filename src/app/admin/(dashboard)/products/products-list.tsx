@@ -10,7 +10,7 @@
  * - [ADM-WORKFLOW-03] Bulk selection and floating bulk actions bar.
  */
 
-import React, { useState, useTransition } from 'react';
+import React, { useState, useEffect, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { uiStringsFa } from '@/content/ui-strings.fa';
@@ -18,6 +18,8 @@ import {
   toggleProductAvailabilityAction,
   duplicateProductAction,
   deleteProductAction,
+  bulkDeleteProductsAction,
+  bulkToggleProductAvailabilityAction,
 } from '@/server/actions/product-actions';
 import { useToast } from '@/components/admin/toast-provider';
 import { ConfirmModal } from '@/components/admin/confirm-modal';
@@ -54,6 +56,11 @@ export function ProductsList({ initialProducts, categories, totalCount }: Produc
   const [isPending, startTransition] = useTransition();
 
   const [products, setProducts] = useState<ProductListItem[]>(initialProducts);
+
+  useEffect(() => {
+    setProducts(initialProducts);
+  }, [initialProducts]);
+
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
@@ -73,7 +80,14 @@ export function ProductsList({ initialProducts, categories, totalCount }: Produc
     if (statusFilter && p.status !== statusFilter) return false;
     if (availabilityFilter === 'AVAILABLE' && !p.isAvailable) return false;
     if (availabilityFilter === 'UNAVAILABLE' && p.isAvailable) return false;
-    if (categoryFilter && p.categorySlug !== categoryFilter && !p.categoryIds?.includes(`cat_${categoryFilter}`)) return false;
+    if (categoryFilter) {
+      const matchCat =
+        p.categorySlug === categoryFilter ||
+        p.categoryIds?.includes(categoryFilter) ||
+        p.categoryIds?.includes(`cat_${categoryFilter}`) ||
+        p.categories?.some((c: any) => c.slug === categoryFilter || c.category?.slug === categoryFilter);
+      if (!matchCat) return false;
+    }
     if (search) {
       const q = search.toLowerCase();
       const match =
@@ -107,6 +121,7 @@ export function ProductsList({ initialProducts, categories, totalCount }: Produc
     startTransition(async () => {
       const res = await duplicateProductAction(prod.id);
       if (res.success && res.data) {
+        setProducts((prev) => [res.data, ...prev]);
         toast.success(uiStringsFa.adminProducts.duplicatedSuccess);
         router.refresh();
       } else {
@@ -117,18 +132,18 @@ export function ProductsList({ initialProducts, categories, totalCount }: Produc
 
   const confirmDeleteAction = async () => {
     if (confirmDelete.isBulk) {
-      // Bulk delete
+      // Batched bulk delete
       const idsToDelete = Array.from(selectedIds);
       startTransition(async () => {
-        let deletedCount = 0;
-        for (const id of idsToDelete) {
-          const res = await deleteProductAction(id);
-          if (res.success) deletedCount++;
+        const res = await bulkDeleteProductsAction(idsToDelete);
+        if (res.success) {
+          setProducts((prev) => prev.filter((p) => !selectedIds.has(p.id)));
+          setSelectedIds(new Set());
+          setConfirmDelete({ isOpen: false });
+          toast.success(`${res.data?.count ?? idsToDelete.length} محصول با موفقیت حذف گردید.`);
+        } else {
+          toast.error(res.error || 'خطا در حذف دسته‌ای');
         }
-        setProducts((prev) => prev.filter((p) => !selectedIds.has(p.id)));
-        setSelectedIds(new Set());
-        setConfirmDelete({ isOpen: false });
-        toast.success(`${deletedCount} محصول با موفقیت حذف گردید.`);
       });
       return;
     }
@@ -186,14 +201,16 @@ export function ProductsList({ initialProducts, categories, totalCount }: Produc
   const handleBulkToggleAvailability = (isAvailable: boolean) => {
     startTransition(async () => {
       const ids = Array.from(selectedIds);
-      for (const id of ids) {
-        await toggleProductAvailabilityAction({ id, isAvailable });
+      const res = await bulkToggleProductAvailabilityAction({ ids, isAvailable });
+      if (res.success) {
+        setProducts((prev) =>
+          prev.map((item) => (selectedIds.has(item.id) ? { ...item, isAvailable } : item))
+        );
+        toast.success(`وضعیت موجودی ${ids.length} محصول به‌روزرسانی شد.`);
+        setSelectedIds(new Set());
+      } else {
+        toast.error(res.error || 'خطا در به‌روزرسانی موجودی');
       }
-      setProducts((prev) =>
-        prev.map((item) => (selectedIds.has(item.id) ? { ...item, isAvailable } : item))
-      );
-      toast.success(`وضعیت موجودی ${ids.length} محصول به‌روزرسانی شد.`);
-      setSelectedIds(new Set());
     });
   };
 
@@ -382,14 +399,40 @@ export function ProductsList({ initialProducts, categories, totalCount }: Produc
                       />
                     </td>
                     <td className="py-3 px-4 font-bold text-[#332115]">
-                      <Link href={`/admin/products/${prod.id}`} className="hover:text-[#D97706]">
-                        {prod.nameFa}
-                      </Link>
-                      {prod.isFeatured && (
-                        <span className="ms-1.5 px-1 py-0.5 text-[9px] bg-[#FEF3C7] text-[#C86A00] font-bold">
-                          ویژه
-                        </span>
-                      )}
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <Link href={`/admin/products/${prod.id}`} className="hover:text-[#D97706]">
+                          {prod.nameFa}
+                        </Link>
+                        {prod.isFeatured && (
+                          <span className="px-1 py-0.5 text-[9px] bg-[#FEF3C7] text-[#C86A00] font-bold">
+                            ویژه
+                          </span>
+                        )}
+                      </div>
+                      {/* Assigned Category Badges */}
+                      {(() => {
+                        const assigned = categories.filter((c) =>
+                          prod.categoryIds?.includes(c.id) ||
+                          prod.categoryIds?.includes(c.slug) ||
+                          prod.categoryIds?.includes(`cat_${c.slug}`) ||
+                          prod.categorySlug === c.slug ||
+                          prod.categories?.some((pc: any) => pc.id === c.id || pc.slug === c.slug || pc.category?.id === c.id || pc.category?.slug === c.slug)
+                        );
+                        return (
+                          <div className="flex flex-wrap items-center gap-1 mt-1 font-normal">
+                            {assigned.map((c) => (
+                              <span key={c.id} className="px-1.5 py-0.5 bg-stone-100 text-stone-600 text-[10px] border border-stone-200">
+                                {c.name}
+                              </span>
+                            ))}
+                            {prod.status === 'PUBLISHED' && assigned.length === 0 && (
+                              <span className="px-1.5 py-0.5 bg-amber-50 text-amber-800 text-[10px] border border-amber-300">
+                                بدون دسته‌بندی فعال
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })()}
                     </td>
                     <td className="py-3 px-4 text-[#5C5248] font-mono text-[11px]" dir="ltr">
                       {prod.nameOriginal || prod.slug}

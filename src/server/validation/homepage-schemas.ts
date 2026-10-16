@@ -187,6 +187,10 @@ export const sectionTypeEnum = z.enum([
   'TEXT_GALLERY',
   'CARD_CAROUSEL',
   'CONTENT_GRID',
+  'ARTISAN_HERITAGE',
+  'HONEY_FINDER',
+  'TESTIMONIALS',
+  'FAQ_SECTION',
 ]);
 
 export const sectionStatusEnum = z.enum(['DRAFT', 'ACTIVE', 'DISABLED']);

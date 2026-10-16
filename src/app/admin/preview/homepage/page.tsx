@@ -10,6 +10,7 @@ import { getPreviewHomepageSections } from '@/server/queries/homepage-sections';
 import { getPublicProducts } from '@/server/queries/products';
 import { getPublicRecipes } from '@/server/queries/recipes';
 import { DynamicSectionRenderer } from '@/components/public/dynamic-section-renderer';
+import { WoodGroup } from '@/components/ui/wood-group';
 import { Eye, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
@@ -24,6 +25,18 @@ export default async function AdminHomepagePreviewPage() {
 
   const products = productsRes.products || [];
   const recipes = recipesRes.recipes || [];
+
+  // Group consecutive sections by background === 'WOOD' for seamless merging
+  const groupedSections: Array<{ isWood: boolean; sections: typeof sections }> = [];
+  sections.forEach((sec) => {
+    const isWood = sec.background === 'WOOD';
+    const lastGroup = groupedSections[groupedSections.length - 1];
+    if (lastGroup && lastGroup.isWood === isWood) {
+      lastGroup.sections.push(sec);
+    } else {
+      groupedSections.push({ isWood, sections: [sec] });
+    }
+  });
 
   return (
     <div className="flex flex-col w-full min-h-screen text-right">
@@ -54,22 +67,45 @@ export default async function AdminHomepagePreviewPage() {
 
       {/* Sections Rendering */}
       <div className="flex flex-col w-full divide-y-0">
-        {sections.map((section) => (
-          <div key={section.id} className="relative group">
-            {/* Status Floating Pill for Admin Awareness */}
-            {section.status !== 'ACTIVE' && (
-              <div className="absolute top-4 right-4 z-30 px-3 py-1 bg-black/80 backdrop-blur-xs text-white text-xs font-black rounded-full border border-amber-500/50 shadow-lg">
-                وضعیت: {section.status === 'DRAFT' ? 'پیش‌نویس (DRAFT)' : 'غیرفعال (DISABLED)'}
-              </div>
-            )}
-
-            <DynamicSectionRenderer
-              section={section}
-              products={products}
-              recipes={recipes}
-            />
-          </div>
-        ))}
+        {groupedSections.map((group, gIdx) => {
+          if (group.isWood) {
+            return (
+              <WoodGroup key={`wood-group-${gIdx}`}>
+                {group.sections.map((section) => (
+                  <div key={section.id} className="relative group">
+                    {/* Status Floating Pill for Admin Awareness */}
+                    {section.status !== 'ACTIVE' && (
+                      <div className="absolute top-4 right-4 z-30 px-3 py-1 bg-black/80 backdrop-blur-xs text-white text-xs font-black rounded-full border border-amber-500/50 shadow-lg">
+                        وضعیت: {section.status === 'DRAFT' ? 'پیش‌نویس (DRAFT)' : 'غیرفعال (DISABLED)'}
+                      </div>
+                    )}
+                    <DynamicSectionRenderer
+                      section={section}
+                      products={products}
+                      recipes={recipes}
+                      noBackground={true}
+                    />
+                  </div>
+                ))}
+              </WoodGroup>
+            );
+          }
+          return group.sections.map((section) => (
+            <div key={section.id} className="relative group">
+              {/* Status Floating Pill for Admin Awareness */}
+              {section.status !== 'ACTIVE' && (
+                <div className="absolute top-4 right-4 z-30 px-3 py-1 bg-black/80 backdrop-blur-xs text-white text-xs font-black rounded-full border border-amber-500/50 shadow-lg">
+                  وضعیت: {section.status === 'DRAFT' ? 'پیش‌نویس (DRAFT)' : 'غیرفعال (DISABLED)'}
+                </div>
+              )}
+              <DynamicSectionRenderer
+                section={section}
+                products={products}
+                recipes={recipes}
+              />
+            </div>
+          ));
+        })}
 
         {sections.length === 0 && (
           <div className="py-32 text-center text-stone-500 font-bold">

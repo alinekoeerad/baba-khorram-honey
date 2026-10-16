@@ -12,6 +12,10 @@ import { PillButton } from '@/components/ui/pill-button';
 import { HeroSlider } from '@/components/public/hero-slider';
 import { RecipeCarousel } from '@/components/public/recipe-carousel';
 import { ProductCarousel } from '@/components/public/product-carousel';
+import { ArtisanHeritageShowcase } from '@/components/public/artisan-heritage-showcase';
+import { HoneyFinder } from '@/components/public/honey-finder';
+import { TestimonialsSection } from '@/components/public/testimonials-section';
+import { FaqSection } from '@/components/public/faq-section';
 import { resolveControlledLink } from '@/server/validation/homepage-schemas';
 import Link from 'next/link';
 
@@ -240,6 +244,50 @@ export function DynamicSectionRenderer({
   // 5. CARD_CAROUSEL (carousel-cards)
   if (type === 'CARD_CAROUSEL') {
     const source = content.source || 'RECIPES';
+    const maxItems = content.maxItems || 12;
+
+    if (source === 'SELECTED') {
+      const selectedIds: string[] = Array.isArray(content.selectedItems) ? content.selectedItems : [];
+      const matchedProducts = products.filter(
+        (p) => (p.status === 'PUBLISHED' || !p.status) && selectedIds.includes(p.id)
+      );
+      const matchedRecipes = recipes.filter(
+        (r) => (r.status === 'PUBLISHED' || !r.status) && selectedIds.includes(r.id)
+      );
+
+      if (matchedProducts.length >= matchedRecipes.length && matchedProducts.length > 0) {
+        let displayList = [...matchedProducts];
+        if (displayList.length < 3) {
+          const backfill = products.filter(
+            (p) => (p.status === 'PUBLISHED' || !p.status) && !displayList.some((d) => d.id === p.id)
+          );
+          displayList = [...displayList, ...backfill].slice(0, Math.max(maxItems, 3));
+        } else {
+          displayList = displayList.slice(0, maxItems);
+        }
+        return (
+          <div id={`section-${section.id}`}>
+            <ProductCarousel products={displayList} noBackground={noBackground || isWood} />
+          </div>
+        );
+      } else {
+        let displayList = [...matchedRecipes];
+        if (displayList.length < 3) {
+          const backfill = recipes.filter(
+            (r) => (r.status === 'PUBLISHED' || !r.status) && !displayList.some((d) => d.id === r.id)
+          );
+          displayList = [...displayList, ...backfill].slice(0, Math.max(maxItems, 3));
+        } else {
+          displayList = displayList.slice(0, maxItems);
+        }
+        return (
+          <div id={`section-${section.id}`}>
+            <RecipeCarousel recipes={displayList} noBackground={noBackground || isWood} />
+          </div>
+        );
+      }
+    }
+
     if (source === 'PRODUCTS') {
       return (
         <div id={`section-${section.id}`}>
@@ -320,6 +368,42 @@ export function DynamicSectionRenderer({
       <section id={`section-${section.id}`} className="py-14 sm:py-20 bg-stone-50">
         {inner}
       </section>
+    );
+  }
+
+  // 7. ARTISAN_HERITAGE (heritage-default)
+  if (type === 'ARTISAN_HERITAGE' || template === 'heritage-default') {
+    return (
+      <div id={`section-${section.id}`}>
+        <ArtisanHeritageShowcase />
+      </div>
+    );
+  }
+
+  // 8. HONEY_FINDER (honey-finder-default)
+  if (type === 'HONEY_FINDER' || template === 'honey-finder-default') {
+    return (
+      <div id={`section-${section.id}`}>
+        <HoneyFinder products={products} />
+      </div>
+    );
+  }
+
+  // 9. TESTIMONIALS (testimonials-default)
+  if (type === 'TESTIMONIALS' || template === 'testimonials-default') {
+    return (
+      <div id={`section-${section.id}`}>
+        <TestimonialsSection />
+      </div>
+    );
+  }
+
+  // 10. FAQ_SECTION (faq-default)
+  if (type === 'FAQ_SECTION' || template === 'faq-default') {
+    return (
+      <div id={`section-${section.id}`}>
+        <FaqSection />
+      </div>
     );
   }
 

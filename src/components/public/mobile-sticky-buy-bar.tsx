@@ -59,10 +59,10 @@ export function MobileStickyBuyBar({
   return (
     <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#23150B]/95 border-t-2 border-[#F59E0B] p-3 shadow-[0_-10px_25px_rgba(0,0,0,0.5)] backdrop-blur-md flex items-center justify-between gap-3 animate-in slide-in-from-bottom duration-300">
       <div className="text-right truncate flex-1 min-w-0 pr-1">
-        <div className="text-xs font-black text-[#FFFBEB] truncate">
+        <div className="text-xs font-black text-[#2B2017] truncate">
           {productName}
         </div>
-        <div className="text-[11px] text-[#FBBF24] font-bold">
+        <div className="text-[11px] text-[#D97706] font-bold">
           {added ? '✓ به سبد اضافه شد' : '۱۰۰٪ طبیعی و دارای برگه آزمایش'}
         </div>
       </div>

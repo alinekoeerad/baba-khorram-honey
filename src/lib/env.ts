@@ -44,6 +44,14 @@ export const envSchema = z.object({
       .string()
       .min(16, 'BETTER_AUTH_SECRET must be at least 16 characters')
       .default('development-better-auth-secret-key-32-chars-long!'),
+
+    // Optional instant order notifications to admin messengers (Eitaa, Bale, Telegram)
+    EITAA_BOT_TOKEN: z.string().optional(),
+    EITAA_CHAT_ID: z.string().optional(),
+    BALE_BOT_TOKEN: z.string().optional(),
+    BALE_CHAT_ID: z.string().optional(),
+    TELEGRAM_BOT_TOKEN: z.string().optional(),
+    TELEGRAM_CHAT_ID: z.string().optional(),
   })
   .superRefine((data, ctx) => {
     if (data.NODE_ENV === 'production') {

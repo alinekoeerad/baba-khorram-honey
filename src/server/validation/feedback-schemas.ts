@@ -40,7 +40,23 @@ export const feedbackStatusUpdateSchema = z.object({
   id: z.string().min(1),
   status: feedbackStatusEnum,
   adminNote: z.string().max(1000).optional().nullable(),
+  publicReply: z.string().max(2000).optional().nullable(),
+});
+
+export const trackFeedbackSchema = z.object({
+  trackingCode: z
+    .string()
+    .transform((val) => normalizePersianDigits(val).trim().toUpperCase())
+    .refine((val) => /^FB-\d+-[A-Z0-9]+$/i.test(val) || val.length >= 5, 'کد پیگیری نامعتبر است.'),
+  phone: z
+    .string()
+    .transform((val) => normalizePersianDigits(val).replace(/[\s-]/g, ''))
+    .refine(
+      (val) => /^(\+98|0)?9\d{9}$/.test(val) || /^(\+98|0)[1-8]\d{8,9}$/.test(val),
+      'شماره تماس وارد شده معتبر نیست (مثال: 09123456789)'
+    ),
 });
 
 export type FeedbackSubmissionInput = z.infer<typeof feedbackSubmissionSchema>;
 export type FeedbackStatusUpdateInput = z.infer<typeof feedbackStatusUpdateSchema>;
+export type TrackFeedbackInput = z.infer<typeof trackFeedbackSchema>;

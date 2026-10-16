@@ -25,7 +25,7 @@ export interface HomepageSectionViewModel {
   updatedAt: Date;
 }
 
-const DEFAULT_SECTIONS_INIT = [
+export const DEFAULT_SECTIONS_INIT = [
   {
     internalName: 'اسلایدر هیرو اصلی',
     type: 'HERO' as SectionType,

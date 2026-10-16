@@ -13,6 +13,8 @@ interface PurposeOption {
   honeySlug: string;
   description: string;
   tasteProfile: string;
+  keywords: string[];
+  preferredNature: string;
 }
 
 const PURPOSES: PurposeOption[] = [
@@ -24,6 +26,8 @@ const PURPOSES: PurposeOption[] = [
     honeySlug: 'wild-thyme-honey',
     description: 'سرشار از تیمول و خواص آنتی‌باکتریال قوی، تسکین‌دهنده سرفه، تقویت‌کننده ریه و بهبود عفونت‌های گلو.',
     tasteProfile: 'تند و گیاهی، عطر نافذ آویشن کوهی',
+    keywords: ['آویشن', 'ایمنی', 'سرماخوردگی', 'گلو', 'سرفه', 'عفونت', 'ریه'],
+    preferredNature: 'WARM',
   },
   {
     id: 'digestion',
@@ -33,6 +37,8 @@ const PURPOSES: PurposeOption[] = [
     honeySlug: 'mountain-astragalus-honey',
     description: 'بسیار ملایم با ساکارز کم (زیر ۲٪)، بهبود زخم و رفلاکس معده و تقویت عملکرد کلیه‌ها.',
     tasteProfile: 'شیرینی ملایم و دلنشین، طبع متعادل',
+    keywords: ['گون', 'معده', 'گوارش', 'هضم', 'رفلاکس', 'زخم'],
+    preferredNature: 'BALANCED',
   },
   {
     id: 'energy',
@@ -42,6 +48,8 @@ const PURPOSES: PurposeOption[] = [
     honeySlug: 'wild-sidr-honey',
     description: 'منبع متراکم آهن، کلسیم و پروتئین گیاهی؛ فوق‌العاده برای ورزشکاران، کودکان و افزایش قوای جسمانی.',
     tasteProfile: 'گرم، غلیظ با عطر خاص شکوفه‌های سدر',
+    keywords: ['کنار', 'سدر', 'انرژی', 'عضلات', 'ورزشکار', 'قوا'],
+    preferredNature: 'WARM',
   },
   {
     id: 'relaxation',
@@ -51,13 +59,61 @@ const PURPOSES: PurposeOption[] = [
     honeySlug: 'multifloral-mountain-honey',
     description: 'حاصل شهد بیش از ۳۰ گونه گیاه دارویی کوهستان؛ کاهنده اضطراب و استرس با تحریک ترشح ملاتونین طبیعی.',
     tasteProfile: 'چندبعدی، معطر و آرام‌بخش',
+    keywords: ['چهل‌گیاه', 'چهل گیاه', 'ارسباران', 'اعصاب', 'خواب', 'آرامش', 'استرس'],
+    preferredNature: 'COOL',
   },
 ];
 
-export function HoneyFinder() {
+export function HoneyFinder({ products = [] }: { products?: any[] }) {
   const [selectedPurposeId, setSelectedPurposeId] = useState(PURPOSES[0].id);
 
   const selected = PURPOSES.find((p) => p.id === selectedPurposeId) || PURPOSES[0];
+
+  // Filter only live PUBLISHED & available products
+  const activeProducts = (products || []).filter(
+    (p) => (p.status === 'PUBLISHED' || !p.status) && p.isAvailable !== false
+  );
+
+  // Match recommendation dynamically
+  let matchedProduct: any = null;
+  if (activeProducts.length > 0) {
+    // 1. Direct slug match
+    matchedProduct = activeProducts.find((p) => p.slug === selected.honeySlug);
+
+    // 2. Keyword match in nameFa, shortDescription, benefits
+    if (!matchedProduct) {
+      matchedProduct = activeProducts.find((p) => {
+        const textBlob = [
+          p.nameFa || '',
+          p.shortDescription || '',
+          p.description || '',
+          Array.isArray(p.benefits) ? p.benefits.join(' ') : (p.benefits || ''),
+        ].join(' ').toLowerCase();
+
+        return selected.keywords.some((kw) => textBlob.includes(kw.toLowerCase()));
+      });
+    }
+
+    // 3. Match by foodNature
+    if (!matchedProduct) {
+      matchedProduct = activeProducts.find((p) => p.foodNature === selected.preferredNature);
+    }
+
+    // 4. Graceful fallback
+    if (!matchedProduct) {
+      const idx = PURPOSES.findIndex((p) => p.id === selected.id);
+      matchedProduct = activeProducts[idx % activeProducts.length];
+    }
+  }
+
+  const honeyName = matchedProduct?.nameFa || selected.honeyName;
+  const honeySlug = matchedProduct?.slug || selected.honeySlug;
+  const honeyDescription =
+    matchedProduct?.shortDescription ||
+    (Array.isArray(matchedProduct?.benefits) && matchedProduct.benefits.length > 0
+      ? matchedProduct.benefits.join('، ')
+      : selected.description);
+  const honeyTaste = matchedProduct?.flavorProfile || selected.tasteProfile;
 
   return (
     <section className="py-16 sm:py-24 bg-[#FFFBEB] border-t border-[#EFE9E0]" aria-labelledby="finder-heading">
@@ -120,7 +176,7 @@ export function HoneyFinder() {
                   عسل پیشنهادی برای شما
                 </span>
                 <h3 className="text-xl sm:text-2xl font-black text-[#2B2017] mt-1">
-                  {selected.honeyName}
+                  {honeyName}
                 </h3>
               </div>
               <span className="text-xs font-bold bg-[#FEF3C7] text-[#92400E] px-3 py-1 rounded-full">
@@ -129,19 +185,19 @@ export function HoneyFinder() {
             </div>
 
             <p className="text-sm sm:text-base text-[#4A3B32] font-medium leading-loose">
-              {selected.description}
+              {honeyDescription}
             </p>
 
             <div className="bg-[#FDFBF8] p-3.5 border border-[#EFE9E0] text-xs sm:text-sm text-[#5C5248]">
               <strong className="text-[#2B2017]">طعم و عطر: </strong>
-              <span>{selected.tasteProfile}</span>
+              <span>{honeyTaste}</span>
             </div>
 
             <div className="pt-2 flex items-center justify-between">
               <PillButton
                 variant="gold"
                 size="md"
-                href={`/products/${selected.honeySlug}`}
+                href={`/products/${honeySlug}`}
                 className="font-black"
               >
                 مشاهده مشخصات و خرید

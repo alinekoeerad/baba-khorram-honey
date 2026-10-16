@@ -57,13 +57,13 @@ export default async function ContactPage() {
 
   const address =
     settings.address ||
-    'آذربایجان شرقی، منطقه حفاظت‌شده ارسباران، دفتر مرکزی عسل باباخُرم';
+    'کرج، جهانشهر، بلوار مولانا';
   const workingHours =
     settings.workingHours ||
-    'همه‌روزه از ساعت ۹:۰۰ الی ۱۸:۰۰ (به جز روزهای تعطیل رسمی)';
-  const latitude = settings.latitude ?? 38.8680;
-  const longitude = settings.longitude ?? 47.0360;
-  const zoom = settings.mapZoom ?? 14;
+    'همه‌روزه از ساعت ۹:۰۰ الی ۲۱:۰۰';
+  const latitude = settings.latitude ?? 35.8415;
+  const longitude = settings.longitude ?? 50.9850;
+  const zoom = settings.mapZoom ?? 15;
 
   const phoneChannel = channels.find((c) => c.type === 'PHONE');
 

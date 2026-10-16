@@ -285,6 +285,31 @@ export const cartActions = {
     writeStoredCart({ lines: updated, updatedAt: Date.now() });
   },
 
+  switchOption(oldOptionId: string, newOptionId: string): void {
+    const current = readStoredCart();
+    const existingOld = current.lines.find((l) => l.optionId === oldOptionId);
+    if (!existingOld) return;
+
+    const existingNewIndex = current.lines.findIndex((l) => l.optionId === newOptionId);
+    let nextLines: CartLine[];
+
+    if (existingNewIndex >= 0) {
+      nextLines = current.lines
+        .filter((l) => l.optionId !== oldOptionId)
+        .map((l) =>
+          l.optionId === newOptionId
+            ? { ...l, qty: clampQuantity(l.qty + existingOld.qty) }
+            : l
+        );
+    } else {
+      nextLines = current.lines.map((l) =>
+        l.optionId === oldOptionId ? { ...l, optionId: newOptionId } : l
+      );
+    }
+
+    writeStoredCart({ lines: nextLines, updatedAt: Date.now() });
+  },
+
   clearCart(): void {
     writeStoredCart({ lines: [], updatedAt: Date.now() });
   },

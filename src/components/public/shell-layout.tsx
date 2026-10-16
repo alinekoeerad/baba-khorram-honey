@@ -41,6 +41,7 @@ export function ShellLayout({
       <Header
         siteNameFa={settings.siteNameFa}
         cartEnabled={settings.cartEnabled}
+        logo={settings.logo}
         channels={contactBarChannels}
         onOpenSearch={() => setIsSearchOpen((prev) => !prev)}
         onOpenHamburger={() => setIsHamburgerOpen(true)}

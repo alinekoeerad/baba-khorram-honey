@@ -19,6 +19,7 @@ import { Container } from '@/components/ui/container';
 import { getPublicProducts } from '@/server/queries/products';
 import { getPublicCategories } from '@/server/queries/categories';
 import { ProductsListingClient } from '@/components/public/products-listing-client';
+import { uiStringsFa } from '@/content/ui-strings.fa';
 
 export const revalidate = 3600;
 
@@ -62,6 +63,14 @@ export async function generateMetadata({
       locale: 'fa_IR',
       siteName: 'عسل باباخُرم',
     },
+    ...(q
+      ? {
+          robots: {
+            index: false,
+            follow: true,
+          },
+        }
+      : {}),
   };
 }
 
@@ -104,7 +113,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
           </div>
 
           <p className="text-sm sm:text-base lg:text-lg text-[#5C3A21] font-semibold max-w-2xl mx-auto leading-relaxed pt-1">
-            مجموعه کامل عسلهای طبیعی و ارگانیک باباخُرم؛ برداشتشده با روشهای اصیل زنبورداری کوهستان
+            {uiStringsFa.listing.productsSubtitle}
           </p>
         </header>
 

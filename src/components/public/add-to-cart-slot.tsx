@@ -50,9 +50,25 @@ export function AddToCartSlot({
   // Filter to available options only
   const availableOptions = effectiveOptions.filter((o) => o.isAvailable);
 
-  // If cart disabled or product unavailable or no options: show nothing
-  if (!cartEnabled || !isAvailable || !productId || availableOptions.length === 0) {
+  if (!cartEnabled || !isAvailable || !productId) {
     return null;
+  }
+
+  // If cart enabled & product available but 0 options remain: provide inquiry link
+  if (availableOptions.length === 0) {
+    return (
+      <div className="max-w-md mx-auto my-4 p-5 bg-[#FAF7F2] border border-[#FDE68A] text-center space-y-3">
+        <p className="text-xs sm:text-sm text-stone-700 font-bold">
+          جهت استعلام موجودی بسته‌بندی‌ها و ثبت سفارش این عسل، با پشتیبانی تماس بگیرید.
+        </p>
+        <Link
+          href="/contact"
+          className="inline-block px-5 py-2.5 bg-[#F59E0B] hover:bg-[#D97706] text-[#2E1F14] text-xs font-black transition-colors"
+        >
+          استعلام و سفارش از طریق پشتیبانی
+        </Link>
+      </div>
+    );
   }
 
   const [selectedOptionId, setSelectedOptionId] = useState<string>(

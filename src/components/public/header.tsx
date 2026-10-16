@@ -28,6 +28,7 @@ import { ChannelIcon } from './channel-icon';
 interface HeaderProps {
   siteNameFa: string;
   cartEnabled: boolean;
+  logo?: any;
   channels?: PublicChannelItem[];
   onOpenSearch: () => void;
   onOpenHamburger: () => void;
@@ -37,6 +38,7 @@ interface HeaderProps {
 export function Header({
   siteNameFa,
   cartEnabled,
+  logo,
   channels = [],
   onOpenSearch,
   onOpenHamburger,
@@ -46,6 +48,13 @@ export function Header({
   const [isContactOpen, setIsContactOpen] = useState(false);
   const desktopContactRef = useRef<HTMLDivElement>(null);
   const mobileContactRef = useRef<HTMLDivElement>(null);
+
+  const headerLogoSrc =
+    typeof logo === 'string'
+      ? logo
+      : logo?.storageKey
+        ? `/uploads/${logo.storageKey}`
+        : (logo?.url || '/images/header-logo.webp');
 
   // Close contact menu on outside click or Escape
   useEffect(() => {
@@ -82,13 +91,13 @@ export function Header({
     <div className="pt-1 pb-3 px-3 space-y-1 animate-in fade-in duration-150 border-t border-white/10">
       {/* Phone call link */}
       <a
-        href="tel:09120000000"
+        href="tel:09389196010"
         onClick={() => setIsContactOpen(false)}
         className="flex items-center justify-between px-3 py-2 text-xs font-black text-white hover:bg-black/25 hover:text-[#FBBF24] transition-colors rounded-none"
       >
         <span>تماس تلفنی</span>
         <span className="font-mono text-[11px] text-[#FBBF24]" dir="ltr">
-          ۰۹۱۲-۰۰۰-۰۰۰۰
+          ۰۹۳۸-۹۱۹-۶۰۱۰
         </span>
       </a>
 
@@ -113,7 +122,7 @@ export function Header({
       ) : (
         <>
           <a
-            href="https://wa.me/"
+            href="https://wa.me/989389196010"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => setIsContactOpen(false)}
@@ -123,17 +132,17 @@ export function Header({
             <span>پیام‌رسان واتساپ</span>
           </a>
           <a
-            href="https://t.me/"
+            href="https://t.me/Babakhoram9"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => setIsContactOpen(false)}
             className="flex items-center gap-2 px-3 py-2 text-xs font-black text-white hover:bg-black/25 hover:text-[#FBBF24] transition-colors rounded-none"
           >
             <ChannelIcon type="TELEGRAM" className="w-3.5 h-3.5 text-[#FBBF24]" />
-            <span>کانال تلگرام</span>
+            <span>تلگرام پشتیبانی</span>
           </a>
           <a
-            href="https://eitaa.com/"
+            href="https://eitaa.com/Babakhoram"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => setIsContactOpen(false)}
@@ -240,11 +249,11 @@ export function Header({
 
         {/* Quick Phone Call Link */}
         <a
-          href="tel:09120000000"
+          href="tel:09389196010"
           className="flex items-center gap-1.5 text-[11px] font-black text-white/90 hover:text-[#FBBF24] transition-colors"
           dir="ltr"
         >
-          <span className="font-mono">۰۹۱۲-۰۰۰-۰۰۰۰</span>
+          <span className="font-mono">۰۹۳۸-۹۱۹-۶۰۱۰</span>
           <PhoneCall className="w-3 h-3 text-[#FBBF24]" />
         </a>
       </div>
@@ -270,11 +279,13 @@ export function Header({
 
           <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0 min-w-max">
             {/* Dedicated Brand Emblem */}
-            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-none bg-gradient-to-br from-[#FDE68A] to-[#F59E0B] text-[#332115] flex items-center justify-center shadow-md border border-white/30 group-hover:scale-105 transition-transform shrink-0">
-              <svg className="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L4 6.5V17.5L12 22L20 17.5V6.5L12 2ZM12 4.3L18 7.7V16.3L12 19.7L6 16.3V7.7L12 4.3ZM12 7L8 9.3V14.7L12 17L16 14.7V9.3L12 7Z" />
-              </svg>
-            </div>
+            <img
+              src={headerLogoSrc}
+              alt={siteNameFa}
+              width={48}
+              height={48}
+              className="h-10 w-10 sm:h-12 sm:w-12 object-contain shrink-0 group-hover:scale-105 transition-transform"
+            />
 
             <div className="flex flex-col text-right shrink-0 whitespace-nowrap">
               <span className="text-base sm:text-2xl font-black text-white tracking-tight drop-shadow-md group-hover:text-[#FFF6D6] transition-colors leading-tight whitespace-nowrap">

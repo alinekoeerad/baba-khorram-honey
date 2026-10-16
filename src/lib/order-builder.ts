@@ -144,37 +144,43 @@ export interface ChannelLinkResult {
 
 /**
  * Generates verified deep links for mobile and web clients.
- * Official Link Patterns (Addendum A6):
- * - SMS: sms:<cleanNumber>?body=<encoded>
+ * Official Link Patterns (Addendum A6 & Direct Prefill Specifications):
+ * - SMS: sms:<cleanNumber>?body=<encoded> (Android) or sms:<cleanNumber>&body=<encoded> (iOS)
  * - WhatsApp: https://wa.me/<cleanNumber>?text=<encoded>
- * - Telegram: https://t.me/<username> (Prefill unverified for direct chat -> copy-then-open)
- * - Eitaa: https://eitaa.com/<username> (Prefill unverified -> copy-then-open)
- * - Bale: https://ble.ir/<username> (Prefill unverified -> copy-then-open)
- * - Rubika: https://rubika.ir/<username> (Prefill unverified -> copy-then-open)
+ * - Telegram: https://t.me/<username>?text=<encoded>
+ * - Eitaa: https://eitaa.com/<username>?text=<encoded>
+ * - Bale: https://ble.ir/<username>?text=<encoded>
+ * - Rubika: https://rubika.ir/<username>?text=<encoded>
  */
 export function buildChannelOrderLink(
   type: ChannelType,
   value: string,
-  messageText: string
+  messageText: string,
+  options?: { isIos?: boolean }
 ): ChannelLinkResult {
   const encodedText = encodeURIComponent(messageText);
 
   switch (type) {
     case 'PHONE': {
-      // Clean phone number for tel/sms protocols
+      // Clean phone number for tel/sms protocols with iOS vs Android support
       const cleanPhone = value.replace(/[^0-9+]/g, '');
+      const separator = options?.isIos ? '&' : '?';
       return {
-        directUrl: `sms:${cleanPhone}?body=${encodedText}`,
+        directUrl: `sms:${cleanPhone}${separator}body=${encodedText}`,
         isPrefillSupported: true,
         instructionsFa: 'برنامه پیامک گوشی باز می‌شود و متن سفارش به صورت خودکار درج می‌گردد.',
       };
     }
 
     case 'WHATSAPP': {
-      // Digits only in international format (e.g. 989123456789)
+      // Digits only strictly in international format starting with 98 (e.g. 989389196010)
       let cleanPhone = value.replace(/[^0-9]/g, '');
-      if (cleanPhone.startsWith('0')) {
+      if (cleanPhone.startsWith('00')) {
+        cleanPhone = cleanPhone.substring(2);
+      } else if (cleanPhone.startsWith('0')) {
         cleanPhone = '98' + cleanPhone.substring(1);
+      } else if (!cleanPhone.startsWith('98') && cleanPhone.length === 10) {
+        cleanPhone = '98' + cleanPhone;
       }
       return {
         directUrl: `https://wa.me/${cleanPhone}?text=${encodedText}`,
@@ -184,40 +190,42 @@ export function buildChannelOrderLink(
     }
 
     case 'TELEGRAM': {
+      // Telegram v8+ supports ?text= parameter to prefill chat input
       const cleanUsername = value.replace(/^@/, '').trim();
       return {
-        directUrl: `https://t.me/${cleanUsername}`,
-        isPrefillSupported: false,
-        instructionsFa: 'متن سفارش کپی شد؛ در گفتگوی تلگرام Paste کرده و ارسال فرمایید.',
+        directUrl: `https://t.me/${cleanUsername}?text=${encodedText}`,
+        isPrefillSupported: true,
+        instructionsFa: 'تلگرام باز شده و متن سفارش در پیام آماده ارسال خواهد بود.',
       };
     }
 
     case 'EITAA': {
       const cleanUsername = value.replace(/^@/, '').trim();
       return {
-        directUrl: `https://eitaa.com/${cleanUsername}`,
-        isPrefillSupported: false,
-        instructionsFa: 'متن سفارش کپی شد؛ در پیام‌رسان ایتا Paste کرده و ارسال فرمایید.',
+        directUrl: `https://eitaa.com/${cleanUsername}?text=${encodedText}`,
+        isPrefillSupported: true,
+        instructionsFa: 'متن کامل سفارش کپی شد. پس از ورود به صفحه گفتگوی ایتا، در کادر پیام نگهدارید و گزینه «جایگذاری / Paste» را بزنید.',
       };
     }
 
     case 'BALE': {
       const cleanUsername = value.replace(/^@/, '').trim();
       return {
-        directUrl: `https://ble.ir/${cleanUsername}`,
-        isPrefillSupported: false,
-        instructionsFa: 'متن سفارش کپی شد؛ در پیام‌رسان بله Paste کرده و ارسال فرمایید.',
+        directUrl: `https://ble.ir/${cleanUsername}?text=${encodedText}`,
+        isPrefillSupported: true,
+        instructionsFa: 'متن کامل سفارش کپی شد. پس از ورود به صفحه گفتگوی بله، در کادر پیام نگهدارید و گزینه «جایگذاری / Paste» را بزنید.',
       };
     }
 
     case 'RUBIKA': {
       const cleanUsername = value.replace(/^@/, '').trim();
       return {
-        directUrl: `https://rubika.ir/${cleanUsername}`,
-        isPrefillSupported: false,
-        instructionsFa: 'متن سفارش کپی شد؛ در روبیکا Paste کرده و ارسال فرمایید.',
+        directUrl: `https://rubika.ir/${cleanUsername}?text=${encodedText}`,
+        isPrefillSupported: true,
+        instructionsFa: 'متن کامل سفارش کپی شد. پس از ورود به صفحه گفتگوی روبیکا، در کادر پیام نگهدارید و گزینه «جایگذاری / Paste» را بزنید.',
       };
     }
+
 
     default: {
       return {

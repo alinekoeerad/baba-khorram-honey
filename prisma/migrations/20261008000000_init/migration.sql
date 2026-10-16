@@ -17,7 +17,13 @@ CREATE TYPE "ServingType" AS ENUM ('HOT', 'WARM', 'COLD');
 CREATE TYPE "CardTheme" AS ENUM ('AUTO', 'GREEN', 'ORANGE', 'YELLOW', 'BURGUNDY');
 
 -- CreateEnum
-CREATE TYPE "SectionType" AS ENUM ('HERO', 'IMAGE_TEXT', 'FULL_IMAGE_OVERLAY', 'TEXT_GALLERY', 'CARD_CAROUSEL', 'CONTENT_GRID');
+CREATE TYPE "SectionType" AS ENUM ('HERO', 'IMAGE_TEXT', 'FULL_IMAGE_OVERLAY', 'TEXT_GALLERY', 'CARD_CAROUSEL', 'CONTENT_GRID', 'ARTISAN_HERITAGE', 'HONEY_FINDER', 'TESTIMONIALS', 'FAQ_SECTION');
+
+-- CreateEnum
+CREATE TYPE "FeedbackType" AS ENUM ('SUGGESTION', 'CRITICISM', 'PRODUCT_QUALITY', 'OTHER');
+
+-- CreateEnum
+CREATE TYPE "FeedbackStatus" AS ENUM ('UNREAD', 'REVIEWED', 'ARCHIVED');
 
 -- CreateEnum
 CREATE TYPE "SectionStatus" AS ENUM ('DRAFT', 'ACTIVE', 'DISABLED');
@@ -26,7 +32,7 @@ CREATE TYPE "SectionStatus" AS ENUM ('DRAFT', 'ACTIVE', 'DISABLED');
 CREATE TYPE "SectionBackground" AS ENUM ('NONE', 'WOOD');
 
 -- CreateEnum
-CREATE TYPE "ChannelType" AS ENUM ('PHONE', 'WHATSAPP', 'TELEGRAM', 'EITAA', 'RUBIKA', 'BALE', 'INSTAGRAM');
+CREATE TYPE "ChannelType" AS ENUM ('PHONE', 'WHATSAPP', 'TELEGRAM', 'EITAA', 'RUBIKA', 'BALE', 'INSTAGRAM', 'YOUTUBE');
 
 -- CreateEnum
 CREATE TYPE "RedirectEntityType" AS ENUM ('PRODUCT', 'RECIPE');
@@ -368,6 +374,33 @@ CREATE TABLE "audit_logs" (
     CONSTRAINT "audit_logs_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "recipe_products" (
+    "recipeId" TEXT NOT NULL,
+    "productId" TEXT NOT NULL,
+    "sortOrder" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "recipe_products_pkey" PRIMARY KEY ("recipeId","productId")
+);
+
+-- CreateTable
+CREATE TABLE "feedbacks" (
+    "id" TEXT NOT NULL,
+    "trackingCode" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "phone" TEXT NOT NULL,
+    "type" "FeedbackType" NOT NULL DEFAULT 'SUGGESTION',
+    "message" TEXT NOT NULL,
+    "status" "FeedbackStatus" NOT NULL DEFAULT 'UNREAD',
+    "adminNote" TEXT,
+    "publicReply" TEXT,
+    "ip" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "feedbacks_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
@@ -444,6 +477,13 @@ CREATE UNIQUE INDEX "slug_redirects_entityType_oldSlug_key" ON "slug_redirects"(
 -- CreateIndex
 CREATE INDEX "audit_logs_entityType_entityId_idx" ON "audit_logs"("entityType", "entityId");
 CREATE INDEX "audit_logs_createdAt_idx" ON "audit_logs"("createdAt");
+CREATE INDEX "audit_logs_userId_createdAt_idx" ON "audit_logs"("userId", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "recipe_products_productId_idx" ON "recipe_products"("productId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "feedbacks_trackingCode_key" ON "feedbacks"("trackingCode");
 
 -- AddForeignKey
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -501,6 +541,21 @@ ALTER TABLE "section_items" ADD CONSTRAINT "section_items_productId_fkey" FOREIG
 
 -- AddForeignKey
 ALTER TABLE "section_items" ADD CONSTRAINT "section_items_recipeId_fkey" FOREIGN KEY ("recipeId") REFERENCES "recipes"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "recipe_products" ADD CONSTRAINT "recipe_products_recipeId_fkey" FOREIGN KEY ("recipeId") REFERENCES "recipes"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "recipe_products" ADD CONSTRAINT "recipe_products_productId_fkey" FOREIGN KEY ("productId") REFERENCES "products"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "site_settings" ADD CONSTRAINT "site_settings_logoId_fkey" FOREIGN KEY ("logoId") REFERENCES "media_assets"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "site_settings" ADD CONSTRAINT "site_settings_footerLogoId_fkey" FOREIGN KEY ("footerLogoId") REFERENCES "media_assets"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "site_settings" ADD CONSTRAINT "site_settings_ogImageId_fkey" FOREIGN KEY ("ogImageId") REFERENCES "media_assets"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- ===============================================================
 -- Raw SQL Extras (PostgreSQL Trigram, FTS & Domain Constraints)

@@ -4,21 +4,19 @@
  * RecipeDetailView Component
  *
  * Implements:
- * - [UX-03] Recipe-to-Product Bridge: Embedded recommended honey card with 1-click "افزودن عسل پیشنهادی به سبد خرید".
- * - Color Palette Harmonization: Warm Ivory & Amber text over wood (no neon green).
- * - Deterministic card theme rotation on related recipes.
- * - Sharp 90-degree geometric identity (rounded-none).
+ * - Editorial Recipe Presentation (Artisan Paper Showcase, Ingredients Checklist, Cookbook Steps, Gallery)
+ * - Auto-scrolling Related Recipes Carousel
+ * - Color Palette Harmonization: Dark contrast text over light wood
+ * - Sharp 90-degree geometric identity (rounded-none)
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { WoodBackground } from '@/components/ui/wood-background';
 import { Container } from '@/components/ui/container';
 import { Picture } from '@/components/ui/picture';
-import { PillButton } from '@/components/ui/pill-button';
-import { useCartStore } from '@/lib/cart-store';
+import { RecipeCarousel } from '@/components/public/recipe-carousel';
 import { toPersianDigits, ServingTypeValue, resolveItemCardTheme } from '@/lib/domain-utils';
-import { ShoppingCart, Check, Sparkles } from 'lucide-react';
 import type { RecipeCardViewModel } from '@/server/queries/recipes';
 
 const THEME_BREADCRUMB_COLORS: Record<string, { primary: string; hover: string; muted: string; hex: string }> = {
@@ -92,30 +90,6 @@ export function RecipeDetailView({
   relatedRecipes = [],
   isAdminPreview = false,
 }: RecipeDetailViewProps) {
-  const { actions } = useCartStore();
-  const [honeyAdded, setHoneyAdded] = useState(false);
-
-  // Recommended authentic honey pairing for this recipe
-  const recommendedHoney = {
-    id: 'prod-1',
-    name: 'عسل طبیعی گون کوهستان باباخُرم',
-    slug: 'mountain-astragalus-honey',
-    weight: '۱ کیلوگرمی',
-    optionId: 'opt_prod-1_1kg',
-  };
-
-  const handleAddHoneyToCart = () => {
-    const res = actions.addItem({
-      productId: recommendedHoney.id,
-      optionId: recommendedHoney.optionId,
-      qty: 1,
-    });
-    if (res.success) {
-      setHoneyAdded(true);
-      setTimeout(() => setHoneyAdded(false), 3000);
-    }
-  };
-
   const resolvedThemeKey = resolveItemCardTheme(recipe);
   const themeColors = THEME_BREADCRUMB_COLORS[resolvedThemeKey] || THEME_BREADCRUMB_COLORS.GREEN;
 
@@ -217,52 +191,7 @@ export function RecipeDetailView({
           </div>
         </div>
 
-        {/* 2. [UX-03] Chef's Recommended Honey Box (Parchment Card) */}
-        <div className="max-w-3xl mx-auto p-5 sm:p-6 bg-gradient-to-l from-[#FFFBEB] to-[#FEF3C7] border border-[#F59E0B]/40 rounded-none shadow-sm text-right space-y-4">
-          <div className="flex items-center justify-between border-b border-[#FDE68A] pb-3">
-            <div className="flex items-center gap-2 text-[#2B2017] font-black text-sm sm:text-base">
-              <Sparkles className="w-5 h-5 text-[#D97706]" />
-              <span>عسل پیشنهادی سرآشپز برای این دستور</span>
-            </div>
-            <span className="text-xs text-[#92400E] font-black bg-white px-2.5 py-0.5 border border-[#FDE68A] rounded-full">
-              بسته‌بندی شیشه‌ای
-            </span>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="space-y-1">
-              <h3 className="text-base sm:text-lg font-black text-[#2B2017]">
-                {recommendedHoney.name}
-              </h3>
-              <p className="text-xs sm:text-sm text-[#5C5248] font-medium leading-relaxed">
-                طعم ملایم، طبع معتدل و بافت مخملی این عسل طعم نوشیدنی و دسر را بدون تلخی یا شیرینی زننده تکمیل می‌کند.
-              </p>
-            </div>
-
-            <div className="shrink-0 w-full sm:w-auto">
-              <PillButton
-                variant="gold"
-                size="md"
-                onClick={handleAddHoneyToCart}
-                className="w-full sm:w-auto font-black text-xs sm:text-sm justify-center shadow-md cursor-pointer"
-              >
-                {honeyAdded ? (
-                  <span className="flex items-center gap-1.5 text-emerald-950 font-black">
-                    <Check className="w-4 h-4" />
-                    به سبد افزوده شد
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1.5">
-                    <ShoppingCart className="w-4 h-4" />
-                    افزودن عسل به سبد
-                  </span>
-                )}
-              </PillButton>
-            </div>
-          </div>
-        </div>
-
-        {/* 3. Story & Long Description */}
+        {/* 2. Story & Long Description */}
         {(recipe.shortDescription || recipe.longDescription) && (
           <div className="max-w-3xl mx-auto space-y-4 text-right bg-white p-6 sm:p-8 border border-[#EFE9E0] rounded-none shadow-sm">
             {recipe.shortDescription && (
@@ -278,7 +207,7 @@ export function RecipeDetailView({
           </div>
         )}
 
-        {/* 4. Ingredients Checklist (Clean Ivory Card) */}
+        {/* 3. Ingredients Checklist (Clean Ivory Card) */}
         {recipe.ingredients && recipe.ingredients.length > 0 && (
           <div className="max-w-3xl mx-auto text-right space-y-6 bg-white p-6 sm:p-8 border border-[#EFE9E0] rounded-none shadow-sm">
             <h2 className="text-2xl font-black text-[#2B2017] text-center border-b border-[#EFE9E0] pb-4">
@@ -323,7 +252,7 @@ export function RecipeDetailView({
           </div>
         )}
 
-        {/* 5. Step-by-Step Cooking Guide (Continuous Cookbook Timeline) */}
+        {/* 4. Step-by-Step Cooking Guide (Continuous Cookbook Timeline) */}
         {recipe.steps && recipe.steps.length > 0 && (
           <div className="max-w-3xl mx-auto text-right space-y-6 bg-white p-6 sm:p-10 border border-[#EFE9E0] rounded-none shadow-sm">
             <h2 className="text-2xl font-black text-[#2B2017] text-center border-b border-[#EFE9E0] pb-4">
@@ -353,10 +282,10 @@ export function RecipeDetailView({
           </div>
         )}
 
-        {/* 6. Gallery */}
+        {/* 5. Gallery */}
         {recipe.gallery && recipe.gallery.length > 0 && (
           <div className="space-y-6 pt-4 max-w-3xl mx-auto text-center">
-            <h2 className="text-xl sm:text-2xl font-black text-[#FFFBEB] drop-shadow-sm">
+            <h2 className="text-xl sm:text-2xl font-black text-[#2B2017] drop-shadow-sm">
               تصاویر مراحل و آماده‌سازی
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -377,8 +306,12 @@ export function RecipeDetailView({
             </div>
           </div>
         )}
-
       </Container>
+
+      {/* Related Recipes Carousel */}
+      {relatedRecipes && relatedRecipes.length > 0 && (
+        <RecipeCarousel recipes={relatedRecipes} noBackground={true} />
+      )}
     </WoodBackground>
   );
 }

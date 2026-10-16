@@ -285,3 +285,13 @@ export function toPersianDigits(input: number | string | null | undefined): stri
   const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
   return String(input).replace(/\d/g, (digit) => persianDigits[Number(digit)]);
 }
+
+export {
+  copyTextSync,
+  copyTextToClipboard,
+  safeRandomUUID,
+  getClientOrigin,
+  resolveOrderShareUrl,
+  isIosDevice,
+  buildSmsUri,
+} from './clipboard';

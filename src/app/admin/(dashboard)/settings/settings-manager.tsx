@@ -37,6 +37,7 @@ import {
   Info,
 } from 'lucide-react';
 import { ConfirmModal } from '@/components/admin/confirm-modal';
+import { ImageUploader } from '@/components/admin/image-uploader';
 
 interface SettingsManagerProps {
   initialSettings: SiteSettingsData;
@@ -332,6 +333,26 @@ export function SettingsManager({
                 placeholder="تمامی حقوق برای برند عسل باباخُرم محفوظ است. طراحی و توسعه ۱۴۰۵."
               />
             </div>
+
+            {/* Media Uploaders: Logo & Footer Logo */}
+            <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 border-t border-[#EFE9E0]">
+              <div>
+                <label className="block text-sm font-bold text-[#2B2017] mb-2">لوگوی اصلی سایت (Header Logo)</label>
+                <ImageUploader
+                  value={settings.logo}
+                  onChange={(asset) => setSettings({ ...settings, logoId: asset?.id || null, logo: asset })}
+                  label="انتخاب یا بارگذاری لوگوی اصلی"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-[#2B2017] mb-2">لوگوی فوتر سایت (Footer Logo)</label>
+                <ImageUploader
+                  value={settings.footerLogo}
+                  onChange={(asset) => setSettings({ ...settings, footerLogoId: asset?.id || null, footerLogo: asset })}
+                  label="انتخاب یا بارگذاری لوگوی فوتر"
+                />
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -354,7 +375,7 @@ export function SettingsManager({
                   value={settings.address || ''}
                   onChange={(e) => setSettings({ ...settings, address: e.target.value })}
                   className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#F59E0B]"
-                  placeholder="ایران، آذربایجان شرقی، کلیبر، خیابان امام، پلاک ۴۲"
+                  placeholder="کرج، جهانشهر، بلوار مولانا"
                 />
               </div>
               <div className="md:col-span-2">
@@ -385,7 +406,7 @@ export function SettingsManager({
                     })
                   }
                   className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-4 py-2.5 text-sm text-left focus:outline-none focus:border-[#F59E0B]"
-                  placeholder="38.8711"
+                  placeholder="35.8415"
                 />
               </div>
               <div>
@@ -404,7 +425,27 @@ export function SettingsManager({
                     })
                   }
                   className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-4 py-2.5 text-sm text-left focus:outline-none focus:border-[#F59E0B]"
-                  placeholder="47.0354"
+                  placeholder="50.9850"
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-bold text-[#2B2017] mb-2">
+                  بزرگ‌نمایی نقشه (Zoom)
+                </label>
+                <input
+                  type="number"
+                  min="10"
+                  max="18"
+                  dir="ltr"
+                  value={settings.mapZoom ?? ''}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      mapZoom: e.target.value ? parseInt(e.target.value, 10) : null,
+                    })
+                  }
+                  className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-4 py-2.5 text-sm text-left focus:outline-none focus:border-[#F59E0B]"
+                  placeholder="15"
                 />
               </div>
             </div>
@@ -544,6 +585,18 @@ export function SettingsManager({
                 placeholder="تولید و عرضه مستقیم انواع عسل طبیعی و ارگانیک از دامنه‌های ارسباران و قره‌داغ."
               />
             </div>
+
+            {/* OG Image Uploader */}
+            <div className="pt-4 border-t border-[#EFE9E0]">
+              <label className="block text-sm font-bold text-[#2B2017] mb-2">
+                تصویر پیش‌فرض اشتراک‌گذاری شبکه‌های اجتماعی (OpenGraph Image)
+              </label>
+              <ImageUploader
+                value={settings.ogImage}
+                onChange={(asset) => setSettings({ ...settings, ogImageId: asset?.id || null, ogImage: asset })}
+                label="انتخاب یا بارگذاری تصویر اشتراک‌گذاری سئو"
+              />
+            </div>
           </div>
         </div>
       )}
@@ -551,6 +604,21 @@ export function SettingsManager({
       {/* Tab 4: Cart & Orders */}
       {activeTab === 'cart' && (
         <div className="bg-white border border-[#EFE9E0] rounded-2xl p-6 shadow-xs space-y-6">
+          {/* Zero Active Order Channels Safety Warning */}
+          {settings.cartEnabled && channels.filter((c) => c.isActive && c.acceptsOrders).length === 0 && (
+            <div className="p-4 bg-amber-50 border-2 border-amber-300 rounded-xl text-amber-950 flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+              <div>
+                <h4 className="font-black text-sm text-amber-900 mb-1">
+                  هشدار: هیچ کانال فعالی برای دریافت سفارش تنظیم نشده است!
+                </h4>
+                <p className="text-xs text-amber-800 leading-relaxed font-medium">
+                  سبد خرید فعال است، اما هیچ کانال ارتباطی فعالی با گزینه «دریافت سفارش» فعال نیست. لطفاً در تب «اطلاعات تماس و کانال‌ها» حداقل یک کانال فعال (مانند واتساپ، ایتا، بله یا تلگرام) را به عنوان پذیرنده سفارش علامت‌گذاری نمایید تا فرآیند ثبت سفارش مشتریان تکمیل گردد.
+                </p>
+              </div>
+            </div>
+          )}
+
           <div className="flex items-center justify-between p-4 bg-amber-50/60 border border-amber-200 rounded-xl">
             <div className="space-y-0.5">
               <h3 className="text-base font-bold text-[#2B2017]">فعال‌سازی سبد خرید و ثبت سفارش آنلاین</h3>
@@ -649,7 +717,7 @@ export function SettingsManager({
                     setChannelForm({
                       ...channelForm,
                       type: newType,
-                      acceptsOrders: newType === 'INSTAGRAM' ? false : channelForm.acceptsOrders,
+                      acceptsOrders: (newType === 'INSTAGRAM' || newType === 'YOUTUBE') ? false : channelForm.acceptsOrders,
                     });
                   }}
                   className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#F59E0B]"
@@ -696,13 +764,13 @@ export function SettingsManager({
                   <input
                     type="checkbox"
                     checked={channelForm.acceptsOrders}
-                    disabled={channelForm.type === 'INSTAGRAM'}
+                    disabled={channelForm.type === 'INSTAGRAM' || channelForm.type === 'YOUTUBE'}
                     onChange={(e) => setChannelForm({ ...channelForm, acceptsOrders: e.target.checked })}
                     className="w-4 h-4 rounded text-[#3F8F3B] focus:ring-0 disabled:opacity-50"
                   />
                   <span
                     className={`text-xs font-bold ${
-                      channelForm.type === 'INSTAGRAM' ? 'text-stone-400' : 'text-[#2B2017]'
+                      channelForm.type === 'INSTAGRAM' || channelForm.type === 'YOUTUBE' ? 'text-stone-400' : 'text-[#2B2017]'
                     }`}
                   >
                     پذیرش و ارسال سفارشات سبد خرید در این کانال

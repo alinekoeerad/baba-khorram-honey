@@ -34,7 +34,8 @@ export async function updateRecipeAction(params: {
     );
     return { success: true, data: recipe };
   } catch (err: any) {
-    return { success: false, error: err.message || 'خطا در به‌روزرسانی دستور' };
+    const isConflict = err.name === 'ConcurrencyConflictError' || err?.message?.includes('دیگری ویرایش شده است');
+    return { success: false, error: err.message || 'خطا در به‌روزرسانی دستور', isConflict };
   }
 }
 
@@ -57,3 +58,31 @@ export async function deleteRecipeAction(id: string) {
     return { success: false, error: err.message || 'خطا در حذف دستور' };
   }
 }
+
+export async function bulkDeleteRecipesAction(ids: string[]) {
+  try {
+    const { user } = await requireAdmin({ allowRedirect: false });
+    const res = await RecipeService.bulkDeleteRecipes(ids, user.id);
+    return { success: true, data: res };
+  } catch (err: any) {
+    return { success: false, error: err.message || 'خطا در حذف دسته‌ای دستورها' };
+  }
+}
+
+export async function bulkUpdateRecipeStatusAction(params: {
+  ids: string[];
+  status: 'PUBLISHED' | 'ARCHIVED' | 'DRAFT';
+}) {
+  try {
+    const { user } = await requireAdmin({ allowRedirect: false });
+    const res = await RecipeService.bulkUpdateRecipeStatus(
+      params.ids,
+      params.status,
+      user.id
+    );
+    return { success: true, data: res };
+  } catch (err: any) {
+    return { success: false, error: err.message || 'خطا در تغییر وضعیت دسته‌ای دستورها' };
+  }
+}
+

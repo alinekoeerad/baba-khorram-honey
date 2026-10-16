@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default async function SettingsPage() {
-  await requireAdmin();
+  await requireAdmin({ allowRedirect: true });
   const settings = await SettingsService.getSettings();
   const channels = await SettingsService.getChannels();
 

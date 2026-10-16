@@ -18,21 +18,21 @@ import { PillButton } from '@/components/ui/pill-button';
 import { toPersianDigits } from '@/lib/domain-utils';
 
 export interface ContactMapProps {
-  latitude: number;
-  longitude: number;
+  latitude?: number;
+  longitude?: number;
   zoom?: number;
   siteNameFa: string;
-  address: string;
+  address?: string;
   workingHours?: string | null;
   tileUrl?: string;
 }
 
 export function ContactMap({
-  latitude,
-  longitude,
-  zoom = 14,
+  latitude = 35.8415,
+  longitude = 50.9850,
+  zoom = 15,
   siteNameFa,
-  address,
+  address = 'کرج، جهانشهر، بلوار مولانا',
   workingHours,
   tileUrl = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
 }: ContactMapProps) {

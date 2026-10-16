@@ -95,3 +95,32 @@ describe('Search Text Generation & Maintenance (Task 5)', () => {
     expect(searchText).toContain('پوملو تازه');
   });
 });
+
+describe('Batched Bulk Actions (Eliminate N+1 Loops)', () => {
+  it('ProductService.bulkToggleProductAvailability updates multiple product IDs in a single call', async () => {
+    const updateManySpy = vi.spyOn(db.product, 'updateMany').mockResolvedValueOnce({ count: 3 } as any);
+
+    const res = await ProductService.bulkToggleProductAvailability(['p-1', 'p-2', 'p-3'], false, 'admin-1');
+    expect(res.count).toBe(3);
+    expect(updateManySpy).toHaveBeenCalledWith({
+      where: { id: { in: ['p-1', 'p-2', 'p-3'] } },
+      data: { isAvailable: false },
+    });
+
+    updateManySpy.mockRestore();
+  });
+
+  it('RecipeService.bulkUpdateRecipeStatus updates multiple recipe IDs in a single call', async () => {
+    const updateManySpy = vi.spyOn(db.recipe, 'updateMany').mockResolvedValueOnce({ count: 2 } as any);
+
+    const res = await RecipeService.bulkUpdateRecipeStatus(['r-1', 'r-2'], 'ARCHIVED', 'admin-1');
+    expect(res.count).toBe(2);
+    expect(updateManySpy).toHaveBeenCalledWith({
+      where: { id: { in: ['r-1', 'r-2'] } },
+      data: { status: 'ARCHIVED' },
+    });
+
+    updateManySpy.mockRestore();
+  });
+});
+

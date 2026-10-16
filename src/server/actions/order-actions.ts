@@ -25,8 +25,9 @@ import {
   buildCompactOrderMessage,
   buildChannelOrderLink,
   sanitizePlainText,
+  notifyAdminOfOrder,
   OrderItemLine,
-} from '@/lib/order-builder';
+} from '@/server/services/order-service';
 import { encryptOrderPayload } from '@/server/auth/order-encryption';
 import type { ChannelType } from '@prisma/client';
 
@@ -53,7 +54,7 @@ const BuildOrderInputSchema = z.object({
     notes: z.string().max(300).optional(),
   }),
 
-  channelId: z.string().min(1, 'کانال ارسال سفارش مشخص نشده است.'),
+  channelId: z.string().optional().nullable(),
   createShareLink: z.boolean().default(false),
 });
 
@@ -67,8 +68,12 @@ export interface BuildOrderResult {
   isPrefillSupported?: boolean;
   instructionsFa?: string;
   shareUrl?: string;
+  shareCode?: string;
+  channelType?: ChannelType;
+  channelValue?: string;
   error?: string;
 }
+
 
 export async function buildOrderAction(
   rawInput: BuildOrderInput
@@ -120,14 +125,25 @@ export async function buildOrderAction(
     }
 
     // 4. Verify ContactChannel: active & acceptsOrders
-    const channel = await db.contactChannel.findUnique({
-      where: { id: channelId },
-    });
+    let channel: any = null;
+    if (channelId && channelId !== 'GENERAL_FALLBACK') {
+      channel = await db.contactChannel.findUnique({
+        where: { id: channelId },
+      });
 
-    if (!channel || !channel.isActive || !channel.acceptsOrders) {
-      return {
-        success: false,
-        error: 'کانال ارتباطی انتخاب‌شده در دسترس نیست یا سفارش نمی‌پذیرد.',
+      if (!channel || !channel.isActive || !channel.acceptsOrders) {
+        return {
+          success: false,
+          error: 'کانال ارتباطی انتخاب‌شده در دسترس نیست یا سفارش نمی‌پذیرد.',
+        };
+      }
+    } else {
+      channel = {
+        type: 'OTHER',
+        value: 'contact',
+        label: 'اشتراک‌گذاری و پشتیبانی مستقیم',
+        acceptsOrders: true,
+        isActive: true,
       };
     }
 
@@ -216,14 +232,18 @@ export async function buildOrderAction(
           outroText: settings.orderOutroText,
         });
 
+    // 9b. Instant non-blocking notification to business owner / admin via Eitaa, Bale, Telegram
+    await notifyAdminOfOrder(messageText, channel.type);
+
     // 10. Generate Channel Deep Link
     const linkResult = buildChannelOrderLink(channel.type, channel.value, messageText);
 
     // 11. Create OrderShareLink if requested (for QR / Desktop handoff)
     let shareUrl: string | undefined = undefined;
+    let shareCode: string | undefined = undefined;
 
     if (createShareLink) {
-      const shareCode = crypto.randomBytes(9).toString('base64url'); // 12 unguessable URL-safe characters
+      shareCode = crypto.randomBytes(9).toString('base64url'); // 12 unguessable URL-safe characters
       const expiresAt = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
 
       const encryptedPayload = encryptOrderPayload({
@@ -255,8 +275,11 @@ export async function buildOrderAction(
         },
       });
 
-      const siteUrl = process.env.SITE_URL || 'http://localhost:3000';
-      shareUrl = `${siteUrl}/o/${shareCode}`;
+      const canonicalSiteUrl =
+        process.env.NEXT_PUBLIC_SITE_URL ||
+        process.env.SITE_URL ||
+        'http://localhost:3000';
+      shareUrl = `${canonicalSiteUrl.replace(/\/+$/, '')}/o/${shareCode}`;
     }
 
     // Return result without logging customer PII
@@ -267,8 +290,12 @@ export async function buildOrderAction(
       directUrl: linkResult.directUrl,
       isPrefillSupported: linkResult.isPrefillSupported,
       instructionsFa: linkResult.instructionsFa,
+      channelType: channel.type as ChannelType,
+      channelValue: channel.value,
       shareUrl,
+      shareCode,
     };
+
   } catch (error) {
     console.error('buildOrderAction internal error:', error instanceof Error ? error.message : 'Unknown');
     return {

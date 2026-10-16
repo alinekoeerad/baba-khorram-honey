@@ -27,7 +27,7 @@ interface RecipeItem {
   id: string;
   title: string;
   slug: string;
-  imageUrl?: string;
+  imageUrl?: string | null;
   theme?: string;
   cardTheme?: string;
   sortOrder?: number;
@@ -114,15 +114,15 @@ export function RecipeCarousel({
 
   const content = (
     <Container>
-      {/* Section Header with Warm Ivory Title and Cream Subtitle */}
+      {/* Section Header with High-Contrast Dark Title and Subtitle */}
       <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-16 space-y-3 px-2">
         <h2
           id="recipes-heading"
-          className="text-2xl sm:text-4xl lg:text-5xl font-black text-[#FFFBEB] drop-shadow-md tracking-tight"
+          className="text-2xl sm:text-4xl lg:text-5xl font-black text-[#2B2017] drop-shadow-md tracking-tight"
         >
           ترکیبات و دسرهای سلامت‌بخش
         </h2>
-        <p className="text-[#E5D5C5] font-bold text-sm sm:text-base lg:text-lg">
+        <p className="text-[#5C5248] font-bold text-sm sm:text-base lg:text-lg">
           دستورهای غذایی سنتی، معجون‌ها و نوشیدنی‌های شگفت‌انگیز با طعم اصیل عسل
         </p>
       </div>

@@ -131,7 +131,11 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <ProductDetailView product={product} relatedProducts={relatedProducts} cartEnabled={settings.cartEnabled} />
+      <ProductDetailView
+        product={product}
+        relatedProducts={relatedProducts}
+        cartEnabled={settings.cartEnabled}
+      />
     </>
   );
 }

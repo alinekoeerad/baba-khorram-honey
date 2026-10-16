@@ -56,6 +56,10 @@ enum SectionType {
   TEXT_GALLERY
   CARD_CAROUSEL
   CONTENT_GRID
+  ARTISAN_HERITAGE
+  HONEY_FINDER
+  TESTIMONIALS
+  FAQ_SECTION
 }
 
 enum SectionStatus {
@@ -77,6 +81,7 @@ enum ChannelType {
   RUBIKA
   BALE
   INSTAGRAM
+  YOUTUBE
 }
 
 enum RedirectEntityType {
@@ -196,10 +201,13 @@ model MediaAsset {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  productMainImages Product[]            @relation("ProductMainImage")
-  productGallery    ProductGalleryItem[]
-  recipeMainImages  Recipe[]             @relation("RecipeMainImage")
-  recipeGallery     RecipeGalleryItem[]
+  productMainImages      Product[]            @relation("ProductMainImage")
+  productGallery         ProductGalleryItem[]
+  recipeMainImages       Recipe[]             @relation("RecipeMainImage")
+  recipeGallery          RecipeGalleryItem[]
+  siteSettingsLogo       SiteSettings[]       @relation("SiteSettingsLogo")
+  siteSettingsFooterLogo SiteSettings[]       @relation("SiteSettingsFooterLogo")
+  siteSettingsOgImage    SiteSettings[]       @relation("SiteSettingsOgImage")
 
   @@map("media_assets")
 }
@@ -235,8 +243,8 @@ model Product {
   benefits    ProductBenefit[]
   options     ProductOption[]
   categories  ProductCategory[]
-  gallery     ProductGalleryItem[]
-  sectionItem SectionItem[]
+  gallery              ProductGalleryItem[]
+  sectionItem          SectionItem[]
 
   @@index([status, sortOrder, id])
   @@index([isFeatured])
@@ -325,8 +333,8 @@ model Recipe {
   ingredients RecipeIngredient[]
   steps       RecipeStep[]
   categories  RecipeCategory[]
-  gallery     RecipeGalleryItem[]
-  sectionItem SectionItem[]
+  gallery             RecipeGalleryItem[]
+  sectionItem         SectionItem[]
 
   @@index([status, sortOrder, id])
   @@index([isFeatured])
@@ -389,6 +397,7 @@ model RecipeGalleryItem {
   @@map("recipe_gallery_items")
 }
 
+
 // ---------------------------------------------------------------
 // Homepage Sections & Items
 // ---------------------------------------------------------------
@@ -438,11 +447,14 @@ model SiteSettings {
   logoId         String?
   footerLogoId   String?
   ogImageId      String?
-  address        String?
-  workingHours   String?
-  latitude       Float?
-  longitude      Float?
-  mapZoom        Int?     @default(14)
+  logo           MediaAsset? @relation("SiteSettingsLogo", fields: [logoId], references: [id], onDelete: SetNull)
+  footerLogo     MediaAsset? @relation("SiteSettingsFooterLogo", fields: [footerLogoId], references: [id], onDelete: SetNull)
+  ogImage        MediaAsset? @relation("SiteSettingsOgImage", fields: [ogImageId], references: [id], onDelete: SetNull)
+  address        String?     @default("کرج، جهانشهر، بلوار مولانا")
+  workingHours   String?     @default("همه‌روزه از ساعت ۹:۰۰ الی ۲۱:۰۰")
+  latitude       Float?      @default(35.8415)
+  longitude      Float?      @default(50.9850)
+  mapZoom        Int?        @default(15)
   copyrightText  String?
   seoTitle       String?
   seoDescription String?
@@ -527,6 +539,7 @@ model AuditLog {
 
   @@index([entityType, entityId])
   @@index([createdAt])
+  @@index([userId, createdAt])
   @@map("audit_logs")
 }
 
@@ -553,6 +566,7 @@ model Feedback {
   message      String
   status       FeedbackStatus @default(UNREAD)
   adminNote    String?
+  publicReply  String?
   ip           String?
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt

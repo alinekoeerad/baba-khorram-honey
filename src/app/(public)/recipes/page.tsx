@@ -21,6 +21,7 @@ import { Container } from '@/components/ui/container';
 import { getPublicRecipes } from '@/server/queries/recipes';
 import { getPublicCategories } from '@/server/queries/categories';
 import { RecipesListingClient } from '@/components/public/recipes-listing-client';
+import { uiStringsFa } from '@/content/ui-strings.fa';
 
 export const revalidate = 3600;
 
@@ -54,7 +55,11 @@ export async function generateMetadata({
     'طرز تهیه انواع نوشیدنی‌ها و دسرهای خوش‌طعم و مقوی سنتی و بین‌المللی با عسل طبیعی باباخُرم';
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://babakhorram.com';
-  const canonicalUrl = `${siteUrl}/recipes${category ? `?category=${category}` : ''}`;
+  const queryParams = new URLSearchParams();
+  if (category) queryParams.set('category', category);
+  if (serving === 'hot') queryParams.set('serving', 'hot');
+  const queryString = queryParams.toString();
+  const canonicalUrl = `${siteUrl}/recipes${queryString ? `?${queryString}` : ''}`;
 
   return {
     title,
@@ -69,6 +74,14 @@ export async function generateMetadata({
       locale: 'fa_IR',
       siteName: 'عسل باباخُرم',
     },
+    ...(q
+      ? {
+          robots: {
+            index: false,
+            follow: true,
+          },
+        }
+      : {}),
   };
 }
 
@@ -112,7 +125,7 @@ export default async function RecipesPage({ searchParams }: RecipesPageProps) {
           </div>
 
           <p className="text-sm sm:text-base lg:text-lg text-[#5C3A21] font-semibold max-w-2xl mx-auto leading-relaxed pt-1">
-            دستورهای اختصاصی و سنتی برای آمادهسازی انواع نوشیدنی، معجون و دسرهای سالم با عسل طبیعی
+            {uiStringsFa.listing.recipesSubtitle}
           </p>
         </header>
 
