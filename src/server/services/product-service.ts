@@ -97,7 +97,11 @@ export class ProductService {
   static async getProductById(id: string) {
     return await db.product.findUnique({
       where: { id },
-      include: { categories: true, mainImage: true },
+      include: {
+        categories: true,
+        mainImage: true,
+        gallery: { include: { asset: true }, orderBy: { sortOrder: 'asc' } },
+      },
     });
   }
 

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { db, OrderRecord } from '@/server/db/client';
 import { getRecentAuditLogs } from '@/server/services/audit-log-service';
 import { uiStringsFa } from '@/content/ui-strings.fa';
+import { toPersianDigits } from '@/lib/utils';
 import {
   Package,
   BookOpen,
@@ -240,7 +241,7 @@ export default async function AdminDashboardPage() {
             href="/admin/orders"
             className="px-4 py-2 bg-[#D97706] hover:bg-[#B45309] text-white text-xs font-black transition-colors shadow-xs rounded-none"
           >
-            مدیریت سفارشات ({newOrders})
+            مدیریت سفارشات ({toPersianDigits(newOrders)})
           </Link>
           <Link
             href="/admin/products/new"
@@ -263,7 +264,7 @@ export default async function AdminDashboardPage() {
         <div className="bg-white border-2 border-[#FDE68A] p-6 shadow-xs relative overflow-hidden rounded-none">
           {newOrders > 0 && (
             <div className="absolute top-0 end-0 bg-rose-500 text-white text-[10px] font-black px-2.5 py-0.5 rounded-none animate-pulse">
-              {newOrders} جدید
+              {toPersianDigits(newOrders)} جدید
             </div>
           )}
           <div className="flex items-center justify-between">
@@ -271,15 +272,15 @@ export default async function AdminDashboardPage() {
               <ShoppingBag className="w-4 h-4 text-[#D97706]" />
               <span>سفارشات ثبت‌شده</span>
             </span>
-            <span className="text-2xl font-black text-[#332115]">{totalOrders}</span>
+            <span className="text-2xl font-black text-[#332115]">{toPersianDigits(totalOrders)}</span>
           </div>
           <div className="mt-4 pt-4 border-t border-[#EFE9E0] grid grid-cols-2 gap-2 text-center text-xs">
             <div>
-              <div className="font-bold text-rose-600">{newOrders}</div>
+              <div className="font-bold text-rose-600">{toPersianDigits(newOrders)}</div>
               <div className="text-[#5C5248] text-[11px] mt-0.5">در انتظار هماهنگی</div>
             </div>
             <div>
-              <div className="font-bold text-[#3F8F3B]">{contactedOrders}</div>
+              <div className="font-bold text-[#3F8F3B]">{toPersianDigits(contactedOrders)}</div>
               <div className="text-[#5C5248] text-[11px] mt-0.5">هماهنگ شده</div>
             </div>
           </div>
@@ -300,19 +301,19 @@ export default async function AdminDashboardPage() {
               <Package className="w-4 h-4 text-[#D97706]" />
               <span>{uiStringsFa.adminDashboard.productsOverview}</span>
             </span>
-            <span className="text-2xl font-black text-[#332115]">{totalProducts}</span>
+            <span className="text-2xl font-black text-[#332115]">{toPersianDigits(totalProducts)}</span>
           </div>
           <div className="mt-4 pt-4 border-t border-[#EFE9E0] grid grid-cols-3 gap-2 text-center text-xs">
             <div>
-              <div className="font-bold text-[#3F8F3B]">{publishedProducts}</div>
+              <div className="font-bold text-[#3F8F3B]">{toPersianDigits(publishedProducts)}</div>
               <div className="text-[#5C5248] text-[11px] mt-0.5">{uiStringsFa.adminDashboard.publishedCount}</div>
             </div>
             <div>
-              <div className="font-bold text-[#E07D2B]">{draftProducts}</div>
+              <div className="font-bold text-[#E07D2B]">{toPersianDigits(draftProducts)}</div>
               <div className="text-[#5C5248] text-[11px] mt-0.5">{uiStringsFa.adminDashboard.draftCount}</div>
             </div>
             <div>
-              <div className="font-bold text-[#5C5248]">{archivedProducts}</div>
+              <div className="font-bold text-[#5C5248]">{toPersianDigits(archivedProducts)}</div>
               <div className="text-[#5C5248] text-[11px] mt-0.5">{uiStringsFa.adminDashboard.archivedCount}</div>
             </div>
           </div>
@@ -325,19 +326,19 @@ export default async function AdminDashboardPage() {
               <BookOpen className="w-4 h-4 text-[#3F8F3B]" />
               <span>{uiStringsFa.adminDashboard.recipesOverview}</span>
             </span>
-            <span className="text-2xl font-black text-[#332115]">{totalRecipes}</span>
+            <span className="text-2xl font-black text-[#332115]">{toPersianDigits(totalRecipes)}</span>
           </div>
           <div className="mt-4 pt-4 border-t border-[#EFE9E0] grid grid-cols-3 gap-2 text-center text-xs">
             <div>
-              <div className="font-bold text-[#3F8F3B]">{publishedRecipes}</div>
+              <div className="font-bold text-[#3F8F3B]">{toPersianDigits(publishedRecipes)}</div>
               <div className="text-[#5C5248] text-[11px] mt-0.5">{uiStringsFa.adminDashboard.publishedCount}</div>
             </div>
             <div>
-              <div className="font-bold text-[#E07D2B]">{draftRecipes}</div>
+              <div className="font-bold text-[#E07D2B]">{toPersianDigits(draftRecipes)}</div>
               <div className="text-[#5C5248] text-[11px] mt-0.5">{uiStringsFa.adminDashboard.draftCount}</div>
             </div>
             <div>
-              <div className="font-bold text-[#5C5248]">{archivedRecipes}</div>
+              <div className="font-bold text-[#5C5248]">{toPersianDigits(archivedRecipes)}</div>
               <div className="text-[#5C5248] text-[11px] mt-0.5">{uiStringsFa.adminDashboard.archivedCount}</div>
             </div>
           </div>
@@ -350,7 +351,7 @@ export default async function AdminDashboardPage() {
               <Layers className="w-4 h-4 text-[#C86A00]" />
               <span>دسته‌بندی و پوشش</span>
             </span>
-            <span className="text-2xl font-black text-[#332115]">{totalCategories}</span>
+            <span className="text-2xl font-black text-[#332115]">{toPersianDigits(totalCategories)}</span>
           </div>
           <p className="text-xs text-[#5C5248] mt-3">
             دسته‌بندی‌های فعال کاتالوگ عسل و دستورهای طب سنتی
@@ -377,12 +378,12 @@ export default async function AdminDashboardPage() {
               {unreadFeedbacks > 0 && (
                 <span className="w-2.5 h-2.5 rounded-none bg-rose-500 animate-ping inline-block" />
               )}
-              <span>{unreadFeedbacks}</span>
+              <span>{toPersianDigits(unreadFeedbacks)}</span>
             </span>
           </div>
           <p className="text-xs text-[#5C5248] mt-3">
             {unreadFeedbacks > 0
-              ? `${unreadFeedbacks} پیام و پیشنهاد جدید در انتظار بررسی مدیر`
+              ? `${toPersianDigits(unreadFeedbacks)} پیام و پیشنهاد جدید در انتظار بررسی مدیر`
               : 'تمام بازخوردهای مشتریان بررسی و رسیدگی شده‌اند'}
           </p>
           <div className="mt-4 pt-3 border-t border-[#EFE9E0]">
@@ -414,7 +415,7 @@ export default async function AdminDashboardPage() {
               href="/admin/orders"
               className="text-xs font-bold text-[#D97706] hover:text-[#B45309] bg-[#FFFBEB] px-3.5 py-1.5 border border-[#FDE68A] transition-colors rounded-none"
             >
-              مدیریت و پردازش سفارشات ({totalOrders}) ←
+              مدیریت و پردازش سفارشات ({toPersianDigits(totalOrders)}) ←
             </Link>
           </div>
         </div>
@@ -430,7 +431,7 @@ export default async function AdminDashboardPage() {
                 </h3>
               </div>
               <span className="text-xs font-bold bg-amber-50 text-amber-900 border border-amber-200 px-2 py-0.5 rounded-none">
-                مجموع: {total7DaysOrders} سفارش
+                مجموع: {toPersianDigits(total7DaysOrders)} سفارش
               </span>
             </div>
 
@@ -561,7 +562,7 @@ export default async function AdminDashboardPage() {
             <div className="pt-3 border-t border-[#EFE9E0] grid grid-cols-3 gap-2 text-center text-xs">
               <div className="p-2 bg-[#FDFBF8] border border-[#EFE9E0] rounded-none">
                 <div className="text-[11px] text-[#5C5248]">ثبت سفارش هفته</div>
-                <div className="font-bold text-[#D97706] mt-0.5">{total7DaysOrders} سفارش</div>
+                <div className="font-bold text-[#D97706] mt-0.5">{toPersianDigits(total7DaysOrders)} سفارش</div>
               </div>
               <div className="p-2 bg-[#FDFBF8] border border-[#EFE9E0] rounded-none">
                 <div className="text-[11px] text-[#5C5248]">مجموع ارزش ۷ روز</div>
@@ -574,7 +575,7 @@ export default async function AdminDashboardPage() {
               <div className="p-2 bg-[#FDFBF8] border border-[#EFE9E0] rounded-none">
                 <div className="text-[11px] text-[#5C5248]">میانگین روزانه</div>
                 <div className="font-bold text-[#2B2017] mt-0.5">
-                  {(total7DaysOrders / 7).toFixed(1)} / روز
+                  {toPersianDigits((total7DaysOrders / 7).toFixed(1))} / روز
                 </div>
               </div>
             </div>
@@ -590,7 +591,7 @@ export default async function AdminDashboardPage() {
                 </h3>
               </div>
               <span className="text-xs font-bold text-[#5C5248]">
-                کل: {totalOrdersForBreakdown} سفارش
+                کل: {toPersianDigits(totalOrdersForBreakdown)} سفارش
               </span>
             </div>
 
@@ -652,8 +653,8 @@ export default async function AdminDashboardPage() {
                   <div className="text-[11px] text-rose-700 mt-0.5">نیازمند تماس تلفنی یا چت</div>
                 </div>
                 <div className="text-end">
-                  <div className="text-base font-black text-rose-900">{statusCounts.NEW}</div>
-                  <div className="text-[10px] font-bold text-rose-600">%{statusPercentages.NEW}</div>
+                  <div className="text-base font-black text-rose-900">{toPersianDigits(statusCounts.NEW)}</div>
+                  <div className="text-[10px] font-bold text-rose-600">%{toPersianDigits(statusPercentages.NEW)}</div>
                 </div>
               </div>
 
@@ -667,8 +668,8 @@ export default async function AdminDashboardPage() {
                   <div className="text-[11px] text-amber-700 mt-0.5">تایید نهایی مشتری</div>
                 </div>
                 <div className="text-end">
-                  <div className="text-base font-black text-amber-900">{statusCounts.CONTACTED}</div>
-                  <div className="text-[10px] font-bold text-amber-600">%{statusPercentages.CONTACTED}</div>
+                  <div className="text-base font-black text-amber-900">{toPersianDigits(statusCounts.CONTACTED)}</div>
+                  <div className="text-[10px] font-bold text-amber-600">%{toPersianDigits(statusPercentages.CONTACTED)}</div>
                 </div>
               </div>
 
@@ -682,8 +683,8 @@ export default async function AdminDashboardPage() {
                   <div className="text-[11px] text-emerald-700 mt-0.5">تحویل پست یا پیک</div>
                 </div>
                 <div className="text-end">
-                  <div className="text-base font-black text-emerald-900">{statusCounts.SHIPPED}</div>
-                  <div className="text-[10px] font-bold text-emerald-600">%{statusPercentages.SHIPPED}</div>
+                  <div className="text-base font-black text-emerald-900">{toPersianDigits(statusCounts.SHIPPED)}</div>
+                  <div className="text-[10px] font-bold text-emerald-600">%{toPersianDigits(statusPercentages.SHIPPED)}</div>
                 </div>
               </div>
 
@@ -697,8 +698,8 @@ export default async function AdminDashboardPage() {
                   <div className="text-[11px] text-stone-500 mt-0.5">سفارشات ابطال شده</div>
                 </div>
                 <div className="text-end">
-                  <div className="text-base font-black text-stone-800">{statusCounts.CANCELLED}</div>
-                  <div className="text-[10px] font-bold text-stone-500">%{statusPercentages.CANCELLED}</div>
+                  <div className="text-base font-black text-stone-800">{toPersianDigits(statusCounts.CANCELLED)}</div>
+                  <div className="text-[10px] font-bold text-stone-500">%{toPersianDigits(statusPercentages.CANCELLED)}</div>
                 </div>
               </div>
             </div>
@@ -813,8 +814,8 @@ export default async function AdminDashboardPage() {
                         <span className="text-[10px] text-[#8C7E72] font-mono">({ch.latinName})</span>
                       </div>
                       <div className="flex items-center gap-2 text-xs font-mono">
-                        <span className="font-black text-[#2B2017]">{ch.count} سفارش</span>
-                        <span className="text-[10px] font-bold text-[#5C5248]">%{pct}</span>
+                        <span className="font-black text-[#2B2017]">{toPersianDigits(ch.count)} سفارش</span>
+                        <span className="text-[10px] font-bold text-[#5C5248]">%{toPersianDigits(pct)}</span>
                       </div>
                     </div>
 
@@ -851,7 +852,7 @@ export default async function AdminDashboardPage() {
           <div className="flex items-center gap-2 text-xs">
             <span className="font-bold text-[#2B2017]">نرخ موجودی محصولات:</span>
             <span className={`font-mono font-bold px-2 py-0.5 ${stockRatio >= 80 ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`}>
-              %{stockRatio}
+              %{toPersianDigits(stockRatio)}
             </span>
           </div>
         </div>
@@ -859,8 +860,8 @@ export default async function AdminDashboardPage() {
         {/* Visual Progress Bar */}
         <div className="space-y-1.5">
           <div className="flex justify-between text-xs text-[#5C5248]">
-            <span>موجود در انبار: {inStockProducts} قلم</span>
-            <span>ناموجود: {outOfStockProducts} قلم</span>
+            <span>موجود در انبار: {toPersianDigits(inStockProducts)} قلم</span>
+            <span>ناموجود: {toPersianDigits(outOfStockProducts)} قلم</span>
           </div>
           <div className="w-full h-3 bg-rose-100 overflow-hidden flex">
             <div
@@ -877,7 +878,7 @@ export default async function AdminDashboardPage() {
             <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
             <div>
               <div className="text-xs font-bold text-[#2B2017]">محصولات فعال و در دسترس</div>
-              <div className="text-[11px] text-[#5C5248] mt-0.5">{inStockProducts} محصول آماده خرید آنلاین</div>
+              <div className="text-[11px] text-[#5C5248] mt-0.5">{toPersianDigits(inStockProducts)} محصول آماده خرید آنلاین</div>
             </div>
           </div>
 
@@ -886,7 +887,7 @@ export default async function AdminDashboardPage() {
             <div>
               <div className="text-xs font-bold text-[#2B2017]">محصولات ناموجود</div>
               <div className="text-[11px] text-[#5C5248] mt-0.5">
-                {outOfStockProducts > 0 ? `${outOfStockProducts} محصول نیازمند شارژ انبار` : 'هیچ محصولی ناموجود نیست'}
+                {outOfStockProducts > 0 ? `${toPersianDigits(outOfStockProducts)} محصول نیازمند شارژ انبار` : 'هیچ محصولی ناموجود نیست'}
               </div>
             </div>
           </div>
@@ -895,7 +896,7 @@ export default async function AdminDashboardPage() {
             <Package className="w-5 h-5 text-amber-600 shrink-0" />
             <div>
               <div className="text-xs font-bold text-[#2B2017]">محصولات ویژه صفحه اصلی</div>
-              <div className="text-[11px] text-[#5C5248] mt-0.5">{featuredProducts} محصول دارای نشان ویژه</div>
+              <div className="text-[11px] text-[#5C5248] mt-0.5">{toPersianDigits(featuredProducts)} محصول دارای نشان ویژه</div>
             </div>
           </div>
         </div>

@@ -8,6 +8,7 @@ import React from 'react';
 import { requireAdmin } from '@/server/auth/require-admin';
 import { db } from '@/server/db/client';
 import { FeedbacksManagerClient } from './feedbacks-manager-client';
+import { toPersianDigits } from '@/lib/domain-utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,29 +43,29 @@ export default async function AdminFeedbacksPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-white border border-[#EFE9E0] p-5 shadow-xs">
           <div className="text-xs font-bold text-[#5C5248]">کل بازخوردها</div>
-          <div className="text-2xl sm:text-3xl font-black text-[#332115] mt-2">
-            {totalCount}
+          <div className="text-2xl sm:text-3xl font-black text-[#332115] mt-2 font-mono">
+            {toPersianDigits(totalCount)}
           </div>
         </div>
 
         <div className="bg-white border border-[#EFE9E0] p-5 shadow-xs">
           <div className="text-xs font-bold text-rose-700">خوانده‌نشده (جدید)</div>
-          <div className="text-2xl sm:text-3xl font-black text-rose-700 mt-2">
-            {unreadCount}
+          <div className="text-2xl sm:text-3xl font-black text-rose-700 mt-2 font-mono">
+            {toPersianDigits(unreadCount)}
           </div>
         </div>
 
         <div className="bg-white border border-[#EFE9E0] p-5 shadow-xs">
           <div className="text-xs font-bold text-[#D97706]">پیشنهادات سازنده</div>
-          <div className="text-2xl sm:text-3xl font-black text-[#D97706] mt-2">
-            {suggestionCount}
+          <div className="text-2xl sm:text-3xl font-black text-[#D97706] mt-2 font-mono">
+            {toPersianDigits(suggestionCount)}
           </div>
         </div>
 
         <div className="bg-white border border-[#EFE9E0] p-5 shadow-xs">
           <div className="text-xs font-bold text-[#9E3556]">انتقادات و شکایات</div>
-          <div className="text-2xl sm:text-3xl font-black text-[#9E3556] mt-2">
-            {criticismCount}
+          <div className="text-2xl sm:text-3xl font-black text-[#9E3556] mt-2 font-mono">
+            {toPersianDigits(criticismCount)}
           </div>
         </div>
       </div>

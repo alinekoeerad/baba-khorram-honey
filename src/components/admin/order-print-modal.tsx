@@ -22,6 +22,7 @@ import {
   Truck,
   CheckCircle2,
   RotateCcw,
+  FileDown,
 } from 'lucide-react';
 import { toPersianDigits, parseLocalizedNumber } from '@/lib/domain-utils';
 import type { OrderItem } from './orders-manager-client';
@@ -73,9 +74,9 @@ export function OrderPrintModal({ order, isOpen, onClose }: OrderPrintModalProps
   const [customerNotes, setCustomerNotes] = useState(order.customerNotes || '');
 
   // Sender state
-  const [senderName, setSenderName] = useState('عسل طبیعی باباخُرم');
-  const [senderPhone, setSenderPhone] = useState('۰۹۱۲۳۴۵۶۷۸۹ - ۰۲۶۳۳۴۴۵۵۶۶');
-  const [senderAddress, setSenderAddress] = useState('استان البرز، کرج، دفتر مرکزی توزیع عسل باباخُرم');
+  const [senderName, setSenderName] = useState('عسل باباخُرم');
+  const [senderPhone, setSenderPhone] = useState('۰۲۶-۳۴۴۵۵۶۶۷ | ۰۹۱۲۳۴۵۶۷۸۹');
+  const [senderAddress, setSenderAddress] = useState('کرج، جهانشهر، بلوار مولانا');
   const [senderPostalCode, setSenderPostalCode] = useState('۳۱۴۸۵-۱۴۳۲۱');
 
   // Invoice specifics
@@ -137,6 +138,10 @@ export function OrderPrintModal({ order, isOpen, onClose }: OrderPrintModalProps
     setInvoiceDate(formatDateToPersian(order.createdAt));
     setShippingCost(0);
     setDiscount(0);
+    setSenderName('عسل باباخُرم');
+    setSenderPhone('۰۲۶-۳۴۴۵۵۶۶۷ | ۰۹۱۲۳۴۵۶۷۸۹');
+    setSenderAddress('کرج، جهانشهر، بلوار مولانا');
+    setSenderPostalCode('۳۱۴۸۵-۱۴۳۲۱');
     setLines(
       order.lines.map((l, idx) => ({
         id: `${l.productId || 'p'}_${idx}`,
@@ -150,6 +155,229 @@ export function OrderPrintModal({ order, isOpen, onClose }: OrderPrintModalProps
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const handleExportWord = () => {
+    const content = `
+      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40' dir='rtl' lang='fa'>
+      <head>
+        <meta charset='utf-8'>
+        <title>فاکتور فروش شماره ${orderCode} - عسل باباخُرم</title>
+        <!--[if gte mso 9]>
+        <xml>
+          <w:WordDocument>
+            <w:View>Print</w:View>
+            <w:Zoom>100</w:Zoom>
+            <w:DoNotOptimizeForBrowser/>
+          </w:WordDocument>
+        </xml>
+        <![endif]-->
+        <style>
+          @page Section1 {
+            size: 595.3pt 841.9pt;
+            margin: 1.5cm 1.5cm 1.5cm 1.5cm;
+            mso-header-margin: 36.0pt;
+            mso-footer-margin: 36.0pt;
+            mso-paper-source: 0;
+          }
+          div.Section1 { page: Section1; }
+          body {
+            font-family: 'Vazirmatn', Tahoma, 'B Nazanin', Arial, sans-serif;
+            direction: rtl;
+            text-align: right;
+            color: #2b2017;
+            background: #ffffff;
+            margin: 20px;
+          }
+          .invoice-card {
+            border: 2px solid #2b2017;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+          }
+          .header-title {
+            font-size: 18pt;
+            font-weight: bold;
+            color: #b45309;
+            margin-bottom: 4px;
+          }
+          .header-meta {
+            font-size: 10pt;
+            color: #5c5248;
+            border-bottom: 2px solid #2b2017;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+          }
+          .meta-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+          }
+          .meta-table td {
+            padding: 6px 10px;
+            font-size: 10pt;
+            border: 1px solid #d5c7b8;
+            background-color: #fdfbf8;
+          }
+          .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+          }
+          .items-table th {
+            background-color: #f5eedf;
+            border: 1px solid #2b2017;
+            padding: 8px;
+            font-size: 10pt;
+            font-weight: bold;
+            text-align: center;
+          }
+          .items-table td {
+            border: 1px solid #2b2017;
+            padding: 8px;
+            font-size: 10pt;
+            text-align: right;
+          }
+          .text-center { text-align: center; }
+          .text-left { text-align: left; direction: ltr; }
+          .total-row {
+            background-color: #fde8cd;
+            font-weight: bold;
+            font-size: 11pt;
+          }
+          .footer-box {
+            border-top: 1px solid #d5c7b8;
+            padding-top: 14px;
+            margin-top: 20px;
+            font-size: 9pt;
+            color: #5c5248;
+          }
+          .signature-box {
+            border: 1px solid #2b2017;
+            padding: 10px;
+            text-align: center;
+            height: 70px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="Section1">
+          <div class="invoice-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="header-title">عسل باباخُرم - فاکتور رسمی فروش کالا و خدمات</div>
+                <div style="font-size: 10.5pt; font-weight: bold; color: #332115;">
+                  عسل باباخُرم - کرج، جهانشهر، بلوار مولانا | تلفن: ${toPersianDigits(senderPhone)}
+                </div>
+              </div>
+            </div>
+            <div class="header-meta">
+              تولید و عرضه مستقیم انواع عسل‌های طبیعی و ارگانیک کوهستان، ژل رویال و گرده گل
+            </div>
+
+            <table class="meta-table">
+              <tr>
+                <td style="width: 50%;"><strong>شماره فاکتور: </strong>${orderCode}</td>
+                <td style="width: 50%;"><strong>تاریخ صدور: </strong>${toPersianDigits(invoiceDate)}</td>
+              </tr>
+              <tr>
+                <td><strong>کد رهگیری سفارش: </strong>${orderCode}</td>
+                <td><strong>نام خریدار / گیرنده: </strong>${customerName || 'مشتری گرامی'}</td>
+              </tr>
+              <tr>
+                <td><strong>شماره تماس گیرنده: </strong>${toPersianDigits(customerMobile)}</td>
+                <td><strong>شهر / استان مقصد: </strong>${customerCity || '—'}</td>
+              </tr>
+              ${customerAddress ? `
+              <tr>
+                <td colspan="2"><strong>نشانی دقیق پستی: </strong>${customerAddress}</td>
+              </tr>` : ''}
+              ${customerPostalCode ? `
+              <tr>
+                <td colspan="2"><strong>کد پستی گیرنده: </strong>${toPersianDigits(customerPostalCode)}</td>
+              </tr>` : ''}
+              ${customerNotes ? `
+              <tr>
+                <td colspan="2"><strong>یادداشت ارسال: </strong>${customerNotes}</td>
+              </tr>` : ''}
+            </table>
+
+            <table class="items-table">
+              <thead>
+                <tr>
+                  <th style="width: 40px;">ردیف</th>
+                  <th>نام محصول و شرح کالا</th>
+                  <th style="width: 90px;">بسته‌بندی</th>
+                  <th style="width: 50px;">تعداد</th>
+                  <th style="width: 120px;">قیمت واحد (تومان)</th>
+                  <th style="width: 130px;">مبلغ کل (تومان)</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${lines.map((line, idx) => `
+                <tr>
+                  <td class="text-center">${toPersianDigits(idx + 1)}</td>
+                  <td><strong>${line.productNameFa}</strong></td>
+                  <td class="text-center">${line.optionLabel || '—'}</td>
+                  <td class="text-center"><strong>${toPersianDigits(line.qty)}</strong></td>
+                  <td class="text-left">${formatToman(line.unitPrice || 0)}</td>
+                  <td class="text-left"><strong>${formatToman(line.qty * (line.unitPrice || 0))}</strong></td>
+                </tr>
+                `).join('')}
+                <tr style="background-color: #faf7f2;">
+                  <td colspan="4" style="text-align: right; font-weight: bold;">جمع کل اقلام سفارش:</td>
+                  <td colspan="2" class="text-left" style="font-weight: bold;">${formatToman(itemsTotal)} تومان</td>
+                </tr>
+                ${shippingCost > 0 ? `
+                <tr>
+                  <td colspan="4" style="text-align: right;">هزینه بسته‌بندی و ارسال پستی:</td>
+                  <td colspan="2" class="text-left">${formatToman(shippingCost)} تومان</td>
+                </tr>` : ''}
+                ${discount > 0 ? `
+                <tr style="color: #166534;">
+                  <td colspan="4" style="text-align: right; font-weight: bold;">مبلغ تخفیف ویژه:</td>
+                  <td colspan="2" class="text-left" style="font-weight: bold;">- ${formatToman(discount)} تومان</td>
+                </tr>` : ''}
+                <tr class="total-row">
+                  <td colspan="4" style="text-align: right; font-size: 11.5pt;">مبلغ نهایی قابل پرداخت:</td>
+                  <td colspan="2" class="text-left" style="font-size: 12.5pt; color: #b45309;">${formatToman(grandTotal)} تومان</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+              <tr>
+                <td style="border: none; width: 65%; font-size: 9pt; color: #5c5248; vertical-align: top;">
+                  <strong>تضمین و شرایط عودت:</strong><br/>
+                  تمامی عسل‌های باباخُرم دارای ضمانت اصالت ۱۰۰٪ آزمایشگاهی و طبیعی می‌باشند.<br/>
+                  در صورت هرگونه نارضایتی، مرسوله ظرف مدت ۷ روز کاری قابل عودت کامل می‌باشد.<br/>
+                  پشتیبانی و سفارشات: ${toPersianDigits(senderPhone)} | وب‌سایت: عسل باباخُرم
+                </td>
+                <td style="border: none; width: 35%; vertical-align: top;">
+                  <div class="signature-box">
+                    <span style="font-size: 9pt; color: #5c5248;">مهر و امضای فروشگاه</span><br/><br/>
+                    <strong style="font-size: 10pt; color: #2b2017;">عسل طبیعی باباخُرم</strong>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const blob = new Blob(['\ufeff' + content], {
+      type: 'application/msword;charset=utf-8',
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `فاکتور-عسل-باباخرم-${orderCode}.doc`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -255,6 +483,16 @@ export function OrderPrintModal({ order, isOpen, onClose }: OrderPrintModalProps
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">بازنشانی</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleExportWord}
+                className="h-9 px-3 bg-white hover:bg-amber-50 border border-[#D97706] text-[#D97706] hover:text-[#B45309] text-xs font-bold transition-colors inline-flex items-center gap-1.5 shadow-xs cursor-pointer rounded-none"
+                title="دانلود فاکتور رسمی با فرمت استاندارد Word و Google Docs"
+              >
+                <FileDown className="w-4 h-4" />
+                <span>دانلود / باز کردن در قالب سند (Word / Google Docs)</span>
               </button>
 
               <button
@@ -698,46 +936,80 @@ export function OrderPrintModal({ order, isOpen, onClose }: OrderPrintModalProps
                   {(printMode === 'BOTH' || printMode === 'INVOICE_ONLY') && (
                     <div className="border border-black p-5 space-y-4 font-sans">
                       {/* Invoice Header */}
-                      <div className="flex items-center justify-between border-b-2 border-black pb-3">
-                        <div className="space-y-0.5">
-                          <h2 className="text-lg font-black tracking-tight text-black">
-                            فاکتور فروش کالا و خدمات
-                          </h2>
-                          <p className="text-xs text-stone-700 font-bold">
-                            تولیدی و فروشگاه عسل طبیعی باباخُرم
-                          </p>
+                      <div className="border-b-2 border-black pb-3 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <div className="space-y-0.5">
+                            <div className="flex items-center gap-2">
+                              <span className="text-2xl">🍯</span>
+                              <h2 className="text-xl font-black tracking-tight text-black">
+                                عسل باباخُرم
+                              </h2>
+                            </div>
+                            <p className="text-xs text-stone-700 font-bold">
+                              صورتحساب رسمی فروش کالا و خدمات
+                            </p>
+                          </div>
+
+                          <div className="border border-black px-3 py-1.5 bg-stone-50 text-left text-xs space-y-0.5 font-mono">
+                            <div>
+                              <span className="text-stone-600 font-bold">شماره فاکتور: </span>
+                              <span className="font-black text-sm text-[#D97706]">{orderCode}</span>
+                            </div>
+                            <div>
+                              <span className="text-stone-600 font-bold">تاریخ صدور: </span>
+                              <span className="font-bold">{toPersianDigits(invoiceDate)}</span>
+                            </div>
+                            <div>
+                              <span className="text-stone-600 font-bold">کد رهگیری: </span>
+                              <span className="font-bold">{orderCode}</span>
+                            </div>
+                          </div>
                         </div>
 
-                        <div className="text-left text-xs space-y-1 font-mono">
-                          <div>
-                            <span className="text-stone-600 font-bold">شماره فاکتور: </span>
-                            <span className="font-black text-sm">{orderCode}</span>
+                        <div className="pt-2 border-t border-stone-200 flex flex-wrap items-center justify-between gap-2 text-xs text-stone-800">
+                          <div className="font-bold">
+                            عسل باباخُرم - کرج، جهانشهر، بلوار مولانا | تلفن: <span className="font-mono">{toPersianDigits(senderPhone)}</span>
                           </div>
-                          <div>
-                            <span className="text-stone-600 font-bold">تاریخ صدور: </span>
-                            <span>{toPersianDigits(invoiceDate)}</span>
+                          <div className="text-[11px] text-stone-500">
+                            تولید و عرضه مستقیم انواع عسل‌های طبیعی و ارگانیک
                           </div>
                         </div>
                       </div>
 
-                      {/* Buyer Details Bar */}
-                      <div className="bg-stone-50 border border-black p-2.5 grid grid-cols-12 gap-2 text-xs">
-                        <div className="col-span-4">
-                          <span className="text-stone-600">خریدار: </span>
+                      {/* Customer Details Box */}
+                      <div className="bg-stone-50 border border-black p-3 grid grid-cols-12 gap-2 text-xs">
+                        <div className="col-span-6 sm:col-span-3">
+                          <span className="text-stone-600 font-bold">نام خریدار: </span>
                           <strong className="text-black">{customerName || 'مشتری گرامی'}</strong>
                         </div>
-                        <div className="col-span-4 font-mono">
-                          <span className="text-stone-600">شماره تماس: </span>
+                        <div className="col-span-6 sm:col-span-3 font-mono">
+                          <span className="text-stone-600 font-bold">تلفن همراه: </span>
                           <strong>{toPersianDigits(customerMobile)}</strong>
                         </div>
-                        <div className="col-span-4">
-                          <span className="text-stone-600">شهر مقصد: </span>
+                        <div className="col-span-6 sm:col-span-3">
+                          <span className="text-stone-600 font-bold">شهر مقصد: </span>
                           <strong>{customerCity || '—'}</strong>
                         </div>
+                        <div className="col-span-6 sm:col-span-3 font-mono">
+                          <span className="text-stone-600 font-bold">کد رهگیری: </span>
+                          <strong className="text-[#D97706]">{orderCode}</strong>
+                        </div>
                         {customerAddress && (
-                          <div className="col-span-12 pt-1 border-t border-stone-200">
-                            <span className="text-stone-600">نشانی تحویل: </span>
-                            <span>{customerAddress}</span>
+                          <div className="col-span-12 pt-2 border-t border-stone-200">
+                            <span className="text-stone-600 font-bold">نشانی دقیق تحویل: </span>
+                            <span className="text-black">{customerAddress}</span>
+                          </div>
+                        )}
+                        {customerPostalCode && (
+                          <div className="col-span-12 font-mono">
+                            <span className="text-stone-600 font-bold">کد پستی: </span>
+                            <span>{toPersianDigits(customerPostalCode)}</span>
+                          </div>
+                        )}
+                        {customerNotes && (
+                          <div className="col-span-12 text-stone-700 pt-1 border-t border-stone-200">
+                            <span className="font-bold">یادداشت ارسال: </span>
+                            <span>{customerNotes}</span>
                           </div>
                         )}
                       </div>
@@ -870,6 +1142,14 @@ export function OrderPrintModal({ order, isOpen, onClose }: OrderPrintModalProps
                 className="h-9 px-4 bg-[#FAF7F2] hover:bg-stone-100 border border-[#EFE9E0] font-bold text-[#5C5248] transition-colors cursor-pointer rounded-none"
               >
                 انصراف و بستن
+              </button>
+              <button
+                type="button"
+                onClick={handleExportWord}
+                className="h-9 px-3 bg-white hover:bg-amber-50 border border-[#D97706] text-[#D97706] hover:text-[#B45309] font-bold transition-colors inline-flex items-center gap-1.5 shadow-xs cursor-pointer rounded-none"
+              >
+                <FileDown className="w-4 h-4" />
+                <span>دانلود / باز کردن در قالب سند (Word / Google Docs)</span>
               </button>
               <button
                 type="button"

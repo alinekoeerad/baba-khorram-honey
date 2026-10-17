@@ -21,7 +21,7 @@ import { slugify, parseLocalizedInt } from '@/lib/domain-utils';
 import { ImageUploader } from '@/components/admin/image-uploader';
 import { MultiImageUploader } from '@/components/admin/multi-image-uploader';
 import { createProductAction, updateProductAction } from '@/server/actions/product-actions';
-import { MediaAssetRecord } from '@/server/db/client';
+import type { MediaAssetRecord } from '@/server/db/client';
 import { useToast } from '@/components/admin/toast-provider';
 import { productInputSchema } from '@/server/validation';
 import { AlertTriangle } from 'lucide-react';
@@ -77,7 +77,10 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
   const [newOptionLabel, setNewOptionLabel] = useState('');
 
   const [mainImage, setMainImage] = useState<MediaAssetRecord | null>(initialData?.mainImage || null);
-  const [galleryImages, setGalleryImages] = useState<MediaAssetRecord[]>(initialData?.gallery || []);
+  const currentImageUrl = (initialData as any)?.imageUrl || (initialData?.mainImage ? (initialData.mainImage.url || `/uploads/${initialData.mainImage.storageKey}`) : null);
+  const [galleryImages, setGalleryImages] = useState<MediaAssetRecord[]>(
+    () => (initialData?.gallery || []).map((g: any) => g.asset || g)
+  );
 
   // UI state
   const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
@@ -824,6 +827,7 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
         <ImageUploader
           label={uiStringsFa.adminProducts.mainImage}
           value={mainImage}
+          currentImageUrl={currentImageUrl}
           onChange={(img) => {
             setMainImage(img);
             markDirty();

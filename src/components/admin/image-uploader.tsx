@@ -1,24 +1,25 @@
 'use client';
 
 /**
- * Single Image Uploader Component (Phase 3, Task 5)
+ * Single Image Uploader Component (Phase 3, Task 5 & Phase 10)
  * Accessible, responsive single image uploader with:
+ * - Persistent thumbnail preview with rigid square aspect ratio
+ * - Fallback to existing image URLs (currentImageUrl or string values)
  * - Drag-and-drop zone
- * - Preview using <Picture>
  * - Replace / Remove actions
  * - Alt text editing
  * - Persian progress and error messaging
  * - Full keyboard navigation (focus rings, enter/space triggers)
  */
 
-import React, { useState, useRef, useTransition } from 'react';
-import { Picture } from '@/components/ui/picture';
+import React, { useState, useRef, useTransition, useEffect } from 'react';
 import { uploadMediaAction, updateMediaAltAction } from '@/server/actions/media-actions';
-import { MediaAssetRecord } from '@/server/db/client';
+import type { MediaAssetRecord } from '@/server/db/client';
 import { uiStringsFa } from '@/content/ui-strings.fa';
 
 export interface ImageUploaderProps {
-  value?: MediaAssetRecord | null;
+  value?: MediaAssetRecord | { url?: string; storageKey?: string; alt?: string; id?: string; width?: number; height?: number; bytes?: number } | string | null;
+  currentImageUrl?: string | null;
   onChange: (asset: MediaAssetRecord | null) => void;
   label?: string;
   className?: string;
@@ -26,6 +27,7 @@ export interface ImageUploaderProps {
 
 export function ImageUploader({
   value,
+  currentImageUrl,
   onChange,
   label,
   className = '',
@@ -33,11 +35,42 @@ export function ImageUploader({
   const [isPending, startTransition] = useTransition();
   const [progress, setProgress] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
-  const [altText, setAltText] = useState<string>(value?.alt || '');
+  const [altText, setAltText] = useState<string>(
+    typeof value === 'object' && value?.alt ? value.alt : ''
+  );
   const [isAltSaved, setIsAltSaved] = useState(false);
+  const [isRemoved, setIsRemoved] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
+
+  // Sync alt text when value changes
+  useEffect(() => {
+    if (value && typeof value === 'object' && 'alt' in value && value.alt) {
+      setAltText(value.alt);
+    }
+    if (value) {
+      setIsRemoved(false);
+    }
+  }, [value]);
+
+  // Determine active display URL
+  const activeImageUrl = (() => {
+    if (isRemoved) return null;
+    if (typeof value === 'string' && value.trim()) return value.trim();
+    if (value && typeof value === 'object') {
+      if ('url' in value && typeof value.url === 'string' && value.url.trim()) {
+        return value.url.trim();
+      }
+      if ('storageKey' in value && typeof value.storageKey === 'string' && value.storageKey.trim()) {
+        return `/uploads/${value.storageKey.trim()}`;
+      }
+    }
+    if (currentImageUrl && typeof currentImageUrl === 'string' && currentImageUrl.trim()) {
+      return currentImageUrl.trim();
+    }
+    return null;
+  })();
 
   const handleFileSelect = async (file: File) => {
     setError(null);
@@ -65,6 +98,7 @@ export function ImageUploader({
       setProgress(100);
 
       if (res.success && res.data) {
+        setIsRemoved(false);
         onChange(res.data);
         setAltText(res.data.alt || '');
         setError(null);
@@ -102,16 +136,17 @@ export function ImageUploader({
   };
 
   const handleAltSave = async () => {
-    if (!value?.id) return;
+    if (!value || typeof value !== 'object' || !('id' in value) || !value.id) return;
     const res = await updateMediaAltAction({ assetId: value.id, alt: altText });
     if (res.success) {
       setIsAltSaved(true);
       setTimeout(() => setIsAltSaved(false), 2000);
-      onChange({ ...value, alt: altText });
+      onChange({ ...(value as MediaAssetRecord), alt: altText });
     }
   };
 
   const handleRemove = () => {
+    setIsRemoved(true);
     onChange(null);
     setAltText('');
     setError(null);
@@ -138,8 +173,8 @@ export function ImageUploader({
         aria-label={label || uiStringsFa.adminMedia.uploadTitle}
       />
 
-      {/* Empty State / Upload Dropzone */}
-      {!value ? (
+      {/* Empty State / Upload Dropzone when NO active image */}
+      {!activeImageUrl ? (
         <div
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
@@ -154,7 +189,7 @@ export function ImageUploader({
           tabIndex={0}
           role="button"
           aria-label={uiStringsFa.adminMedia.uploadPrompt}
-          className={`flex flex-col items-center justify-center p-6 border-2 border-dashed transition-all cursor-pointer outline-none focus:ring-2 focus:ring-[#D97706] ${
+          className={`flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-none transition-all cursor-pointer outline-none focus:ring-2 focus:ring-[#D97706] ${
             isDragging
               ? 'border-[#D97706] bg-[#FEF3C7]/40'
               : 'border-[#EFE9E0] bg-[#FFFBEB]/30 hover:border-[#D97706] hover:bg-[#FFFBEB]'
@@ -173,36 +208,43 @@ export function ImageUploader({
           </span>
         </div>
       ) : (
-        /* Preview & Actions Card */
-        <div className="bg-white border border-[#EFE9E0] p-4 shadow-xs space-y-4 rounded-none">
+        /* Preview & Actions Card with Rigid Square Aspect Ratio */
+        <div className="bg-white border border-[#D5C7B8] p-4 shadow-xs space-y-4 rounded-none">
           <div className="flex flex-col sm:flex-row gap-4 items-start">
-            <div className="w-full sm:w-48 h-36 bg-[#FDFBF8] border border-[#EFE9E0] overflow-hidden shrink-0 relative group">
-              <Picture
-                asset={value}
-                alt={altText}
-                className="w-full h-full object-cover"
+            {/* Strict, rigid square preview container */}
+            <div className="w-28 h-28 sm:w-32 sm:h-32 shrink-0 border border-[#D5C7B8] bg-[#FAF8F5] p-1 flex items-center justify-center overflow-hidden rounded-none shadow-xs relative group">
+              <img
+                src={activeImageUrl}
+                alt={altText || (typeof value === 'object' && value?.alt ? value.alt : '') || label || 'تصویر فعال'}
+                className="w-full h-full object-cover rounded-none"
               />
-              <span className="absolute top-2 right-2 bg-[#2B1B10]/85 backdrop-blur-xs text-amber-300 font-mono text-[9px] font-bold px-1.5 py-0.5 border border-amber-500/30">
-                WebP
+              <span className="absolute top-1.5 right-1.5 bg-[#2B1B10]/85 backdrop-blur-xs text-amber-300 font-mono text-[9px] font-bold px-1.5 py-0.5 border border-amber-500/30">
+                {value && typeof value === 'object' && 'storageKey' in value ? 'WebP' : 'فعال'}
               </span>
             </div>
 
             <div className="flex-1 space-y-2 text-xs">
               <div className="flex flex-wrap items-center gap-1.5 pb-1">
                 <span className="bg-emerald-50 text-emerald-800 border border-emerald-200 font-mono font-bold px-2 py-0.5 text-[10px] rounded-none">
-                  فرمت WebP
+                  {value && typeof value === 'object' && 'storageKey' in value ? 'فرمت WebP بهینه‌شده' : 'تصویر فعال شاخص'}
                 </span>
-                <span className="bg-amber-50 text-amber-800 border border-amber-200 font-mono font-bold px-2 py-0.5 text-[10px] rounded-none" dir="ltr">
-                  {value.width} × {value.height} px
-                </span>
-                <span className="bg-stone-100 text-stone-700 border border-stone-200 font-mono font-bold px-2 py-0.5 text-[10px] rounded-none" dir="ltr">
-                  {Math.round(value.bytes / 1024)} KB
-                </span>
+                {value && typeof value === 'object' && 'width' in value && value.width && (
+                  <span className="bg-amber-50 text-amber-800 border border-amber-200 font-mono font-bold px-2 py-0.5 text-[10px] rounded-none" dir="ltr">
+                    {value.width} × {value.height} px
+                  </span>
+                )}
+                {value && typeof value === 'object' && 'bytes' in value && value.bytes && (
+                  <span className="bg-stone-100 text-stone-700 border border-stone-200 font-mono font-bold px-2 py-0.5 text-[10px] rounded-none" dir="ltr">
+                    {Math.round(value.bytes / 1024)} KB
+                  </span>
+                )}
               </div>
 
-              <div className="text-[#5C5248]">
-                شناسه ذخیره‌سازی: <span className="font-mono text-[11px] select-all" dir="ltr">{value.storageKey}</span>
-              </div>
+              {value && typeof value === 'object' && 'storageKey' in value && value.storageKey && (
+                <div className="text-[#5C5248]">
+                  شناسه ذخیره‌سازی: <span className="font-mono text-[11px] select-all" dir="ltr">{value.storageKey}</span>
+                </div>
+              )}
 
               {/* Alt Text Input */}
               <div className="pt-2">
@@ -215,15 +257,17 @@ export function ImageUploader({
                     value={altText}
                     onChange={(e) => setAltText(e.target.value)}
                     placeholder={uiStringsFa.adminMedia.altTextPlaceholder}
-                    className="flex-1 px-3 py-1.5 border border-[#EFE9E0] text-xs focus:outline-none focus:border-[#D97706]"
+                    className="flex-1 px-3 py-1.5 border border-[#D5C7B8] text-xs focus:outline-none focus:border-[#D97706] rounded-none"
                   />
-                  <button
-                    type="button"
-                    onClick={handleAltSave}
-                    className="px-3 py-1.5 bg-[#FEF3C7] text-[#C86A00] font-bold text-xs hover:bg-[#FDE68A] transition-colors"
-                  >
-                    {isAltSaved ? 'ذخیره شد' : 'ثبت'}
-                  </button>
+                  {value && typeof value === 'object' && 'id' in value && value.id && (
+                    <button
+                      type="button"
+                      onClick={handleAltSave}
+                      className="px-3 py-1.5 bg-[#FEF3C7] text-[#C86A00] font-bold text-xs hover:bg-[#FDE68A] transition-colors rounded-none cursor-pointer"
+                    >
+                      {isAltSaved ? 'ذخیره شد' : 'ثبت'}
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -232,14 +276,14 @@ export function ImageUploader({
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="px-3 py-1.5 text-xs font-bold text-[#D97706] hover:bg-[#FEF3C7] border border-[#FDE68A] transition-colors cursor-pointer"
+                  className="px-3 py-1.5 text-xs font-bold text-[#D97706] hover:bg-[#FEF3C7] border border-[#FDE68A] transition-colors cursor-pointer rounded-none"
                 >
                   {uiStringsFa.adminMedia.replaceImage}
                 </button>
                 <button
                   type="button"
                   onClick={handleRemove}
-                  className="px-3 py-1.5 text-xs font-bold text-[#9E3556] hover:bg-[#FEF2F2] border border-[#FECACA] transition-colors cursor-pointer"
+                  className="px-3 py-1.5 text-xs font-bold text-[#9E3556] hover:bg-[#FEF2F2] border border-[#FECACA] transition-colors cursor-pointer rounded-none"
                 >
                   {uiStringsFa.adminMedia.removeImage}
                 </button>
@@ -256,7 +300,7 @@ export function ImageUploader({
             <span>{uiStringsFa.adminMedia.uploading}</span>
             <span>{progress}%</span>
           </div>
-          <div className="w-full h-1.5 bg-[#EFE9E0] overflow-hidden">
+          <div className="w-full h-1.5 bg-[#EFE9E0] overflow-hidden rounded-none">
             <div
               className="h-full bg-[#D97706] transition-all duration-200"
               style={{ width: `${progress}%` }}
@@ -267,7 +311,7 @@ export function ImageUploader({
 
       {/* Error Message */}
       {error && (
-        <div className="p-3 bg-[#FEF2F2] border-s-4 border-[#9E3556] text-[#9E3556] text-xs leading-relaxed" role="alert">
+        <div className="p-3 bg-[#FEF2F2] border-s-4 border-[#9E3556] text-[#9E3556] text-xs leading-relaxed rounded-none" role="alert">
           {error}
         </div>
       )}

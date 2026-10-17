@@ -1,12 +1,12 @@
+'use client';
+
 /**
  * Audit Log Viewer Client Component (Phase 2, Task 6)
  * Filterable log viewer with user/action/entity filters and "Load more" pagination.
  */
 
-'use client';
-
 import React, { useState, useTransition } from 'react';
-import { AuditLogEntry } from '@/server/services/audit-log-service';
+import type { AuditLogEntry } from '@/server/services/audit-log-service';
 import { uiStringsFa } from '@/content/ui-strings.fa';
 import { Shield, Filter, RotateCcw, Loader2, Download } from 'lucide-react';
 import { exportToCsv } from '@/lib/csv-export';

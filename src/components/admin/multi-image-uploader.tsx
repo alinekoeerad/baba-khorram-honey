@@ -13,7 +13,7 @@
 import React, { useState, useRef, useTransition } from 'react';
 import { Picture } from '@/components/ui/picture';
 import { uploadMediaAction, updateMediaAltAction } from '@/server/actions/media-actions';
-import { MediaAssetRecord } from '@/server/db/client';
+import type { MediaAssetRecord } from '@/server/db/client';
 import { uiStringsFa } from '@/content/ui-strings.fa';
 
 export interface MultiImageUploaderProps {
@@ -201,9 +201,13 @@ export function MultiImageUploader({
               key={item.id || idx}
               className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-3 bg-white border border-[#EFE9E0] shadow-xs"
             >
-              {/* Thumbnail */}
-              <div className="w-24 h-18 bg-[#FDFBF8] border border-[#EFE9E0] shrink-0 overflow-hidden relative group">
-                <Picture asset={item} className="w-full h-full object-cover" />
+              {/* Rigid Square Thumbnail */}
+              <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 border border-[#D5C7B8] bg-[#FAF8F5] p-1 flex items-center justify-center overflow-hidden rounded-none relative group shadow-xs">
+                <img
+                  src={(item as any).url || (item.storageKey ? `/uploads/${item.storageKey}` : '')}
+                  alt={item.alt || ''}
+                  className="w-full h-full object-cover rounded-none"
+                />
                 <span className="absolute top-1 right-1 bg-[#2B1B10]/85 text-amber-300 font-mono text-[8px] font-bold px-1 py-0.2 border border-amber-500/30">
                   WebP
                 </span>

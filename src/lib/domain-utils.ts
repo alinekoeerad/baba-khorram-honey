@@ -322,6 +322,17 @@ export function toPersianDigits(input: number | string | null | undefined): stri
   return String(input).replace(/\d/g, (digit) => persianDigits[Number(digit)]);
 }
 
+/**
+ * Formats a number or numeric string as Persian currency with 3-digit comma grouping (e.g. ۱،۲۵۰،۰۰۰).
+ */
+export function formatPriceFa(amount: number | string | null | undefined): string {
+  if (amount === null || amount === undefined || amount === '') return '۰';
+  const num = typeof amount === 'number' ? amount : Number(normalizeDigits(String(amount)));
+  if (!Number.isFinite(num)) return '۰';
+  const formatted = Math.round(num).toLocaleString('fa-IR');
+  return toPersianDigits(formatted);
+}
+
 export {
   copyTextSync,
   copyTextToClipboard,

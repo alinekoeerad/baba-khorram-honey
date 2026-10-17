@@ -23,6 +23,7 @@ import {
   ExternalLink,
   LogOut,
 } from 'lucide-react';
+import { toPersianDigits } from '@/lib/domain-utils';
 import { uiStringsFa } from '@/content/ui-strings.fa';
 
 import { getAdminFeedbacksAction } from '@/server/actions/feedback-actions';
@@ -107,10 +108,12 @@ export function AdminSidebar({ onClose }: { onClose?: () => void }) {
           const isOrders = item.href === '/admin/orders';
           const badgeText =
             isFeedback && unreadCount > 0
-              ? String(unreadCount)
+              ? toPersianDigits(unreadCount)
               : isOrders && newOrdersCount > 0
-              ? String(newOrdersCount)
-              : item.badge;
+              ? toPersianDigits(newOrdersCount)
+              : item.badge
+              ? toPersianDigits(item.badge)
+              : undefined;
 
           return (
             <Link

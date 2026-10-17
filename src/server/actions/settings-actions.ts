@@ -1,12 +1,12 @@
+'use server';
+
 /**
  * Settings & Contact Channels Server Actions (Phase 5, Task 1)
  * Admin-protected actions for site configuration and channel management.
  */
 
-'use server';
-
 import { requireAdmin } from '@/server/auth/require-admin';
-import { SettingsService, SiteSettingsData, ContactChannelData } from '@/server/services/settings-service';
+import { SettingsService, type SiteSettingsData, type ContactChannelData } from '@/server/services/settings-service';
 
 export async function updateSiteSettingsAction(input: Partial<SiteSettingsData>) {
   try {

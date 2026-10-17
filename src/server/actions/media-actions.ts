@@ -1,9 +1,9 @@
+'use server';
+
 /**
  * Media Server Actions (Phase 3, Task 2)
  * Admin-protected, rate-limited server actions for uploading and managing media assets.
  */
-
-'use server';
 
 import { requireAdmin } from '@/server/auth/require-admin';
 import { uploadAndProcessMedia, deleteMediaAsset } from '@/server/services/media-service';

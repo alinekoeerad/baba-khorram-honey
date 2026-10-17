@@ -1,17 +1,17 @@
+'use client';
+
 /**
  * SectionForm Component (Brief Section 7)
  * Comprehensive per-type content form for creating and editing homepage sections.
  * Guarantees zero fields for CSS, custom fonts, or manual styling.
  */
 
-'use client';
-
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ControlledLinkPicker } from './controlled-link-picker';
-import { ControlledLink, SectionImage } from '@/server/validation/homepage-schemas';
+import type { ControlledLink, SectionImage } from '@/server/validation/homepage-schemas';
 import { createHomepageSectionAction, updateHomepageSectionAction } from '@/server/actions/homepage-actions';
-import { SectionType, SectionStatus, SectionBackground } from '@prisma/client';
+import type { SectionType, SectionStatus, SectionBackground } from '@prisma/client';
 import { parseLocalizedInt } from '@/lib/domain-utils';
 import {
   Save,
@@ -271,8 +271,8 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
               <div className="space-y-3">
                 {imagesList.map((img, idx) => (
                   <div key={idx} className="flex items-center gap-3 p-3 bg-stone-50 border border-stone-200 rounded-none">
-                    <div className="w-12 h-12 rounded-none bg-stone-200 overflow-hidden shrink-0 border border-stone-300">
-                      <img src={img.url} alt={img.alt} className="w-full h-full object-cover" />
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 border border-[#D5C7B8] bg-[#FAF8F5] p-1 flex items-center justify-center overflow-hidden rounded-none shadow-xs">
+                      <img src={img.url} alt={img.alt || ''} className="w-full h-full object-cover rounded-none" />
                     </div>
 
                     <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -381,27 +381,38 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                 <ImageIcon className="w-4 h-4 text-[#D97706]" />
                 <span>تصویر شاخص سکشن *</span>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input
-                  type="text"
-                  required
-                  value={content.image?.url || ''}
-                  onChange={(e) =>
-                    updateContentField('image', { ...content.image, url: e.target.value })
-                  }
-                  placeholder="آدرس فایل تصویر (مثلاً /images/beekeeping.jpg)"
-                  className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B] font-mono"
-                  dir="ltr"
-                />
-                <input
-                  type="text"
-                  value={content.image?.alt || ''}
-                  onChange={(e) =>
-                    updateContentField('image', { ...content.image, alt: e.target.value })
-                  }
-                  placeholder="متن جایگزین (Alt)"
-                  className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
-                />
+              <div className="flex flex-col sm:flex-row gap-4 items-start">
+                {content.image?.url && (
+                  <div className="w-28 h-28 sm:w-32 sm:h-32 shrink-0 border border-[#D5C7B8] bg-[#FAF8F5] p-1 flex items-center justify-center overflow-hidden rounded-none shadow-xs">
+                    <img
+                      src={content.image.url}
+                      alt={content.image.alt || ''}
+                      className="w-full h-full object-cover rounded-none"
+                    />
+                  </div>
+                )}
+                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+                  <input
+                    type="text"
+                    required
+                    value={content.image?.url || ''}
+                    onChange={(e) =>
+                      updateContentField('image', { ...content.image, url: e.target.value })
+                    }
+                    placeholder="آدرس فایل تصویر (مثلاً /images/beekeeping.jpg)"
+                    className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B] font-mono"
+                    dir="ltr"
+                  />
+                  <input
+                    type="text"
+                    value={content.image?.alt || ''}
+                    onChange={(e) =>
+                      updateContentField('image', { ...content.image, alt: e.target.value })
+                    }
+                    placeholder="متن جایگزین (Alt)"
+                    className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
+                  />
+                </div>
               </div>
             </div>
 
@@ -473,27 +484,38 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                 <ImageIcon className="w-4 h-4 text-[#D97706]" />
                 <span>تصویر پس‌زمینه بنر *</span>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input
-                  type="text"
-                  required
-                  value={content.image?.url || ''}
-                  onChange={(e) =>
-                    updateContentField('image', { ...content.image, url: e.target.value })
-                  }
-                  placeholder="آدرس فایل تصویر (مثلاً /images/bees-banner.jpg)"
-                  className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B] font-mono"
-                  dir="ltr"
-                />
-                <input
-                  type="text"
-                  value={content.image?.alt || ''}
-                  onChange={(e) =>
-                    updateContentField('image', { ...content.image, alt: e.target.value })
-                  }
-                  placeholder="متن جایگزین (Alt)"
-                  className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
-                />
+              <div className="flex flex-col sm:flex-row gap-4 items-start">
+                {content.image?.url && (
+                  <div className="w-28 h-28 sm:w-32 sm:h-32 shrink-0 border border-[#D5C7B8] bg-[#FAF8F5] p-1 flex items-center justify-center overflow-hidden rounded-none shadow-xs">
+                    <img
+                      src={content.image.url}
+                      alt={content.image.alt || ''}
+                      className="w-full h-full object-cover rounded-none"
+                    />
+                  </div>
+                )}
+                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+                  <input
+                    type="text"
+                    required
+                    value={content.image?.url || ''}
+                    onChange={(e) =>
+                      updateContentField('image', { ...content.image, url: e.target.value })
+                    }
+                    placeholder="آدرس فایل تصویر (مثلاً /images/bees-banner.jpg)"
+                    className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B] font-mono"
+                    dir="ltr"
+                  />
+                  <input
+                    type="text"
+                    value={content.image?.alt || ''}
+                    onChange={(e) =>
+                      updateContentField('image', { ...content.image, alt: e.target.value })
+                    }
+                    placeholder="متن جایگزین (Alt)"
+                    className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
+                  />
+                </div>
               </div>
             </div>
 
@@ -616,25 +638,36 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                       </button>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <input
-                        type="text"
-                        required
-                        value={item.title || ''}
-                        onChange={(e) => handleUpdateGridItem(idx, 'title', e.target.value)}
-                        placeholder="عنوان آیتم *"
-                        className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
-                      />
-                      <input
-                        type="text"
-                        value={item.image?.url || ''}
-                        onChange={(e) =>
-                          handleUpdateGridItem(idx, 'image', { url: e.target.value, alt: item.title })
-                        }
-                        placeholder="آدرس آیکون/تصویر (اختیاری)"
-                        className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B] font-mono"
-                        dir="ltr"
-                      />
+                    <div className="flex flex-col sm:flex-row gap-3 items-start">
+                      {item.image?.url && (
+                        <div className="w-20 h-20 shrink-0 border border-[#D5C7B8] bg-[#FAF8F5] p-1 flex items-center justify-center overflow-hidden rounded-none shadow-xs">
+                          <img
+                            src={item.image.url}
+                            alt={item.image.alt || item.title || ''}
+                            className="w-full h-full object-cover rounded-none"
+                          />
+                        </div>
+                      )}
+                      <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+                        <input
+                          type="text"
+                          required
+                          value={item.title || ''}
+                          onChange={(e) => handleUpdateGridItem(idx, 'title', e.target.value)}
+                          placeholder="عنوان آیتم *"
+                          className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
+                        />
+                        <input
+                          type="text"
+                          value={item.image?.url || ''}
+                          onChange={(e) =>
+                            handleUpdateGridItem(idx, 'image', { url: e.target.value, alt: item.title })
+                          }
+                          placeholder="آدرس آیکون/تصویر (اختیاری)"
+                          className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B] font-mono"
+                          dir="ltr"
+                        />
+                      </div>
                     </div>
 
                     <textarea

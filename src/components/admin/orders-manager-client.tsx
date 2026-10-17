@@ -255,7 +255,7 @@ export function OrdersManagerClient({
                 : 'bg-white text-[#5C5248] border-[#EFE9E0] hover:bg-stone-50'
             }`}
           >
-            همه ({counts.all})
+            همه ({toPersianDigits(counts.all)})
           </button>
 
           <button
@@ -267,7 +267,7 @@ export function OrdersManagerClient({
                 : 'bg-white text-rose-700 border-rose-200 hover:bg-rose-50'
             }`}
           >
-            جدید / در انتظار هماهنگی ({counts.new})
+            جدید / در انتظار هماهنگی ({toPersianDigits(counts.new)})
           </button>
 
           <button
@@ -279,7 +279,7 @@ export function OrdersManagerClient({
                 : 'bg-white text-amber-800 border-amber-200 hover:bg-amber-50'
             }`}
           >
-            هماهنگ شده ({counts.contacted})
+            هماهنگ شده ({toPersianDigits(counts.contacted)})
           </button>
 
           <button
@@ -291,7 +291,7 @@ export function OrdersManagerClient({
                 : 'bg-white text-emerald-800 border-emerald-200 hover:bg-emerald-50'
             }`}
           >
-            ارسال شده ({counts.shipped})
+            ارسال شده ({toPersianDigits(counts.shipped)})
           </button>
 
           <button
@@ -303,7 +303,7 @@ export function OrdersManagerClient({
                 : 'bg-white text-stone-600 border-stone-200 hover:bg-stone-50'
             }`}
           >
-            لغو شده ({counts.cancelled})
+            لغو شده ({toPersianDigits(counts.cancelled)})
           </button>
         </div>
       </div>
@@ -369,7 +369,7 @@ export function OrdersManagerClient({
                           href={`tel:${normalizeDigits(order.customerMobile).replace(/[^0-9+]/g, '')}`}
                           className="hover:text-[#D97706] hover:underline"
                         >
-                          {order.customerMobile}
+                          {toPersianDigits(order.customerMobile)}
                         </a>
                       </div>
 
@@ -544,15 +544,25 @@ export function OrdersManagerClient({
                     <div className="space-y-1.5 pt-2">
                       <div className="flex items-center justify-between text-xs text-stone-500">
                         <span className="font-bold text-[#2B2017]">
-                          متن کامل فاکتور سیستم:
+                          متن فاکتور سفارش:
                         </span>
-                        <button
-                          type="button"
-                          onClick={() => handleCopyInvoice(order)}
-                          className="text-[#D97706] hover:underline font-bold cursor-pointer"
-                        >
-                          کپی متن فاکتور
-                        </button>
+                        <div className="flex items-center gap-3">
+                          <button
+                            type="button"
+                            onClick={() => setPrintModalOrder(order)}
+                            className="text-[#D97706] hover:text-[#B45309] hover:underline font-bold cursor-pointer inline-flex items-center gap-1"
+                          >
+                            <Printer className="w-3.5 h-3.5" />
+                            <span>چاپ و صدور سند رسمی (Word / Docs)</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleCopyInvoice(order)}
+                            className="text-stone-500 hover:text-[#2B2017] hover:underline cursor-pointer"
+                          >
+                            کپی متن
+                          </button>
+                        </div>
                       </div>
                       <pre className="p-3.5 bg-white border border-[#EFE9E0] font-sans text-xs text-[#2B2017] leading-relaxed whitespace-pre-wrap select-all">
                         {order.messageText}

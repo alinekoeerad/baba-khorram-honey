@@ -87,6 +87,7 @@ export class RecipeService {
       include: {
         categories: true,
         mainImage: true,
+        gallery: { include: { asset: true }, orderBy: { sortOrder: 'asc' } },
       },
     });
   }

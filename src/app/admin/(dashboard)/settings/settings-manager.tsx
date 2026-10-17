@@ -1,13 +1,13 @@
+'use client';
+
 /**
  * Settings Manager Client Component (Phase 5, Task 1)
  * Full tabbed settings UI for General, Contact, SEO, and Cart configuration.
  */
 
-'use client';
-
 import React, { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import {
+import type {
   SiteSettingsData,
   ContactChannelData,
 } from '@/server/services/settings-service';
@@ -385,6 +385,7 @@ export function SettingsManager({
                 <label className="block text-sm font-bold text-[#2B2017] mb-2">لوگوی اصلی سایت (Header Logo)</label>
                 <ImageUploader
                   value={settings.logo}
+                  currentImageUrl={typeof settings.logo === 'string' ? settings.logo : (settings.logo?.url || (settings.logo?.storageKey ? `/uploads/${settings.logo.storageKey}` : null))}
                   onChange={(asset) => setSettings({ ...settings, logoId: asset?.id || null, logo: asset })}
                   label="انتخاب یا بارگذاری لوگوی اصلی"
                 />
@@ -393,6 +394,7 @@ export function SettingsManager({
                 <label className="block text-sm font-bold text-[#2B2017] mb-2">لوگوی فوتر سایت (Footer Logo)</label>
                 <ImageUploader
                   value={settings.footerLogo}
+                  currentImageUrl={typeof settings.footerLogo === 'string' ? settings.footerLogo : (settings.footerLogo?.url || (settings.footerLogo?.storageKey ? `/uploads/${settings.footerLogo.storageKey}` : null))}
                   onChange={(asset) => setSettings({ ...settings, footerLogoId: asset?.id || null, footerLogo: asset })}
                   label="انتخاب یا بارگذاری لوگوی فوتر"
                 />
@@ -646,6 +648,7 @@ export function SettingsManager({
               </label>
               <ImageUploader
                 value={settings.ogImage}
+                currentImageUrl={typeof settings.ogImage === 'string' ? settings.ogImage : (settings.ogImage?.url || (settings.ogImage?.storageKey ? `/uploads/${settings.ogImage.storageKey}` : null))}
                 onChange={(asset) => setSettings({ ...settings, ogImageId: asset?.id || null, ogImage: asset })}
                 label="انتخاب یا بارگذاری تصویر اشتراک‌گذاری سئو"
               />

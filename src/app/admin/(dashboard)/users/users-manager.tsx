@@ -1,10 +1,10 @@
+'use client';
+
 /**
  * Admin Users Manager Client Component (Phase 2, Task 8 & Refinement Pass)
  * Manages admin accounts, status activation/deactivation, password resets,
  * deletion with super-admin protection, and sharp 90-degree corners.
  */
-
-'use client';
 
 import React, { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';

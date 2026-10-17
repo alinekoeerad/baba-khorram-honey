@@ -8,6 +8,7 @@ import React from 'react';
 import { requireAdmin } from '@/server/auth/require-admin';
 import { db } from '@/server/db/client';
 import { OrdersManagerClient } from '@/components/admin/orders-manager-client';
+import { toPersianDigits } from '@/lib/domain-utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,29 +43,29 @@ export default async function AdminOrdersPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-white border border-[#EFE9E0] p-5 shadow-xs">
           <div className="text-xs font-bold text-[#5C5248]">کل سفارش‌ها</div>
-          <div className="text-2xl sm:text-3xl font-black text-[#332115] mt-2">
-            {totalCount}
+          <div className="text-2xl sm:text-3xl font-black text-[#332115] mt-2 font-mono">
+            {toPersianDigits(totalCount)}
           </div>
         </div>
 
         <div className="bg-white border border-[#EFE9E0] p-5 shadow-xs">
           <div className="text-xs font-bold text-rose-700">جدید (در انتظار هماهنگی)</div>
-          <div className="text-2xl sm:text-3xl font-black text-rose-700 mt-2">
-            {newCount}
+          <div className="text-2xl sm:text-3xl font-black text-rose-700 mt-2 font-mono">
+            {toPersianDigits(newCount)}
           </div>
         </div>
 
         <div className="bg-white border border-[#EFE9E0] p-5 shadow-xs">
           <div className="text-xs font-bold text-[#D97706]">هماهنگ شده</div>
-          <div className="text-2xl sm:text-3xl font-black text-[#D97706] mt-2">
-            {contactedCount}
+          <div className="text-2xl sm:text-3xl font-black text-[#D97706] mt-2 font-mono">
+            {toPersianDigits(contactedCount)}
           </div>
         </div>
 
         <div className="bg-white border border-[#EFE9E0] p-5 shadow-xs">
           <div className="text-xs font-bold text-[#3F8F3B]">ارسال شده</div>
-          <div className="text-2xl sm:text-3xl font-black text-[#3F8F3B] mt-2">
-            {shippedCount}
+          <div className="text-2xl sm:text-3xl font-black text-[#3F8F3B] mt-2 font-mono">
+            {toPersianDigits(shippedCount)}
           </div>
         </div>
       </div>

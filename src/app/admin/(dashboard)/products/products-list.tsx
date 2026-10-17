@@ -25,6 +25,7 @@ import { useToast } from '@/components/admin/toast-provider';
 import { ConfirmModal } from '@/components/admin/confirm-modal';
 import { AdminBadge } from '@/components/admin/admin-badge';
 import { exportToCsv } from '@/lib/csv-export';
+import { toPersianDigits } from '@/lib/domain-utils';
 import { Download, Trash2, CheckCircle2, XCircle, Plus, Eye, Edit3, Copy } from 'lucide-react';
 
 export interface ProductListItem {
@@ -515,7 +516,7 @@ export function ProductsList({ initialProducts, categories, totalCount }: Produc
             onClick={() => setVisibleCount((prev) => prev + 20)}
             className="flex items-center gap-2 px-6 py-2.5 bg-[#FFFBEB] hover:bg-[#FEF3C7] text-[#332115] font-bold text-xs border border-[#EFE9E0] rounded-none transition-colors cursor-pointer"
           >
-            <span>نمایش بیشتر (نمایش {displayedItems.length} از {filtered.length})</span>
+            <span>نمایش بیشتر (نمایش {toPersianDigits(displayedItems.length)} از {toPersianDigits(filtered.length)})</span>
           </button>
         </div>
       )}

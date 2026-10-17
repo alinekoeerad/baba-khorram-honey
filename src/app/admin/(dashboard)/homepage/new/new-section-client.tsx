@@ -1,15 +1,15 @@
+'use client';
+
 /**
  * NewSectionClient Component (Brief Section 7)
  * Step-by-step creation flow: Select visual template -> Fill content form.
  */
 
-'use client';
-
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { TemplatePicker } from '@/components/admin/homepage/template-picker';
 import { SectionForm } from '@/components/admin/homepage/section-form';
-import { TemplateDefinition, TEMPLATE_REGISTRY } from '@/server/services/homepage-template-service';
+import { type TemplateDefinition, TEMPLATE_REGISTRY } from '@/server/services/homepage-template-service';
 import { ArrowRight, Sparkles, Check } from 'lucide-react';
 
 export function NewSectionClient() {

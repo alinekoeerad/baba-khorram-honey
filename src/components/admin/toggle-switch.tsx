@@ -14,8 +14,10 @@ export interface AdminToggleSwitchProps {
 
 /**
  * AdminToggleSwitch
- * Crisp 90-degree square corners with pixel-perfect vertical and horizontal symmetry.
- * Enforces balanced 2px padding on all sides in both active and inactive states.
+ * Slim, modern, professional toggle switch with crisp 90-degree corners.
+ * - Active: Modern Green (bg-emerald-600)
+ * - Inactive: Clean Neutral Gray (bg-gray-300)
+ * - Thumb: Crisp white square, perfectly centered with balanced 4px padding on all sides.
  */
 export function AdminToggleSwitch({
   checked,
@@ -48,7 +50,7 @@ export function AdminToggleSwitch({
         </div>
       )}
 
-      {/* Switch Track (48px x 24px) with isolated LTR coordinate space */}
+      {/* Slim Switch Track (h-6 w-11) */}
       <button
         id={switchId}
         type="button"
@@ -57,15 +59,15 @@ export function AdminToggleSwitch({
         disabled={disabled}
         dir="ltr"
         onClick={() => !disabled && onChange(!checked)}
-        className={`relative inline-flex h-6 w-12 shrink-0 cursor-pointer rounded-none border border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#D97706] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
-          checked ? 'bg-[#15803D]' : 'bg-stone-300'
+        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-none transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50 ${
+          checked ? 'bg-emerald-600' : 'bg-gray-300'
         }`}
       >
-        {/* Switch Thumb (20px x 20px) - Exactly 2px padding on top, bottom, left, and right */}
+        {/* Thumb: Crisp white square with smooth slide */}
         <span
           aria-hidden="true"
-          className={`pointer-events-none absolute top-[2px] left-[2px] inline-block h-5 w-5 transform rounded-none bg-white shadow-xs ring-0 transition-transform duration-200 ease-in-out ${
-            checked ? 'translate-x-[24px]' : 'translate-x-0'
+          className={`inline-block h-4 w-4 transform bg-white shadow-xs ring-0 transition-transform duration-200 ease-in-out rounded-none ${
+            checked ? 'translate-x-6' : 'translate-x-1'
           }`}
         />
       </button>

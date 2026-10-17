@@ -15,5 +15,6 @@ export {
   parseLocalizedNumber,
   parseLocalizedInt,
   toPersianDigits,
+  formatPriceFa,
 } from './domain-utils';
 

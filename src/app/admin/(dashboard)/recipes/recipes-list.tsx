@@ -24,6 +24,7 @@ import { ConfirmModal } from '@/components/admin/confirm-modal';
 import { AdminBadge } from '@/components/admin/admin-badge';
 import { Plus, CheckCircle2, Archive, Trash2, Download } from 'lucide-react';
 import { exportToCsv } from '@/lib/csv-export';
+import { toPersianDigits } from '@/lib/domain-utils';
 
 export interface RecipeListItem {
   id: string;
@@ -409,10 +410,10 @@ export function RecipesList({ initialRecipes, categories, totalCount }: RecipesL
                       <AdminBadge status={r.status} />
                     </td>
                     <td className="py-3 px-4 text-center font-bold text-[#332115]">
-                      {r.ingredients?.length || 0}
+                      {toPersianDigits(r.ingredients?.length || 0)}
                     </td>
                     <td className="py-3 px-4 text-center font-bold text-[#332115]">
-                      {r.steps?.length || 0}
+                      {toPersianDigits(r.steps?.length || 0)}
                     </td>
                     <td className="py-3 px-4 text-end whitespace-nowrap">
                       <div className="inline-flex items-center gap-1.5 flex-nowrap">
@@ -465,7 +466,7 @@ export function RecipesList({ initialRecipes, categories, totalCount }: RecipesL
             onClick={() => setVisibleCount((prev) => prev + 20)}
             className="flex items-center gap-2 px-6 py-2.5 bg-[#FFFBEB] hover:bg-[#FEF3C7] text-[#332115] font-bold text-xs border border-[#EFE9E0] rounded-none transition-colors cursor-pointer"
           >
-            <span>نمایش بیشتر (نمایش {displayedItems.length} از {filtered.length})</span>
+            <span>نمایش بیشتر (نمایش {toPersianDigits(displayedItems.length)} از {toPersianDigits(filtered.length)})</span>
           </button>
         </div>
       )}

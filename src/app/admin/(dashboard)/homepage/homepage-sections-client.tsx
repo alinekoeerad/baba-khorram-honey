@@ -1,14 +1,14 @@
+'use client';
+
 /**
  * HomepageSectionsClient Component (Brief Section 7)
  * Admin table & management controls for ordering, editing, previewing, and deleting sections.
  */
 
-'use client';
-
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { HomepageSectionViewModel } from '@/server/queries/homepage-sections';
+import type { HomepageSectionViewModel } from '@/server/queries/homepage-sections';
 import {
   deleteHomepageSectionAction,
   toggleHomepageSectionStatusAction,
