@@ -1090,5 +1090,234 @@
     "createdById": "usr_1791465544331_so4k7",
     "createdAt": "2026-10-17T17:26:27.431Z",
     "updatedAt": "2026-10-17T17:26:27.431Z"
+  },
+  {
+    "id": "ast_1792258703490_fffpv",
+    "storageKey": "img_1792258702677_3fffd4fdf4d00a29-1280.webp",
+    "mime": "image/webp",
+    "bytes": 78642,
+    "width": 1280,
+    "height": 1280,
+    "blurDataUrl": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAABQAgCdASoQABAABABoJbACdAYwTvNOycfWgfAA9mw1nqQYqHcR2Xwj1bUfmQjZQoS7IOlfZte1Z0ENMYzbqHTMu3S9Bi5ymT4PvstcR8LnLTS4AP+IWRdBflfG9HxE7mfCBEcViFPzPa833x2tIAAA",
+    "variants": {
+      "480": {
+        "key": "img_1792258702677_3fffd4fdf4d00a29-480.webp",
+        "url": "/uploads/img_1792258702677_3fffd4fdf4d00a29-480.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 30228
+      },
+      "768": {
+        "key": "img_1792258702677_3fffd4fdf4d00a29-768.webp",
+        "url": "/uploads/img_1792258702677_3fffd4fdf4d00a29-768.webp",
+        "width": 768,
+        "height": 768,
+        "bytes": 53750
+      },
+      "1200": {
+        "key": "img_1792258702677_3fffd4fdf4d00a29-1200.webp",
+        "url": "/uploads/img_1792258702677_3fffd4fdf4d00a29-1200.webp",
+        "width": 1200,
+        "height": 1200,
+        "bytes": 82712
+      },
+      "1280": {
+        "key": "img_1792258702677_3fffd4fdf4d00a29-1280.webp",
+        "url": "/uploads/img_1792258702677_3fffd4fdf4d00a29-1280.webp",
+        "width": 1280,
+        "height": 1280,
+        "bytes": 78642
+      }
+    },
+    "alt": null,
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-17T17:38:23.490Z",
+    "updatedAt": "2026-10-17T17:38:23.490Z"
+  },
+  {
+    "id": "ast_1792258711976_qq7z8",
+    "storageKey": "img_1792258711270_fc9819f936093573-1254.webp",
+    "mime": "image/webp",
+    "bytes": 98686,
+    "width": 1254,
+    "height": 1254,
+    "blurDataUrl": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAAAwAgCdASoQABAABABoJbACdAEN5RliUThQAAD2bD21X2i463pehp4U+yp/8sQSwHIfHkEdVMMKgsVc5BdTboK6LqgSbxvRcmcmZe4hhDGnLwna5McOexKgl/p3awlbKhjUeEYo6GGXSpD20AA=",
+    "variants": {
+      "480": {
+        "key": "img_1792258711270_fc9819f936093573-480.webp",
+        "url": "/uploads/img_1792258711270_fc9819f936093573-480.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 35850
+      },
+      "768": {
+        "key": "img_1792258711270_fc9819f936093573-768.webp",
+        "url": "/uploads/img_1792258711270_fc9819f936093573-768.webp",
+        "width": 768,
+        "height": 768,
+        "bytes": 66896
+      },
+      "1200": {
+        "key": "img_1792258711270_fc9819f936093573-1200.webp",
+        "url": "/uploads/img_1792258711270_fc9819f936093573-1200.webp",
+        "width": 1200,
+        "height": 1200,
+        "bytes": 108418
+      },
+      "1254": {
+        "key": "img_1792258711270_fc9819f936093573-1254.webp",
+        "url": "/uploads/img_1792258711270_fc9819f936093573-1254.webp",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 98686
+      }
+    },
+    "alt": null,
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-17T17:38:31.976Z",
+    "updatedAt": "2026-10-17T17:38:31.976Z"
+  },
+  {
+    "id": "ast_1792258712742_rmkdw",
+    "storageKey": "img_1792258712136_e8c57e78604065dc-1254.webp",
+    "mime": "image/webp",
+    "bytes": 38426,
+    "width": 1254,
+    "height": 1254,
+    "blurDataUrl": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADQAQCdASoQABAABABoJYwAAuP+jU0MAAD+94CSCwmeoTWVnbFe1HSi4sPPkk7hYYbcHAjEvChHR3/QGm978S4f9EG+oqcZQ4AAAA==",
+    "variants": {
+      "480": {
+        "key": "img_1792258712136_e8c57e78604065dc-480.webp",
+        "url": "/uploads/img_1792258712136_e8c57e78604065dc-480.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 11192
+      },
+      "768": {
+        "key": "img_1792258712136_e8c57e78604065dc-768.webp",
+        "url": "/uploads/img_1792258712136_e8c57e78604065dc-768.webp",
+        "width": 768,
+        "height": 768,
+        "bytes": 20168
+      },
+      "1200": {
+        "key": "img_1792258712136_e8c57e78604065dc-1200.webp",
+        "url": "/uploads/img_1792258712136_e8c57e78604065dc-1200.webp",
+        "width": 1200,
+        "height": 1200,
+        "bytes": 35766
+      },
+      "1254": {
+        "key": "img_1792258712136_e8c57e78604065dc-1254.webp",
+        "url": "/uploads/img_1792258712136_e8c57e78604065dc-1254.webp",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 38426
+      }
+    },
+    "alt": null,
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-17T17:38:32.742Z",
+    "updatedAt": "2026-10-17T17:38:32.742Z"
+  },
+  {
+    "id": "ast_1792258714578_nbw14",
+    "storageKey": "img_1792258712951_481de952c6833ff0-2048.webp",
+    "mime": "image/webp",
+    "bytes": 329872,
+    "width": 2048,
+    "height": 2048,
+    "blurDataUrl": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAAAwAgCdASoQABAABABoJagCdAau8PiOLWQkAADL/ZWRaH+qAdfu7rtQSry5ZYMY0kx7AE7r0hm3gqezlubiiPoV8mfKpB90n60u0AAA",
+    "variants": {
+      "480": {
+        "key": "img_1792258712951_481de952c6833ff0-480.webp",
+        "url": "/uploads/img_1792258712951_481de952c6833ff0-480.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 37126
+      },
+      "768": {
+        "key": "img_1792258712951_481de952c6833ff0-768.webp",
+        "url": "/uploads/img_1792258712951_481de952c6833ff0-768.webp",
+        "width": 768,
+        "height": 768,
+        "bytes": 72874
+      },
+      "1200": {
+        "key": "img_1792258712951_481de952c6833ff0-1200.webp",
+        "url": "/uploads/img_1792258712951_481de952c6833ff0-1200.webp",
+        "width": 1200,
+        "height": 1200,
+        "bytes": 147938
+      },
+      "1920": {
+        "key": "img_1792258712951_481de952c6833ff0-1920.webp",
+        "url": "/uploads/img_1792258712951_481de952c6833ff0-1920.webp",
+        "width": 1920,
+        "height": 1920,
+        "bytes": 309886
+      },
+      "2048": {
+        "key": "img_1792258712951_481de952c6833ff0-2048.webp",
+        "url": "/uploads/img_1792258712951_481de952c6833ff0-2048.webp",
+        "width": 2048,
+        "height": 2048,
+        "bytes": 329872
+      }
+    },
+    "alt": null,
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-17T17:38:34.578Z",
+    "updatedAt": "2026-10-17T17:38:34.578Z"
+  },
+  {
+    "id": "ast_1792258716252_k8881",
+    "storageKey": "img_1792258714732_bd8b669523886cbd-2048.webp",
+    "mime": "image/webp",
+    "bytes": 206154,
+    "width": 2048,
+    "height": 2048,
+    "blurDataUrl": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAABQAgCdASoQABAABABoJbACdGaAAxM7YfUsbxgA9mw9tWS8jtx5xoDa+5wnG+XiUmb1sZyyAwSl9uoZbqLbE5Ty8dYDSffKw2Qd+jym7aotVz08UCJGQFgA",
+    "variants": {
+      "480": {
+        "key": "img_1792258714732_bd8b669523886cbd-480.webp",
+        "url": "/uploads/img_1792258714732_bd8b669523886cbd-480.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 24620
+      },
+      "768": {
+        "key": "img_1792258714732_bd8b669523886cbd-768.webp",
+        "url": "/uploads/img_1792258714732_bd8b669523886cbd-768.webp",
+        "width": 768,
+        "height": 768,
+        "bytes": 46638
+      },
+      "1200": {
+        "key": "img_1792258714732_bd8b669523886cbd-1200.webp",
+        "url": "/uploads/img_1792258714732_bd8b669523886cbd-1200.webp",
+        "width": 1200,
+        "height": 1200,
+        "bytes": 94346
+      },
+      "1920": {
+        "key": "img_1792258714732_bd8b669523886cbd-1920.webp",
+        "url": "/uploads/img_1792258714732_bd8b669523886cbd-1920.webp",
+        "width": 1920,
+        "height": 1920,
+        "bytes": 185266
+      },
+      "2048": {
+        "key": "img_1792258714732_bd8b669523886cbd-2048.webp",
+        "url": "/uploads/img_1792258714732_bd8b669523886cbd-2048.webp",
+        "width": 2048,
+        "height": 2048,
+        "bytes": 206154
+      }
+    },
+    "alt": null,
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-17T17:38:36.252Z",
+    "updatedAt": "2026-10-17T17:38:36.252Z"
   }
 ]

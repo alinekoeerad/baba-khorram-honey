@@ -18,9 +18,20 @@ import { uiStringsFa } from '@/content/ui-strings.fa';
 import { ImageLightboxModal } from './image-lightbox-modal';
 import { ZoomIn } from 'lucide-react';
 
+export type MultiImageItem = MediaAssetRecord | {
+  id?: string;
+  url?: string;
+  alt?: string | null;
+  storageKey?: string | null;
+  width?: number | null;
+  height?: number | null;
+  bytes?: number | null;
+  mime?: string;
+};
+
 export interface MultiImageUploaderProps {
-  values: MediaAssetRecord[];
-  onChange: (assets: MediaAssetRecord[]) => void;
+  values: any[];
+  onChange: (assets: any[]) => void;
   label?: string;
   maxImages?: number;
   className?: string;
@@ -53,36 +64,44 @@ export function MultiImageUploader({
     setProgress(10);
 
     startTransition(async () => {
-      const uploadedAssets: MediaAssetRecord[] = [];
+      const uploadedAssets: any[] = [];
 
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        if (file.size > 10 * 1024 * 1024) {
-          setError(`فایل ${file.name} بیش از ۱۰ مگابایت است و رد شد.`);
-          continue;
+      try {
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          if (file.size > 10 * 1024 * 1024) {
+            setError(`فایل ${file.name} بیش از ۱۰ مگابایت است و رد شد.`);
+            continue;
+          }
+
+          const formData = new FormData();
+          formData.append('file', file);
+          formData.append('alt', '');
+
+          try {
+            const res = await uploadMediaAction(formData);
+            if (res?.success && res.data) {
+              uploadedAssets.push(res.data);
+            } else {
+              setError(res?.error || uiStringsFa.adminMedia.processingError);
+            }
+          } catch (uploadErr: any) {
+            setError(uploadErr?.message || uiStringsFa.adminMedia.processingError);
+          }
+
+          setProgress(Math.round(((i + 1) / files.length) * 100));
         }
 
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('alt', '');
-
-        const res = await uploadMediaAction(formData);
-        if (res.success && res.data) {
-          uploadedAssets.push(res.data);
-        } else {
-          setError(res.error || uiStringsFa.adminMedia.processingError);
+        if (uploadedAssets.length > 0) {
+          onChange([...values, ...uploadedAssets]);
         }
-
-        setProgress(Math.round(((i + 1) / files.length) * 100));
-      }
-
-      if (uploadedAssets.length > 0) {
-        onChange([...values, ...uploadedAssets]);
-      }
-
-      setTimeout(() => setProgress(0), 400);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
+      } catch (err: any) {
+        setError(err?.message || uiStringsFa.adminMedia.processingError);
+      } finally {
+        setTimeout(() => setProgress(0), 400);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
       }
     });
   };
@@ -108,8 +127,12 @@ export function MultiImageUploader({
     updated[index] = { ...updated[index], alt: newAlt };
     onChange(updated);
 
-    if (updated[index].id) {
-      await updateMediaAltAction({ assetId: updated[index].id, alt: newAlt });
+    if (updated[index]?.id) {
+      try {
+        await updateMediaAltAction({ assetId: updated[index].id, alt: newAlt });
+      } catch (err) {
+        console.warn('Failed to update media alt:', err);
+      }
     }
   };
 
@@ -206,18 +229,19 @@ export function MultiImageUploader({
             >
             {/* Rigid Square Thumbnail with Click-to-Zoom */}
             {(() => {
-              const imgUrl = (item as any).url || (item.storageKey ? `/uploads/${item.storageKey}` : '');
+              const imgUrl = (item as any)?.url || (item?.storageKey ? `/uploads/${item.storageKey}` : '');
               return (
                 <div
-                  onClick={() =>
+                  onClick={() => {
+                    if (!imgUrl) return;
                     setLightboxImage({
                       url: imgUrl,
-                      alt: item.alt || '',
-                      width: item.width,
-                      height: item.height,
-                      bytes: item.bytes,
-                    })
-                  }
+                      alt: item?.alt || '',
+                      width: item?.width,
+                      height: item?.height,
+                      bytes: item?.bytes,
+                    });
+                  }}
                   className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 border border-[#D5C7B8] bg-[#FAF8F5] p-1 flex items-center justify-center overflow-hidden rounded-none relative group shadow-xs cursor-zoom-in"
                   title="کلیک برای بزرگنمایی تصویر"
                   role="button"
@@ -225,21 +249,28 @@ export function MultiImageUploader({
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
+                      if (!imgUrl) return;
                       setLightboxImage({
                         url: imgUrl,
-                        alt: item.alt || '',
-                        width: item.width,
-                        height: item.height,
-                        bytes: item.bytes,
+                        alt: item?.alt || '',
+                        width: item?.width,
+                        height: item?.height,
+                        bytes: item?.bytes,
                       });
                     }
                   }}
                 >
-                  <img
-                    src={imgUrl}
-                    alt={item.alt || ''}
-                    className="w-full h-full object-cover rounded-none transition-transform duration-200 group-hover:scale-105"
-                  />
+                  {imgUrl ? (
+                    <img
+                      src={imgUrl}
+                      alt={item?.alt || ''}
+                      className="w-full h-full object-cover rounded-none transition-transform duration-200 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-[#EFE9E0] flex items-center justify-center text-[10px] text-stone-400">
+                      بدون تصویر
+                    </div>
+                  )}
                   {/* Subtle hover overlay with magnifying glass */}
                   <div className="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white gap-1 pointer-events-none">
                     <ZoomIn className="w-4 h-4 text-amber-300 drop-shadow-sm" />
@@ -259,18 +290,26 @@ export function MultiImageUploader({
                     <span className="bg-emerald-50 text-emerald-800 border border-emerald-200 font-mono font-bold px-1.5 py-0.2 text-[9px] rounded-none">
                       WebP
                     </span>
-                    <span className="bg-amber-50 text-amber-800 border border-amber-200 font-mono font-bold px-1.5 py-0.2 text-[9px] rounded-none" dir="ltr">
-                      {item.width} × {item.height}
-                    </span>
-                    <span className="bg-stone-100 text-stone-700 border border-stone-200 font-mono font-bold px-1.5 py-0.2 text-[9px] rounded-none" dir="ltr">
-                      {Math.round(item.bytes / 1024)} KB
-                    </span>
+                    {item?.width && item?.height ? (
+                      <span className="bg-amber-50 text-amber-800 border border-amber-200 font-mono font-bold px-1.5 py-0.2 text-[9px] rounded-none" dir="ltr">
+                        {item.width} × {item.height}
+                      </span>
+                    ) : null}
+                    {typeof item?.bytes === 'number' && item.bytes > 0 ? (
+                      <span className="bg-stone-100 text-stone-700 border border-stone-200 font-mono font-bold px-1.5 py-0.2 text-[9px] rounded-none" dir="ltr">
+                        {Math.round(item.bytes / 1024)} KB
+                      </span>
+                    ) : null}
                   </div>
-                  <span className="font-mono text-[10px]" dir="ltr">{item.storageKey}</span>
+                  {item?.storageKey ? (
+                    <span className="font-mono text-[10px]" dir="ltr">{item.storageKey}</span>
+                  ) : item?.id ? (
+                    <span className="font-mono text-[10px]" dir="ltr">{item.id}</span>
+                  ) : null}
                 </div>
                 <input
                   type="text"
-                  value={item.alt || ''}
+                  value={item?.alt || ''}
                   onChange={(e) => handleAltChange(idx, e.target.value)}
                   placeholder={uiStringsFa.adminMedia.altTextPlaceholder}
                   className="w-full px-2.5 py-1 text-xs border border-[#EFE9E0] focus:outline-none focus:border-[#D97706] rounded-none"

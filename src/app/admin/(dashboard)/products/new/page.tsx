@@ -13,7 +13,7 @@ export default async function NewProductPage() {
 
   return (
     <ProductForm
-      categories={activeCategories}
+      categories={JSON.parse(JSON.stringify(activeCategories))}
       isEdit={false}
     />
   );

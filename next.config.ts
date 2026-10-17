@@ -31,6 +31,7 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: devOrigins,
   experimental: {
     serverActions: {
+      bodySizeLimit: '25mb',
       allowedOrigins: isDev
         ? [...devOrigins, getProductionDomain()]
         : [getProductionDomain()],

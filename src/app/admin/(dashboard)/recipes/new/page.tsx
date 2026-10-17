@@ -18,8 +18,8 @@ export default async function NewRecipePage() {
 
   return (
     <RecipeForm
-      categories={activeCategories}
-      products={activeProducts}
+      categories={JSON.parse(JSON.stringify(activeCategories))}
+      products={JSON.parse(JSON.stringify(activeProducts))}
       isEdit={false}
     />
   );

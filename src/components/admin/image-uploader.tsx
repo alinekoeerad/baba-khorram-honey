@@ -96,20 +96,25 @@ export function ImageUploader({
         setProgress((prev) => (prev < 90 ? prev + 15 : prev));
       }, 100);
 
-      const res = await uploadMediaAction(formData);
-      clearInterval(timer);
-      setProgress(100);
+      try {
+        const res = await uploadMediaAction(formData);
+        clearInterval(timer);
+        setProgress(100);
 
-      if (res.success && res.data) {
-        setIsRemoved(false);
-        onChange(res.data);
-        setAltText(res.data.alt || '');
-        setError(null);
-      } else {
-        setError(res.error || uiStringsFa.adminMedia.processingError);
+        if (res?.success && res.data) {
+          setIsRemoved(false);
+          onChange(res.data);
+          setAltText(res.data.alt || '');
+          setError(null);
+        } else {
+          setError(res?.error || uiStringsFa.adminMedia.processingError);
+        }
+      } catch (err: any) {
+        clearInterval(timer);
+        setError(err?.message || uiStringsFa.adminMedia.processingError);
+      } finally {
+        setTimeout(() => setProgress(0), 400);
       }
-
-      setTimeout(() => setProgress(0), 400);
     });
   };
 
@@ -140,11 +145,15 @@ export function ImageUploader({
 
   const handleAltSave = async () => {
     if (!value || typeof value !== 'object' || !('id' in value) || !value.id) return;
-    const res = await updateMediaAltAction({ assetId: value.id, alt: altText });
-    if (res.success) {
-      setIsAltSaved(true);
-      setTimeout(() => setIsAltSaved(false), 2000);
-      onChange({ ...(value as MediaAssetRecord), alt: altText });
+    try {
+      const res = await updateMediaAltAction({ assetId: value.id, alt: altText });
+      if (res?.success) {
+        setIsAltSaved(true);
+        setTimeout(() => setIsAltSaved(false), 2000);
+        onChange({ ...(value as MediaAssetRecord), alt: altText });
+      }
+    } catch (err) {
+      console.warn('Failed to save alt text:', err);
     }
   };
 

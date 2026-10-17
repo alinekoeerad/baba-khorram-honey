@@ -98,8 +98,27 @@ export function RecipeForm({ initialData, categories, products = [], isEdit = fa
   const [galleryImages, setGalleryImages] = useState<MediaAssetRecord[]>(() => {
     if (!initialData?.gallery || !Array.isArray(initialData.gallery)) return [];
     return initialData.gallery
-      .map((g: any) => g.asset || g)
-      .filter((img: any) => img && (img.id || img.storageKey));
+      .map((g: any) => {
+        const asset = g?.asset || g;
+        if (!asset) return null;
+        const url = asset.url || (asset.storageKey ? `/uploads/${asset.storageKey}` : '');
+        return {
+          id: asset.id || g.assetId || g.id || '',
+          url,
+          storageKey: asset.storageKey || g.storageKey || '',
+          mime: asset.mime || 'image/webp',
+          bytes: asset.bytes ?? 0,
+          width: asset.width ?? null,
+          height: asset.height ?? null,
+          blurDataUrl: asset.blurDataUrl || null,
+          variants: asset.variants || null,
+          alt: asset.alt || g.alt || '',
+          createdById: asset.createdById || null,
+          createdAt: asset.createdAt ? new Date(asset.createdAt) : new Date(),
+          updatedAt: asset.updatedAt ? new Date(asset.updatedAt) : new Date(),
+        } as MediaAssetRecord;
+      })
+      .filter((img: any): img is MediaAssetRecord => Boolean(img && (img.id || img.storageKey || img.url)));
   });
 
   // UI state
@@ -272,32 +291,41 @@ export function RecipeForm({ initialData, categories, products = [], isEdit = fa
     setFieldErrors({});
 
     startTransition(async () => {
-      let res;
-      if (isEdit) {
-        res = await updateRecipeAction({
-          id: initialData.id,
-          input: payload,
-          expectedUpdatedAt: initialData.updatedAt,
-        });
-      } else {
-        res = await createRecipeAction(payload as any);
-      }
-
-      if (res.success && res.data) {
-        setConflictError(false);
-        setIsDirty(false);
-        toast.success(uiStringsFa.adminRecipes.savedSuccess);
-        setNotification({ type: 'success', message: uiStringsFa.adminRecipes.savedSuccess });
-        if (!isEdit) {
-          router.push(`/admin/recipes/${res.data.id}`);
+      try {
+        let res;
+        if (isEdit) {
+          res = await updateRecipeAction({
+            id: initialData.id,
+            input: payload,
+            expectedUpdatedAt: initialData.updatedAt,
+          });
         } else {
-          router.refresh();
+          res = await createRecipeAction(payload as any);
         }
-      } else {
-        if ((res as any).isConflict) {
-          setConflictError(true);
+
+        if (res.success && res.data) {
+          setConflictError(false);
+          setIsDirty(false);
+          toast.success(uiStringsFa.adminRecipes.savedSuccess);
+          setNotification({ type: 'success', message: uiStringsFa.adminRecipes.savedSuccess });
+          if (!isEdit) {
+            router.push(`/admin/recipes/${res.data.id}`);
+          } else {
+            router.refresh();
+          }
+        } else {
+          if ((res as any).isConflict) {
+            setConflictError(true);
+          }
+          const errorMsg = res.error || 'خطا در ذخیره‌سازی اطلاعات دستور';
+          toast.error(errorMsg);
+          setNotification({
+            type: 'error',
+            message: errorMsg,
+          });
         }
-        const errorMsg = res.error || 'خطا در ذخیره‌سازی اطلاعات دستور';
+      } catch (err: any) {
+        const errorMsg = err?.message || 'خطا در ارتباط با سرور هنگام ذخیره دستور';
         toast.error(errorMsg);
         setNotification({
           type: 'error',
