@@ -156,10 +156,27 @@ export class RecipeService {
           sortOrder: st.sortOrder ?? idx,
         })),
         categoryIds: validated.categoryIds,
+        mainImageId: validated.mainImageId || null,
         searchText,
       },
       include: { categories: true, mainImage: true },
     });
+
+    if (validated.galleryAssetIds && validated.galleryAssetIds.length > 0) {
+      try {
+        for (let i = 0; i < validated.galleryAssetIds.length; i++) {
+          await db.recipeGalleryItem.create({
+            data: {
+              recipeId: created.id,
+              assetId: validated.galleryAssetIds[i],
+              sortOrder: i,
+            },
+          });
+        }
+      } catch (err) {
+        console.error('Failed to create recipe gallery items:', err);
+      }
+    }
 
     try {
       revalidateTag('recipes', 'max');
@@ -288,10 +305,30 @@ export class RecipeService {
         ingredients,
         steps,
         categoryIds,
+        mainImageId: rawInput.mainImageId !== undefined ? rawInput.mainImageId : existing.mainImageId,
         searchText,
       },
       include: { categories: true, mainImage: true },
     });
+
+    if (rawInput.galleryAssetIds !== undefined) {
+      try {
+        await db.recipeGalleryItem.deleteMany({ where: { recipeId: id } });
+        if (Array.isArray(rawInput.galleryAssetIds) && rawInput.galleryAssetIds.length > 0) {
+          for (let i = 0; i < rawInput.galleryAssetIds.length; i++) {
+            await db.recipeGalleryItem.create({
+              data: {
+                recipeId: id,
+                assetId: rawInput.galleryAssetIds[i],
+                sortOrder: i,
+              },
+            });
+          }
+        }
+      } catch (err) {
+        console.error('Failed to update recipe gallery items:', err);
+      }
+    }
 
     try {
       revalidateTag('recipes', 'max');

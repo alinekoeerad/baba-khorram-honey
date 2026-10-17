@@ -354,6 +354,8 @@ export function RecipesListingClient({
                 href={item.href}
                 imageAsset={item.imageAsset}
                 imageUrl={item.imageUrl || (item.imageAsset ? null : '/images/recipe-1.jpg')}
+                secondaryImageAsset={item.secondaryImageAsset}
+                secondaryImageUrl={item.secondaryImageUrl}
                 theme={item.theme || item.cardTheme}
                 slug={item.slug}
                 linkLabel={item.linkLabel}
@@ -374,6 +376,8 @@ export function RecipesListingClient({
                 href={item.href}
                 imageAsset={item.imageAsset}
                 imageUrl={item.imageUrl || (item.imageAsset ? null : '/images/recipe-1.jpg')}
+                secondaryImageAsset={item.secondaryImageAsset}
+                secondaryImageUrl={item.secondaryImageUrl}
                 theme={item.theme || item.cardTheme}
                 slug={item.slug}
                 linkLabel={item.linkLabel}

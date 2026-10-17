@@ -1,0 +1,26 @@
+[
+  {
+    "id": "rgi_1792257398813_uwq16",
+    "recipeId": "rcp_recipe-gallery-test-1792257398810",
+    "assetId": "ast_step_1",
+    "sortOrder": 0
+  },
+  {
+    "id": "rgi_1792257398814_wn2ps",
+    "recipeId": "rcp_recipe-gallery-test-1792257398810",
+    "assetId": "ast_step_2",
+    "sortOrder": 1
+  },
+  {
+    "id": "rgi_1792257442106_f2tvg",
+    "recipeId": "rcp_recipe-gallery-test-1792257442101",
+    "assetId": "ast_step_1",
+    "sortOrder": 0
+  },
+  {
+    "id": "rgi_1792257442106_11xde",
+    "recipeId": "rcp_recipe-gallery-test-1792257442101",
+    "assetId": "ast_step_2",
+    "sortOrder": 1
+  }
+]

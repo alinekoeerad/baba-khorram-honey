@@ -173,10 +173,27 @@ export class ProductService {
         })),
         categoryIds: validated.categoryIds,
         categorySlug: categories[0]?.id?.replace('cat_', '') || 'honey-types',
+        mainImageId: validated.mainImageId || null,
         searchText,
       },
       include: { categories: true, mainImage: true },
     });
+
+    if (validated.galleryAssetIds && validated.galleryAssetIds.length > 0) {
+      try {
+        for (let i = 0; i < validated.galleryAssetIds.length; i++) {
+          await db.productGalleryItem.create({
+            data: {
+              productId: created.id,
+              assetId: validated.galleryAssetIds[i],
+              sortOrder: i,
+            },
+          });
+        }
+      } catch (err) {
+        console.error('Failed to create product gallery items:', err);
+      }
+    }
 
     try {
       revalidateTag('products', 'max');
@@ -287,6 +304,7 @@ export class ProductService {
     if (rawInput.isAvailable !== undefined && rawInput.isAvailable !== existing.isAvailable) changedFields.push('isAvailable');
     if (rawInput.options) changedFields.push('options');
     if (rawInput.benefits) changedFields.push('benefits');
+    if (rawInput.galleryAssetIds) changedFields.push('gallery');
 
     const updated = await db.product.update({
       where: { id },
@@ -311,10 +329,30 @@ export class ProductService {
         options,
         categoryIds,
         categorySlug: categories[0]?.id?.replace('cat_', '') || existing.categorySlug,
+        mainImageId: rawInput.mainImageId !== undefined ? rawInput.mainImageId : existing.mainImageId,
         searchText,
       },
       include: { categories: true, mainImage: true },
     });
+
+    if (rawInput.galleryAssetIds !== undefined) {
+      try {
+        await db.productGalleryItem.deleteMany({ where: { productId: id } });
+        if (Array.isArray(rawInput.galleryAssetIds) && rawInput.galleryAssetIds.length > 0) {
+          for (let i = 0; i < rawInput.galleryAssetIds.length; i++) {
+            await db.productGalleryItem.create({
+              data: {
+                productId: id,
+                assetId: rawInput.galleryAssetIds[i],
+                sortOrder: i,
+              },
+            });
+          }
+        }
+      } catch (err) {
+        console.error('Failed to update product gallery items:', err);
+      }
+    }
 
     try {
       revalidateTag('products', 'max');

@@ -181,6 +181,8 @@ export function SearchResultsClient({
                     subtitle={item.subtitle}
                     href={item.href}
                     imageAsset={item.imageAsset}
+                    secondaryImageAsset={item.secondaryImageAsset}
+                    secondaryImageUrl={item.secondaryImageUrl}
                     theme={item.theme}
                     slug={item.slug}
                     sortOrder={item.sortOrder}
@@ -200,6 +202,8 @@ export function SearchResultsClient({
                     subtitle={item.subtitle}
                     href={item.href}
                     imageAsset={item.imageAsset}
+                    secondaryImageAsset={item.secondaryImageAsset}
+                    secondaryImageUrl={item.secondaryImageUrl}
                     theme={item.theme}
                     slug={item.slug}
                     sortOrder={item.sortOrder}
@@ -254,6 +258,8 @@ export function SearchResultsClient({
                     subtitle={item.subtitle}
                     href={item.href}
                     imageAsset={item.imageAsset}
+                    secondaryImageAsset={item.secondaryImageAsset}
+                    secondaryImageUrl={item.secondaryImageUrl}
                     theme={item.theme}
                     slug={item.slug}
                     sortOrder={item.sortOrder}

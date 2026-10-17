@@ -10,13 +10,16 @@
  * - Sharp 90-degree geometric identity (rounded-none)
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { WoodBackground } from '@/components/ui/wood-background';
 import { Container } from '@/components/ui/container';
 import { Picture } from '@/components/ui/picture';
+import { InteractiveMediaGallery } from '@/components/public/interactive-media-gallery';
+import { ImageLightboxModal } from '@/components/admin/image-lightbox-modal';
 import { RecipeCarousel } from '@/components/public/recipe-carousel';
 import { toPersianDigits, ServingTypeValue, resolveItemCardTheme } from '@/lib/domain-utils';
+import { ZoomIn } from 'lucide-react';
 import type { RecipeCardViewModel } from '@/server/queries/recipes';
 
 const THEME_BREADCRUMB_COLORS: Record<string, { primary: string; hover: string; muted: string; hex: string }> = {
@@ -90,6 +93,7 @@ export function RecipeDetailView({
   relatedRecipes = [],
   isAdminPreview = false,
 }: RecipeDetailViewProps) {
+  const [lightboxSlide, setLightboxSlide] = useState<{ url: string; alt?: string | null; width?: number | null; height?: number | null } | null>(null);
   const resolvedThemeKey = resolveItemCardTheme(recipe);
   const themeColors = THEME_BREADCRUMB_COLORS[resolvedThemeKey] || THEME_BREADCRUMB_COLORS.GREEN;
 
@@ -129,25 +133,15 @@ export function RecipeDetailView({
 
         {/* 1. Editorial Hero Card (Warm Artisan Paper Showcase) */}
         <div className="max-w-3xl mx-auto bg-white border border-[#EFE9E0] p-6 sm:p-10 rounded-none shadow-md space-y-6 text-center">
-          {/* Recipe Photography */}
-          <div className="max-w-md mx-auto aspect-4/3 rounded-none overflow-hidden border-4 border-[#FAF7F2] shadow-md bg-[#FAF7F2] flex items-center justify-center">
-            {recipe.mainImage ? (
-              <Picture
-                asset={recipe.mainImage}
-                width={recipe.mainImage.width ?? 800}
-                height={recipe.mainImage.height ?? 600}
-                blurDataUrl={recipe.mainImage.blurDataUrl}
-                alt={recipe.nameFa}
-                priority={true}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <img
-                src="/images/recipe-1.jpg"
-                alt={recipe.nameFa}
-                className="w-full h-full object-cover"
-              />
-            )}
+          {/* Interactive Recipe Photography & Gallery */}
+          <div className="max-w-md mx-auto">
+            <InteractiveMediaGallery
+              mainImage={recipe.mainImage}
+              gallery={recipe.gallery}
+              fallbackImageUrl={(recipe as any).imageUrl || '/images/recipe-1.jpg'}
+              title={recipe.nameFa}
+              aspectRatio="aspect-4/3"
+            />
           </div>
 
           {/* Titles */}
@@ -289,20 +283,38 @@ export function RecipeDetailView({
               تصاویر مراحل و آماده‌سازی
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {recipe.gallery.map((item) => (
-                <div
-                  key={item.id}
-                  className="aspect-square bg-[#FAF7F2] border-2 border-white/30 overflow-hidden shadow-md rounded-none"
-                >
-                  <Picture
-                    asset={item.asset}
-                    width={400}
-                    height={400}
-                    alt={recipe.nameFa}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-              ))}
+              {recipe.gallery.map((item, idx) => {
+                const asset = item.asset || item;
+                const imgUrl = asset.url || (asset.storageKey ? `/uploads/${asset.storageKey}` : '/images/recipe-1.jpg');
+                return (
+                  <div
+                    key={item.id || idx}
+                    onClick={() => setLightboxSlide({ url: imgUrl, alt: asset.alt || recipe.nameFa, width: asset.width, height: asset.height })}
+                    className="aspect-square bg-[#FAF7F2] border-2 border-white/30 overflow-hidden shadow-md rounded-none relative group cursor-zoom-in"
+                    role="button"
+                    tabIndex={0}
+                    title="کلیک برای بزرگنمایی تصویر"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setLightboxSlide({ url: imgUrl, alt: asset.alt || recipe.nameFa, width: asset.width, height: asset.height });
+                      }
+                    }}
+                  >
+                    <Picture
+                      asset={asset}
+                      width={400}
+                      height={400}
+                      alt={recipe.nameFa}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white gap-1 pointer-events-none">
+                      <ZoomIn className="w-5 h-5 text-amber-300 drop-shadow-md" />
+                      <span className="text-[11px] font-bold drop-shadow-md">بزرگنمایی</span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
@@ -311,6 +323,17 @@ export function RecipeDetailView({
       {/* Related Recipes Carousel */}
       {relatedRecipes && relatedRecipes.length > 0 && (
         <RecipeCarousel recipes={relatedRecipes} noBackground={true} />
+      )}
+
+      {/* Lightbox for Step Photos */}
+      {lightboxSlide && (
+        <ImageLightboxModal
+          isOpen={Boolean(lightboxSlide)}
+          onClose={() => setLightboxSlide(null)}
+          imageUrl={lightboxSlide.url}
+          alt={lightboxSlide.alt}
+          dimensions={{ width: lightboxSlide.width, height: lightboxSlide.height }}
+        />
       )}
     </WoodBackground>
   );

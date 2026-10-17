@@ -145,6 +145,8 @@ let productOptionsStore: any[] = loadJson('product-options.json', []);
 let orderShareLinksStore: any[] = loadJson('order-share-links.json', []);
 let recipeProductsStore: any[] = loadJson('recipe-products.json', []);
 let ordersStore: OrderRecord[] = loadJson('orders.json', []);
+let productGalleryStore: any[] = loadJson('product-gallery.json', []);
+let recipeGalleryStore: any[] = loadJson('recipe-gallery.json', []);
 
 // Create fallback Prisma-compatible client
 function createFallbackClient() {
@@ -483,6 +485,25 @@ function createFallbackClient() {
             return copy;
           });
         }
+        if (args.include?.gallery) {
+          let gItems = productGalleryStore.filter((g) => g.productId === res.id);
+          if (gItems.length === 0 && Array.isArray((res as any).galleryAssetIds)) {
+            gItems = (res as any).galleryAssetIds.map((aId: string, idx: number) => ({
+              id: `pg_${res.id}_${idx}`,
+              productId: res.id,
+              assetId: aId,
+              sortOrder: idx,
+            }));
+          }
+          gItems.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+          res.gallery = gItems.map((g) => {
+            const copy = { ...g };
+            if (args.include.gallery?.include?.asset || args.include.gallery === true) {
+              copy.asset = mediaAssetsStore.find((m) => m.id === g.assetId) || null;
+            }
+            return copy;
+          });
+        }
         return res;
       },
       async findUniqueOrThrow(args: { where: { id?: string; slug?: string }; include?: any }) {
@@ -594,6 +615,25 @@ function createFallbackClient() {
             }
             item.options = opts;
           }
+          if (args?.include?.gallery) {
+            let gItems = productGalleryStore.filter((g) => g.productId === item.id);
+            if (gItems.length === 0 && Array.isArray((item as any).galleryAssetIds)) {
+              gItems = (item as any).galleryAssetIds.map((aId: string, idx: number) => ({
+                id: `pg_${item.id}_${idx}`,
+                productId: item.id,
+                assetId: aId,
+                sortOrder: idx,
+              }));
+            }
+            gItems.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+            item.gallery = gItems.map((g) => {
+              const copy = { ...g };
+              if (args.include.gallery?.include?.asset || args.include.gallery === true) {
+                copy.asset = mediaAssetsStore.find((m) => m.id === g.assetId) || null;
+              }
+              return copy;
+            });
+          }
           return item;
         });
       },
@@ -662,6 +702,96 @@ function createFallbackClient() {
       },
     },
 
+    productGalleryItem: {
+      async findMany(args?: { where?: any; orderBy?: any; include?: any }) {
+        let list = [...productGalleryStore];
+        if (args?.where) {
+          if (args.where.productId) list = list.filter((x) => x.productId === args.where.productId);
+          if (args.where.assetId) list = list.filter((x) => x.assetId === args.where.assetId);
+        }
+        if (args?.orderBy?.sortOrder) {
+          list.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+        }
+        return list.map((item) => {
+          const copy = { ...item };
+          if (args?.include?.asset) {
+            copy.asset = mediaAssetsStore.find((m) => m.id === item.assetId) || null;
+          }
+          return copy;
+        });
+      },
+      async create(args: { data: any }) {
+        const id = args.data.id || `pgi_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+        const newItem = {
+          id,
+          productId: args.data.productId,
+          assetId: args.data.assetId,
+          sortOrder: args.data.sortOrder ?? 0,
+        };
+        productGalleryStore.push(newItem);
+        saveJson('product-gallery.json', productGalleryStore);
+        return { ...newItem };
+      },
+      async deleteMany(args?: { where?: any }) {
+        let count = 0;
+        if (!args?.where) {
+          count = productGalleryStore.length;
+          productGalleryStore = [];
+        } else if (args.where.productId) {
+          const initialLen = productGalleryStore.length;
+          productGalleryStore = productGalleryStore.filter((x) => x.productId !== args.where.productId);
+          count = initialLen - productGalleryStore.length;
+        }
+        saveJson('product-gallery.json', productGalleryStore);
+        return { count };
+      },
+    },
+
+    recipeGalleryItem: {
+      async findMany(args?: { where?: any; orderBy?: any; include?: any }) {
+        let list = [...recipeGalleryStore];
+        if (args?.where) {
+          if (args.where.recipeId) list = list.filter((x) => x.recipeId === args.where.recipeId);
+          if (args.where.assetId) list = list.filter((x) => x.assetId === args.where.assetId);
+        }
+        if (args?.orderBy?.sortOrder) {
+          list.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+        }
+        return list.map((item) => {
+          const copy = { ...item };
+          if (args?.include?.asset) {
+            copy.asset = mediaAssetsStore.find((m) => m.id === item.assetId) || null;
+          }
+          return copy;
+        });
+      },
+      async create(args: { data: any }) {
+        const id = args.data.id || `rgi_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+        const newItem = {
+          id,
+          recipeId: args.data.recipeId,
+          assetId: args.data.assetId,
+          sortOrder: args.data.sortOrder ?? 0,
+        };
+        recipeGalleryStore.push(newItem);
+        saveJson('recipe-gallery.json', recipeGalleryStore);
+        return { ...newItem };
+      },
+      async deleteMany(args?: { where?: any }) {
+        let count = 0;
+        if (!args?.where) {
+          count = recipeGalleryStore.length;
+          recipeGalleryStore = [];
+        } else if (args.where.recipeId) {
+          const initialLen = recipeGalleryStore.length;
+          recipeGalleryStore = recipeGalleryStore.filter((x) => x.recipeId !== args.where.recipeId);
+          count = initialLen - recipeGalleryStore.length;
+        }
+        saveJson('recipe-gallery.json', recipeGalleryStore);
+        return { count };
+      },
+    },
+
     recipe: {
       async count(args?: { where?: any }) {
         const items = await this.findMany({ where: args?.where });
@@ -694,6 +824,25 @@ function createFallbackClient() {
             if (args.include.recommendedProducts?.include?.product) {
               const prod = productsStore.find((p) => p.id === rp.productId);
               copy.product = prod ? { ...prod } : null;
+            }
+            return copy;
+          });
+        }
+        if (args.include?.gallery) {
+          let gItems = recipeGalleryStore.filter((g) => g.recipeId === res.id);
+          if (gItems.length === 0 && Array.isArray((res as any).galleryAssetIds)) {
+            gItems = (res as any).galleryAssetIds.map((aId: string, idx: number) => ({
+              id: `rg_${res.id}_${idx}`,
+              recipeId: res.id,
+              assetId: aId,
+              sortOrder: idx,
+            }));
+          }
+          gItems.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+          res.gallery = gItems.map((g) => {
+            const copy = { ...g };
+            if (args.include.gallery?.include?.asset || args.include.gallery === true) {
+              copy.asset = mediaAssetsStore.find((m) => m.id === g.assetId) || null;
             }
             return copy;
           });
@@ -820,6 +969,25 @@ function createFallbackClient() {
             const allOpts = loadJson('product-options.json', productOptionsStore);
             const opts = allOpts.filter((o: any) => o.productId === item.id);
             item.options = opts.length > 0 ? opts : (item.options || []);
+          }
+          if (args?.include?.gallery) {
+            let gItems = recipeGalleryStore.filter((g) => g.recipeId === item.id);
+            if (gItems.length === 0 && Array.isArray((item as any).galleryAssetIds)) {
+              gItems = (item as any).galleryAssetIds.map((aId: string, idx: number) => ({
+                id: `rg_${item.id}_${idx}`,
+                recipeId: item.id,
+                assetId: aId,
+                sortOrder: idx,
+              }));
+            }
+            gItems.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+            item.gallery = gItems.map((g) => {
+              const copy = { ...g };
+              if (args.include.gallery?.include?.asset || args.include.gallery === true) {
+                copy.asset = mediaAssetsStore.find((m) => m.id === g.assetId) || null;
+              }
+              return copy;
+            });
           }
           return item;
         });

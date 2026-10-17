@@ -59,6 +59,13 @@ export interface RecipeCardViewModel {
     blurDataUrl?: string | null;
   } | null;
   imageUrl: string | null;
+  secondaryImageAsset?: {
+    id: string;
+    width: number;
+    height: number;
+    blurDataUrl?: string | null;
+  } | null;
+  secondaryImageUrl?: string | null;
   imageAlt: string;
   linkLabel: string;
   categories: any[];
@@ -150,6 +157,10 @@ export async function getPublicRecipes(filters: PublicRecipeFilters = {}) {
         },
       },
       mainImage: true,
+      gallery: {
+        orderBy: { sortOrder: 'asc' },
+        include: { asset: true },
+      },
     },
   });
 
@@ -164,6 +175,19 @@ export async function getPublicRecipes(filters: PublicRecipeFilters = {}) {
           height: r.mainImage.height ?? 600,
           blurDataUrl: r.mainImage.blurDataUrl ?? null,
         }
+      : null;
+
+    const firstGallery = (r.gallery && r.gallery.length > 0) ? (r.gallery[0]?.asset || r.gallery[0]) : null;
+    const secondaryImageAsset = firstGallery && firstGallery.id
+      ? {
+          id: firstGallery.id,
+          width: firstGallery.width ?? 800,
+          height: firstGallery.height ?? 600,
+          blurDataUrl: firstGallery.blurDataUrl ?? null,
+        }
+      : null;
+    const secondaryImageUrl = firstGallery
+      ? (firstGallery.url || (firstGallery.storageKey ? `/uploads/${firstGallery.storageKey}` : null))
       : null;
 
     return {
@@ -186,6 +210,8 @@ export async function getPublicRecipes(filters: PublicRecipeFilters = {}) {
       href: `/recipes/${r.slug}`,
       imageAsset,
       imageUrl: null,
+      secondaryImageAsset,
+      secondaryImageUrl,
       imageAlt: r.nameFa,
       linkLabel: 'مشاهده دستور',
       categories: r.categories.map((c: any) => c.category),

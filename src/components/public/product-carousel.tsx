@@ -163,6 +163,7 @@ export function ProductCarousel({
             const theme = THEME_CLASSES[themeKey] || THEME_CLASSES.GREEN;
             const titleText = p.nameFa || p.title || 'عسل ممتاز باباخُرم';
             const imageSrc = p.imageUrl || (p.slug ? `/images/products/${p.slug}.jpg` : '/images/honey-jar.jpg');
+            const secondaryImageSrc = (p as any).secondaryImageUrl || ((p as any).gallery && (p as any).gallery.length > 0 ? ((p as any).gallery[0]?.asset?.url || ((p as any).gallery[0]?.asset?.storageKey ? `/uploads/${(p as any).gallery[0]?.asset?.storageKey}` : null)) : null);
 
             return (
               <article
@@ -175,15 +176,29 @@ export function ProductCarousel({
               >
                 <Link href={`/products/${p.slug}`} className="flex flex-col h-full">
                   {/* Image Wrap - Edge-to-edge card presentation */}
-                  <div className="w-full aspect-[4/3] overflow-hidden shrink-0 relative">
+                  <div className="w-full aspect-[4/3] overflow-hidden shrink-0 relative bg-black/5">
                     <img
                       src={imageSrc}
                       alt={titleText}
-                      className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
+                      className={`w-full h-full object-cover object-center transition-all duration-500 ease-out ${
+                        secondaryImageSrc ? 'group-hover:opacity-0' : 'group-hover:scale-105'
+                      }`}
                       loading="lazy"
                       width={360}
                       height={270}
                     />
+                    {secondaryImageSrc && (
+                      <div className="hidden sm:block absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out pointer-events-none">
+                        <img
+                          src={secondaryImageSrc}
+                          alt={titleText}
+                          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                          loading="lazy"
+                          width={360}
+                          height={270}
+                        />
+                      </div>
+                    )}
                     {p.isAvailable === false && (
                       <div className="absolute top-3 right-3 bg-[#9E3556] text-white text-xs font-black px-2.5 py-1 z-10 shadow-xs">
                         ناموجود

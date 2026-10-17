@@ -324,6 +324,8 @@ export function ProductsListingClient({
                 href={item.href}
                 imageAsset={item.imageAsset}
                 imageUrl={item.imageUrl || (item.slug ? `/images/products/${item.slug}.jpg` : (item.imageAsset ? null : '/images/honey-jar.jpg'))}
+                secondaryImageAsset={item.secondaryImageAsset}
+                secondaryImageUrl={item.secondaryImageUrl}
                 theme={item.theme || item.cardTheme}
                 slug={item.slug}
                 isAvailable={item.isAvailable}
@@ -345,6 +347,8 @@ export function ProductsListingClient({
                 href={item.href}
                 imageAsset={item.imageAsset}
                 imageUrl={item.imageUrl || (item.slug ? `/images/products/${item.slug}.jpg` : (item.imageAsset ? null : '/images/honey-jar.jpg'))}
+                secondaryImageAsset={item.secondaryImageAsset}
+                secondaryImageUrl={item.secondaryImageUrl}
                 theme={item.theme || item.cardTheme}
                 slug={item.slug}
                 isAvailable={item.isAvailable}

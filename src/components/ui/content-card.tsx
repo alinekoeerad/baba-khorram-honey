@@ -30,6 +30,13 @@ export interface ContentCardProps {
     blurDataUrl?: string | null;
   } | null;
   imageUrl?: string | null;
+  secondaryImageAsset?: {
+    id: string;
+    width: number;
+    height: number;
+    blurDataUrl?: string | null;
+  } | null;
+  secondaryImageUrl?: string | null;
   imageAlt?: string;
   theme?: CardTheme | 'AUTO' | string;
   slug?: string;
@@ -137,6 +144,8 @@ export function ContentCard({
   href,
   imageAsset,
   imageUrl,
+  secondaryImageAsset,
+  secondaryImageUrl,
   imageAlt = '',
   theme = 'AUTO',
   slug = '',
@@ -177,18 +186,44 @@ export function ContentCard({
                 height={imageAsset.height}
                 blurDataUrl={imageAsset.blurDataUrl}
                 alt={imageAlt || title}
-                className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transform-none"
+                className={`w-full h-full object-cover object-center transition-all duration-500 ease-out ${
+                  secondaryImageUrl || secondaryImageAsset ? 'group-hover:opacity-0' : 'group-hover:scale-105'
+                } motion-reduce:transform-none`}
                 priority={priority}
               />
             ) : imageUrl ? (
               <img
                 src={imageUrl}
                 alt={imageAlt || title}
-                className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transform-none"
+                className={`w-full h-full object-cover object-center transition-all duration-500 ease-out ${
+                  secondaryImageUrl || secondaryImageAsset ? 'group-hover:opacity-0' : 'group-hover:scale-105'
+                } motion-reduce:transform-none`}
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-black/10 text-xs font-bold text-white/90">
                 <span>عسل باباخُرم</span>
+              </div>
+            )}
+
+            {/* Optional Secondary Image on Desktop Hover */}
+            {(secondaryImageAsset || secondaryImageUrl) && (
+              <div className="hidden sm:block absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out pointer-events-none">
+                {secondaryImageAsset ? (
+                  <Picture
+                    asset={secondaryImageAsset}
+                    width={secondaryImageAsset.width}
+                    height={secondaryImageAsset.height}
+                    blurDataUrl={secondaryImageAsset.blurDataUrl}
+                    alt={imageAlt || title}
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out motion-reduce:transform-none"
+                  />
+                ) : (
+                  <img
+                    src={secondaryImageUrl!}
+                    alt={imageAlt || title}
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out motion-reduce:transform-none"
+                  />
+                )}
               </div>
             )}
 
@@ -241,18 +276,44 @@ export function ContentCard({
             height={imageAsset.height}
             blurDataUrl={imageAsset.blurDataUrl}
             alt={imageAlt || title}
-            className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transform-none"
+            className={`w-full h-full object-cover object-center transition-all duration-500 ease-out ${
+              secondaryImageUrl || secondaryImageAsset ? 'group-hover:opacity-0' : 'group-hover:scale-105'
+            } motion-reduce:transform-none`}
             priority={priority}
           />
         ) : imageUrl ? (
           <img
             src={imageUrl}
             alt={imageAlt || title}
-            className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transform-none"
+            className={`w-full h-full object-cover object-center transition-all duration-500 ease-out ${
+              secondaryImageUrl || secondaryImageAsset ? 'group-hover:opacity-0' : 'group-hover:scale-105'
+            } motion-reduce:transform-none`}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-black/10 text-sm font-medium text-white/90">
             <span>عسل باباخُرم</span>
+          </div>
+        )}
+
+        {/* Optional Secondary Image on Desktop Hover */}
+        {(secondaryImageAsset || secondaryImageUrl) && (
+          <div className="hidden sm:block absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out pointer-events-none">
+            {secondaryImageAsset ? (
+              <Picture
+                asset={secondaryImageAsset}
+                width={secondaryImageAsset.width}
+                height={secondaryImageAsset.height}
+                blurDataUrl={secondaryImageAsset.blurDataUrl}
+                alt={imageAlt || title}
+                className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out motion-reduce:transform-none"
+              />
+            ) : (
+              <img
+                src={secondaryImageUrl!}
+                alt={imageAlt || title}
+                className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out motion-reduce:transform-none"
+              />
+            )}
           </div>
         )}
 

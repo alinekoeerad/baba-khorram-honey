@@ -96,6 +96,8 @@ export const productInputSchema = z.object({
   benefits: z.array(z.string().trim()).default([]),
   options: z.array(productOptionInputSchema).default([]),
   categoryIds: z.array(z.string()).default([]),
+  mainImageId: z.string().trim().optional().nullable(),
+  galleryAssetIds: z.array(z.string()).optional(),
 });
 
 export type ProductInput = z.infer<typeof productInputSchema>;
@@ -151,6 +153,8 @@ export const recipeInputSchema = z.object({
   steps: z.array(recipeStepInputSchema).default([]),
   categoryIds: z.array(z.string()).default([]),
   recommendedProductIds: z.array(z.string()).optional().default([]),
+  mainImageId: z.string().trim().optional().nullable(),
+  galleryAssetIds: z.array(z.string()).optional(),
 });
 
 export type RecipeInput = z.infer<typeof recipeInputSchema>;

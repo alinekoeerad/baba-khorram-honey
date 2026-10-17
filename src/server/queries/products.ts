@@ -57,6 +57,13 @@ export interface ProductCardViewModel {
     blurDataUrl?: string | null;
   } | null;
   imageUrl: string | null;
+  secondaryImageAsset?: {
+    id: string;
+    width: number;
+    height: number;
+    blurDataUrl?: string | null;
+  } | null;
+  secondaryImageUrl?: string | null;
   imageAlt: string;
   linkLabel: string;
   categories: any[];
@@ -136,6 +143,10 @@ export async function getPublicProducts(filters: PublicProductFilters = {}) {
         where: { isAvailable: true },
         orderBy: { sortOrder: 'asc' },
       },
+      gallery: {
+        orderBy: { sortOrder: 'asc' },
+        include: { asset: true },
+      },
     },
   });
 
@@ -150,6 +161,19 @@ export async function getPublicProducts(filters: PublicProductFilters = {}) {
           height: p.mainImage.height ?? 600,
           blurDataUrl: p.mainImage.blurDataUrl ?? null,
         }
+      : null;
+
+    const firstGallery = (p.gallery && p.gallery.length > 0) ? (p.gallery[0]?.asset || p.gallery[0]) : null;
+    const secondaryImageAsset = firstGallery && firstGallery.id
+      ? {
+          id: firstGallery.id,
+          width: firstGallery.width ?? 800,
+          height: firstGallery.height ?? 600,
+          blurDataUrl: firstGallery.blurDataUrl ?? null,
+        }
+      : null;
+    const secondaryImageUrl = firstGallery
+      ? (firstGallery.url || (firstGallery.storageKey ? `/uploads/${firstGallery.storageKey}` : null))
       : null;
 
     return {
@@ -176,6 +200,8 @@ export async function getPublicProducts(filters: PublicProductFilters = {}) {
       href: `/products/${p.slug}`,
       imageAsset,
       imageUrl: (p as any).imageUrl || (p.slug ? `/images/products/${p.slug}.jpg` : null),
+      secondaryImageAsset,
+      secondaryImageUrl,
       imageAlt: p.nameFa,
       linkLabel: 'مشاهده محصول',
       categories: p.categories.map((c: any) => c.category),

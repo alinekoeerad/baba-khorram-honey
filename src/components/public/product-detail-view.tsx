@@ -16,6 +16,7 @@ import Link from 'next/link';
 import { WoodBackground } from '@/components/ui/wood-background';
 import { Container } from '@/components/ui/container';
 import { Picture } from '@/components/ui/picture';
+import { InteractiveMediaGallery } from '@/components/public/interactive-media-gallery';
 import { AddToCartSlot } from '@/components/public/add-to-cart-slot';
 import { MobileStickyBuyBar } from '@/components/public/mobile-sticky-buy-bar';
 import { ProductCarousel } from '@/components/public/product-carousel';
@@ -132,51 +133,15 @@ export function ProductDetailView({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           {/* RIGHT COLUMN (7 Cols): Gallery, Trust Seals, Specs & Description */}
           <div className="lg:col-span-7 space-y-8 text-right">
-            {/* 1. Main High-Resolution Image (Full Jar Presentation, Zero Cropping) */}
-            <div className="w-full aspect-4/3 rounded-none overflow-hidden border border-[#EFE9E0] shadow-md bg-[#FAF7F2] p-6 flex items-center justify-center relative">
-              {product.mainImage ? (
-                <Picture
-                  asset={product.mainImage}
-                  width={product.mainImage.width ?? 900}
-                  height={product.mainImage.height ?? 675}
-                  blurDataUrl={product.mainImage.blurDataUrl}
-                  alt={product.nameFa}
-                  priority={true}
-                  className="w-full h-full max-h-full object-contain"
-                />
-              ) : (
-                <img
-                  src={(product as any).imageUrl || `/images/products/${product.slug}.jpg`}
-                  alt={product.nameFa}
-                  className="w-full h-full max-h-full object-contain"
-                />
-              )}
-              {product.isFeatured && (
-                <span className="absolute top-4 right-4 bg-[#F59E0B] text-[#2B2017] text-xs font-black px-3 py-1 rounded-none shadow-md">
-                  منتخب باباخُرم
-                </span>
-              )}
-            </div>
-
-            {/* Supplementary Gallery Thumbnails */}
-            {product.gallery && product.gallery.length > 0 && (
-              <div className="grid grid-cols-4 gap-3 sm:gap-4">
-                {product.gallery.map((item) => (
-                  <div
-                    key={item.id}
-                    className="aspect-square bg-[#FAF7F2] p-2 flex items-center justify-center border border-[#EFE9E0] rounded-none overflow-hidden shadow-xs hover:border-[#F59E0B] transition-colors"
-                  >
-                    <Picture
-                      asset={item.asset}
-                      width={300}
-                      height={300}
-                      alt={product.nameFa}
-                      className="w-full h-full max-h-full object-contain hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
+            {/* 1. Interactive Multi-Image Luxury Gallery with Fullscreen Lightbox */}
+            <InteractiveMediaGallery
+              mainImage={product.mainImage}
+              gallery={product.gallery}
+              fallbackImageUrl={(product as any).imageUrl || `/images/products/${product.slug}.jpg`}
+              title={product.nameFa}
+              aspectRatio="aspect-4/3"
+              featuredBadge={product.isFeatured ? 'منتخب باباخُرم' : null}
+            />
 
             {/* Authentic Heritage Postal & Wax Seals */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 bg-[#FFFBEB] border border-[#FDE68A] rounded-none shadow-xs text-center">

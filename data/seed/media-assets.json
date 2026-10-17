@@ -954,5 +954,141 @@
     "createdById": "usr_1791465544331_so4k7",
     "createdAt": "2026-10-17T13:54:29.607Z",
     "updatedAt": "2026-10-17T13:54:29.607Z"
+  },
+  {
+    "id": "ast_1792257974686_267wa",
+    "storageKey": "img_1792257972736_eafa1a4a86a68e79-1707.webp",
+    "mime": "image/webp",
+    "bytes": 200712,
+    "width": 1707,
+    "height": 1280,
+    "blurDataUrl": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADwAQCdASoQAAwABABoJbACdAECupfYDAAA/jOOI1Kx+pUq17tX0VJ9yox9DMm4n8haWfARdShxo6WNhoBQc5ggpsH8eQIL9rATYzqsHBRhwOSlXq9DQAAA",
+    "variants": {
+      "480": {
+        "key": "img_1792257972736_eafa1a4a86a68e79-480.webp",
+        "url": "/uploads/img_1792257972736_eafa1a4a86a68e79-480.webp",
+        "width": 480,
+        "height": 360,
+        "bytes": 41238
+      },
+      "768": {
+        "key": "img_1792257972736_eafa1a4a86a68e79-768.webp",
+        "url": "/uploads/img_1792257972736_eafa1a4a86a68e79-768.webp",
+        "width": 768,
+        "height": 576,
+        "bytes": 81694
+      },
+      "1200": {
+        "key": "img_1792257972736_eafa1a4a86a68e79-1200.webp",
+        "url": "/uploads/img_1792257972736_eafa1a4a86a68e79-1200.webp",
+        "width": 1200,
+        "height": 900,
+        "bytes": 145660
+      },
+      "1707": {
+        "key": "img_1792257972736_eafa1a4a86a68e79-1707.webp",
+        "url": "/uploads/img_1792257972736_eafa1a4a86a68e79-1707.webp",
+        "width": 1707,
+        "height": 1280,
+        "bytes": 200712
+      }
+    },
+    "alt": null,
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-17T17:26:14.686Z",
+    "updatedAt": "2026-10-17T17:26:14.686Z"
+  },
+  {
+    "id": "ast_1792257985865_6wfbd",
+    "storageKey": "img_1792257985162_875c9c2a1ba3c152-1254.webp",
+    "mime": "image/webp",
+    "bytes": 98686,
+    "width": 1254,
+    "height": 1254,
+    "blurDataUrl": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAAAwAgCdASoQABAABABoJbACdAEN5RliUThQAAD2bD21X2i463pehp4U+yp/8sQSwHIfHkEdVMMKgsVc5BdTboK6LqgSbxvRcmcmZe4hhDGnLwna5McOexKgl/p3awlbKhjUeEYo6GGXSpD20AA=",
+    "variants": {
+      "480": {
+        "key": "img_1792257985162_875c9c2a1ba3c152-480.webp",
+        "url": "/uploads/img_1792257985162_875c9c2a1ba3c152-480.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 35850
+      },
+      "768": {
+        "key": "img_1792257985162_875c9c2a1ba3c152-768.webp",
+        "url": "/uploads/img_1792257985162_875c9c2a1ba3c152-768.webp",
+        "width": 768,
+        "height": 768,
+        "bytes": 66896
+      },
+      "1200": {
+        "key": "img_1792257985162_875c9c2a1ba3c152-1200.webp",
+        "url": "/uploads/img_1792257985162_875c9c2a1ba3c152-1200.webp",
+        "width": 1200,
+        "height": 1200,
+        "bytes": 108418
+      },
+      "1254": {
+        "key": "img_1792257985162_875c9c2a1ba3c152-1254.webp",
+        "url": "/uploads/img_1792257985162_875c9c2a1ba3c152-1254.webp",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 98686
+      }
+    },
+    "alt": null,
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-17T17:26:25.865Z",
+    "updatedAt": "2026-10-17T17:26:25.865Z"
+  },
+  {
+    "id": "ast_1792257987431_urr6z",
+    "storageKey": "img_1792257986015_89e7dffe3729bac7-2048.webp",
+    "mime": "image/webp",
+    "bytes": 70520,
+    "width": 2048,
+    "height": 2048,
+    "blurDataUrl": "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAADwAQCdASoQABAABABoJYwAAvc6W9U1ZQAA/vYKg1Bi9hRDsqoSen8qgWpkNPEwI8cNfLXQSziwWWXqKnGUOAAA",
+    "variants": {
+      "480": {
+        "key": "img_1792257986015_89e7dffe3729bac7-480.webp",
+        "url": "/uploads/img_1792257986015_89e7dffe3729bac7-480.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 10178
+      },
+      "768": {
+        "key": "img_1792257986015_89e7dffe3729bac7-768.webp",
+        "url": "/uploads/img_1792257986015_89e7dffe3729bac7-768.webp",
+        "width": 768,
+        "height": 768,
+        "bytes": 18770
+      },
+      "1200": {
+        "key": "img_1792257986015_89e7dffe3729bac7-1200.webp",
+        "url": "/uploads/img_1792257986015_89e7dffe3729bac7-1200.webp",
+        "width": 1200,
+        "height": 1200,
+        "bytes": 33702
+      },
+      "1920": {
+        "key": "img_1792257986015_89e7dffe3729bac7-1920.webp",
+        "url": "/uploads/img_1792257986015_89e7dffe3729bac7-1920.webp",
+        "width": 1920,
+        "height": 1920,
+        "bytes": 63358
+      },
+      "2048": {
+        "key": "img_1792257986015_89e7dffe3729bac7-2048.webp",
+        "url": "/uploads/img_1792257986015_89e7dffe3729bac7-2048.webp",
+        "width": 2048,
+        "height": 2048,
+        "bytes": 70520
+      }
+    },
+    "alt": null,
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-17T17:26:27.431Z",
+    "updatedAt": "2026-10-17T17:26:27.431Z"
   }
 ]

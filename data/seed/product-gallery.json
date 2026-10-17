@@ -1,0 +1,26 @@
+[
+  {
+    "id": "pgi_1792257398803_st9ah",
+    "productId": "prd_product-gallery-test-1792257398788",
+    "assetId": "ast_seed_gal2",
+    "sortOrder": 0
+  },
+  {
+    "id": "pgi_1792257398804_6u9km",
+    "productId": "prd_product-gallery-test-1792257398788",
+    "assetId": "ast_seed_gal3",
+    "sortOrder": 1
+  },
+  {
+    "id": "pgi_1792257442092_np6qf",
+    "productId": "prd_product-gallery-test-1792257442072",
+    "assetId": "ast_seed_gal2",
+    "sortOrder": 0
+  },
+  {
+    "id": "pgi_1792257442093_65pum",
+    "productId": "prd_product-gallery-test-1792257442072",
+    "assetId": "ast_seed_gal3",
+    "sortOrder": 1
+  }
+]

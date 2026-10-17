@@ -95,9 +95,12 @@ export function RecipeForm({ initialData, categories, products = [], isEdit = fa
   // Media
   const [mainImage, setMainImage] = useState<MediaAssetRecord | null>(initialData?.mainImage || null);
   const currentImageUrl = (initialData as any)?.imageUrl || (initialData?.mainImage ? (initialData.mainImage.url || `/uploads/${initialData.mainImage.storageKey}`) : null);
-  const [galleryImages, setGalleryImages] = useState<MediaAssetRecord[]>(
-    () => (initialData?.gallery || []).map((g: any) => g.asset || g)
-  );
+  const [galleryImages, setGalleryImages] = useState<MediaAssetRecord[]>(() => {
+    if (!initialData?.gallery || !Array.isArray(initialData.gallery)) return [];
+    return initialData.gallery
+      .map((g: any) => g.asset || g)
+      .filter((img: any) => img && (img.id || img.storageKey));
+  });
 
   // UI state
   const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
@@ -242,6 +245,7 @@ export function RecipeForm({ initialData, categories, products = [], isEdit = fa
         .filter((s) => s.text.trim().length > 0)
         .map((s, idx) => ({ text: s.text, sortOrder: idx })),
       mainImageId: mainImage?.id || null,
+      galleryAssetIds: galleryImages.map((img) => img.id).filter(Boolean),
     };
 
     // Client-side Zod validation with inline error mapping
