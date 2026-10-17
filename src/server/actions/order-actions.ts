@@ -16,7 +16,9 @@
 import { z } from 'zod';
 import crypto from 'crypto';
 import { headers } from 'next/headers';
-import { db } from '@/server/db/client';
+import { db, OrderRecord } from '@/server/db/client';
+import { requireAdmin } from '@/server/auth/require-admin';
+import { recordAuditLog } from '@/server/services/audit-log-service';
 import { checkRateLimit } from '@/lib/rate-limit';
 import { validateAndNormalizeIranianMobile } from '@/lib/domain-utils';
 import {
@@ -43,18 +45,33 @@ const BuildOrderInputSchema = z.object({
     .min(1, 'سبد خرید خالی است.')
     .max(30, 'حداکثر ۳۰ قلم کالا مجاز است.'),
 
-  customer: z.object({
-    firstName: z.string().min(1, 'نام الزامی است.').max(50),
-    lastName: z.string().min(1, 'نام خانوادگی الزامی است.').max(50),
-    mobile: z.string().min(1, 'شماره تماس الزامی است.').max(20),
-    province: z.string().min(1, 'استان الزامی است.').max(50),
-    city: z.string().min(1, 'شهر الزامی است.').max(50),
-    address: z.string().min(5, 'آدرس دقیق الزامی است.').max(500),
-    postalCode: z.string().max(10).optional(),
-    notes: z.string().max(300).optional(),
-  }),
+  customer: z
+    .object({
+      fullName: z.string().max(100).optional(),
+      firstName: z.string().max(50).optional(),
+      lastName: z.string().max(50).optional(),
+      mobile: z.string().min(1, 'شماره تماس الزامی است.').max(20),
+      province: z.string().max(50).optional(),
+      city: z.string().max(50).optional(),
+      address: z.string().max(500).optional(),
+      postalCode: z.string().max(10).optional(),
+      notes: z.string().max(300).optional(),
+      preferredContactMethod: z.string().max(50).optional(),
+    })
+    .refine(
+      (c) =>
+        Boolean(
+          (c.fullName && c.fullName.trim().length > 0) ||
+          (c.firstName && c.firstName.trim().length > 0)
+        ),
+      {
+        message: 'نام و نام خانوادگی الزامی است.',
+        path: ['fullName'],
+      }
+    ),
 
   channelId: z.string().optional().nullable(),
+  preferredContactMethod: z.string().max(50).optional(),
   createShareLink: z.boolean().default(false),
 });
 
@@ -64,6 +81,7 @@ export interface BuildOrderResult {
   success: boolean;
   orderCode?: string;
   messageText?: string;
+  fullMessageText?: string;
   directUrl?: string;
   isPrefillSupported?: boolean;
   instructionsFa?: string;
@@ -113,7 +131,7 @@ export async function buildOrderAction(
       };
     }
 
-    const { lines, customer, channelId, createShareLink } = parsed.data;
+    const { lines, customer, channelId, preferredContactMethod, createShareLink } = parsed.data;
 
     // 3. Verify SiteSettings: cartEnabled
     const settings = await db.siteSettings.findUnique({ where: { id: 1 } });
@@ -124,13 +142,12 @@ export async function buildOrderAction(
       };
     }
 
-    // 4. Verify ContactChannel: active & acceptsOrders
+    // 4. Verify or Resolve ContactChannel
     let channel: any = null;
     if (channelId && channelId !== 'GENERAL_FALLBACK') {
       channel = await db.contactChannel.findUnique({
         where: { id: channelId },
       });
-
       if (!channel || !channel.isActive || !channel.acceptsOrders) {
         return {
           success: false,
@@ -138,13 +155,46 @@ export async function buildOrderAction(
         };
       }
     } else {
-      channel = {
-        type: 'OTHER',
-        value: 'contact',
-        label: 'اشتراک‌گذاری و پشتیبانی مستقیم',
-        acceptsOrders: true,
-        isActive: true,
-      };
+      try {
+        const preferredType = (customer.preferredContactMethod || preferredContactMethod || 'PHONE').toUpperCase();
+        if (typeof db.contactChannel?.findFirst === 'function') {
+          channel = await db.contactChannel.findFirst({
+            where: {
+              type: preferredType as any,
+              isActive: true,
+              acceptsOrders: true,
+            },
+          });
+
+          if (!channel) {
+            channel = await db.contactChannel.findFirst({
+              where: {
+                isActive: true,
+                acceptsOrders: true,
+              },
+            });
+          }
+        }
+
+        if (!channel && typeof db.contactChannel?.findMany === 'function') {
+          const allActive = await db.contactChannel.findMany({
+            where: { isActive: true, acceptsOrders: true },
+          });
+          channel = allActive.find((c: any) => c.type === preferredType) || allActive[0] || null;
+        }
+      } catch {
+        // Non-blocking fallback
+      }
+
+      if (!channel || !channel.isActive || !channel.acceptsOrders) {
+        channel = {
+          type: 'PHONE',
+          value: '09389196010',
+          label: 'واحد پشتیبانی و سفارشات',
+          acceptsOrders: true,
+          isActive: true,
+        };
+      }
     }
 
     // 5. Validate Iranian Mobile
@@ -202,21 +252,40 @@ export async function buildOrderAction(
     }
 
     // 7. Sanitize Customer Data
+    let firstName = customer.firstName || '';
+    let lastName = customer.lastName || '';
+    if (!firstName && customer.fullName) {
+      const parts = customer.fullName.trim().split(/\s+/);
+      firstName = parts[0] || '';
+      lastName = parts.slice(1).join(' ') || '';
+    }
+
+    const preferredMethod = customer.preferredContactMethod || preferredContactMethod || 'PHONE';
+
     const sanitizedCustomer = {
-      firstName: sanitizePlainText(customer.firstName, 50),
-      lastName: sanitizePlainText(customer.lastName, 50),
+      firstName: sanitizePlainText(firstName, 50),
+      lastName: sanitizePlainText(lastName, 50),
       mobile: mobileValidation.normalized,
       province: sanitizePlainText(customer.province, 50),
       city: sanitizePlainText(customer.city, 50),
       address: sanitizePlainText(customer.address, 500),
       postalCode: sanitizePlainText(customer.postalCode, 10),
       notes: sanitizePlainText(customer.notes, 300),
+      preferredContactMethod: sanitizePlainText(preferredMethod, 50),
     };
 
     // 8. Generate Reference Code
     const orderCode = generateOrderReferenceCode();
 
     // 9. Build Message Text
+    const fullMessageText = buildFullOrderMessage({
+      referenceCode: orderCode,
+      customer: sanitizedCustomer,
+      items: verifiedItems,
+      introText: settings.orderIntroText,
+      outroText: settings.orderOutroText,
+    });
+
     const isSms = channel.type === 'PHONE';
     const messageText = isSms
       ? buildCompactOrderMessage({
@@ -224,46 +293,83 @@ export async function buildOrderAction(
           customer: sanitizedCustomer,
           items: verifiedItems,
         })
-      : buildFullOrderMessage({
-          referenceCode: orderCode,
-          customer: sanitizedCustomer,
-          items: verifiedItems,
-          introText: settings.orderIntroText,
-          outroText: settings.orderOutroText,
-        });
+      : fullMessageText;
 
     // 9b. Instant non-blocking notification to business owner / admin via Eitaa, Bale, Telegram
-    await notifyAdminOfOrder(messageText, channel.type);
+    // Always send full invoice to store admin bot
+    await notifyAdminOfOrder(fullMessageText, channel.type);
 
+    // 10. Generate Channel Deep Link
     // 10. Generate Channel Deep Link
     const linkResult = buildChannelOrderLink(channel.type, channel.value, messageText);
 
-    // 11. Create OrderShareLink if requested (for QR / Desktop handoff)
+    // 10b. Always persist Order in Database for Admin Management
+    const customerDisplayName = (
+      customer.fullName ||
+      `${sanitizedCustomer.firstName} ${sanitizedCustomer.lastName}`
+    ).trim();
+
+    try {
+      await db.order.create({
+        data: {
+          id: `ord_${orderCode}`,
+          code: orderCode,
+          customerName: customerDisplayName,
+          customerMobile: sanitizedCustomer.mobile,
+          customerCity: sanitizedCustomer.city || null,
+          customerAddress: sanitizedCustomer.address || null,
+          customerNotes: sanitizedCustomer.notes || null,
+          preferredContact: sanitizedCustomer.preferredContactMethod || 'PHONE',
+          lines: lines.map((l, idx) => {
+            const v = verifiedItems[idx];
+            return {
+              productId: l.productId,
+              productNameFa: v?.productNameFa || '',
+              optionId: l.optionId,
+              optionLabel: v?.optionLabel || '',
+              qty: l.qty,
+            };
+          }),
+          totalPrice: null,
+          messageText: fullMessageText,
+          status: 'NEW',
+          channelType: channel.type,
+          channelValue: channel.value,
+          createdAt: new Date(),
+        },
+      });
+    } catch (saveErr) {
+      console.warn('Failed to persist order record in database:', saveErr);
+    }
+
+    // 11. Always create OrderShareLink (for QR, desktop handoff & /o/[code])
     let shareUrl: string | undefined = undefined;
     let shareCode: string | undefined = undefined;
 
-    if (createShareLink) {
+    try {
       shareCode = crypto.randomBytes(9).toString('base64url'); // 12 unguessable URL-safe characters
       const expiresAt = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
 
       const encryptedPayload = encryptOrderPayload({
         orderCode,
-        messageText,
+        messageText: fullMessageText,
         channelType: channel.type,
         channelValue: channel.value,
         directUrl: linkResult.directUrl,
       });
 
       // Active rows cap enforcement (max 2000 active rows)
-      const activeCount = await db.orderShareLink.count({
-        where: { expiresAt: { gt: new Date() } },
-      });
-
-      if (activeCount >= 2000) {
-        // Delete expired rows first
-        await db.orderShareLink.deleteMany({
-          where: { expiresAt: { lt: new Date() } },
+      if (typeof db.orderShareLink?.count === 'function') {
+        const activeCount = await db.orderShareLink.count({
+          where: { expiresAt: { gt: new Date() } },
         });
+
+        if (activeCount >= 2000 && typeof db.orderShareLink?.deleteMany === 'function') {
+          // Delete expired rows first
+          await db.orderShareLink.deleteMany({
+            where: { expiresAt: { lt: new Date() } },
+          });
+        }
       }
 
       await db.orderShareLink.create({
@@ -280,6 +386,8 @@ export async function buildOrderAction(
         process.env.SITE_URL ||
         'http://localhost:3000';
       shareUrl = `${canonicalSiteUrl.replace(/\/+$/, '')}/o/${shareCode}`;
+    } catch (linkErr) {
+      console.warn('Order share link generation warning:', linkErr);
     }
 
     // Return result without logging customer PII
@@ -287,6 +395,7 @@ export async function buildOrderAction(
       success: true,
       orderCode,
       messageText,
+      fullMessageText,
       directUrl: linkResult.directUrl,
       isPrefillSupported: linkResult.isPrefillSupported,
       instructionsFa: linkResult.instructionsFa,
@@ -303,4 +412,108 @@ export async function buildOrderAction(
       error: 'خطای سیستمی در پردازش سفارش. لطفاً دوباره تلاش نمایید.',
     };
   }
+}
+
+/**
+ * Admin Action: Query orders with optional status or search filter
+ */
+export async function getAdminOrdersAction(filter?: { status?: string; search?: string }) {
+  await requireAdmin({ allowRedirect: false });
+
+  let orders = await db.order.findMany({
+    orderBy: { createdAt: 'desc' },
+  });
+
+  const totalCount = orders.length;
+  const newCount = orders.filter((o: any) => o.status === 'NEW').length;
+  const contactedCount = orders.filter((o: any) => o.status === 'CONTACTED').length;
+  const shippedCount = orders.filter((o: any) => o.status === 'SHIPPED').length;
+  const cancelledCount = orders.filter((o: any) => o.status === 'CANCELLED').length;
+
+  if (filter?.status && filter.status !== 'ALL') {
+    orders = orders.filter((o: any) => o.status === filter.status);
+  }
+
+  if (filter?.search?.trim()) {
+    const q = filter.search.trim().toLowerCase();
+    orders = orders.filter((o: any) => {
+      return (
+        o.code?.toLowerCase().includes(q) ||
+        o.customerName?.toLowerCase().includes(q) ||
+        o.customerMobile?.includes(q) ||
+        o.customerAddress?.toLowerCase().includes(q) ||
+        o.lines?.some((l: any) => l.productNameFa?.toLowerCase().includes(q))
+      );
+    });
+  }
+
+  return {
+    success: true,
+    orders,
+    counts: {
+      total: totalCount,
+      new: newCount,
+      contacted: contactedCount,
+      shipped: shippedCount,
+      cancelled: cancelledCount,
+    },
+  };
+}
+
+/**
+ * Admin Action: Update status of an order
+ */
+export async function updateOrderStatusAction(
+  id: string,
+  status: 'NEW' | 'CONTACTED' | 'SHIPPED' | 'CANCELLED'
+) {
+  const { user } = await requireAdmin({ allowRedirect: false });
+
+  const existing = await db.order.findUnique({ where: { id } });
+  if (!existing) {
+    return { success: false, error: 'سفارش یافت نشد.' };
+  }
+
+  const updated = await db.order.update({
+    where: { id },
+    data: { status },
+  });
+
+  try {
+    await recordAuditLog({
+      userId: user.id,
+      action: 'UPDATE',
+      entityType: 'ORDER',
+      entityId: id,
+      summary: `تغییر وضعیت سفارش ${existing.code} به ${status}`,
+    });
+  } catch {}
+
+  return { success: true, order: updated };
+}
+
+/**
+ * Admin Action: Delete an order record
+ */
+export async function deleteOrderAction(id: string) {
+  const { user } = await requireAdmin({ allowRedirect: false });
+
+  const existing = await db.order.findUnique({ where: { id } });
+  if (!existing) {
+    return { success: false, error: 'سفارش یافت نشد.' };
+  }
+
+  await db.order.delete({ where: { id } });
+
+  try {
+    await recordAuditLog({
+      userId: user.id,
+      action: 'DELETE',
+      entityType: 'ORDER',
+      entityId: id,
+      summary: `حذف سفارش ${existing.code}`,
+    });
+  } catch {}
+
+  return { success: true };
 }

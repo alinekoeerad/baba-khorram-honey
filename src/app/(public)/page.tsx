@@ -361,16 +361,16 @@ export default async function HomePage() {
 
               {/* Text Wrap with High Contrast Warm Ivory & Amber */}
               <div className="lg:col-span-7 space-y-4 sm:space-y-6 text-right">
-                <div className="text-xs sm:text-base font-black text-[#F59E0B] tracking-widest uppercase drop-shadow-md">
+                <div className="text-xs sm:text-base font-black text-[#B45309] tracking-widest uppercase drop-shadow-xs">
                   وبلاگ و دانستنی‌ها
                 </div>
                 <h2
                   id="blog-heading"
-                  className="text-2xl sm:text-4xl lg:text-5xl font-black text-[#FFFBEB] leading-tight drop-shadow-lg"
+                  className="text-2xl sm:text-4xl lg:text-5xl font-black text-[#2B2017] leading-tight drop-shadow-xs"
                 >
                   ماه ملی عسل (HONEY MONTH)
                 </h2>
-                <p className="text-sm sm:text-base lg:text-lg text-[#E5D5C5] font-medium leading-loose text-justify">
+                <p className="text-sm sm:text-base lg:text-lg text-[#5C5248] font-medium leading-loose text-justify">
                   چه می‌شد اگر شیرین‌کننده دلخواه شما، چیزی فراتر از صرفاً یک ماده شیرین بود؟ عسل با خود شیرینی اصیل، طعمی متمایز و بافتی بی‌همتا را به قلب آشپزخانه شما می‌آورد؛ و این فقط آغاز یک سفر خوش‌طعم است. در این ماه ملی عسل، تمامی دلایل فوق‌العاده برای حضور عسل در پخت‌وپز روزمره را با هم جشن می‌گیریم.
                 </p>
                 <div className="pt-2">

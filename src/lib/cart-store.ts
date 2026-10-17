@@ -34,14 +34,16 @@ export interface StoredCartData {
 }
 
 export interface SavedCustomerData {
-  firstName: string;
-  lastName: string;
+  fullName?: string;
+  firstName?: string;
+  lastName?: string;
   mobile: string;
-  province: string;
-  city: string;
-  address: string;
+  province?: string;
+  city?: string;
+  address?: string;
   postalCode?: string;
   notes?: string;
+  preferredContactMethod?: string;
 }
 
 // ----------------------------------------------------------------------

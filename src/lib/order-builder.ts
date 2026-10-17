@@ -22,11 +22,12 @@ export interface OrderCustomerDetails {
   firstName: string;
   lastName: string;
   mobile: string;
-  province: string;
-  city: string;
-  address: string;
+  province?: string;
+  city?: string;
+  address?: string;
   postalCode?: string;
   notes?: string;
+  preferredContactMethod?: string;
 }
 
 export interface BuildMessageOptions {
@@ -82,14 +83,25 @@ export function buildFullOrderMessage(opts: BuildMessageOptions): string {
     opts.outroText?.trim() ||
     'لطفاً مبلغ نهایی و نحوه‌ی پرداخت را اعلام فرمایید. سپاسگزارم.';
 
+  const fullName = `${opts.customer.firstName} ${opts.customer.lastName}`.trim();
+
   const lines: string[] = [
     intro,
     '',
     `📌 کد پیگیری: ${opts.referenceCode}`,
-    `👤 نام و نام خانوادگی: ${opts.customer.firstName} ${opts.customer.lastName}`,
+    `👤 نام و نام خانوادگی: ${fullName}`,
     `📞 شماره تماس: ${opts.customer.mobile}`,
-    `📍 آدرس تحویل: استان ${opts.customer.province}، ${opts.customer.city}، ${opts.customer.address}`,
   ];
+
+  if (opts.customer.preferredContactMethod?.trim()) {
+    lines.push(`💬 روش ترجیحی هماهنگی: ${opts.customer.preferredContactMethod.trim()}`);
+  }
+
+  if (opts.customer.province?.trim() && opts.customer.city?.trim() && opts.customer.address?.trim()) {
+    lines.push(`📍 آدرس تحویل: استان ${opts.customer.province.trim()}، ${opts.customer.city.trim()}، ${opts.customer.address.trim()}`);
+  } else if (opts.customer.address?.trim()) {
+    lines.push(`📍 آدرس / توضیحات تحویل: ${opts.customer.address.trim()}`);
+  }
 
   if (opts.customer.postalCode?.trim()) {
     lines.push(`📮 کد پستی: ${opts.customer.postalCode.trim()}`);
@@ -123,12 +135,17 @@ export function buildCompactOrderMessage(opts: BuildMessageOptions): string {
     .map((item) => `${item.productNameFa} (${item.optionLabel})×${toPersianDigits(item.qty)}`)
     .join('، ');
 
-  const fullName = `${opts.customer.firstName} ${opts.customer.lastName}`;
-  const basePrefix = `سفارش باباخُرم [${opts.referenceCode}]\n${fullName} - ${opts.customer.mobile}\nاقلام: ${itemsText}\nمقصد: ${opts.customer.province}، ${opts.customer.city} - `;
+  const fullName = `${opts.customer.firstName} ${opts.customer.lastName}`.trim();
+  const destText =
+    opts.customer.province?.trim() && opts.customer.city?.trim()
+      ? `مقصد: ${opts.customer.province}، ${opts.customer.city}`
+      : `آدرس: ${opts.customer.address?.trim() || 'هماهنگی تلفنی'}`;
+
+  const basePrefix = `سفارش باباخُرم [${opts.referenceCode}]\n${fullName} - ${opts.customer.mobile}\nاقلام: ${itemsText}\n${destText}${opts.customer.province?.trim() && opts.customer.city?.trim() ? ' - ' : ''}`;
 
   // Target max 300 chars for SMS efficiency
   const maxAddressLen = Math.max(20, 300 - basePrefix.length);
-  let addr = opts.customer.address;
+  let addr = opts.customer.address || '';
   if (addr.length > maxAddressLen) {
     addr = addr.substring(0, maxAddressLen - 3) + '...';
   }

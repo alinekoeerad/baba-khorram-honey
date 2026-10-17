@@ -523,5 +523,48 @@
     "createdById": "usr_system",
     "createdAt": "2026-10-08T13:45:15.440Z",
     "updatedAt": "2026-10-08T13:45:15.440Z"
+  },
+  {
+    "id": "ast_1792188266290_x02rj",
+    "storageKey": "img_1792188265269_8b2efdfa11811f14-1254.webp",
+    "mime": "image/webp",
+    "bytes": 98686,
+    "width": 1254,
+    "height": 1254,
+    "blurDataUrl": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAAAwAgCdASoQABAABABoJbACdAEN5RliUThQAAD2bD21X2i463pehp4U+yp/8sQSwHIfHkEdVMMKgsVc5BdTboK6LqgSbxvRcmcmZe4hhDGnLwna5McOexKgl/p3awlbKhjUeEYo6GGXSpD20AA=",
+    "variants": {
+      "480": {
+        "key": "img_1792188265269_8b2efdfa11811f14-480.webp",
+        "url": "/uploads/img_1792188265269_8b2efdfa11811f14-480.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 35850
+      },
+      "768": {
+        "key": "img_1792188265269_8b2efdfa11811f14-768.webp",
+        "url": "/uploads/img_1792188265269_8b2efdfa11811f14-768.webp",
+        "width": 768,
+        "height": 768,
+        "bytes": 66896
+      },
+      "1200": {
+        "key": "img_1792188265269_8b2efdfa11811f14-1200.webp",
+        "url": "/uploads/img_1792188265269_8b2efdfa11811f14-1200.webp",
+        "width": 1200,
+        "height": 1200,
+        "bytes": 108418
+      },
+      "1254": {
+        "key": "img_1792188265269_8b2efdfa11811f14-1254.webp",
+        "url": "/uploads/img_1792188265269_8b2efdfa11811f14-1254.webp",
+        "width": 1254,
+        "height": 1254,
+        "bytes": 98686
+      }
+    },
+    "alt": null,
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-16T22:04:26.290Z",
+    "updatedAt": "2026-10-16T22:04:26.290Z"
   }
 ]

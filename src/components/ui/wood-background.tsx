@@ -22,7 +22,7 @@ export function WoodBackground({
   return (
     <section
       className={cn(
-        'relative bg-[#2B1B10] text-[#E6DDD4] overflow-hidden',
+        'relative bg-[#FAF7F2] text-[#2B2017] overflow-hidden',
         className
       )}
       style={{
@@ -33,7 +33,7 @@ export function WoodBackground({
       }}
       {...props}
     >
-      <div className="relative z-10 text-[#E6DDD4]">{children}</div>
+      <div className="relative z-10 text-[#2B2017]">{children}</div>
     </section>
   );
 }

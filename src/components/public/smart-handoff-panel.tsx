@@ -42,7 +42,16 @@ export function SmartHandoffPanel({
   className = '',
 }: SmartHandoffPanelProps) {
   const [copied, setCopied] = useState(true); // Default true since order build copies text immediately
-  const effectiveSiteUrl = siteUrl || getClientOrigin();
+  const [effectiveSiteUrl, setEffectiveSiteUrl] = useState<string>(() => {
+    return siteUrl || process.env.NEXT_PUBLIC_SITE_URL || 'https://babakhorram.com';
+  });
+
+  React.useEffect(() => {
+    if (!siteUrl && typeof window !== 'undefined' && window.location?.origin) {
+      setEffectiveSiteUrl(window.location.origin);
+    }
+  }, [siteUrl]);
+
   const cleanValue = (channelValue || '').replace(/^@/, '').trim();
 
 

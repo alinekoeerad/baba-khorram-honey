@@ -80,5 +80,26 @@ describe('OrderService & Order Deep-Link Generators (Addendum A5/A6)', () => {
       expect(compact).toContain('K892-23');
       expect(compact.length).toBeLessThanOrEqual(300);
     });
+
+    it('builds full order message with preferredContactMethod and single address line', () => {
+      const opts = {
+        referenceCode: 'B4K8-91',
+        customer: {
+          firstName: 'حمید',
+          lastName: 'نیکزاد',
+          mobile: '09129876543',
+          address: 'تهران، زعفرانیه، پلاک ۱۲',
+          preferredContactMethod: 'ایتا',
+        },
+        items: [{ productNameFa: 'عسل آویشن کوهی', optionLabel: '۵۰۰ گرم', qty: 2 }],
+      };
+
+      const full = OrderService.buildFullMessage(opts);
+      expect(full).toContain('B4K8-91');
+      expect(full).toContain('حمید نیکزاد');
+      expect(full).toContain('💬 روش ترجیحی هماهنگی: ایتا');
+      expect(full).toContain('📍 آدرس / توضیحات تحویل: تهران، زعفرانیه، پلاک ۱۲');
+      expect(full).toContain('عسل آویشن کوهی - ۵۰۰ گرم × ۲ عدد');
+    });
   });
 });

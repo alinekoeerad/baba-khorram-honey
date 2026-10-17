@@ -21,6 +21,7 @@ interface AdminHeaderProps {
 
 const BREADCRUMB_MAP: Record<string, string> = {
   admin: 'داشبورد',
+  orders: 'مدیریت سفارشات',
   products: 'محصولات عسل',
   recipes: 'دستورهای مصرف',
   categories: 'دسته‌بندی‌ها',
@@ -77,9 +78,10 @@ export function AdminHeader({ user }: AdminHeaderProps) {
             <img
               src="/images/header-logo.webp"
               alt="عسل باباخُرم"
-              width={36}
-              height={36}
-              className="w-9 h-9 object-contain"
+              width={160}
+              height={160}
+              decoding="async"
+              className="w-9 h-9 object-contain shrink-0"
             />
           </Link>
 

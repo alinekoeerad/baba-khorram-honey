@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { db } from '@/server/db/client';
 import { getRecentAuditLogs } from '@/server/services/audit-log-service';
 import { uiStringsFa } from '@/content/ui-strings.fa';
-import { Package, BookOpen, Layers, MessageSquare, AlertTriangle, CheckCircle2, Shield } from 'lucide-react';
+import { Package, BookOpen, Layers, MessageSquare, AlertTriangle, CheckCircle2, Shield, ShoppingBag } from 'lucide-react';
 import { AdminBadge } from '@/components/admin/admin-badge';
 
 export const dynamic = 'force-dynamic';
@@ -11,6 +11,9 @@ export const dynamic = 'force-dynamic';
 export default async function AdminDashboardPage() {
   // Query status counts & catalog health metrics
   const [
+    totalOrders,
+    newOrders,
+    contactedOrders,
     totalProducts,
     publishedProducts,
     draftProducts,
@@ -27,6 +30,9 @@ export default async function AdminDashboardPage() {
     activeAdmins,
     recentAuditLogs,
   ] = await Promise.all([
+    db.order.count(),
+    db.order.count({ where: { status: 'NEW' } }),
+    db.order.count({ where: { status: 'CONTACTED' } }),
     db.product.count(),
     db.product.count({ where: { status: 'PUBLISHED' } }),
     db.product.count({ where: { status: 'DRAFT' } }),
@@ -58,6 +64,12 @@ export default async function AdminDashboardPage() {
         </div>
         <div className="flex items-center gap-2">
           <Link
+            href="/admin/orders"
+            className="px-4 py-2 bg-[#D97706] hover:bg-[#B45309] text-white text-xs font-black transition-colors shadow-xs"
+          >
+            مدیریت سفارشات ({newOrders})
+          </Link>
+          <Link
             href="/admin/products/new"
             className="px-4 py-2 bg-[#FBBF24] hover:bg-[#F59E0B] text-[#332115] text-xs font-bold transition-colors shadow-xs"
           >
@@ -73,7 +85,41 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Primary Metrics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
+        {/* Orders Card */}
+        <div className="bg-white border-2 border-[#FDE68A] p-6 shadow-xs relative overflow-hidden">
+          {newOrders > 0 && (
+            <div className="absolute top-0 end-0 bg-rose-500 text-white text-[10px] font-black px-2.5 py-0.5 rounded-none animate-pulse">
+              {newOrders} جدید
+            </div>
+          )}
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-[#D97706] uppercase tracking-wide flex items-center gap-1.5">
+              <ShoppingBag className="w-4 h-4 text-[#D97706]" />
+              <span>سفارشات ثبت‌شده</span>
+            </span>
+            <span className="text-2xl font-black text-[#332115]">{totalOrders}</span>
+          </div>
+          <div className="mt-4 pt-4 border-t border-[#EFE9E0] grid grid-cols-2 gap-2 text-center text-xs">
+            <div>
+              <div className="font-bold text-rose-600">{newOrders}</div>
+              <div className="text-[#5C5248] text-[11px] mt-0.5">در انتظار هماهنگی</div>
+            </div>
+            <div>
+              <div className="font-bold text-[#3F8F3B]">{contactedOrders}</div>
+              <div className="text-[#5C5248] text-[11px] mt-0.5">هماهنگ شده</div>
+            </div>
+          </div>
+          <div className="mt-3 pt-3 border-t border-[#EFE9E0]">
+            <Link
+              href="/admin/orders"
+              className="text-xs font-bold text-[#D97706] hover:text-[#C86A00] flex items-center justify-between"
+            >
+              <span>مشاهده و پردازش سفارشات</span>
+              <span>←</span>
+            </Link>
+          </div>
+        </div>
         {/* Products Card */}
         <div className="bg-white border border-[#EFE9E0] p-6 shadow-xs">
           <div className="flex items-center justify-between">

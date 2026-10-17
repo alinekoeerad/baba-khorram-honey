@@ -226,9 +226,9 @@ export default async function StyleguidePage() {
 
         <WoodBackground className="py-16">
           <Container className="text-center space-y-4">
-            <h3 className="text-2xl font-black text-white">تک‌سکشن بافت چوب (WoodBackground)</h3>
-            <p className="text-sm text-[#E8E2D9] max-w-lg mx-auto">
-              این بخش به صورت مستقل یک بافت چوبی تیره با لایه تاریک ایجاد می‌کند.
+            <h3 className="text-2xl font-black text-[#2B2017]">تک‌سکشن بافت چوب (WoodBackground)</h3>
+            <p className="text-sm text-[#5C5248] max-w-lg mx-auto font-medium">
+              این بخش به صورت مستقل بافت چوب طبیعی روشن را ایجاد می‌کند.
             </p>
             <div className="pt-2">
               <PillButton variant="gold" size="sm">
@@ -241,14 +241,14 @@ export default async function StyleguidePage() {
         <WoodGroup className="py-12">
           <div className="py-8">
             <Container className="text-center">
-              <h4 className="text-xl font-black text-white">بخش اول گروه چوبی (WoodGroup Item 1)</h4>
-              <p className="text-xs text-[#E8E2D9] mt-2">اتصال پیوسته بدون درز میان دو بخش متوالی</p>
+              <h4 className="text-xl font-black text-[#2B2017]">بخش اول گروه چوبی (WoodGroup Item 1)</h4>
+              <p className="text-xs text-[#5C5248] mt-2 font-medium">اتصال پیوسته بدون درز میان دو بخش متوالی</p>
             </Container>
           </div>
           <div className="py-8">
             <Container className="text-center">
-              <h4 className="text-xl font-black text-white">بخش دوم گروه چوبی (WoodGroup Item 2)</h4>
-              <p className="text-xs text-[#E8E2D9] mt-2">عدم هم‌پوشانی مضاعف یا تغییر کنتراست پس‌زمینه</p>
+              <h4 className="text-xl font-black text-[#2B2017]">بخش دوم گروه چوبی (WoodGroup Item 2)</h4>
+              <p className="text-xs text-[#5C5248] mt-2 font-medium">عدم هم‌پوشانی مضاعف یا تغییر کنتراست پس‌زمینه</p>
             </Container>
           </div>
         </WoodGroup>

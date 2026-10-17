@@ -1,21 +1,16 @@
 'use client';
 
 /**
- * Cart View Client Component (Phase 9 Tasks 5, 7, 9 & Addendum A3-A6)
+ * Cart View Client Component
  *
- * Implements:
- * - Fresh item data fetching & verification
- * - Line item quantity changes, option switching, and removal
- * - Delivery-only customer form with Zod validation
- * - "مرا به خاطر بسپار" local storage (cart-customer:v1)
- * - Channel chooser (active channels with acceptsOrders)
- * - Mobile vs Desktop device detection with manual override
- * - Desktop QR panel encoding ONLY SITE_URL/o/<code> (generated client-side)
- * - Copy-then-open fallback for unverified messengers
- * - After-send confirmation dialog ("سفارش را ارسال کردید؟")
+ * Implements the Frictionless 1-Click Direct Order Registration paradigm:
+ * 1. Simple Checkout Form: Name, Mobile, Address/Notes (optional), Preferred Contact Method (optional pill selector).
+ * 2. Single Primary CTA: "ثبت نهایی سفارش" (Instant database save + Bot dispatch to Bale, Eitaa, Telegram).
+ * 3. Reassuring Post-Order Receipt: Luxury Green/Gold Success Card, Order Code Badge, Invoice Summary,
+ *    and Optional Fast-Track Chat (WhatsApp, Telegram, Bale, Eitaa, Direct Call/SMS).
  */
 
-import React, { useState, useEffect, useTransition } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { WoodBackground } from '@/components/ui/wood-background';
 import { Container } from '@/components/ui/container';
@@ -29,18 +24,10 @@ import {
   SavedCustomerData,
 } from '@/lib/cart-store';
 import { toPersianDigits, validateAndNormalizeIranianMobile } from '@/lib/domain-utils';
-import {
-  copyTextSync,
-  copyTextToClipboard,
-  isIosDevice,
-  buildSmsUri,
-  resolveOrderShareUrl,
-} from '@/lib/clipboard';
-import { buildChannelOrderUrl } from '@/lib/contact-channels';
+import { copyTextSync, copyTextToClipboard } from '@/lib/clipboard';
 import { fetchFreshCartAction } from '@/server/actions/cart-actions';
 import { buildOrderAction, BuildOrderResult } from '@/server/actions/order-actions';
-import { generateQrSvg } from '@/lib/qr-code';
-import { SmartHandoffPanel } from './smart-handoff-panel';
+import { ChannelIcon } from './channel-icon';
 import type { FreshCartLineItem } from '@/server/queries/cart';
 import type { PublicChannelItem } from '@/server/queries/settings';
 import {
@@ -48,20 +35,30 @@ import {
   Trash2,
   Plus,
   Minus,
-  AlertTriangle,
   Info,
   Copy,
   Check,
-  ExternalLink,
   Loader2,
   CheckCircle2,
-  Share2,
+  MessageSquare,
+  Phone,
+  ShieldCheck,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react';
 
 export interface CartViewProps {
   cartNotice: string;
   orderChannels: PublicChannelItem[];
 }
+
+const PREFERRED_METHODS = [
+  { id: 'PHONE', label: 'تماس تلفنی / پیامک (پیش‌فرض)' },
+  { id: 'EITAA', label: 'ایتا' },
+  { id: 'BALE', label: 'بله' },
+  { id: 'WHATSAPP', label: 'واتساپ' },
+  { id: 'TELEGRAM', label: 'تلگرام' },
+] as const;
 
 export function CartView({ cartNotice, orderChannels }: CartViewProps) {
   const { lines, totalQuantity, warning, actions } = useCartStore();
@@ -71,49 +68,41 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
   const [hasUnavailable, setHasUnavailable] = useState(false);
 
   // Customer Form State
-  const [customer, setCustomer] = useState<SavedCustomerData>({
-    firstName: '',
-    lastName: '',
-    mobile: '',
-    province: '',
-    city: '',
-    address: '',
-    postalCode: '',
-    notes: '',
-  });
+  const [fullName, setFullName] = useState('');
+  const [mobile, setMobile] = useState('');
+  const [address, setAddress] = useState('');
+  const [preferredContactMethod, setPreferredContactMethod] = useState<string>('PHONE');
   const [rememberMe, setRememberMe] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
-  // Automatic device detection (Mobile vs Desktop) with manual override toggle
-  const [isMobileClient, setIsMobileClient] = useState(false);
-
-  // Order submission state
-  const [selectedChannelId, setSelectedChannelId] = useState<string>('');
+  // Submission State
   const [orderResult, setOrderResult] = useState<BuildOrderResult | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [isCopied, setIsCopied] = useState(false);
-  const [showConfirmSent, setShowConfirmSent] = useState(false);
-  const [canShare, setCanShare] = useState(false);
 
-  // 1. Initial Customer "Remember Me" Load & Auto Device Detection
+  // Feedback states
+  const [isCodeCopied, setIsCodeCopied] = useState(false);
+  const [isInvoiceCopied, setIsInvoiceCopied] = useState(false);
+  const [messengerToast, setMessengerToast] = useState<string | null>(null);
+  const [isSummaryExpanded, setIsSummaryExpanded] = useState(true);
+
+  const receiptRef = useRef<HTMLDivElement>(null);
+
+  // 1. Initial Customer "Remember Me" Load
   useEffect(() => {
     const saved = getSavedCustomer();
     if (saved) {
-      setCustomer(saved);
+      const name =
+        saved.fullName ||
+        [saved.firstName, saved.lastName].filter(Boolean).join(' ');
+      setFullName(name);
+      setMobile(saved.mobile || '');
+      setAddress(saved.address || '');
+      if (saved.preferredContactMethod) {
+        setPreferredContactMethod(saved.preferredContactMethod);
+      }
       setRememberMe(true);
     }
-
-    if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
-      setCanShare(true);
-    }
-
-    // Auto-detect mobile device without asking user
-    const isMobile =
-      typeof window !== 'undefined'
-        ? window.innerWidth < 768 || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)
-        : false;
-    setIsMobileClient(isMobile);
   }, []);
 
   // 2. Fetch fresh cart data on mount and whenever lines change
@@ -144,57 +133,35 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
     };
   }, [lines]);
 
-  // Filter channels based on detected device
-  // Desktop cannot use SMS (PHONE)
-  const availableChannels = orderChannels.filter((ch) => {
-    if (!isMobileClient && ch.type === 'PHONE') {
-      return false;
-    }
-    return true;
-  });
-
-  // Set default channel
+  // 3. Scroll to top/receipt when orderResult arrives
   useEffect(() => {
-    if (availableChannels.length > 0 && !selectedChannelId) {
-      if (availableChannels[0]?.id) setSelectedChannelId(availableChannels[0].id);
-    } else if (
-      selectedChannelId &&
-      !availableChannels.some((ch) => ch.id === selectedChannelId)
-    ) {
-      setSelectedChannelId(availableChannels[0]?.id || '');
+    if (orderResult) {
+      if (receiptRef.current) {
+        receiptRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
-  }, [availableChannels, selectedChannelId]);
+  }, [orderResult]);
 
-  // Validate form fields
+  // Form Validation
   const validateForm = (): boolean => {
     const errors: Record<string, string> = {};
 
-    if (!customer.firstName.trim()) errors.firstName = 'نام الزامی است.';
-    if (!customer.lastName.trim()) errors.lastName = 'نام خانوادگی الزامی است.';
+    if (!fullName.trim() || fullName.trim().length < 2) {
+      errors.fullName = 'لطفاً نام و نام خانوادگی خود را وارد فرمایید (حداقل ۲ حرف).';
+    }
 
-    const mobileVal = validateAndNormalizeIranianMobile(customer.mobile);
+    const mobileVal = validateAndNormalizeIranianMobile(mobile);
     if (!mobileVal.isValid) {
       errors.mobile = mobileVal.error || 'شماره موبایل وارد شده معتبر نیست.';
-    }
-
-    if (!customer.province.trim()) errors.province = 'استان الزامی است.';
-    if (!customer.city.trim()) errors.city = 'شهر الزامی است.';
-    if (!customer.address.trim() || customer.address.trim().length < 5) {
-      errors.address = 'آدرس کامل و دقیق (حداقل ۵ کاراکتر) الزامی است.';
-    }
-
-    if (customer.postalCode && customer.postalCode.trim().length > 0) {
-      const cleanPostal = customer.postalCode.replace(/[^0-9]/g, '');
-      if (cleanPostal.length !== 10) {
-        errors.postalCode = 'کد پستی باید دقیقاً ۱۰ رقم باشد.';
-      }
     }
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
-  // Submit and Build Order
+  // 1-Click Order Submission
   const handleProceedToOrder = async () => {
     if (lines.length === 0) return;
     if (hasUnavailable) {
@@ -203,21 +170,22 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
     }
 
     if (!validateForm()) {
-      setSubmitError('لطفاً خطاهای فرم آدرس و مشخصات را برطرف نمایید.');
+      setSubmitError('لطفاً فیلدهای الزامی مشخصات (نام و شماره موبایل) را با دقت تکمیل فرمایید.');
       return;
     }
-
-    // Zero-channel resilience: fallback to GENERAL_FALLBACK if no channels exist
-    const channelIdToUse =
-      selectedChannelId ||
-      (availableChannels.length > 0 ? availableChannels[0]?.id : 'GENERAL_FALLBACK');
 
     setIsSubmitting(true);
     setSubmitError(null);
 
-    // Save or clear Remember Me
+    const customerData: SavedCustomerData = {
+      fullName: fullName.trim(),
+      mobile: mobile.trim(),
+      address: address.trim(),
+      preferredContactMethod,
+    };
+
     if (rememberMe) {
-      saveCustomerLocally(customer);
+      saveCustomerLocally(customerData);
     } else {
       clearSavedCustomer();
     }
@@ -225,107 +193,104 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
     try {
       const result = await buildOrderAction({
         lines,
-        customer,
-        channelId: channelIdToUse,
-        createShareLink: !isMobileClient, // Desktop needs share link for QR
+        customer: customerData,
+        preferredContactMethod,
+        createShareLink: true,
       });
 
-      if (result.success && result.messageText) {
-        // 1. Dual-Safety: Synchronously copy messageText to clipboard first
-        copyTextSync(result.messageText);
-        await copyTextToClipboard(result.messageText);
-        setIsCopied(true);
-
-        const chosenChannel = availableChannels.find((ch) => ch.id === channelIdToUse);
-        const channelType = result.channelType || chosenChannel?.type;
-        const channelValue = result.channelValue || chosenChannel?.value || '';
-        const isIranian =
-          channelType === 'EITAA' ||
-          channelType === 'BALE' ||
-          channelType === 'RUBIKA';
-
-        // Format platform-aware direct URL with prefilled text parameter for all channels
-        let finalDirectUrl = result.directUrl || '#';
-        if (channelType && channelValue) {
-          finalDirectUrl = buildChannelOrderUrl(
-            channelType as any,
-            channelValue,
-            result.messageText,
-            { isIos: isIosDevice() }
-          );
-        }
-
-        const updatedResult: BuildOrderResult = {
-          ...result,
-          directUrl: finalDirectUrl,
-          isPrefillSupported: !isIranian,
-        };
-        setOrderResult(updatedResult);
-        setShowConfirmSent(true);
-
-        // 2. Dual-Safety: Immediately open the prefilled deep link (?text=...) on mobile ONLY for WhatsApp, Telegram, and SMS
-        // For Eitaa, Bale, and Rubika, keep customer on the Smart Handoff Panel so they can use Button 1 (PV) or Button 2 (Share)
-        // without landing on a blank chat!
-        if (isMobileClient && !isIranian && finalDirectUrl && finalDirectUrl !== '#') {
-          window.location.href = finalDirectUrl;
+      if (result.success && result.orderCode) {
+        setOrderResult(result);
+        const textToCopy = result.fullMessageText || result.messageText || '';
+        if (textToCopy) {
+          copyTextSync(textToCopy);
+          copyTextToClipboard(textToCopy);
         }
       } else {
-        setSubmitError(result.error || 'خطا در آماده‌سازی سفارش.');
+        setSubmitError(result.error || 'خطا در ثبت سفارش. لطفاً دوباره تلاش فرمایید.');
       }
     } catch {
-      setSubmitError('خطای ارتباط با سرور.');
+      setSubmitError('خطای ارتباط با سرور هنگام ثبت سفارش.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleNativeShare = async (text?: string, title?: string) => {
-    const shareText = text || orderResult?.messageText;
-    if (!shareText) return;
-    if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
-      try {
-        await navigator.share({
-          title: title || `سفارش ${orderResult?.orderCode || ''}`,
-          text: shareText,
-        });
-      } catch {}
-    }
+  const handleCopyOrderCode = () => {
+    if (!orderResult?.orderCode) return;
+    copyTextSync(orderResult.orderCode);
+    copyTextToClipboard(orderResult.orderCode);
+    setIsCodeCopied(true);
+    setTimeout(() => setIsCodeCopied(false), 2500);
   };
 
-  const handleCopyText = async () => {
-    if (!orderResult?.messageText) return;
-    copyTextSync(orderResult.messageText);
-    const success = await copyTextToClipboard(orderResult.messageText);
+  const handleCopyInvoice = async () => {
+    const text = orderResult?.fullMessageText || orderResult?.messageText;
+    if (!text) return;
+    copyTextSync(text);
+    const success = await copyTextToClipboard(text);
     if (success) {
-      setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 3000);
+      setIsInvoiceCopied(true);
+      setTimeout(() => setIsInvoiceCopied(false), 2500);
     }
   };
 
-  const handleConfirmClearCart = () => {
-    actions.clearCart();
-    setOrderResult(null);
-    setShowConfirmSent(false);
+  // Messenger fast-track chat handlers
+  const handleOpenBale = () => {
+    const text = orderResult?.fullMessageText || orderResult?.messageText || '';
+    if (text) {
+      copyTextSync(text);
+      copyTextToClipboard(text);
+    }
+    setMessengerToast('متن سفارش کپی شد — در صفحه چت بله Paste کنید');
+    setTimeout(() => setMessengerToast(null), 6000);
+    window.open('https://ble.ir/Babakhoram', '_blank', 'noopener,noreferrer');
   };
 
-  // If cart is empty
+  const handleOpenEitaa = () => {
+    const text = orderResult?.fullMessageText || orderResult?.messageText || '';
+    if (text) {
+      copyTextSync(text);
+      copyTextToClipboard(text);
+    }
+    setMessengerToast('متن سفارش کپی شد — در صفحه چت ایتا Paste کنید');
+    setTimeout(() => setMessengerToast(null), 6000);
+    window.open('https://eitaa.com/Babakhoram', '_blank', 'noopener,noreferrer');
+  };
+
+  const selectedContactMethodLabel =
+    PREFERRED_METHODS.find((m) => m.id === preferredContactMethod)?.label || 'تماس تلفنی / پیامک';
+
+  const customerDisplayName = fullName.trim() || 'مشتری گرامی';
+  const friendlySupportText = orderResult
+    ? `سلام، سفارش شماره ${orderResult.orderCode} به نام ${customerDisplayName} ثبت شد.\n\n${orderResult.fullMessageText || orderResult.messageText || ''}`
+    : '';
+
+  // Empty Cart Screen (Only when not showing confirmation receipt)
   if (lines.length === 0 && !orderResult) {
     return (
-      <WoodBackground className="py-20 min-h-screen">
-        <Container size="narrow" className="text-center space-y-6 bg-white p-8 sm:p-12 border border-[#FDE68A] shadow-xl rounded-none">
-          <div className="w-16 h-16 rounded-full bg-[#FEF3C7] border border-[#F59E0B] flex items-center justify-center mx-auto text-[#D97706] shadow-2xs">
-            <ShoppingCart className="w-8 h-8" />
-          </div>
-          <h1 className="text-2xl sm:text-4xl font-black text-[#2B2017]">
-            سبد خرید شما خالی است
-          </h1>
-          <p className="text-sm sm:text-base text-[#5C5248] max-w-md mx-auto leading-relaxed font-medium">
-            محصولی به سبد خرید اضافه نشده است. می‌توانید با مراجعه به فهرست محصولات، انواع عسل طبیعی باباخُرم را بررسی و سفارش دهید.
-          </p>
-          <div className="pt-4">
-            <PillButton variant="gold" size="lg" href="/products">
-              مشاهده و انتخاب محصولات
-            </PillButton>
+      <WoodBackground className="py-16 sm:py-24 min-h-[70vh] flex items-center">
+        <Container size="narrow">
+          <div className="bg-white border-2 border-[#FDE68A] p-8 sm:p-12 text-center space-y-6 shadow-xl rounded-none">
+            <div className="w-20 h-20 mx-auto rounded-full bg-[#FAF7F2] border border-[#EFE9E0] flex items-center justify-center text-[#D97706]">
+              <ShoppingCart className="w-10 h-10" />
+            </div>
+
+            <div className="space-y-2">
+              <h1 className="text-2xl sm:text-3xl font-black text-[#2B2017]">
+                سبد خرید شما در حال حاضر خالی است
+              </h1>
+              <p className="text-sm text-[#5C5248] max-w-md mx-auto leading-relaxed font-medium">
+                شهد‌های طبیعی و خالص باباخُرم مستقیماً از کندوهای طالقان و سبلان برداشت می‌شوند. برای مشاهده محصولات کلیک فرمایید.
+              </p>
+            </div>
+
+            <div className="pt-2">
+              <Link href="/products">
+                <PillButton variant="gold" size="lg" className="font-bold">
+                  مشاهده و خرید عسل‌های طبیعی
+                </PillButton>
+              </Link>
+            </div>
           </div>
         </Container>
       </WoodBackground>
@@ -333,15 +298,17 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
   }
 
   return (
-    <WoodBackground className="py-12 sm:py-20 min-h-screen">
-      <Container size="narrow" className="space-y-10 sm:space-y-12">
-        {/* Page Title */}
-        <div className="text-center space-y-3">
-          <h1 className="text-3xl sm:text-5xl font-black text-[#FFFBEB] leading-tight drop-shadow-md">
-            سبد خرید و ثبت سفارش
+    <WoodBackground className="py-10 sm:py-16 min-h-screen">
+      <Container size="default" className="space-y-8">
+        {/* Page Title & Subtitle */}
+        <div className="text-center space-y-2">
+          <h1 className="text-2xl sm:text-4xl font-black text-[#2B2017]">
+            {orderResult ? 'رسید نهایی سفارش شما' : 'سبد خرید و ثبت نهایی سفارش'}
           </h1>
-          <p className="text-xs sm:text-sm text-[#E5D5C5]">
-            تعداد کل اقلام: {toPersianDigits(totalQuantity)} عدد (بدون نیاز به پرداخت آنلاین)
+          <p className="text-xs sm:text-sm text-[#5C5248] font-medium">
+            {orderResult
+              ? 'سفارش شما در سامانه فروش عسل باباخُرم ثبت گردید'
+              : `تعداد کل اقلام: ${toPersianDigits(totalQuantity)} عدد — بدون نیاز به پرداخت آنلاین`}
           </p>
         </div>
 
@@ -353,635 +320,554 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
           </div>
         )}
 
-        {/* 1. Cart Lines Items Section: Warm Ivory Card */}
-        <div className="bg-white border border-[#FDE68A] p-5 sm:p-8 space-y-6 shadow-lg rounded-none text-right">
-          <h2 className="text-xl sm:text-2xl font-black text-[#2B2017] border-b border-[#EFE9E0] pb-3">
-            اقلام انتخابی شما
-          </h2>
+        {/* Cart Notice from Site Settings */}
+        {cartNotice && !orderResult && (
+          <div className="p-4 bg-white border-r-4 border-[#F59E0B] text-[#5C5248] text-xs sm:text-sm leading-relaxed shadow-sm rounded-none">
+            {cartNotice}
+          </div>
+        )}
 
-          {isLoadingFresh && (
-            <div className="py-4 flex items-center justify-center gap-2 text-xs text-[#5C5248]">
-              <Loader2 className="w-4 h-4 animate-spin text-[#D97706]" />
-              <span>در حال به‌روزرسانی موجودی و مشخصات...</span>
-            </div>
-          )}
-
-          <div className="divide-y divide-[#EFE9E0]">
-            {lines.map((line) => {
-              const fresh = freshItems.find((f) => f.optionId === line.optionId);
-              const title = fresh?.productNameFa || 'عسل طبیعی';
-              const optionLabel = fresh?.optionLabel || 'وزن نامشخص';
-              const isAvailable = fresh ? fresh.isAvailable : true;
-              const invalidReason = fresh?.invalidReason;
-
-              return (
-                <div
-                  key={line.optionId}
-                  className={`py-4 sm:py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
-                    !isAvailable ? 'bg-rose-50 p-3 border border-rose-300' : ''
-                  }`}
-                >
-                  {/* Item Image and Name */}
-                  <div className="flex items-center gap-3 sm:gap-4">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-[#FAF7F2] border border-[#EFE9E0] shrink-0 overflow-hidden flex items-center justify-center">
-                      {fresh?.mainImage ? (
-                        <Picture
-                          asset={fresh.mainImage}
-                          alt={title}
-                          width={100}
-                          height={100}
-                          className="w-full h-full object-contain p-1"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-[10px] text-[#786455] font-bold">
-                          باباخُرم
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="space-y-1 min-w-0">
-                      <Link
-                        href={`/products/${fresh?.productSlug || ''}`}
-                        className="font-black text-sm sm:text-base text-[#2B2017] hover:text-[#D97706] transition-colors truncate block"
-                      >
-                        {title}
-                      </Link>
-                      {/* In-Cart Option Switching */}
-                      {fresh?.options && fresh.options.length > 1 ? (
-                        <div className="flex items-center gap-1.5 mt-1">
-                          <span className="text-[11px] text-[#786455] font-bold">بسته‌بندی:</span>
-                          <select
-                            value={line.optionId}
-                            onChange={(e) => actions.switchOption(line.optionId, e.target.value)}
-                            className="text-xs font-bold text-[#B45309] bg-[#FAF7F2] border border-[#EFE9E0] px-2 py-0.5 rounded-none focus:outline-none focus:border-[#D97706] cursor-pointer"
-                          >
-                            {fresh.options.map((opt) => (
-                              <option key={opt.id} value={opt.id} disabled={!opt.isAvailable}>
-                                {opt.label} {!opt.isAvailable ? '(ناموجود)' : ''}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      ) : (
-                        <div className="text-xs text-[#B45309] font-bold">
-                          بسته‌بندی: {optionLabel}
-                        </div>
-                      )}
-                      {!isAvailable && (
-                        <div className="text-xs text-rose-700 font-bold flex items-center gap-1">
-                          <AlertTriangle className="w-3.5 h-3.5" />
-                          <span>{invalidReason || 'این مورد ناموجود است.'}</span>
-                        </div>
-                      )}
-                    </div>
+        {/* ========================================================================= */}
+        {/* POST-ORDER CONFIRMATION RECEIPT (Rendered immediately upon orderResult)  */}
+        {/* ========================================================================= */}
+        {orderResult && (
+          <div ref={receiptRef} className="space-y-8 animate-in fade-in duration-300">
+            {/* 1. Success Header Card (Green/Gold Luxury Theme) */}
+            <div className="bg-gradient-to-br from-[#064e3b] via-[#065f46] to-[#047857] text-white border-2 border-[#10b981] p-6 sm:p-8 shadow-2xl rounded-none text-right space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-emerald-500/30 pb-4">
+                <div className="flex items-center gap-3.5">
+                  <div className="w-12 h-12 rounded-full bg-emerald-400/20 border border-emerald-300 flex items-center justify-center shrink-0 shadow-inner">
+                    <CheckCircle2 className="w-7 h-7 text-emerald-300" />
                   </div>
-
-                  {/* Quantity Stepper & Remove */}
-                  <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0">
-                    <div className="flex items-center gap-2 bg-[#FAF7F2] border border-[#EFE9E0] p-1 rounded-none shadow-2xs">
-                      <button
-                        type="button"
-                        onClick={() => actions.updateQuantity(line.optionId, line.qty - 1)}
-                        disabled={line.qty <= 1}
-                        aria-label="کاهش"
-                        className="w-7 h-7 flex items-center justify-center text-[#2B2017] hover:bg-stone-200 disabled:opacity-30 cursor-pointer"
-                      >
-                        <Minus className="w-3.5 h-3.5" />
-                      </button>
-                      <span className="w-7 text-center font-black text-sm text-[#2B2017] select-none">
-                        {toPersianDigits(line.qty)}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => actions.updateQuantity(line.optionId, line.qty + 1)}
-                        disabled={line.qty >= 50}
-                        aria-label="افزایش"
-                        className="w-7 h-7 flex items-center justify-center text-[#2B2017] hover:bg-stone-200 disabled:opacity-30 cursor-pointer"
-                      >
-                        <Plus className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => actions.removeItem(line.optionId)}
-                      aria-label="حذف از سبد"
-                      className="p-2 text-rose-600 hover:text-rose-700 hover:bg-rose-50 rounded-none transition-colors cursor-pointer"
-                      title="حذف این مورد"
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </button>
+                  <div>
+                    <h2 className="text-xl sm:text-2xl font-black text-white">
+                      سفارش شما با موفقیت ثبت شد!
+                    </h2>
+                    <p className="text-xs sm:text-sm text-emerald-100 font-medium mt-1">
+                      فاکتور سفارش شما به واحد فروش عسل باباخُرم ارسال گردید.
+                    </p>
                   </div>
                 </div>
-              );
-            })}
-          </div>
 
-          {/* Cart Notice Box */}
-          <div className="p-4 bg-[#FFFBEB] border border-[#FDE68A] text-[#92400E] text-xs sm:text-sm leading-relaxed flex items-start gap-2.5 rounded-none shadow-2xs">
-            <Info className="w-5 h-5 shrink-0 mt-0.5 text-[#D97706]" />
-            <div>
-              <span className="font-black text-[#2B2017]">یادداشت فروشگاه: </span>
-              <span className="font-medium">{cartNotice}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* 2. Customer Delivery Form (Delivery Only): Warm Ivory Card */}
-        <div className="bg-white border border-[#FDE68A] p-5 sm:p-8 space-y-6 shadow-lg rounded-none text-right">
-          <div className="space-y-1 border-b border-[#EFE9E0] pb-3">
-            <h2 className="text-xl sm:text-2xl font-black text-[#2B2017]">
-              مشخصات و نشانی تحویل (فقط ارسال پستی)
-            </h2>
-            <p className="text-xs text-[#786455] font-medium">
-              تحویل سفارشات صرفاً به صورت ارسال پستی و درب منزل می‌باشد و امکان دریافت حضوری وجود ندارد.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-            {/* First Name */}
-            <div className="space-y-1.5">
-              <label className="block text-xs sm:text-sm font-bold text-[#2B2017]">
-                نام <span className="text-[#9E3556]">*</span>
-              </label>
-              <input
-                type="text"
-                value={customer.firstName}
-                onChange={(e) => setCustomer({ ...customer, firstName: e.target.value })}
-                className="w-full h-11 px-3.5 bg-[#FAF7F2] border border-[#EFE9E0] text-[#2B2017] text-sm focus:outline-none focus:border-[#D97706] focus:bg-white rounded-none transition-colors"
-                dir="rtl"
-              />
-              {formErrors.firstName && (
-                <p className="text-xs text-rose-700 font-bold">{formErrors.firstName}</p>
-              )}
-            </div>
-
-            {/* Last Name */}
-            <div className="space-y-1.5">
-              <label className="block text-xs sm:text-sm font-bold text-[#2B2017]">
-                نام خانوادگی <span className="text-[#9E3556]">*</span>
-              </label>
-              <input
-                type="text"
-                value={customer.lastName}
-                onChange={(e) => setCustomer({ ...customer, lastName: e.target.value })}
-                className="w-full h-11 px-3.5 bg-[#FAF7F2] border border-[#EFE9E0] text-[#2B2017] text-sm focus:outline-none focus:border-[#D97706] focus:bg-white rounded-none transition-colors"
-                dir="rtl"
-              />
-              {formErrors.lastName && (
-                <p className="text-xs text-rose-700 font-bold">{formErrors.lastName}</p>
-              )}
-            </div>
-
-            {/* Mobile Number */}
-            <div className="space-y-1.5">
-              <label className="block text-xs sm:text-sm font-bold text-[#2B2017]">
-                شماره موبایل (۰۹xxxxxxxxx) <span className="text-[#9E3556]">*</span>
-              </label>
-              <input
-                type="tel"
-                value={customer.mobile}
-                onChange={(e) => setCustomer({ ...customer, mobile: e.target.value })}
-                placeholder="09123456789"
-                className="w-full h-11 px-3.5 bg-[#FAF7F2] border border-[#EFE9E0] text-[#2B2017] text-sm focus:outline-none focus:border-[#D97706] focus:bg-white rounded-none transition-colors text-right"
-                dir="ltr"
-              />
-              {formErrors.mobile && (
-                <p className="text-xs text-rose-700 font-bold">{formErrors.mobile}</p>
-              )}
-            </div>
-
-            {/* Province */}
-            <div className="space-y-1.5">
-              <label className="block text-xs sm:text-sm font-bold text-[#2B2017]">
-                استان <span className="text-[#9E3556]">*</span>
-              </label>
-              <input
-                type="text"
-                value={customer.province}
-                onChange={(e) => setCustomer({ ...customer, province: e.target.value })}
-                placeholder="مثال: آذربایجان شرقی"
-                className="w-full h-11 px-3.5 bg-[#FAF7F2] border border-[#EFE9E0] text-[#2B2017] text-sm focus:outline-none focus:border-[#D97706] focus:bg-white rounded-none transition-colors"
-                dir="rtl"
-              />
-              {formErrors.province && (
-                <p className="text-xs text-rose-700 font-bold">{formErrors.province}</p>
-              )}
-            </div>
-
-            {/* City */}
-            <div className="space-y-1.5">
-              <label className="block text-xs sm:text-sm font-bold text-[#2B2017]">
-                شهر <span className="text-[#9E3556]">*</span>
-              </label>
-              <input
-                type="text"
-                value={customer.city}
-                onChange={(e) => setCustomer({ ...customer, city: e.target.value })}
-                placeholder="مثال: تبریز"
-                className="w-full h-11 px-3.5 bg-[#FAF7F2] border border-[#EFE9E0] text-[#2B2017] text-sm focus:outline-none focus:border-[#D97706] focus:bg-white rounded-none transition-colors"
-                dir="rtl"
-              />
-              {formErrors.city && (
-                <p className="text-xs text-rose-700 font-bold">{formErrors.city}</p>
-              )}
-            </div>
-
-            {/* Postal Code (Optional) */}
-            <div className="space-y-1.5">
-              <label className="block text-xs sm:text-sm font-bold text-[#2B2017]">
-                کد پستی (۱۰ رقم - اختیاری)
-              </label>
-              <input
-                type="text"
-                maxLength={10}
-                value={customer.postalCode || ''}
-                onChange={(e) => setCustomer({ ...customer, postalCode: e.target.value })}
-                placeholder="کد پستی ۱۰ رقمی"
-                className="w-full h-11 px-3.5 bg-[#FAF7F2] border border-[#EFE9E0] text-[#2B2017] text-sm focus:outline-none focus:border-[#D97706] focus:bg-white rounded-none transition-colors text-right"
-                dir="ltr"
-              />
-              {formErrors.postalCode && (
-                <p className="text-xs text-rose-700 font-bold">{formErrors.postalCode}</p>
-              )}
-            </div>
-
-            {/* Address */}
-            <div className="sm:col-span-2 space-y-1.5">
-              <label className="block text-xs sm:text-sm font-bold text-[#2B2017]">
-                نشانی دقیق پستی (خیابان، کوچه، پلاک، واحد) <span className="text-[#9E3556]">*</span>
-              </label>
-              <textarea
-                rows={3}
-                value={customer.address}
-                onChange={(e) => setCustomer({ ...customer, address: e.target.value })}
-                maxLength={500}
-                className="w-full p-3 bg-[#FAF7F2] border border-[#EFE9E0] text-[#2B2017] text-sm focus:outline-none focus:border-[#D97706] focus:bg-white rounded-none transition-colors leading-relaxed"
-                dir="rtl"
-              />
-              {formErrors.address && (
-                <p className="text-xs text-rose-700 font-bold">{formErrors.address}</p>
-              )}
-            </div>
-
-            {/* Notes (Optional) */}
-            <div className="sm:col-span-2 space-y-1.5">
-              <label className="block text-xs sm:text-sm font-bold text-[#2B2017]">
-                توضیحات تکمیلی (اختیاری - حداکثر ۳۰۰ کاراکتر)
-              </label>
-              <textarea
-                rows={2}
-                value={customer.notes || ''}
-                onChange={(e) => setCustomer({ ...customer, notes: e.target.value })}
-                maxLength={300}
-                className="w-full p-3 bg-[#FAF7F2] border border-[#EFE9E0] text-[#2B2017] text-sm focus:outline-none focus:border-[#D97706] focus:bg-white rounded-none transition-colors leading-relaxed"
-                dir="rtl"
-              />
-            </div>
-          </div>
-
-          {/* Remember Me Checkbox & Privacy Policy Line */}
-          <div className="space-y-3 pt-2 border-t border-[#EFE9E0]">
-            <label className="flex items-center gap-2.5 text-xs sm:text-sm text-[#2B2017] cursor-pointer select-none font-medium">
-              <input
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                className="w-4 h-4 rounded-none text-[#F59E0B] focus:ring-[#F59E0B] bg-white border-[#EFE9E0]"
-              />
-              <span>مرا به خاطر بسپار (ذخیره اطلاعات نشانی در مرورگر شما برای سفارش‌های بعدی)</span>
-            </label>
-
-            <p className="text-[11px] sm:text-xs text-[#786455] leading-relaxed">
-              🔒 حریم خصوصی: اطلاعات شما به هیچ وجه در دیتابیس سایت ذخیره نمی‌شود و صرفاً جهت ساخت متن پیام سفارش استفاده می‌گردد (در حالت بارکد QR، به مدت ۳۰ دقیقه به صورت رمزنگاری‌شده نگهداری می‌شود).
-            </p>
-          </div>
-        </div>
-
-        {/* 3. Channel Chooser: Warm Ivory Card */}
-        <div className="bg-white border border-[#FDE68A] p-5 sm:p-8 space-y-6 shadow-lg rounded-none text-right">
-          <div className="border-b border-[#EFE9E0] pb-3">
-            <h2 className="text-xl sm:text-2xl font-black text-[#2B2017]">
-              انتخاب روش و کانال ارسال سفارش
-            </h2>
-            <p className="text-xs text-[#786455] mt-1 font-medium">
-              سفارش شما مستقیماً به دست کارشناسان فروش باباخُرم خواهد رسید.
-            </p>
-          </div>
-
-          {/* Device Mode Switcher (Mobile vs Desktop) */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 p-3 bg-[#FAF7F2] border border-[#EFE9E0] text-xs">
-            <span className="text-[#5C5248] font-medium">
-              دستگاه شما: <strong className="text-[#2B2017]">{isMobileClient ? 'تلفن همراه (موبایل)' : 'رایانه (کامپیوتر / لپ‌تاپ)'}</strong>
-            </span>
-            <div className="inline-flex items-center gap-1.5 self-start sm:self-auto">
-              <button
-                type="button"
-                onClick={() => setIsMobileClient(true)}
-                className={`px-3 py-1 text-xs font-bold transition-all rounded-none cursor-pointer ${
-                  isMobileClient
-                    ? 'bg-[#D97706] text-white shadow-xs'
-                    : 'bg-white text-[#5C5248] border border-[#EFE9E0] hover:bg-[#FEF3C7]'
-                }`}
-              >
-                با گوشی هستم
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsMobileClient(false)}
-                className={`px-3 py-1 text-xs font-bold transition-all rounded-none cursor-pointer ${
-                  !isMobileClient
-                    ? 'bg-[#D97706] text-white shadow-xs'
-                    : 'bg-white text-[#5C5248] border border-[#EFE9E0] hover:bg-[#FEF3C7]'
-                }`}
-              >
-                با کامپیوتر هستم
-              </button>
-            </div>
-          </div>
-
-          {/* Channels Selection / Zero-Channel Fallback */}
-          {availableChannels.length === 0 ? (
-            <div className="p-4 bg-amber-50 border border-amber-300 text-amber-900 text-xs sm:text-sm font-bold rounded-none space-y-1">
-              <p>در حال حاضر کانال پیام‌رسان مستقیمی ثبت نشده است.</p>
-              <p className="font-normal text-amber-800 leading-relaxed">
-                نگران نباشید! با فشردن دکمه «آماده‌سازی و ارسال سفارش»، فاکتور و اطلاعات شما آماده شده و می‌توانید آن را مستقیماً از طریق اشتراک‌گذاری سیستمی گوشی یا کپی متن، برای کارشناسان ما ارسال نمایید.
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-              {availableChannels.map((channel) => {
-                const isSelected = selectedChannelId === channel.id;
-                const isSms = channel.type === 'PHONE';
-
-                return (
-                  <div
-                    key={channel.id}
-                    onClick={() => channel.id && setSelectedChannelId(channel.id)}
-                    className={`p-4 border cursor-pointer transition-all flex items-center justify-between gap-3 rounded-none ${
-                      isSelected
-                        ? 'bg-[#FFFBEB] border-2 border-[#D97706] shadow-sm'
-                        : 'bg-[#FAF7F2] border-[#EFE9E0] hover:bg-[#FFFBEB] hover:border-[#D97706]'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                          isSelected ? 'border-[#D97706] bg-[#D97706]' : 'border-stone-400'
-                        }`}
-                      >
-                        {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-                      </div>
-                      <div>
-                        <div className="font-black text-sm sm:text-base text-[#2B2017]">
-                          {channel.label || channel.type}
-                        </div>
-                        <div className="text-xs text-[#786455] font-medium">
-                          {isSms ? 'ارسال از طریق پیامک متنی' : 'ارسال در گفتگوی پیام‌رسان'}
-                        </div>
-                      </div>
-                    </div>
-                    {isSms && (
-                      <span className="text-[10px] px-2 py-0.5 bg-[#FEF3C7] text-[#92400E] border border-[#FDE68A] font-bold rounded-none">
-                        پیامک گوشی
-                      </span>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
-          {submitError && (
-            <div className="p-3 bg-rose-50 border border-rose-300 text-rose-800 text-xs sm:text-sm rounded-none font-bold">
-              {submitError}
-            </div>
-          )}
-
-          {/* Action Trigger */}
-          <div className="pt-2 text-center">
-            <PillButton
-              variant="gold"
-              size="lg"
-              onClick={handleProceedToOrder}
-              disabled={isSubmitting || hasUnavailable}
-              className="w-full sm:w-auto px-12 font-black text-base shadow-lg cursor-pointer"
-            >
-              {isSubmitting ? (
-                <span className="flex items-center gap-2">
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  <span>در حال آماده‌سازی پیام سفارش...</span>
-                </span>
-              ) : (
-                <span>آماده‌سازی و ارسال سفارش</span>
-              )}
-            </PillButton>
-          </div>
-        </div>
-
-
-
-        {/* 4. Mobile Output Panel (Native Share + Direct Link + Copy) */}
-        {isMobileClient && orderResult && (
-          <div className="bg-white border-2 border-[#FDE68A] p-5 sm:p-8 space-y-5 shadow-xl rounded-none text-right animate-in fade-in duration-300">
-            <div className="border-b border-[#EFE9E0] pb-3">
-              <h3 className="text-xl sm:text-2xl font-black text-[#2B2017]">
-                سفارش شما با کد {orderResult.orderCode} آماده ارسال است
-              </h3>
-              <p className="text-xs text-[#786455] mt-1 font-medium">
-                می‌توانید مستقیماً پیام‌رسان را باز کنید یا از گزینه اشتراک‌گذاری گوشی استفاده فرمایید:
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              {/* Native Web Share button */}
-              {canShare && (
-                <button
-                  type="button"
-                  onClick={() => handleNativeShare()}
-                  className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#D97706] hover:bg-[#B45309] text-white font-black text-sm shadow-md transition-all cursor-pointer"
-                >
-                  <Share2 className="w-5 h-5" />
-                  <span>ارسال مستقیم به تمام پیام‌رسان‌ها (اشتراک‌گذاری)</span>
-                </button>
-              )}
-
-              {/* Iranian messengers use SmartHandoffPanel; Others use direct pre-filled link */}
-              {orderResult.channelType === 'EITAA' ||
-              orderResult.channelType === 'BALE' ||
-              orderResult.channelType === 'RUBIKA' ? (
-                <SmartHandoffPanel
-                  orderCode={orderResult.orderCode || ''}
-                  messageText={orderResult.messageText || ''}
-                  channelType={orderResult.channelType}
-                  channelValue={orderResult.channelValue || ''}
-                  directUrl={orderResult.directUrl}
-                />
-              ) : (
-                orderResult.directUrl &&
-                orderResult.directUrl !== '#' && (
-                  <a
-                    href={orderResult.directUrl}
-                    onClick={() => {
-                      copyTextSync(orderResult.messageText || '');
-                      copyTextToClipboard(orderResult.messageText || '');
-                      setIsCopied(true);
-                    }}
-                    className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#15803D] hover:bg-[#166534] text-white font-black text-sm shadow-md transition-all cursor-pointer"
-                  >
-                    <ExternalLink className="w-5 h-5" />
-                    <span>ارسال در پیام‌رسان منتخب</span>
-                  </a>
-                )
-              )}
-
-
-              {/* Copy order text */}
-              <div className="space-y-2 pt-2">
-                <div className="flex items-center justify-between text-xs text-[#2B2017]">
-                  <span className="font-bold">متن سفارش:</span>
+                {/* Prominent Order Code Badge */}
+                <div className="inline-flex items-center gap-2 bg-[#022c22]/80 border border-emerald-400/40 px-4 py-2.5 rounded-none self-start sm:self-auto shadow-inner">
+                  <span className="text-xs text-emerald-200 font-medium">کد پیگیری سفارش:</span>
+                  <span className="font-mono font-black text-base text-[#FDE68A] tracking-wider select-all">
+                    {orderResult.orderCode}
+                  </span>
                   <button
                     type="button"
-                    onClick={handleCopyText}
-                    className="flex items-center gap-1.5 text-[#D97706] hover:text-[#B45309] font-black cursor-pointer"
+                    onClick={handleCopyOrderCode}
+                    className="p-1 hover:bg-emerald-800/60 text-emerald-200 hover:text-white transition-colors cursor-pointer"
+                    title="کپی کد پیگیری"
+                    aria-label="کپی کد پیگیری سفارش"
                   >
-                    {isCopied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
-                    <span>{isCopied ? 'کپی شد!' : 'کپی متن'}</span>
+                    {isCodeCopied ? <Check className="w-4 h-4 text-emerald-300" /> : <Copy className="w-4 h-4" />}
                   </button>
                 </div>
-                <pre
-                  className="w-full max-h-48 overflow-y-auto whitespace-pre-wrap font-sans text-xs text-[#2B2017] bg-[#FAF7F2] p-3 border border-[#EFE9E0] select-all rounded-none font-medium leading-relaxed"
-                  dir="rtl"
-                >
-                  {orderResult.messageText}
-                </pre>
               </div>
-            </div>
-          </div>
-        )}
 
-        {/* 4. Desktop Output Panel (Messenger Open + Copy + QR Code) */}
-        {!isMobileClient && orderResult && (
-          <div className="bg-white border-2 border-[#FDE68A] p-6 sm:p-8 space-y-6 shadow-xl rounded-none text-right animate-in fade-in duration-300">
-            <div className="border-b border-[#EFE9E0] pb-3">
-              <h3 className="text-xl sm:text-2xl font-black text-[#2B2017]">
-                سفارش شما با کد {orderResult.orderCode} آماده ارسال است
-              </h3>
-              <p className="text-xs text-[#786455] mt-1 font-medium">
-                می‌توانید پیام‌رسان را باز کنید، متن را کپی فرمایید، یا بارکد را با گوشی اسکن کنید:
+              <p className="text-xs sm:text-sm text-emerald-100 leading-relaxed font-medium">
+                همکاران ما در اسرع وقت با شماره{' '}
+                <strong className="text-white font-mono text-sm underline decoration-emerald-300">
+                  {mobile}
+                </strong>{' '}
+                تماس خواهند گرفت.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              {/* Left Column: Actions & Copy */}
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-xs text-[#2B2017]">
-                    <span className="font-bold">متن سفارش:</span>
-                    <button
-                      type="button"
-                      onClick={handleCopyText}
-                      className="flex items-center gap-1.5 text-[#D97706] hover:text-[#B45309] font-black cursor-pointer"
-                    >
-                      {isCopied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
-                      <span>{isCopied ? 'کپی شد!' : 'کپی متن'}</span>
-                    </button>
-                  </div>
-                  <pre
-                    className="w-full max-h-48 overflow-y-auto whitespace-pre-wrap font-sans text-xs text-[#2B2017] bg-[#FAF7F2] p-3 border border-[#EFE9E0] select-all rounded-none font-medium leading-relaxed"
-                    dir="rtl"
-                  >
-                    {orderResult.messageText}
-                  </pre>
+            {/* 2. Collapsible/Clean Invoice Summary Box */}
+            <div className="bg-white border border-[#FDE68A] p-5 sm:p-7 shadow-lg rounded-none text-right space-y-4">
+              <div className="flex items-center justify-between border-b border-[#EFE9E0] pb-3">
+                <div className="flex items-center gap-2">
+                  <ShoppingCart className="w-5 h-5 text-[#D97706]" />
+                  <h3 className="text-base sm:text-lg font-black text-[#2B2017]">
+                    خلاصه فاکتور و مشخصات تحویل
+                  </h3>
                 </div>
-
-                <div className="space-y-2 pt-2">
-                  {orderResult.directUrl && orderResult.directUrl !== '#' && (
-                    <a
-                      href={orderResult.directUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() => {
-                        copyTextSync(orderResult.messageText || '');
-                        copyTextToClipboard(orderResult.messageText || '');
-                        setIsCopied(true);
-                      }}
-                      className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#15803D] hover:bg-[#166534] text-white font-black text-sm transition-all shadow-md cursor-pointer"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      <span>باز کردن برنامه / نسخه وب پیام‌رسان</span>
-                    </a>
-                  )}
-
-                  <PillButton
-                    variant="gold"
-                    size="md"
-                    onClick={handleCopyText}
-                    className="w-full justify-center font-bold cursor-pointer"
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setOrderResult(null)}
+                    className="text-xs font-bold text-[#B45309] hover:text-[#D97706] hover:underline cursor-pointer"
                   >
-                    {isCopied ? 'متن کپی شد' : 'کپی متن سفارش برای ارسال دستی'}
-                  </PillButton>
+                    افزودن یا ویرایش سفارش
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsSummaryExpanded(!isSummaryExpanded)}
+                    className="p-1 text-[#786455] hover:text-[#2B2017] cursor-pointer"
+                    aria-label="نمایش یا پنهان‌سازی جزئیات فاکتور"
+                  >
+                    {isSummaryExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                  </button>
                 </div>
-
-                {orderResult.instructionsFa && (
-                  <p className="text-xs text-[#786455] leading-relaxed font-medium">
-                    💡 {orderResult.instructionsFa}
-                  </p>
-                )}
               </div>
 
-              {/* Right Column: In-Browser SVG QR Code */}
-              {(orderResult.shareUrl || orderResult.shareCode) && (
-                <div className="flex flex-col items-center justify-center p-6 bg-[#FAF7F2] rounded-none border border-[#EFE9E0] text-center space-y-3">
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: generateQrSvg(
-                        resolveOrderShareUrl(orderResult.shareUrl || orderResult.shareCode || ''),
-                        200
-                      ),
-                    }}
-                    className="p-2 bg-white border border-[#EFE9E0] shadow-2xs"
-                  />
-                  <div className="space-y-1 text-[#2B2017]">
-                    <p className="font-black text-xs sm:text-sm">
-                      اسکن و ارسال سریع با گوشی
-                    </p>
-                    <p className="text-[11px] text-[#786455]">
-                      دوربین گوشی را روی تصویر بالا بگیرید تا صفحه سفارش با یک لمس باز شود.
-                    </p>
+              {isSummaryExpanded && (
+                <div className="space-y-4">
+                  {/* Customer Info Card */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-[#FAF7F2] p-3.5 border border-[#EFE9E0] text-xs">
+                    <div>
+                      <span className="text-[#786455] font-medium">تحویل‌گیرنده: </span>
+                      <strong className="text-[#2B2017]">{customerDisplayName}</strong>
+                    </div>
+                    <div>
+                      <span className="text-[#786455] font-medium">شماره تماس: </span>
+                      <strong className="text-[#2B2017] font-mono">{mobile}</strong>
+                    </div>
+                    <div>
+                      <span className="text-[#786455] font-medium">روش هماهنگی: </span>
+                      <strong className="text-[#D97706]">{selectedContactMethodLabel}</strong>
+                    </div>
+                    {address && (
+                      <div className="sm:col-span-3 pt-1 border-t border-[#EFE9E0] text-[#5C5248]">
+                        <span className="text-[#786455] font-medium">آدرس / توضیحات تحویل: </span>
+                        <span>{address}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Items list */}
+                  <div className="divide-y divide-[#EFE9E0] border border-[#EFE9E0]">
+                    {lines.map((line) => {
+                      const fresh = freshItems.find((f) => f.optionId === line.optionId);
+                      const title = fresh?.productNameFa || 'عسل طبیعی';
+                      const optionLabel = fresh?.optionLabel || 'وزن نامشخص';
+                      return (
+                        <div
+                          key={line.optionId}
+                          className="p-3.5 flex items-center justify-between text-xs sm:text-sm bg-white"
+                        >
+                          <span className="font-bold text-[#2B2017]">
+                            {title} —{' '}
+                            <span className="text-[#786455] font-normal">{optionLabel}</span>
+                          </span>
+                          <span className="font-black text-[#B45309]">
+                            {toPersianDigits(line.qty)} عدد
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Actions Bar */}
+                  <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+                    <button
+                      type="button"
+                      onClick={handleCopyInvoice}
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-[#FAF7F2] hover:bg-[#FEF3C7] border border-[#D97706] text-[#2B2017] font-bold text-xs transition-colors cursor-pointer rounded-none"
+                    >
+                      {isInvoiceCopied ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>متن کامل فاکتور کپی شد!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3.5 h-3.5 text-[#D97706]" />
+                          <span>کپی متن کامل فاکتور</span>
+                        </>
+                      )}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        actions.clearCart();
+                        setOrderResult(null);
+                      }}
+                      className="text-xs text-stone-500 hover:text-stone-800 underline transition-colors cursor-pointer"
+                    >
+                      ثبت سفارش جدید (خالی کردن سبد)
+                    </button>
                   </div>
                 </div>
               )}
+            </div>
 
+            {/* 3. Optional "Want to message us right now?" Section */}
+            <div className="bg-white border-2 border-[#FDE68A] p-5 sm:p-7 shadow-lg rounded-none text-right space-y-5">
+              <div className="border-b border-[#EFE9E0] pb-3">
+                <div className="flex items-center gap-2 text-[#2B2017]">
+                  <MessageSquare className="w-5 h-5 text-[#D97706]" />
+                  <h3 className="text-lg sm:text-xl font-black">
+                    گفتگوی سریع با پشتیبانی — اختیاری
+                  </h3>
+                </div>
+                <p className="text-xs sm:text-sm text-[#5C5248] mt-1 font-medium leading-relaxed">
+                  سفارش شما ثبت شده و نیازی به اقدام دیگری نیست؛ اما اگر مایلید همین لحظه در پیام‌رسان‌ها با ما گفتگو کنید، روی پیام‌رسان دلخواه بزنید:
+                </p>
+              </div>
+
+              {/* Inline Feedback Toast for Bale/Eitaa */}
+              {messengerToast && (
+                <div className="p-3 bg-emerald-50 border border-emerald-400 text-emerald-900 text-xs sm:text-sm font-bold flex items-center gap-2 animate-in fade-in rounded-none">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>{messengerToast}</span>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+                {/* WhatsApp */}
+                <a
+                  href={`https://wa.me/989389196010?text=${encodeURIComponent(friendlySupportText)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-4 bg-[#F0FDF4] hover:bg-[#DCFCE7] border border-[#22C55E]/40 hover:border-[#22C55E] flex items-center gap-3 transition-all rounded-none cursor-pointer group shadow-2xs"
+                >
+                  <div className="w-10 h-10 rounded-full bg-[#25D366] text-white flex items-center justify-center shrink-0 shadow-sm">
+                    <ChannelIcon type="WHATSAPP" className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <div className="font-black text-sm text-[#14532D]">واتساپ</div>
+                    <div className="text-[11px] text-[#166534]">ارسال پیام با متن آماده</div>
+                  </div>
+                </a>
+
+                {/* Telegram */}
+                <a
+                  href={`https://t.me/Babakhoram?text=${encodeURIComponent(friendlySupportText)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-4 bg-[#F0F9FF] hover:bg-[#E0F2FE] border border-[#38BDF8]/40 hover:border-[#0284C7] flex items-center gap-3 transition-all rounded-none cursor-pointer group shadow-2xs"
+                >
+                  <div className="w-10 h-10 rounded-full bg-[#229ED9] text-white flex items-center justify-center shrink-0 shadow-sm">
+                    <ChannelIcon type="TELEGRAM" className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <div className="font-black text-sm text-[#0C4A6E]">تلگرام</div>
+                    <div className="text-[11px] text-[#0369A1]">ارسال پیام با متن آماده</div>
+                  </div>
+                </a>
+
+                {/* Bale */}
+                <button
+                  type="button"
+                  onClick={handleOpenBale}
+                  className="p-4 bg-[#F0FDF4] hover:bg-[#DCFCE7] border border-[#00A859]/40 hover:border-[#00A859] flex items-center gap-3 transition-all rounded-none cursor-pointer group shadow-2xs text-right"
+                >
+                  <div className="w-10 h-10 rounded-full bg-[#00A859] text-white flex items-center justify-center shrink-0 shadow-sm">
+                    <ChannelIcon type="BALE" className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <div className="font-black text-sm text-[#14532D]">بله (Bale)</div>
+                    <div className="text-[11px] text-[#166534]">کپی خودکار + باز شدن چت</div>
+                  </div>
+                </button>
+
+                {/* Eitaa */}
+                <button
+                  type="button"
+                  onClick={handleOpenEitaa}
+                  className="p-4 bg-[#FFF7ED] hover:bg-[#FFEDD5] border border-[#F97316]/40 hover:border-[#EA580C] flex items-center gap-3 transition-all rounded-none cursor-pointer group shadow-2xs text-right"
+                >
+                  <div className="w-10 h-10 rounded-full bg-[#FF6600] text-white flex items-center justify-center shrink-0 shadow-sm">
+                    <ChannelIcon type="EITAA" className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <div className="font-black text-sm text-[#7C2D12]">ایتا (Eitaa)</div>
+                    <div className="text-[11px] text-[#C2410C]">کپی خودکار + باز شدن چت</div>
+                  </div>
+                </button>
+              </div>
+
+              {/* Direct Phone / SMS bar */}
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 bg-[#FAF7F2] border border-[#EFE9E0] text-xs">
+                <div className="flex items-center gap-2 text-[#5C5248] font-medium">
+                  <Phone className="w-4 h-4 text-[#D97706]" />
+                  <span>شماره مستقیم واحد سفارشات و پشتیبانی:</span>
+                  <strong className="text-[#2B2017] font-mono text-sm">۰۹۳۸۹۱۹۶۰۱۰</strong>
+                </div>
+
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                  <a
+                    href="tel:09389196010"
+                    className="flex-1 sm:flex-none px-4 py-2 bg-white hover:bg-stone-50 border border-[#EFE9E0] text-[#2B2017] font-bold text-center transition-colors rounded-none"
+                  >
+                    تماس تلفنی
+                  </a>
+                  <a
+                    href={`sms:09389196010?body=${encodeURIComponent(`سلام، سفارش شماره ${orderResult.orderCode} به نام ${customerDisplayName} ثبت شد.`)}`}
+                    className="flex-1 sm:flex-none px-4 py-2 bg-white hover:bg-stone-50 border border-[#EFE9E0] text-[#2B2017] font-bold text-center transition-colors rounded-none"
+                  >
+                    ارسال پیامک (SMS)
+                  </a>
+                </div>
+              </div>
+
+              <p className="text-[11px] text-[#786455] leading-relaxed">
+                💡 نکته: مدیریت و کارشناسان فروش عسل باباخُرم هم‌اکنون این سفارش را به صورت خودکار دریافت کرده‌اند. بنابراین حتی در صورت عدم ارسال پیام در پیام‌رسان‌ها، جهت هماهنگی ارسال با شما تماس گرفته خواهد شد.
+              </p>
             </div>
           </div>
         )}
 
-        {/* 5. Persistent After-Send Confirmation Dialog */}
-        {showConfirmSent && (
-          <div className="p-6 bg-emerald-50 border-2 border-emerald-400 space-y-4 shadow-lg text-center rounded-none">
-            <div className="flex items-center justify-center gap-2 text-emerald-950 font-black text-lg">
-              <CheckCircle2 className="w-6 h-6 text-emerald-600" />
-              <span>سفارش را ارسال کردید؟</span>
+        {/* ========================================================================= */}
+        {/* CHECKOUT FLOW (Visible when orderResult is null)                          */}
+        {/* ========================================================================= */}
+        {!orderResult && (
+          <div className="space-y-8 sm:space-y-10">
+            {/* 1. Cart Items List */}
+            <div className="bg-white border border-[#FDE68A] p-5 sm:p-8 space-y-6 shadow-lg rounded-none text-right">
+              <div className="flex items-center justify-between border-b border-[#EFE9E0] pb-3">
+                <h2 className="text-xl sm:text-2xl font-black text-[#2B2017]">
+                  اقلام انتخابی شما
+                </h2>
+                <button
+                  type="button"
+                  onClick={() => actions.clearCart()}
+                  className="text-xs text-[#9E3556] hover:text-[#DC2626] font-bold flex items-center gap-1 transition-colors cursor-pointer"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>خالی کردن سبد</span>
+                </button>
+              </div>
+
+              {isLoadingFresh && (
+                <div className="py-4 flex items-center justify-center gap-2 text-xs text-[#5C5248]">
+                  <Loader2 className="w-4 h-4 animate-spin text-[#D97706]" />
+                  <span>در حال به‌روزرسانی موجودی و مشخصات...</span>
+                </div>
+              )}
+
+              <div className="divide-y divide-[#EFE9E0]">
+                {lines.map((line) => {
+                  const fresh = freshItems.find((f) => f.optionId === line.optionId);
+                  const title = fresh?.productNameFa || 'عسل طبیعی';
+                  const optionLabel = fresh?.optionLabel || 'وزن نامشخص';
+                  const isAvailable = fresh ? fresh.isAvailable : true;
+
+                  return (
+                    <div
+                      key={line.optionId}
+                      className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                    >
+                      {/* Product Thumbnail & Details */}
+                      <div className="flex items-center gap-4">
+                        <div className="w-16 h-16 bg-[#FAF7F2] border border-[#EFE9E0] overflow-hidden shrink-0 rounded-none relative">
+                          {fresh?.mainImage ? (
+                            <Picture
+                              asset={fresh.mainImage as any}
+                              alt={title}
+                              priority={false}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-[10px] text-[#786455] font-bold">
+                              باباخُرم
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="space-y-1">
+                          <h3 className="font-black text-sm sm:text-base text-[#2B2017]">
+                            {title}
+                          </h3>
+                          <p className="text-xs text-[#786455] font-medium">
+                            بسته‌بندی: <span className="font-bold text-[#B45309]">{optionLabel}</span>
+                          </p>
+                          {!isAvailable && (
+                            <span className="inline-block text-[11px] text-rose-700 font-bold bg-rose-100 px-2 py-0.5 border border-rose-200">
+                              ناموجود در انبار
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Quantity Stepper & Remove */}
+                      <div className="flex items-center justify-between sm:justify-end gap-4">
+                        <div className="flex items-center gap-2 bg-[#FAF7F2] border border-[#EFE9E0] p-1 rounded-none shadow-2xs">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              actions.updateQuantity(
+                                line.optionId,
+                                Math.max(1, line.qty - 1)
+                              )
+                            }
+                            aria-label="کاهش تعداد"
+                            className="w-7 h-7 flex items-center justify-center text-[#2B2017] hover:bg-stone-200 transition-colors cursor-pointer"
+                          >
+                            <Minus className="w-3.5 h-3.5" />
+                          </button>
+                          <span className="w-6 text-center font-black text-sm text-[#2B2017] select-none">
+                            {toPersianDigits(line.qty)}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              actions.updateQuantity(
+                                line.optionId,
+                                Math.min(50, line.qty + 1)
+                              )
+                            }
+                            aria-label="افزایش تعداد"
+                            className="w-7 h-7 flex items-center justify-center text-[#2B2017] hover:bg-stone-200 transition-colors cursor-pointer"
+                          >
+                            <Plus className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => actions.removeItem(line.optionId)}
+                          aria-label="حذف از سبد خرید"
+                          className="p-2 text-stone-400 hover:text-rose-600 transition-colors cursor-pointer"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-            <p className="text-xs sm:text-sm text-emerald-800 max-w-md mx-auto leading-relaxed font-medium">
-              اگر پیام سفارش را در پیام‌رسان یا پیامک برای ما فرستادید، می‌توانید سبد خرید خود را خالی فرمایید.
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-              <button
-                type="button"
-                onClick={handleConfirmClearCart}
-                className="px-6 py-2.5 rounded-full bg-[#15803D] hover:bg-[#166534] text-white font-black text-xs sm:text-sm shadow-md transition-all cursor-pointer"
-              >
-                بله، سبد را خالی کن
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowConfirmSent(false)}
-                className="px-6 py-2.5 rounded-full bg-white hover:bg-stone-100 text-[#2B2017] font-bold text-xs sm:text-sm border border-[#EFE9E0] transition-all cursor-pointer"
-              >
-                نه، هنوز
-              </button>
+
+            {/* 2. Order Registration Card ("ثبت اطلاعات گیرنده و نهایی‌سازی سفارش") */}
+            <div className="bg-white border-2 border-[#FDE68A] p-5 sm:p-8 space-y-6 shadow-xl rounded-none text-right">
+              <div className="border-b border-[#EFE9E0] pb-3">
+                <h2 className="text-xl sm:text-2xl font-black text-[#2B2017]">
+                  ثبت اطلاعات گیرنده و نهایی‌سازی سفارش
+                </h2>
+                <p className="text-xs text-[#786455] mt-1 font-medium">
+                  جهت ثبت قطعی سفارش و هماهنگی ارسال، لطفاً اطلاعات زیر را تکمیل فرمایید:
+                </p>
+              </div>
+
+              <div className="space-y-5">
+                {/* 1. Full Name */}
+                <div className="space-y-1.5">
+                  <label className="block text-xs sm:text-sm font-bold text-[#2B2017]">
+                    نام و نام خانوادگی <span className="text-[#9E3556]">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="مثال: علی محمدی"
+                    className="w-full h-11 px-3.5 bg-[#FAF7F2] border border-[#EFE9E0] text-[#2B2017] text-sm focus:outline-none focus:border-[#D97706] focus:bg-white rounded-none transition-colors"
+                    dir="rtl"
+                  />
+                  {formErrors.fullName && (
+                    <p className="text-xs text-rose-700 font-bold">{formErrors.fullName}</p>
+                  )}
+                </div>
+
+                {/* 2. Mobile Phone */}
+                <div className="space-y-1.5">
+                  <label className="block text-xs sm:text-sm font-bold text-[#2B2017]">
+                    شماره موبایل جهت هماهنگی و ارسال <span className="text-[#9E3556]">*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    value={mobile}
+                    onChange={(e) => setMobile(e.target.value)}
+                    placeholder="09123456789"
+                    className="w-full h-11 px-3.5 bg-[#FAF7F2] border border-[#EFE9E0] text-[#2B2017] text-sm focus:outline-none focus:border-[#D97706] focus:bg-white rounded-none transition-colors text-right"
+                    dir="ltr"
+                  />
+                  {formErrors.mobile && (
+                    <p className="text-xs text-rose-700 font-bold">{formErrors.mobile}</p>
+                  )}
+                </div>
+
+                {/* 3. Address / Notes (Optional) */}
+                <div className="space-y-1.5">
+                  <label className="block text-xs sm:text-sm font-bold text-[#2B2017]">
+                    آدرس حدودی یا توضیحات سفارش (اختیاری)
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    maxLength={500}
+                    placeholder="مثال: تهران، نیاوران... یا زمان تماس مورد نظر شما"
+                    className="w-full p-3 bg-[#FAF7F2] border border-[#EFE9E0] text-[#2B2017] text-sm focus:outline-none focus:border-[#D97706] focus:bg-white rounded-none transition-colors leading-relaxed"
+                    dir="rtl"
+                  />
+                </div>
+
+                {/* 4. Preferred Contact Method (Optional Pill Select) */}
+                <div className="space-y-2 pt-1">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs sm:text-sm font-bold text-[#2B2017]">
+                      روش ترجیحی هماهنگی با شما:
+                    </label>
+                    <span className="text-[11px] text-[#786455] font-medium hidden sm:inline">
+                      (صرفاً جهت اطلاع کارشناس فروش)
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                    {PREFERRED_METHODS.map((method) => {
+                      const isSelected = preferredContactMethod === method.id;
+                      return (
+                        <button
+                          key={method.id}
+                          type="button"
+                          onClick={() => setPreferredContactMethod(method.id)}
+                          className={`px-3 py-2.5 text-xs font-bold transition-all rounded-none cursor-pointer border text-center ${
+                            isSelected
+                              ? 'bg-[#FFFBEB] border-[#D97706] text-[#B45309] shadow-xs ring-1 ring-[#D97706]'
+                              : 'bg-[#FAF7F2] border-[#EFE9E0] text-[#5C5248] hover:bg-[#FFFBEB] hover:border-[#D4AF37]'
+                          }`}
+                        >
+                          {method.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Remember Me Checkbox */}
+                <div className="space-y-2 pt-2 border-t border-[#EFE9E0]">
+                  <label className="flex items-center gap-2 text-xs sm:text-sm text-[#2B2017] cursor-pointer select-none font-medium">
+                    <input
+                      type="checkbox"
+                      checked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
+                      className="w-4 h-4 rounded-none text-[#F59E0B] focus:ring-[#F59E0B] bg-white border-[#EFE9E0]"
+                    />
+                    <span>مرا به خاطر بسپار (ذخیره اطلاعات در مرورگر برای سفارش‌های بعدی)</span>
+                  </label>
+                </div>
+              </div>
+
+              {submitError && (
+                <div className="p-3 bg-rose-50 border border-rose-300 text-rose-800 text-xs sm:text-sm rounded-none font-bold">
+                  {submitError}
+                </div>
+              )}
+
+              {/* 5. Single Primary CTA Button & 6. Reassurance Micro-copy */}
+              <div className="pt-4 text-center space-y-3">
+                <PillButton
+                  variant="gold"
+                  size="lg"
+                  onClick={handleProceedToOrder}
+                  disabled={isSubmitting || hasUnavailable}
+                  className="w-full sm:w-auto px-12 font-black text-base shadow-xl cursor-pointer"
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center gap-2">
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <span>در حال ثبت سفارش...</span>
+                    </span>
+                  ) : (
+                    <span>ثبت نهایی سفارش</span>
+                  )}
+                </PillButton>
+
+                <p className="text-xs text-[#5C5248] leading-relaxed font-medium max-w-lg mx-auto">
+                  نیازی به پرداخت آنلاین در این مرحله نیست. پس از ثبت، کارشناسان ما برای هماهنگی ارسال با شما در ارتباط خواهند بود.
+                </p>
+
+                <div className="inline-flex items-center justify-center gap-1.5 text-[11px] text-[#786455] pt-1 font-medium">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>اطلاعات تماس شما نزد عسل باباخُرم محفوظ است.</span>
+                </div>
+              </div>
             </div>
           </div>
         )}

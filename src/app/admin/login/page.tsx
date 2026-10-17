@@ -50,8 +50,9 @@ export default function AdminLoginPage() {
           <img
             src="/images/header-logo.webp"
             alt={uiStringsFa.brand.name}
-            width={64}
-            height={64}
+            width={160}
+            height={160}
+            decoding="async"
             className="w-16 h-16 object-contain mx-auto mb-4"
           />
           <h1 className="text-2xl font-black text-[#332115]">{uiStringsFa.adminAuth.loginTitle}</h1>

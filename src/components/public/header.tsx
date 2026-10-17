@@ -278,13 +278,15 @@ export function Header({
           </button>
 
           <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0 min-w-max">
-            {/* Dedicated Brand Emblem */}
+            {/* Dedicated Brand Emblem (Crisp High-DPI 3x/4x DPR) */}
             <img
               src={headerLogoSrc}
               alt={siteNameFa}
-              width={48}
-              height={48}
-              className="h-10 w-10 sm:h-12 sm:w-12 object-contain shrink-0 group-hover:scale-105 transition-transform"
+              width={160}
+              height={160}
+              decoding="async"
+              fetchPriority="high"
+              className="h-11 w-11 sm:h-12 sm:w-12 object-contain shrink-0 group-hover:scale-105 transition-transform"
             />
 
             <div className="flex flex-col text-right shrink-0 whitespace-nowrap">

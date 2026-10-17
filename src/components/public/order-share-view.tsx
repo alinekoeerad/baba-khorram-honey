@@ -78,13 +78,18 @@ export function OrderShareView({
   };
 
   // Compute platform-aware direct URL with pre-filled text parameter
-  const getComputedDirectUrl = () => {
-    return buildChannelOrderUrl(channelType, channelValue, messageText, {
-      isIos: isIosDevice(),
-    });
-  };
+  const [computedUrl, setComputedUrl] = useState<string>(() => {
+    return directUrl || buildChannelOrderUrl(channelType, channelValue, messageText, { isIos: false });
+  });
 
-  const computedUrl = getComputedDirectUrl();
+  React.useEffect(() => {
+    setComputedUrl(
+      buildChannelOrderUrl(channelType, channelValue, messageText, {
+        isIos: isIosDevice(),
+      })
+    );
+  }, [channelType, channelValue, messageText, directUrl]);
+
   const channelName = CHANNEL_NAMES[channelType] || 'پیام‌رسان';
 
   const handleOpenChannel = (e?: React.MouseEvent) => {
@@ -104,15 +109,15 @@ export function OrderShareView({
       <Container size="narrow" className="space-y-8">
         {/* Header */}
         <div className="text-center space-y-3">
-          <div className="inline-block px-3 py-1 bg-[#FBBF24]/20 border border-[#FBBF24]/40 text-[#FBBF24] text-xs font-bold rounded-full">
+          <div className="inline-block px-3.5 py-1 bg-[#FEF3C7] border border-[#FDE68A] text-[#92400E] text-xs font-black rounded-full shadow-xs">
             ارسال سفارش تلفن همراه
           </div>
-          <h1 className="text-2xl sm:text-4xl font-black text-white">
+          <h1 className="text-2xl sm:text-4xl font-black text-[#2B2017]">
             سفارش عسل باباخُرم
           </h1>
-          <p className="text-xs sm:text-sm text-[#E8E2D9]">
+          <p className="text-xs sm:text-sm text-[#5C5248] font-medium">
             کد پیگیری سفارش:{' '}
-            <span className="font-mono font-bold text-[#FBBF24]">{orderCode}</span>
+            <span className="font-mono font-bold text-[#D97706]">{orderCode}</span>
           </p>
         </div>
 
@@ -208,7 +213,6 @@ export function OrderShareView({
               </a>
             )}
 
-
             <PillButton
               variant="gold"
               size="lg"
@@ -219,6 +223,20 @@ export function OrderShareView({
             </PillButton>
           </div>
         )}
+
+        {/* Support Direct Call */}
+        <div className="flex items-center justify-between gap-3 p-3.5 bg-white border border-[#EFE9E0] text-xs shadow-sm rounded-none text-right">
+          <div className="text-[#5C5248]">
+            <span>پشتیبانی و هماهنگی تلفنی: </span>
+            <strong className="text-[#2B2017] font-mono text-sm">۰۹۳۸۹۱۹۶۰۱۰</strong>
+          </div>
+          <a
+            href="tel:09389196010"
+            className="px-4 py-1.5 bg-[#FAF7F2] hover:bg-[#FEF3C7] border border-[#D97706] text-[#B45309] font-bold transition-colors rounded-none"
+          >
+            تماس مستقیم
+          </a>
+        </div>
       </Container>
     </WoodBackground>
   );

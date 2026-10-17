@@ -170,13 +170,16 @@ export function HamburgerDrawer({
         className="relative w-[85vw] sm:w-[380px] max-w-md h-full bg-[#FDFBF8] text-[#2B2017] shadow-2xl z-10 flex flex-col overflow-hidden animate-in slide-in-from-right duration-300 ease-out border-l border-[#EFE9E0] rounded-none"
       >
         {/* Drawer Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-[#EFE9E0] bg-white">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#EFE9E0] bg-white">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-none bg-[#F59E0B] text-white flex items-center justify-center font-black shadow-xs">
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L4 6.5V17.5L12 22L20 17.5V6.5L12 2ZM12 4.3L18 7.7V16.3L12 19.7L6 16.3V7.7L12 4.3ZM12 7L8 9.3V14.7L12 17L16 14.7V9.3L12 7Z" />
-              </svg>
-            </div>
+            <img
+              src="/images/header-logo.webp"
+              alt="عسل باباخُرم"
+              width={160}
+              height={160}
+              decoding="async"
+              className="w-10 h-10 object-contain shrink-0"
+            />
             <span className="font-black text-lg text-[#2B2017]">
               <span className="lg:hidden">منوی اصلی</span>
               <span className="hidden lg:inline">دسته‌بندی‌های عسل باباخُرم</span>

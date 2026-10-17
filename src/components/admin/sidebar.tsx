@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
+  ShoppingBag,
   MessageSquareHeart,
   Package,
   BookOpen,
@@ -25,6 +26,7 @@ import {
 import { uiStringsFa } from '@/content/ui-strings.fa';
 
 import { getAdminFeedbacksAction } from '@/server/actions/feedback-actions';
+import { getAdminOrdersAction } from '@/server/actions/order-actions';
 
 interface NavItem {
   href: string;
@@ -35,6 +37,7 @@ interface NavItem {
 
 const BASE_NAV_ITEMS: NavItem[] = [
   { href: '/admin', label: 'داشبورد مدیریت', icon: LayoutDashboard },
+  { href: '/admin/orders', label: 'سفارشات ثبت‌شده', icon: ShoppingBag },
   { href: '/admin/products', label: 'محصولات عسل', icon: Package },
   { href: '/admin/recipes', label: 'دستورهای مصرف', icon: BookOpen },
   { href: '/admin/categories', label: 'دسته‌بندی‌ها', icon: FolderTree },
@@ -48,6 +51,7 @@ const BASE_NAV_ITEMS: NavItem[] = [
 export function AdminSidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
   const [unreadCount, setUnreadCount] = React.useState<number>(0);
+  const [newOrdersCount, setNewOrdersCount] = React.useState<number>(0);
 
   React.useEffect(() => {
     let mounted = true;
@@ -58,6 +62,15 @@ export function AdminSidebar({ onClose }: { onClose?: () => void }) {
         }
       })
       .catch(() => {});
+
+    getAdminOrdersAction({ status: 'NEW' })
+      .then((res) => {
+        if (mounted && res.success && res.counts?.new !== undefined) {
+          setNewOrdersCount(res.counts.new);
+        }
+      })
+      .catch(() => {});
+
     return () => {
       mounted = false;
     };
@@ -70,8 +83,9 @@ export function AdminSidebar({ onClose }: { onClose?: () => void }) {
         <img
           src="/images/header-logo.webp"
           alt="عسل باباخُرم"
-          width={36}
-          height={36}
+          width={160}
+          height={160}
+          decoding="async"
           className="w-9 h-9 object-contain shrink-0 group-hover:scale-105 transition-transform"
         />
         <div className="flex flex-col">
@@ -90,7 +104,13 @@ export function AdminSidebar({ onClose }: { onClose?: () => void }) {
               : pathname.startsWith(item.href);
 
           const isFeedback = item.href === '/admin/feedbacks';
-          const badgeText = isFeedback && unreadCount > 0 ? String(unreadCount) : item.badge;
+          const isOrders = item.href === '/admin/orders';
+          const badgeText =
+            isFeedback && unreadCount > 0
+              ? String(unreadCount)
+              : isOrders && newOrdersCount > 0
+              ? String(newOrdersCount)
+              : item.badge;
 
           return (
             <Link
@@ -111,6 +131,8 @@ export function AdminSidebar({ onClose }: { onClose?: () => void }) {
                 <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-black ${
                   isFeedback && unreadCount > 0
                     ? 'bg-rose-500 text-white animate-pulse'
+                    : isOrders && newOrdersCount > 0
+                    ? 'bg-emerald-500 text-white animate-pulse'
                     : 'bg-white/20 text-white'
                 }`}>
                   {badgeText}

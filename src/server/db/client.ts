@@ -77,6 +77,32 @@ export interface SlugRedirectRecord {
   createdAt: Date;
 }
 
+export interface OrderRecord {
+  id: string;
+  code: string;
+  customerName: string;
+  customerMobile: string;
+  customerCity?: string | null;
+  customerAddress?: string | null;
+  customerNotes?: string | null;
+  preferredContact?: string | null;
+  lines: Array<{
+    productId: string;
+    productNameFa: string;
+    optionId: string;
+    optionLabel: string;
+    qty: number;
+    unitPrice?: number | null;
+  }>;
+  totalPrice?: number | null;
+  messageText: string;
+  status: 'NEW' | 'CONTACTED' | 'SHIPPED' | 'CANCELLED';
+  channelType?: string | null;
+  channelValue?: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 const seedDir = path.resolve(process.cwd(), 'data/seed');
 
 function loadJson<T>(filename: string, defaultValue: T): T {
@@ -128,6 +154,7 @@ let homepageSectionsStore: any[] = loadJson('homepage-sections.json', []);
 let productOptionsStore: any[] = loadJson('product-options.json', []);
 let orderShareLinksStore: any[] = loadJson('order-share-links.json', []);
 let recipeProductsStore: any[] = loadJson('recipe-products.json', []);
+let ordersStore: OrderRecord[] = loadJson('orders.json', []);
 
 // Create fallback Prisma-compatible client
 function createFallbackClient() {
@@ -1022,6 +1049,10 @@ function createFallbackClient() {
         const list: any[] = loadJson('contact-channels.json', []);
         return list.find((ch) => ch.id === args.where.id) || null;
       },
+      async findFirst(args?: { where?: any; orderBy?: any }) {
+        const list = await this.findMany(args);
+        return list[0] || null;
+      },
       async create(args: { data: any }) {
         const list: any[] = loadJson('contact-channels.json', []);
         const newItem = {
@@ -1230,6 +1261,110 @@ function createFallbackClient() {
           return list.filter((x: any) => new Date(x.expiresAt).getTime() > threshold).length;
         }
         return list.length;
+      },
+    },
+
+    order: {
+      async findMany(args?: { where?: any; orderBy?: any; take?: number; skip?: number }) {
+        let list: OrderRecord[] = loadJson('orders.json', ordersStore);
+        if (args?.where) {
+          const w = args.where;
+          if (w.status && w.status !== 'ALL') {
+            list = list.filter((o) => o.status === w.status);
+          }
+          if (w.code) {
+            list = list.filter((o) => o.code === w.code);
+          }
+          if (w.customerMobile) {
+            list = list.filter((o) => o.customerMobile?.includes(w.customerMobile));
+          }
+        }
+        if (args?.orderBy?.createdAt === 'asc') {
+          list.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+        } else {
+          list.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        }
+        if (args?.skip) {
+          list = list.slice(args.skip);
+        }
+        if (args?.take) {
+          list = list.slice(0, args.take);
+        }
+        return list.map((o) => ({ ...o }));
+      },
+      async findUnique(args: { where: { id?: string; code?: string } }) {
+        const list: OrderRecord[] = loadJson('orders.json', ordersStore);
+        const item = list.find(
+          (o) => (args.where.id && o.id === args.where.id) || (args.where.code && o.code === args.where.code)
+        );
+        return item ? { ...item } : null;
+      },
+      async findFirst(args?: { where?: any; orderBy?: any }) {
+        const list = await this.findMany(args);
+        return list[0] || null;
+      },
+      async create(args: { data: any }) {
+        const now = new Date();
+        const id = args.data.id || ('ord_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7));
+        const newOrder: OrderRecord = {
+          id,
+          code: args.data.code,
+          customerName: args.data.customerName || '',
+          customerMobile: args.data.customerMobile || '',
+          customerCity: args.data.customerCity || null,
+          customerAddress: args.data.customerAddress || null,
+          customerNotes: args.data.customerNotes || null,
+          preferredContact: args.data.preferredContact || null,
+          lines: args.data.lines || [],
+          totalPrice: args.data.totalPrice ?? null,
+          messageText: args.data.messageText || '',
+          status: args.data.status || 'NEW',
+          channelType: args.data.channelType || null,
+          channelValue: args.data.channelValue || null,
+          createdAt: args.data.createdAt ? new Date(args.data.createdAt) : now,
+          updatedAt: now,
+        };
+        const list: OrderRecord[] = loadJson('orders.json', ordersStore);
+        list.unshift(newOrder);
+        ordersStore = list;
+        saveJson('orders.json', ordersStore);
+        return { ...newOrder };
+      },
+      async update(args: { where: { id?: string; code?: string }; data: any }) {
+        const list: OrderRecord[] = loadJson('orders.json', ordersStore);
+        const idx = list.findIndex(
+          (o) => (args.where.id && o.id === args.where.id) || (args.where.code && o.code === args.where.code)
+        );
+        if (idx === -1) throw new Error('Order not found');
+        const updated = {
+          ...list[idx],
+          ...args.data,
+          updatedAt: new Date(),
+        };
+        list[idx] = updated;
+        ordersStore = list;
+        saveJson('orders.json', ordersStore);
+        return { ...updated };
+      },
+      async delete(args: { where: { id?: string; code?: string } }) {
+        const list: OrderRecord[] = loadJson('orders.json', ordersStore);
+        const idx = list.findIndex(
+          (o) => (args.where.id && o.id === args.where.id) || (args.where.code && o.code === args.where.code)
+        );
+        if (idx === -1) throw new Error('Order not found');
+        const [del] = list.splice(idx, 1);
+        ordersStore = list;
+        saveJson('orders.json', ordersStore);
+        return del;
+      },
+      async count(args?: { where?: any }) {
+        const list: OrderRecord[] = loadJson('orders.json', ordersStore);
+        if (!args?.where) return list.length;
+        let filtered = list;
+        if (args.where.status) {
+          filtered = filtered.filter((o) => o.status === args.where.status);
+        }
+        return filtered.length;
       },
     },
 

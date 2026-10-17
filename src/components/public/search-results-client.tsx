@@ -163,11 +163,11 @@ export function SearchResultsClient({
           {/* 1. Group: Products */}
           {products.length > 0 && (
             <div className="space-y-8">
-              <div className="flex items-center justify-between border-b border-white/20 pb-3">
-                <h2 className="text-2xl sm:text-3xl font-black text-[#FBBF24]">
+              <div className="flex items-center justify-between border-b border-[#EFE9E0] pb-3">
+                <h2 className="text-2xl sm:text-3xl font-black text-[#2B2017]">
                   محصولات مرتبط ({toPersianDigits(totalProducts)})
                 </h2>
-                <span className="text-xs text-[#E8E2D9]/70">
+                <span className="text-xs text-[#5C5248] font-bold">
                   نمایش {toPersianDigits(products.length)} از {toPersianDigits(totalProducts)} مورد
                 </span>
               </div>
@@ -236,11 +236,11 @@ export function SearchResultsClient({
           {/* 2. Group: Recipes */}
           {recipes.length > 0 && (
             <div className="space-y-8">
-              <div className="flex items-center justify-between border-b border-white/20 pb-3">
-                <h2 className="text-2xl sm:text-3xl font-black text-[#FBBF24]">
+              <div className="flex items-center justify-between border-b border-[#EFE9E0] pb-3">
+                <h2 className="text-2xl sm:text-3xl font-black text-[#2B2017]">
                   دسرهای مرتبط ({toPersianDigits(totalRecipes)})
                 </h2>
-                <span className="text-xs text-[#E8E2D9]/70">
+                <span className="text-xs text-[#5C5248] font-bold">
                   نمایش {toPersianDigits(recipes.length)} از {toPersianDigits(totalRecipes)} مورد
                 </span>
               </div>

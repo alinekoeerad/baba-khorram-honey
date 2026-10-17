@@ -25,13 +25,13 @@ export default function GlobalError({
         </div>
 
         <div className="space-y-3">
-          <span className="text-sm sm:text-base font-black text-amber-400 tracking-widest uppercase">
+          <span className="text-sm sm:text-base font-black text-[#B45309] tracking-widest uppercase">
             خطای غیرمنتظره
           </span>
-          <h1 className="text-2xl sm:text-4xl font-black text-white drop-shadow-md leading-tight">
+          <h1 className="text-2xl sm:text-4xl font-black text-[#2B2017] drop-shadow-xs leading-tight">
             مشکلی در پردازش درخواست رخ داد
           </h1>
-          <p className="text-sm sm:text-base text-[#E6DDD4] max-w-md mx-auto leading-relaxed font-medium">
+          <p className="text-sm sm:text-base text-[#5C5248] max-w-md mx-auto leading-relaxed font-medium">
             متأسفانه هنگام بارگذاری صفحه خطایی رخ داد. می‌توانید دوباره تلاش کنید یا به صفحه اصلی بازگردید.
           </p>
         </div>

@@ -11,9 +11,10 @@
 /blob-report/
 /playwright/.cache/
 
-# Next.js build output
+# Next.js build output & caches
 /.next/
 /out/
+next-env.d.ts
 
 # Production builds
 /dist/
@@ -25,15 +26,33 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Environment files (exclude local secrets, keep .env.example)
-.env*.local
+# Environment files & Secrets (exclude local secrets, keep .env.example)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# TypeScript build info
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# Temporary / Legacy / Reference dumps
+full-code.txt
+import-report.md
+folder-structure.txt
+reference/
 
 # System files
 .DS_Store
 *.pem
 
-# Local media uploads
-/uploads/
+# Local media uploads (runtime uploads from admin testing & local dev)
+/uploads/*
+!/uploads/.gitkeep
 
-# TypeScript build info
-*.tsbuildinfo
+# Runtime / Sensitive JSON state inside data/seed (preserve seed data, ignore live sessions/logs/orders)
+/data/seed/sessions.json
+/data/seed/order-share-links.json
+/data/seed/audit-logs.json
+/data/seed/orders.json
+

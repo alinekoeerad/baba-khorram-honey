@@ -71,14 +71,14 @@ export function DynamicSectionRenderer({
     const contentBlock = (
       <div className="lg:col-span-7 space-y-5 text-right">
         {kicker && (
-          <div className={`text-sm sm:text-base font-black tracking-widest uppercase drop-shadow-md ${isWood ? 'text-[#F59E0B]' : 'text-emerald-700'}`}>
+          <div className={`text-sm sm:text-base font-black tracking-widest uppercase drop-shadow-xs ${isWood ? 'text-[#B45309]' : 'text-emerald-700'}`}>
             {kicker}
           </div>
         )}
-        <h2 className={`text-2xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight ${isWood ? 'text-[#FFFBEB]' : themeColors.title}`}>
+        <h2 className={`text-2xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight ${isWood ? 'text-[#2B2017]' : themeColors.title}`}>
           {title}
         </h2>
-        <p className={`text-sm sm:text-base lg:text-lg leading-loose text-justify font-medium ${isWood ? 'text-[#E5D5C5]' : 'text-[#4A423A]'}`}>
+        <p className={`text-sm sm:text-base lg:text-lg leading-loose text-justify font-medium ${isWood ? 'text-[#5C5248]' : 'text-[#4A423A]'}`}>
           {body}
         </p>
         {resolvedCta && (
@@ -310,7 +310,7 @@ export function DynamicSectionRenderer({
     const inner = (
       <Container>
         {title && (
-          <h2 className={`text-2xl sm:text-4xl font-black text-center mb-10 drop-shadow-sm ${isWood ? 'text-[#FFFBEB]' : 'text-[#332115]'}`}>
+          <h2 className={`text-2xl sm:text-4xl font-black text-center mb-10 drop-shadow-xs ${isWood ? 'text-[#2B2017]' : 'text-[#332115]'}`}>
             {title}
           </h2>
         )}

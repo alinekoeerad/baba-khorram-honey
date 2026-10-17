@@ -9,20 +9,18 @@ export function WoodGroup({ children, className, ...props }: WoodGroupProps) {
   return (
     <div
       className={cn(
-        'relative bg-[#2B1B10] bg-cover bg-center bg-fixed text-white overflow-hidden',
+        'relative bg-[#FAF7F2] text-[#2B2017] overflow-hidden',
         className
       )}
       style={{
         backgroundImage: "url('/images/wood-bg.jpg')",
+        backgroundRepeat: 'repeat',
+        backgroundPosition: 'top center',
+        backgroundSize: '800px auto',
       }}
       {...props}
     >
-      <div
-        className="absolute inset-0 z-0 pointer-events-none"
-        style={{ backgroundColor: 'rgba(35, 20, 10, 0.45)' }}
-        aria-hidden="true"
-      />
-      <div className="relative z-10 divide-y divide-white/10">{children}</div>
+      <div className="relative z-10 divide-y divide-[#EFE9E0]/60">{children}</div>
     </div>
   );
 }

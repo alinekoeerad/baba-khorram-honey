@@ -1,26 +1,29 @@
 'use client';
 
 /**
- * AddToCartSlot Component (Phase 9 Task 3 & Addendum A2/A4)
+ * AddToCartSlot Component (Phase 9 Task 3 & Addendum A2/A4 - Luxury Dropdown Pass)
  *
  * Requirements:
  * - Shows nothing if cart is disabled, product is unavailable, or no available options.
- * - Option selector: available options only.
+ * - Weight variant selector: Luxury Dropdown Menu with gold border and active gold accent.
+ * - Closed trigger displays selected weight, formatted price, and subtle chevron.
  * - Quantity stepper: min 1, max 50, Persian digits.
- * - "افزودن به سبد" button with accessible live-region confirmation.
+ * - "افزودن به سبد خرید" PillButton with accessible live-region confirmation.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { PillButton } from '@/components/ui/pill-button';
 import { useCartStore } from '@/lib/cart-store';
 import { toPersianDigits } from '@/lib/domain-utils';
-import { ShoppingCart, Check, Plus, Minus } from 'lucide-react';
+import { ShoppingCart, Check, Plus, Minus, ChevronDown } from 'lucide-react';
 
 export interface ProductOptionItem {
   id: string;
   label: string;
   isAvailable: boolean;
+  price?: number | null;
+  priceFormatted?: string | null;
 }
 
 export interface AddToCartSlotProps {
@@ -28,6 +31,24 @@ export interface AddToCartSlotProps {
   isAvailable?: boolean;
   cartEnabled?: boolean;
   options?: ProductOptionItem[];
+}
+
+function cleanOptionLabel(label: string): string {
+  return label.replace(/\s*-\s*[\d,]+(\s*تومان)?/g, '').trim();
+}
+
+function formatOptionPrice(opt?: ProductOptionItem): string {
+  if (!opt) return 'تماس بگیرید';
+  if (opt.priceFormatted) return opt.priceFormatted;
+  if (typeof opt.price === 'number' && opt.price > 0) {
+    return `${toPersianDigits(opt.price.toLocaleString())} تومان`;
+  }
+  // Check if label contains an explicit price (e.g. 450,000 تومان)
+  const priceMatch = opt.label.match(/([\d,]+)\s*تومان/);
+  if (priceMatch) {
+    return toPersianDigits(priceMatch[0]);
+  }
+  return 'تماس بگیرید';
 }
 
 export function AddToCartSlot({
@@ -50,6 +71,35 @@ export function AddToCartSlot({
   // Filter to available options only
   const availableOptions = effectiveOptions.filter((o) => o.isAvailable);
 
+  const [selectedOptionId, setSelectedOptionId] = useState<string>(
+    availableOptions[0]?.id || ''
+  );
+  const [quantity, setQuantity] = useState<number>(1);
+  const [confirmedMessage, setConfirmedMessage] = useState<string | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on outside click or Escape key
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    }
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape' && isDropdownOpen) {
+        setIsDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isDropdownOpen]);
+
   if (!cartEnabled || !isAvailable || !productId) {
     return null;
   }
@@ -57,13 +107,13 @@ export function AddToCartSlot({
   // If cart enabled & product available but 0 options remain: provide inquiry link
   if (availableOptions.length === 0) {
     return (
-      <div className="max-w-md mx-auto my-4 p-5 bg-[#FAF7F2] border border-[#FDE68A] text-center space-y-3">
+      <div className="max-w-md mx-auto my-4 p-5 bg-[#FAF7F2] border border-[#FDE68A] text-center space-y-3 rounded-none">
         <p className="text-xs sm:text-sm text-stone-700 font-bold">
           جهت استعلام موجودی بسته‌بندی‌ها و ثبت سفارش این عسل، با پشتیبانی تماس بگیرید.
         </p>
         <Link
           href="/contact"
-          className="inline-block px-5 py-2.5 bg-[#F59E0B] hover:bg-[#D97706] text-[#2E1F14] text-xs font-black transition-colors"
+          className="inline-block px-5 py-2.5 bg-[#F59E0B] hover:bg-[#D97706] text-[#2E1F14] text-xs font-black transition-colors rounded-none"
         >
           استعلام و سفارش از طریق پشتیبانی
         </Link>
@@ -71,11 +121,12 @@ export function AddToCartSlot({
     );
   }
 
-  const [selectedOptionId, setSelectedOptionId] = useState<string>(
-    availableOptions[0]?.id || ''
-  );
-  const [quantity, setQuantity] = useState<number>(1);
-  const [confirmedMessage, setConfirmedMessage] = useState<string | null>(null);
+  const selectedOption =
+    availableOptions.find((o) => o.id === selectedOptionId) || availableOptions[0];
+  const isBestValueSelected =
+    selectedOption?.label.includes('۱') ||
+    selectedOption?.label.includes('1') ||
+    selectedOption?.label.includes('یک کیلو');
 
   const handleDecrement = () => {
     setQuantity((prev) => Math.max(1, prev - 1));
@@ -86,17 +137,16 @@ export function AddToCartSlot({
   };
 
   const handleAddToCart = () => {
-    if (!selectedOptionId) return;
+    if (!selectedOption?.id) return;
 
     const res = actions.addItem({
       productId,
-      optionId: selectedOptionId,
+      optionId: selectedOption.id,
       qty: quantity,
     });
 
     if (res.success) {
-      const selectedOpt = availableOptions.find((o) => o.id === selectedOptionId);
-      const msg = `«${selectedOpt?.label || ''}» (${toPersianDigits(quantity)} عدد) به سبد خرید افزوده شد.`;
+      const msg = `«${selectedOption.label}» (${toPersianDigits(quantity)} عدد) به سبد خرید افزوده شد.`;
       setConfirmedMessage(msg);
 
       // Auto-clear message after 4 seconds
@@ -118,36 +168,110 @@ export function AddToCartSlot({
         <span className="text-xs text-[#B45309] font-bold">تحویل درب منزل</span>
       </div>
 
-      {/* 1. Option Selector */}
-      <div className="space-y-2">
-        <label className="block text-xs sm:text-sm font-bold text-[#2B2017]">
-          انتخاب وزن و بسته‌بندی:
-        </label>
-        <div className="flex flex-wrap gap-2.5">
-          {availableOptions.map((opt) => {
-            const isBestValue = opt.label.includes('۱') || opt.label.includes('1') || opt.label.includes('یک کیلو');
-            return (
-              <div key={opt.id} className="relative inline-block">
-                {isBestValue && (
-                  <span className="absolute -top-2.5 right-2 bg-[#F59E0B] text-[#2B2017] text-[10px] font-black px-2 py-0.5 rounded-full shadow-xs z-10 pointer-events-none">
-                    پرفروش‌ترین
-                  </span>
-                )}
+      {/* 1. Luxury Dropdown Weight & Packaging Selector */}
+      <div className="space-y-2 relative" ref={dropdownRef}>
+        <div className="flex items-center justify-between">
+          <label id="weight-selector-label" className="block text-xs sm:text-sm font-bold text-[#2B2017]">
+            انتخاب وزن و بسته‌بندی:
+          </label>
+          <span className="text-[11px] text-[#8C7A6B] font-medium">ظروف بهداشتی استاندارد</span>
+        </div>
+
+        {/* Dropdown Trigger */}
+        <button
+          type="button"
+          id="weight-selector-trigger"
+          aria-haspopup="listbox"
+          aria-expanded={isDropdownOpen}
+          aria-labelledby="weight-selector-label weight-selector-trigger"
+          onClick={() => setIsDropdownOpen((prev) => !prev)}
+          className="w-full flex items-center justify-between p-3.5 bg-white border-2 border-[#D4AF37]/60 hover:border-[#B45309] text-[#2B2017] rounded-none shadow-xs transition-all duration-200 cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]"
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="font-black text-sm sm:text-base text-[#2B2017] truncate">
+              {cleanOptionLabel(selectedOption?.label || '')}
+            </span>
+            {isBestValueSelected && (
+              <span className="text-[10px] font-black bg-[#FEF3C7] text-[#92400E] border border-[#FDE68A] px-2 py-0.5 rounded-none shrink-0 shadow-2xs">
+                پرفروش‌ترین
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-xs sm:text-sm font-black text-[#B45309] bg-[#FFFBEB] px-2.5 py-1 border border-[#FDE68A] rounded-none">
+              {formatOptionPrice(selectedOption)}
+            </span>
+            <ChevronDown
+              className={`w-4 h-4 text-[#8C7A6B] transition-transform duration-200 group-hover:text-[#B45309] ${
+                isDropdownOpen ? 'rotate-180 text-[#B45309]' : ''
+              }`}
+            />
+          </div>
+        </button>
+
+        {/* Dropdown Menu Popup */}
+        {isDropdownOpen && (
+          <div
+            role="listbox"
+            aria-labelledby="weight-selector-label"
+            className="absolute z-30 top-full left-0 right-0 mt-1 bg-white border-2 border-[#D4AF37]/80 shadow-2xl rounded-none divide-y divide-[#EFE9E0] max-h-64 overflow-y-auto animate-in fade-in slide-in-from-top-1 duration-150"
+          >
+            {availableOptions.map((opt) => {
+              const isSelected = opt.id === selectedOption?.id;
+              const isBestValue =
+                opt.label.includes('۱') || opt.label.includes('1') || opt.label.includes('یک کیلو');
+              const priceText = formatOptionPrice(opt);
+
+              return (
                 <button
+                  key={opt.id}
                   type="button"
-                  onClick={() => setSelectedOptionId(opt.id)}
-                  className={`px-4 py-2 text-xs sm:text-sm rounded-none transition-all cursor-pointer ${
-                    selectedOptionId === opt.id
-                      ? 'bg-[#F59E0B] text-[#2B2017] shadow-sm border-2 border-[#D97706] font-black'
-                      : 'bg-white text-[#332115] border border-[#EFE9E0] hover:border-[#D97706] hover:bg-[#FFFBEB] font-bold'
+                  role="option"
+                  aria-selected={isSelected}
+                  onClick={() => {
+                    setSelectedOptionId(opt.id);
+                    setIsDropdownOpen(false);
+                  }}
+                  className={`w-full p-3.5 text-right flex items-center justify-between transition-colors cursor-pointer ${
+                    isSelected
+                      ? 'bg-[#FFFBEB] border-r-4 border-[#D97706] font-bold text-[#2B2017]'
+                      : 'bg-white hover:bg-[#FAF7F2] text-[#2B2017] font-medium'
                   }`}
                 >
-                  {opt.label}
+                  <div className="flex items-center gap-2.5">
+                    <span
+                      className={`text-xs sm:text-sm ${
+                        isSelected ? 'font-black text-[#2B2017]' : 'text-[#332115]'
+                      }`}
+                    >
+                      {cleanOptionLabel(opt.label)}
+                    </span>
+                    {isBestValue && (
+                      <span className="text-[10px] font-black bg-[#FEF3C7] text-[#92400E] border border-[#FDE68A] px-2 py-0.5 rounded-none shadow-2xs">
+                        پرفروش‌ترین
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <span className="text-[11px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-none hidden xs:inline-flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+                      موجود
+                    </span>
+                    <span
+                      className={`text-xs sm:text-sm font-black ${
+                        isSelected ? 'text-[#B45309]' : 'text-[#5C5248]'
+                      }`}
+                    >
+                      {priceText}
+                    </span>
+                  </div>
                 </button>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* 2. Quantity Stepper */}
