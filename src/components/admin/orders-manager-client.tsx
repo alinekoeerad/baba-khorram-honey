@@ -553,7 +553,7 @@ export function OrdersManagerClient({
                             className="text-[#D97706] hover:text-[#B45309] hover:underline font-bold cursor-pointer inline-flex items-center gap-1"
                           >
                             <Printer className="w-3.5 h-3.5" />
-                            <span>چاپ و صدور سند رسمی (Word / Docs)</span>
+                            <span>چاپ فاکتور و برچسب پستی (Print / Word)</span>
                           </button>
                           <button
                             type="button"

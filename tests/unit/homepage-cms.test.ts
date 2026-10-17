@@ -123,4 +123,53 @@ describe('Template Switching & Preserved Bucket Roundtrip', () => {
     expect(analysis.mappedFields).toContain('title');
     expect(analysis.hiddenFields).toContain('subtitle');
   });
+
+  it('validates deviceTarget and focalPoint with backward-compatible defaults', () => {
+    const parsed = heroContentSchema.parse({
+      title: 'عنوان هیرو',
+      images: [
+        { url: '/images/hero-1.jpg', alt: 'پیش‌فرض' },
+        {
+          url: '/images/hero-mobile.jpg',
+          alt: 'موبایل',
+          deviceTarget: 'mobile',
+          focalPoint: 'top',
+        },
+        {
+          url: '/images/hero-desktop.jpg',
+          alt: 'دسکتاپ',
+          deviceTarget: 'desktop',
+          focalPoint: 'bottom',
+        },
+      ],
+    });
+
+    // Verify defaults
+    expect(parsed.images[0].deviceTarget).toBe('all');
+    expect(parsed.images[0].focalPoint).toBe('center');
+
+    // Verify custom values
+    expect(parsed.images[1].deviceTarget).toBe('mobile');
+    expect(parsed.images[1].focalPoint).toBe('top');
+
+    expect(parsed.images[2].deviceTarget).toBe('desktop');
+    expect(parsed.images[2].focalPoint).toBe('bottom');
+  });
+
+  it('rejects invalid deviceTarget or focalPoint values', () => {
+    expect(() =>
+      heroContentSchema.parse({
+        title: 'عنوان هیرو',
+        images: [{ url: '/img.jpg', deviceTarget: 'tablet' as any }],
+      })
+    ).toThrow();
+
+    expect(() =>
+      heroContentSchema.parse({
+        title: 'عنوان هیرو',
+        images: [{ url: '/img.jpg', focalPoint: 'diagonal' as any }],
+      })
+    ).toThrow();
+  });
 });
+

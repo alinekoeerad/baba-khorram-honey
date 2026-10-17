@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import { toPersianDigits, parseLocalizedNumber } from '@/lib/domain-utils';
 import type { OrderItem } from './orders-manager-client';
+import { buildInvoicePrintHtml, buildInvoiceWordHtml } from '@/lib/invoice-export';
 
 interface EditableLineItem {
   id: string;
@@ -154,226 +155,59 @@ export function OrderPrintModal({ order, isOpen, onClose }: OrderPrintModalProps
   };
 
   const handlePrint = () => {
-    window.print();
+    const printWin = window.open('', '_blank', 'width=900,height=900');
+    if (!printWin) {
+      alert('لطفاً اجازه باز شدن پنجره پاپ‌آپ چاپ را در مرورگر فعال کنید.');
+      return;
+    }
+    const fullInvoiceHtml = buildInvoicePrintHtml({
+      orderCode,
+      invoiceDate,
+      senderName,
+      senderPhone,
+      senderAddress,
+      senderPostalCode,
+      customerName,
+      customerMobile,
+      customerCity,
+      customerAddress,
+      customerPostalCode,
+      customerNotes,
+      lines,
+      shippingCost,
+      discount,
+      printMode,
+    });
+    printWin.document.open();
+    printWin.document.write(fullInvoiceHtml);
+    printWin.document.close();
   };
 
   const handleExportWord = () => {
-    const content = `
-      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40' dir='rtl' lang='fa'>
-      <head>
-        <meta charset='utf-8'>
-        <title>فاکتور فروش شماره ${orderCode} - عسل باباخُرم</title>
-        <!--[if gte mso 9]>
-        <xml>
-          <w:WordDocument>
-            <w:View>Print</w:View>
-            <w:Zoom>100</w:Zoom>
-            <w:DoNotOptimizeForBrowser/>
-          </w:WordDocument>
-        </xml>
-        <![endif]-->
-        <style>
-          @page Section1 {
-            size: 595.3pt 841.9pt;
-            margin: 1.5cm 1.5cm 1.5cm 1.5cm;
-            mso-header-margin: 36.0pt;
-            mso-footer-margin: 36.0pt;
-            mso-paper-source: 0;
-          }
-          div.Section1 { page: Section1; }
-          body {
-            font-family: 'Vazirmatn', Tahoma, 'B Nazanin', Arial, sans-serif;
-            direction: rtl;
-            text-align: right;
-            color: #2b2017;
-            background: #ffffff;
-            margin: 20px;
-          }
-          .invoice-card {
-            border: 2px solid #2b2017;
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-          }
-          .header-title {
-            font-size: 18pt;
-            font-weight: bold;
-            color: #b45309;
-            margin-bottom: 4px;
-          }
-          .header-meta {
-            font-size: 10pt;
-            color: #5c5248;
-            border-bottom: 2px solid #2b2017;
-            padding-bottom: 12px;
-            margin-bottom: 16px;
-          }
-          .meta-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 16px;
-          }
-          .meta-table td {
-            padding: 6px 10px;
-            font-size: 10pt;
-            border: 1px solid #d5c7b8;
-            background-color: #fdfbf8;
-          }
-          .items-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 16px;
-          }
-          .items-table th {
-            background-color: #f5eedf;
-            border: 1px solid #2b2017;
-            padding: 8px;
-            font-size: 10pt;
-            font-weight: bold;
-            text-align: center;
-          }
-          .items-table td {
-            border: 1px solid #2b2017;
-            padding: 8px;
-            font-size: 10pt;
-            text-align: right;
-          }
-          .text-center { text-align: center; }
-          .text-left { text-align: left; direction: ltr; }
-          .total-row {
-            background-color: #fde8cd;
-            font-weight: bold;
-            font-size: 11pt;
-          }
-          .footer-box {
-            border-top: 1px solid #d5c7b8;
-            padding-top: 14px;
-            margin-top: 20px;
-            font-size: 9pt;
-            color: #5c5248;
-          }
-          .signature-box {
-            border: 1px solid #2b2017;
-            padding: 10px;
-            text-align: center;
-            height: 70px;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="Section1">
-          <div class="invoice-card">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div>
-                <div class="header-title">عسل باباخُرم - فاکتور رسمی فروش کالا و خدمات</div>
-                <div style="font-size: 10.5pt; font-weight: bold; color: #332115;">
-                  عسل باباخُرم - کرج، جهانشهر، بلوار مولانا | تلفن: ${toPersianDigits(senderPhone)}
-                </div>
-              </div>
-            </div>
-            <div class="header-meta">
-              تولید و عرضه مستقیم انواع عسل‌های طبیعی و ارگانیک کوهستان، ژل رویال و گرده گل
-            </div>
-
-            <table class="meta-table">
-              <tr>
-                <td style="width: 50%;"><strong>شماره فاکتور: </strong>${orderCode}</td>
-                <td style="width: 50%;"><strong>تاریخ صدور: </strong>${toPersianDigits(invoiceDate)}</td>
-              </tr>
-              <tr>
-                <td><strong>کد رهگیری سفارش: </strong>${orderCode}</td>
-                <td><strong>نام خریدار / گیرنده: </strong>${customerName || 'مشتری گرامی'}</td>
-              </tr>
-              <tr>
-                <td><strong>شماره تماس گیرنده: </strong>${toPersianDigits(customerMobile)}</td>
-                <td><strong>شهر / استان مقصد: </strong>${customerCity || '—'}</td>
-              </tr>
-              ${customerAddress ? `
-              <tr>
-                <td colspan="2"><strong>نشانی دقیق پستی: </strong>${customerAddress}</td>
-              </tr>` : ''}
-              ${customerPostalCode ? `
-              <tr>
-                <td colspan="2"><strong>کد پستی گیرنده: </strong>${toPersianDigits(customerPostalCode)}</td>
-              </tr>` : ''}
-              ${customerNotes ? `
-              <tr>
-                <td colspan="2"><strong>یادداشت ارسال: </strong>${customerNotes}</td>
-              </tr>` : ''}
-            </table>
-
-            <table class="items-table">
-              <thead>
-                <tr>
-                  <th style="width: 40px;">ردیف</th>
-                  <th>نام محصول و شرح کالا</th>
-                  <th style="width: 90px;">بسته‌بندی</th>
-                  <th style="width: 50px;">تعداد</th>
-                  <th style="width: 120px;">قیمت واحد (تومان)</th>
-                  <th style="width: 130px;">مبلغ کل (تومان)</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${lines.map((line, idx) => `
-                <tr>
-                  <td class="text-center">${toPersianDigits(idx + 1)}</td>
-                  <td><strong>${line.productNameFa}</strong></td>
-                  <td class="text-center">${line.optionLabel || '—'}</td>
-                  <td class="text-center"><strong>${toPersianDigits(line.qty)}</strong></td>
-                  <td class="text-left">${formatToman(line.unitPrice || 0)}</td>
-                  <td class="text-left"><strong>${formatToman(line.qty * (line.unitPrice || 0))}</strong></td>
-                </tr>
-                `).join('')}
-                <tr style="background-color: #faf7f2;">
-                  <td colspan="4" style="text-align: right; font-weight: bold;">جمع کل اقلام سفارش:</td>
-                  <td colspan="2" class="text-left" style="font-weight: bold;">${formatToman(itemsTotal)} تومان</td>
-                </tr>
-                ${shippingCost > 0 ? `
-                <tr>
-                  <td colspan="4" style="text-align: right;">هزینه بسته‌بندی و ارسال پستی:</td>
-                  <td colspan="2" class="text-left">${formatToman(shippingCost)} تومان</td>
-                </tr>` : ''}
-                ${discount > 0 ? `
-                <tr style="color: #166534;">
-                  <td colspan="4" style="text-align: right; font-weight: bold;">مبلغ تخفیف ویژه:</td>
-                  <td colspan="2" class="text-left" style="font-weight: bold;">- ${formatToman(discount)} تومان</td>
-                </tr>` : ''}
-                <tr class="total-row">
-                  <td colspan="4" style="text-align: right; font-size: 11.5pt;">مبلغ نهایی قابل پرداخت:</td>
-                  <td colspan="2" class="text-left" style="font-size: 12.5pt; color: #b45309;">${formatToman(grandTotal)} تومان</td>
-                </tr>
-              </tbody>
-            </table>
-
-            <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
-              <tr>
-                <td style="border: none; width: 65%; font-size: 9pt; color: #5c5248; vertical-align: top;">
-                  <strong>تضمین و شرایط عودت:</strong><br/>
-                  تمامی عسل‌های باباخُرم دارای ضمانت اصالت ۱۰۰٪ آزمایشگاهی و طبیعی می‌باشند.<br/>
-                  در صورت هرگونه نارضایتی، مرسوله ظرف مدت ۷ روز کاری قابل عودت کامل می‌باشد.<br/>
-                  پشتیبانی و سفارشات: ${toPersianDigits(senderPhone)} | وب‌سایت: عسل باباخُرم
-                </td>
-                <td style="border: none; width: 35%; vertical-align: top;">
-                  <div class="signature-box">
-                    <span style="font-size: 9pt; color: #5c5248;">مهر و امضای فروشگاه</span><br/><br/>
-                    <strong style="font-size: 10pt; color: #2b2017;">عسل طبیعی باباخُرم</strong>
-                  </div>
-                </td>
-              </tr>
-            </table>
-          </div>
-        </div>
-      </body>
-      </html>
-    `;
-
+    const content = buildInvoiceWordHtml({
+      orderCode,
+      invoiceDate,
+      senderName,
+      senderPhone,
+      senderAddress,
+      senderPostalCode,
+      customerName,
+      customerMobile,
+      customerCity,
+      customerAddress,
+      customerPostalCode,
+      customerNotes,
+      lines,
+      shippingCost,
+      discount,
+    });
     const blob = new Blob(['\ufeff' + content], {
       type: 'application/msword;charset=utf-8',
     });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `فاکتور-عسل-باباخرم-${orderCode}.doc`;
+    a.download = `فاکتور-رسمی-عسل-باباخرم-${orderCode}.doc`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -382,46 +216,8 @@ export function OrderPrintModal({ order, isOpen, onClose }: OrderPrintModalProps
 
   return (
     <>
-      {/* Print Specific CSS */}
-      <style dangerouslySetInnerHTML={{ __html: `
-        @media print {
-          @page {
-            size: A4 portrait;
-            margin: 8mm;
-          }
-          body * {
-            visibility: hidden !important;
-          }
-          #printable-order-sheet,
-          #printable-order-sheet * {
-            visibility: visible !important;
-          }
-          #printable-order-sheet {
-            position: absolute !important;
-            inset: 0 !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100% !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            background: #ffffff !important;
-            color: #000000 !important;
-            display: block !important;
-            box-shadow: none !important;
-            border: none !important;
-          }
-          .print-break-page {
-            page-break-after: always !important;
-            break-after: page !important;
-          }
-          .no-print {
-            display: none !important;
-          }
-        }
-      `}} />
-
       {/* Screen Modal Overlay */}
-      <div className="fixed inset-0 z-50 overflow-y-auto bg-stone-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 no-print">
+      <div className="fixed inset-0 z-50 overflow-y-auto bg-stone-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6">
         <div className="bg-[#FAF7F2] border-2 border-[#D97706] w-full max-w-7xl max-h-[92vh] flex flex-col rounded-none shadow-2xl overflow-hidden">
           {/* Header Bar */}
           <div className="p-4 bg-white border-b border-[#EFE9E0] flex flex-wrap items-center justify-between gap-3">
@@ -489,19 +285,20 @@ export function OrderPrintModal({ order, isOpen, onClose }: OrderPrintModalProps
                 type="button"
                 onClick={handleExportWord}
                 className="h-9 px-3 bg-white hover:bg-amber-50 border border-[#D97706] text-[#D97706] hover:text-[#B45309] text-xs font-bold transition-colors inline-flex items-center gap-1.5 shadow-xs cursor-pointer rounded-none"
-                title="دانلود فاکتور رسمی با فرمت استاندارد Word و Google Docs"
+                title="دانلود فایل Word (.doc)"
               >
                 <FileDown className="w-4 h-4" />
-                <span>دانلود / باز کردن در قالب سند (Word / Google Docs)</span>
+                <span>دانلود فایل Word (.doc)</span>
               </button>
 
               <button
                 type="button"
                 onClick={handlePrint}
                 className="h-9 px-4 bg-[#D97706] hover:bg-[#B45309] text-white text-xs font-black transition-colors inline-flex items-center gap-2 shadow-xs cursor-pointer rounded-none"
+                title="چاپ فاکتور رسمی (Print / PDF)"
               >
                 <Printer className="w-4 h-4" />
-                <span>چاپ نهایی (Print)</span>
+                <span>چاپ فاکتور رسمی (Print / PDF)</span>
               </button>
 
               <button
@@ -1147,17 +944,19 @@ export function OrderPrintModal({ order, isOpen, onClose }: OrderPrintModalProps
                 type="button"
                 onClick={handleExportWord}
                 className="h-9 px-3 bg-white hover:bg-amber-50 border border-[#D97706] text-[#D97706] hover:text-[#B45309] font-bold transition-colors inline-flex items-center gap-1.5 shadow-xs cursor-pointer rounded-none"
+                title="دانلود فایل Word (.doc)"
               >
                 <FileDown className="w-4 h-4" />
-                <span>دانلود / باز کردن در قالب سند (Word / Google Docs)</span>
+                <span>دانلود فایل Word (.doc)</span>
               </button>
               <button
                 type="button"
                 onClick={handlePrint}
                 className="h-9 px-5 bg-[#D97706] hover:bg-[#B45309] text-white font-black transition-colors inline-flex items-center gap-2 shadow-xs cursor-pointer rounded-none"
+                title="چاپ فاکتور رسمی (Print / PDF)"
               >
                 <Printer className="w-4 h-4" />
-                <span>چاپ نهایی (Print)</span>
+                <span>چاپ فاکتور رسمی (Print / PDF)</span>
               </button>
             </div>
           </div>

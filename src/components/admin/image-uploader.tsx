@@ -16,6 +16,8 @@ import React, { useState, useRef, useTransition, useEffect } from 'react';
 import { uploadMediaAction, updateMediaAltAction } from '@/server/actions/media-actions';
 import type { MediaAssetRecord } from '@/server/db/client';
 import { uiStringsFa } from '@/content/ui-strings.fa';
+import { ImageLightboxModal } from './image-lightbox-modal';
+import { ZoomIn } from 'lucide-react';
 
 export interface ImageUploaderProps {
   value?: MediaAssetRecord | { url?: string; storageKey?: string; alt?: string; id?: string; width?: number; height?: number; bytes?: number } | string | null;
@@ -40,6 +42,7 @@ export function ImageUploader({
   );
   const [isAltSaved, setIsAltSaved] = useState(false);
   const [isRemoved, setIsRemoved] = useState(false);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -211,14 +214,31 @@ export function ImageUploader({
         /* Preview & Actions Card with Rigid Square Aspect Ratio */
         <div className="bg-white border border-[#D5C7B8] p-4 shadow-xs space-y-4 rounded-none">
           <div className="flex flex-col sm:flex-row gap-4 items-start">
-            {/* Strict, rigid square preview container */}
-            <div className="w-28 h-28 sm:w-32 sm:h-32 shrink-0 border border-[#D5C7B8] bg-[#FAF8F5] p-1 flex items-center justify-center overflow-hidden rounded-none shadow-xs relative group">
+            {/* Strict, rigid square preview container with click-to-zoom Lightbox */}
+            <div
+              onClick={() => setIsLightboxOpen(true)}
+              className="w-28 h-28 sm:w-32 sm:h-32 shrink-0 border border-[#D5C7B8] bg-[#FAF8F5] p-1 flex items-center justify-center overflow-hidden rounded-none shadow-xs relative group cursor-zoom-in"
+              title="کلیک برای بزرگنمایی تصویر"
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setIsLightboxOpen(true);
+                }
+              }}
+            >
               <img
                 src={activeImageUrl}
                 alt={altText || (typeof value === 'object' && value?.alt ? value.alt : '') || label || 'تصویر فعال'}
-                className="w-full h-full object-cover rounded-none"
+                className="w-full h-full object-cover rounded-none transition-transform duration-200 group-hover:scale-105"
               />
-              <span className="absolute top-1.5 right-1.5 bg-[#2B1B10]/85 backdrop-blur-xs text-amber-300 font-mono text-[9px] font-bold px-1.5 py-0.5 border border-amber-500/30">
+              {/* Subtle hover overlay with magnifying glass */}
+              <div className="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white gap-1 pointer-events-none">
+                <ZoomIn className="w-5 h-5 text-amber-300 drop-shadow-sm" />
+                <span className="text-[10px] font-bold drop-shadow-sm">بزرگنمایی</span>
+              </div>
+              <span className="absolute top-1.5 right-1.5 bg-[#2B1B10]/85 backdrop-blur-xs text-amber-300 font-mono text-[9px] font-bold px-1.5 py-0.5 border border-amber-500/30 pointer-events-none">
                 {value && typeof value === 'object' && 'storageKey' in value ? 'WebP' : 'فعال'}
               </span>
             </div>
@@ -314,6 +334,18 @@ export function ImageUploader({
         <div className="p-3 bg-[#FEF2F2] border-s-4 border-[#9E3556] text-[#9E3556] text-xs leading-relaxed rounded-none" role="alert">
           {error}
         </div>
+      )}
+
+      {/* Click-to-Zoom Lightbox Modal */}
+      {activeImageUrl && (
+        <ImageLightboxModal
+          isOpen={isLightboxOpen}
+          onClose={() => setIsLightboxOpen(false)}
+          imageUrl={activeImageUrl}
+          alt={altText || (typeof value === 'object' && value?.alt ? value.alt : '') || label || ''}
+          caption={typeof value === 'object' && value?.storageKey ? value.storageKey : (label || '')}
+          dimensions={value && typeof value === 'object' && value?.width && value?.height ? { width: value.width, height: value.height, bytes: value.bytes } : undefined}
+        />
       )}
     </div>
   );

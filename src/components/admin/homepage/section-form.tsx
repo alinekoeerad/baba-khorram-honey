@@ -12,7 +12,7 @@ import { ControlledLinkPicker } from './controlled-link-picker';
 import type { ControlledLink, SectionImage } from '@/server/validation/homepage-schemas';
 import { createHomepageSectionAction, updateHomepageSectionAction } from '@/server/actions/homepage-actions';
 import type { SectionType, SectionStatus, SectionBackground } from '@prisma/client';
-import { parseLocalizedInt } from '@/lib/domain-utils';
+import { parseLocalizedInt, toPersianDigits } from '@/lib/domain-utils';
 import {
   Save,
   AlertTriangle,
@@ -22,8 +22,10 @@ import {
   ArrowRight,
   Loader2,
   CheckCircle,
+  ZoomIn,
 } from 'lucide-react';
 import Link from 'next/link';
+import { ImageLightboxModal } from '@/components/admin/image-lightbox-modal';
 
 interface SectionFormProps {
   initialData?: {
@@ -52,6 +54,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
 
   const updateContentField = (key: string, val: any) => {
     setContent((prev) => ({
@@ -98,13 +101,35 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
   const imagesList: SectionImage[] = Array.isArray(content.images) ? content.images : [];
 
   const handleAddImage = () => {
-    const next = [...imagesList, { url: '/images/hero-1.jpg', alt: '' }];
+    const next = [
+      ...imagesList,
+      {
+        url: '/images/hero/photo_35.jpg',
+        alt: '',
+        deviceTarget: 'all' as const,
+        focalPoint: 'center' as const,
+      },
+    ];
     updateContentField('images', next);
   };
 
-  const handleUpdateImage = (index: number, field: 'url' | 'alt', val: string) => {
+  const handleUpdateImage = (
+    index: number,
+    field: keyof SectionImage,
+    val: any
+  ) => {
     const next = [...imagesList];
     next[index] = { ...next[index], [field]: val };
+    updateContentField('images', next);
+  };
+
+  const handleMoveImage = (index: number, direction: 'up' | 'down') => {
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= imagesList.length) return;
+    const next = [...imagesList];
+    const temp = next[index];
+    next[index] = next[targetIndex];
+    next[targetIndex] = temp;
     updateContentField('images', next);
   };
 
@@ -268,41 +293,153 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                 )}
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {imagesList.map((img, idx) => (
-                  <div key={idx} className="flex items-center gap-3 p-3 bg-stone-50 border border-stone-200 rounded-none">
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 border border-[#D5C7B8] bg-[#FAF8F5] p-1 flex items-center justify-center overflow-hidden rounded-none shadow-xs">
-                      <img src={img.url} alt={img.alt || ''} className="w-full h-full object-cover rounded-none" />
+                  <div key={idx} className="p-4 bg-stone-50 border border-stone-200 rounded-none space-y-3 shadow-xs">
+                    {/* Slide Card Header with Badge, Reorder buttons, and Delete button */}
+                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-stone-200 pb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2.5 py-1 bg-[#332115] text-[#FBBF24] font-black text-xs rounded-none border border-amber-600/30">
+                          اسلاید {toPersianDigits(idx + 1)}
+                        </span>
+                        {img.deviceTarget === 'mobile' && (
+                          <span className="text-[10px] font-bold bg-purple-100 text-purple-900 px-2 py-0.5 border border-purple-200 rounded-none">
+                            فقط موبایل
+                          </span>
+                        )}
+                        {img.deviceTarget === 'desktop' && (
+                          <span className="text-[10px] font-bold bg-blue-100 text-blue-900 px-2 py-0.5 border border-blue-200 rounded-none">
+                            فقط دسکتاپ
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          type="button"
+                          disabled={idx === 0}
+                          onClick={() => handleMoveImage(idx, 'up')}
+                          className="px-2.5 py-1 text-xs font-bold bg-white hover:bg-amber-50 text-[#332115] border border-stone-300 disabled:opacity-30 disabled:hover:bg-white rounded-none transition-colors cursor-pointer inline-flex items-center gap-1"
+                          title="▲ انتقال به بالا / قبلی"
+                        >
+                          <span>▲</span>
+                          <span>انتقال به بالا / قبلی</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          disabled={idx === imagesList.length - 1}
+                          onClick={() => handleMoveImage(idx, 'down')}
+                          className="px-2.5 py-1 text-xs font-bold bg-white hover:bg-amber-50 text-[#332115] border border-stone-300 disabled:opacity-30 disabled:hover:bg-white rounded-none transition-colors cursor-pointer inline-flex items-center gap-1"
+                          title="▼ انتقال به پایین / بعدی"
+                        >
+                          <span>▼</span>
+                          <span>انتقال به پایین / بعدی</span>
+                        </button>
+
+                        {imagesList.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveImage(idx)}
+                            className="p-1.5 text-rose-600 hover:bg-rose-50 border border-rose-200 rounded-none transition-colors cursor-pointer inline-flex items-center gap-1 text-xs font-bold"
+                            title="حذف این اسلاید"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                            <span className="hidden sm:inline">حذف</span>
+                          </button>
+                        )}
+                      </div>
                     </div>
 
-                    <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      <input
-                        type="text"
-                        value={img.url}
-                        onChange={(e) => handleUpdateImage(idx, 'url', e.target.value)}
-                        placeholder="آدرس تصویر (مثلاً /images/hero-1.jpg)"
-                        className="h-9 px-2.5 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B] font-mono"
-                        dir="ltr"
-                      />
-                      <input
-                        type="text"
-                        value={img.alt}
-                        onChange={(e) => handleUpdateImage(idx, 'alt', e.target.value)}
-                        placeholder="متن جایگزین (Alt)"
-                        className="h-9 px-2.5 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
-                      />
-                    </div>
-
-                    {imagesList.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveImage(idx)}
-                        className="p-2 text-red-500 hover:bg-red-50 rounded-none transition-colors cursor-pointer"
-                        title="حذف این تصویر"
+                    <div className="flex flex-col sm:flex-row gap-4 items-start">
+                      {/* Click-to-Zoom Thumbnail */}
+                      <div
+                        onClick={() => setLightboxUrl(img.url)}
+                        className="w-24 h-24 sm:w-28 sm:h-28 shrink-0 border border-[#D5C7B8] bg-[#FAF8F5] p-1 flex items-center justify-center overflow-hidden rounded-none shadow-xs relative group cursor-zoom-in"
+                        title="کلیک برای بزرگنمایی تصویر"
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            setLightboxUrl(img.url);
+                          }
+                        }}
                       >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    )}
+                        <img
+                          src={img.url}
+                          alt={img.alt || ''}
+                          className="w-full h-full object-cover rounded-none transition-transform duration-200 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white gap-1 pointer-events-none">
+                          <ZoomIn className="w-4 h-4 text-amber-300 drop-shadow-sm" />
+                          <span className="text-[9px] font-bold drop-shadow-sm">بزرگنمایی</span>
+                        </div>
+                      </div>
+
+                      {/* Inputs Grid */}
+                      <div className="flex-1 space-y-2.5 w-full">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          <div className="space-y-1">
+                            <label className="block text-[11px] font-bold text-stone-700">آدرس تصویر (URL) *</label>
+                            <input
+                              type="text"
+                              required
+                              value={img.url}
+                              onChange={(e) => handleUpdateImage(idx, 'url', e.target.value)}
+                              placeholder="مثلاً /images/hero/photo_35.jpg"
+                              className="w-full h-9 px-2.5 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B] font-mono"
+                              dir="ltr"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="block text-[11px] font-bold text-stone-700">متن جایگزین (Alt)</label>
+                            <input
+                              type="text"
+                              value={img.alt || ''}
+                              onChange={(e) => handleUpdateImage(idx, 'alt', e.target.value)}
+                              placeholder="توضیح تصویر برای دسترس‌پذیری"
+                              className="w-full h-9 px-2.5 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Device Target and Focal Point Selectors */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 border-t border-stone-200">
+                          <div className="space-y-1">
+                            <label className="block text-[11px] font-bold text-stone-700">
+                              نمایش در دستگاه (deviceTarget):
+                            </label>
+                            <select
+                              value={img.deviceTarget || 'all'}
+                              onChange={(e) => handleUpdateImage(idx, 'deviceTarget', e.target.value)}
+                              className="w-full h-9 px-2 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
+                            >
+                              <option value="all">همه دستگاهها (موبایل و دسکتاپ)</option>
+                              <option value="desktop">فقط دسکتاپ (مناسب تصاویر افقی/عریض)</option>
+                              <option value="mobile">فقط موبایل (مناسب تصاویر عمودی)</option>
+                            </select>
+                          </div>
+
+                          <div className="space-y-1">
+                            <label className="block text-[11px] font-bold text-stone-700">
+                              نقطه کانونی تصویر (focalPoint):
+                            </label>
+                            <select
+                              value={img.focalPoint || 'center'}
+                              onChange={(e) => handleUpdateImage(idx, 'focalPoint', e.target.value)}
+                              className="w-full h-9 px-2 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
+                            >
+                              <option value="center">مرکز تصویر (پیشفرض)</option>
+                              <option value="top">بالای تصویر</option>
+                              <option value="bottom">پایین تصویر</option>
+                              <option value="right">سمت راست تصویر</option>
+                              <option value="left">سمت چپ تصویر</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -383,12 +520,28 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
               </div>
               <div className="flex flex-col sm:flex-row gap-4 items-start">
                 {content.image?.url && (
-                  <div className="w-28 h-28 sm:w-32 sm:h-32 shrink-0 border border-[#D5C7B8] bg-[#FAF8F5] p-1 flex items-center justify-center overflow-hidden rounded-none shadow-xs">
+                  <div
+                    onClick={() => setLightboxUrl(content.image.url)}
+                    className="w-28 h-28 sm:w-32 sm:h-32 shrink-0 border border-[#D5C7B8] bg-[#FAF8F5] p-1 flex items-center justify-center overflow-hidden rounded-none shadow-xs relative group cursor-zoom-in"
+                    title="کلیک برای بزرگنمایی تصویر"
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setLightboxUrl(content.image.url);
+                      }
+                    }}
+                  >
                     <img
                       src={content.image.url}
                       alt={content.image.alt || ''}
-                      className="w-full h-full object-cover rounded-none"
+                      className="w-full h-full object-cover rounded-none transition-transform duration-200 group-hover:scale-105"
                     />
+                    <div className="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white gap-1 pointer-events-none">
+                      <ZoomIn className="w-5 h-5 text-amber-300 drop-shadow-sm" />
+                      <span className="text-[10px] font-bold drop-shadow-sm">بزرگنمایی</span>
+                    </div>
                   </div>
                 )}
                 <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
@@ -486,12 +639,28 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
               </div>
               <div className="flex flex-col sm:flex-row gap-4 items-start">
                 {content.image?.url && (
-                  <div className="w-28 h-28 sm:w-32 sm:h-32 shrink-0 border border-[#D5C7B8] bg-[#FAF8F5] p-1 flex items-center justify-center overflow-hidden rounded-none shadow-xs">
+                  <div
+                    onClick={() => setLightboxUrl(content.image.url)}
+                    className="w-28 h-28 sm:w-32 sm:h-32 shrink-0 border border-[#D5C7B8] bg-[#FAF8F5] p-1 flex items-center justify-center overflow-hidden rounded-none shadow-xs relative group cursor-zoom-in"
+                    title="کلیک برای بزرگنمایی تصویر"
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setLightboxUrl(content.image.url);
+                      }
+                    }}
+                  >
                     <img
                       src={content.image.url}
                       alt={content.image.alt || ''}
-                      className="w-full h-full object-cover rounded-none"
+                      className="w-full h-full object-cover rounded-none transition-transform duration-200 group-hover:scale-105"
                     />
+                    <div className="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white gap-1 pointer-events-none">
+                      <ZoomIn className="w-5 h-5 text-amber-300 drop-shadow-sm" />
+                      <span className="text-[10px] font-bold drop-shadow-sm">بزرگنمایی</span>
+                    </div>
                   </div>
                 )}
                 <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
@@ -640,12 +809,28 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
 
                     <div className="flex flex-col sm:flex-row gap-3 items-start">
                       {item.image?.url && (
-                        <div className="w-20 h-20 shrink-0 border border-[#D5C7B8] bg-[#FAF8F5] p-1 flex items-center justify-center overflow-hidden rounded-none shadow-xs">
+                        <div
+                          onClick={() => setLightboxUrl(item.image.url)}
+                          className="w-20 h-20 shrink-0 border border-[#D5C7B8] bg-[#FAF8F5] p-1 flex items-center justify-center overflow-hidden rounded-none shadow-xs relative group cursor-zoom-in"
+                          title="کلیک برای بزرگنمایی تصویر"
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              setLightboxUrl(item.image.url);
+                            }
+                          }}
+                        >
                           <img
                             src={item.image.url}
                             alt={item.image.alt || item.title || ''}
-                            className="w-full h-full object-cover rounded-none"
+                            className="w-full h-full object-cover rounded-none transition-transform duration-200 group-hover:scale-105"
                           />
+                          <div className="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white gap-1 pointer-events-none">
+                            <ZoomIn className="w-4 h-4 text-amber-300 drop-shadow-sm" />
+                            <span className="text-[9px] font-bold drop-shadow-sm">بزرگنمایی</span>
+                          </div>
                         </div>
                       )}
                       <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
@@ -728,6 +913,15 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
           )}
         </button>
       </div>
+
+      {/* Lightbox Modal */}
+      {lightboxUrl && (
+        <ImageLightboxModal
+          isOpen={Boolean(lightboxUrl)}
+          onClose={() => setLightboxUrl(null)}
+          imageUrl={lightboxUrl}
+        />
+      )}
     </form>
   );
 }

@@ -15,6 +15,8 @@ import { Picture } from '@/components/ui/picture';
 import { uploadMediaAction, updateMediaAltAction } from '@/server/actions/media-actions';
 import type { MediaAssetRecord } from '@/server/db/client';
 import { uiStringsFa } from '@/content/ui-strings.fa';
+import { ImageLightboxModal } from './image-lightbox-modal';
+import { ZoomIn } from 'lucide-react';
 
 export interface MultiImageUploaderProps {
   values: MediaAssetRecord[];
@@ -34,6 +36,7 @@ export function MultiImageUploader({
   const [isPending, startTransition] = useTransition();
   const [progress, setProgress] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
+  const [lightboxImage, setLightboxImage] = useState<{ url: string; alt?: string | null; width?: number | null; height?: number | null; bytes?: number | null } | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -201,17 +204,53 @@ export function MultiImageUploader({
               key={item.id || idx}
               className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-3 bg-white border border-[#EFE9E0] shadow-xs"
             >
-              {/* Rigid Square Thumbnail */}
-              <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 border border-[#D5C7B8] bg-[#FAF8F5] p-1 flex items-center justify-center overflow-hidden rounded-none relative group shadow-xs">
-                <img
-                  src={(item as any).url || (item.storageKey ? `/uploads/${item.storageKey}` : '')}
-                  alt={item.alt || ''}
-                  className="w-full h-full object-cover rounded-none"
-                />
-                <span className="absolute top-1 right-1 bg-[#2B1B10]/85 text-amber-300 font-mono text-[8px] font-bold px-1 py-0.2 border border-amber-500/30">
-                  WebP
-                </span>
-              </div>
+            {/* Rigid Square Thumbnail with Click-to-Zoom */}
+            {(() => {
+              const imgUrl = (item as any).url || (item.storageKey ? `/uploads/${item.storageKey}` : '');
+              return (
+                <div
+                  onClick={() =>
+                    setLightboxImage({
+                      url: imgUrl,
+                      alt: item.alt || '',
+                      width: item.width,
+                      height: item.height,
+                      bytes: item.bytes,
+                    })
+                  }
+                  className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 border border-[#D5C7B8] bg-[#FAF8F5] p-1 flex items-center justify-center overflow-hidden rounded-none relative group shadow-xs cursor-zoom-in"
+                  title="کلیک برای بزرگنمایی تصویر"
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setLightboxImage({
+                        url: imgUrl,
+                        alt: item.alt || '',
+                        width: item.width,
+                        height: item.height,
+                        bytes: item.bytes,
+                      });
+                    }
+                  }}
+                >
+                  <img
+                    src={imgUrl}
+                    alt={item.alt || ''}
+                    className="w-full h-full object-cover rounded-none transition-transform duration-200 group-hover:scale-105"
+                  />
+                  {/* Subtle hover overlay with magnifying glass */}
+                  <div className="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white gap-1 pointer-events-none">
+                    <ZoomIn className="w-4 h-4 text-amber-300 drop-shadow-sm" />
+                    <span className="text-[9px] font-bold drop-shadow-sm">بزرگنمایی</span>
+                  </div>
+                  <span className="absolute top-1 right-1 bg-[#2B1B10]/85 text-amber-300 font-mono text-[8px] font-bold px-1 py-0.2 border border-amber-500/30 pointer-events-none">
+                    WebP
+                  </span>
+                </div>
+              );
+            })()}
 
               {/* Info & Alt Text */}
               <div className="flex-1 space-y-1.5 w-full">
@@ -234,7 +273,7 @@ export function MultiImageUploader({
                   value={item.alt || ''}
                   onChange={(e) => handleAltChange(idx, e.target.value)}
                   placeholder={uiStringsFa.adminMedia.altTextPlaceholder}
-                  className="w-full px-2.5 py-1 text-xs border border-[#EFE9E0] focus:outline-none focus:border-[#D97706]"
+                  className="w-full px-2.5 py-1 text-xs border border-[#EFE9E0] focus:outline-none focus:border-[#D97706] rounded-none"
                   aria-label={`متن جایگزین تصویر ${idx + 1}`}
                 />
               </div>
@@ -246,8 +285,9 @@ export function MultiImageUploader({
                     type="button"
                     disabled={idx === 0}
                     onClick={() => handleMove(idx, 'up')}
-                    aria-label={uiStringsFa.adminMedia.moveUp}
-                    className="p-1 text-xs font-bold border border-[#EFE9E0] hover:bg-[#FEF3C7] disabled:opacity-30 disabled:hover:bg-transparent"
+                    aria-label="▲ انتقال به بالا / قبلی"
+                    title="▲ انتقال به بالا / قبلی"
+                    className="p-1.5 text-xs font-bold border border-[#EFE9E0] hover:bg-[#FEF3C7] disabled:opacity-30 disabled:hover:bg-transparent rounded-none transition-colors cursor-pointer"
                   >
                     ▲
                   </button>
@@ -255,8 +295,9 @@ export function MultiImageUploader({
                     type="button"
                     disabled={idx === values.length - 1}
                     onClick={() => handleMove(idx, 'down')}
-                    aria-label={uiStringsFa.adminMedia.moveDown}
-                    className="p-1 text-xs font-bold border border-[#EFE9E0] hover:bg-[#FEF3C7] disabled:opacity-30 disabled:hover:bg-transparent"
+                    aria-label="▼ انتقال به پایین / بعدی"
+                    title="▼ انتقال به پایین / بعدی"
+                    className="p-1.5 text-xs font-bold border border-[#EFE9E0] hover:bg-[#FEF3C7] disabled:opacity-30 disabled:hover:bg-transparent rounded-none transition-colors cursor-pointer"
                   >
                     ▼
                   </button>
@@ -265,7 +306,7 @@ export function MultiImageUploader({
                   type="button"
                   onClick={() => handleRemove(idx)}
                   aria-label={uiStringsFa.adminMedia.removeImage}
-                  className="px-2 py-1 text-[11px] font-bold text-[#9E3556] hover:bg-[#FEF2F2] border border-[#FECACA] transition-colors"
+                  className="px-2 py-1 text-[11px] font-bold text-[#9E3556] hover:bg-[#FEF2F2] border border-[#FECACA] transition-colors rounded-none cursor-pointer"
                 >
                   {uiStringsFa.adminMedia.removeImage}
                 </button>
@@ -273,6 +314,18 @@ export function MultiImageUploader({
             </div>
           ))}
         </div>
+      )}
+
+      {/* Lightbox Modal */}
+      {lightboxImage && (
+        <ImageLightboxModal
+          isOpen={Boolean(lightboxImage)}
+          onClose={() => setLightboxImage(null)}
+          imageUrl={lightboxImage.url}
+          alt={lightboxImage.alt}
+          caption={lightboxImage.alt || 'تصویر گالری'}
+          dimensions={lightboxImage.width && lightboxImage.height ? { width: lightboxImage.width, height: lightboxImage.height, bytes: lightboxImage.bytes } : undefined}
+        />
       )}
     </div>
   );

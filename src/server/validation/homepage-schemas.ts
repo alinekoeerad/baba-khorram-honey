@@ -86,9 +86,17 @@ export function resolveControlledLink(link?: ControlledLink | null): { href: str
 // Section Image Schema
 // ---------------------------------------------------------------
 
+export const deviceTargetEnum = z.enum(['all', 'desktop', 'mobile']);
+export type DeviceTarget = z.infer<typeof deviceTargetEnum>;
+
+export const focalPointEnum = z.enum(['center', 'top', 'bottom', 'left', 'right']);
+export type FocalPoint = z.infer<typeof focalPointEnum>;
+
 export const sectionImageSchema = z.object({
   url: z.string().min(1, 'آدرس یا شناسه تصویر الزامی است').trim(),
   alt: z.string().max(200, 'متن جایگزین حداکثر ۲۰۰ کاراکتر است').default(''),
+  deviceTarget: deviceTargetEnum.optional().default('all'),
+  focalPoint: focalPointEnum.optional().default('center'),
 });
 
 export type SectionImage = z.infer<typeof sectionImageSchema>;
