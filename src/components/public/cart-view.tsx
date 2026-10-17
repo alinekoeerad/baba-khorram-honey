@@ -22,7 +22,7 @@ import {
   clearSavedCustomer,
   SavedCustomerData,
 } from '@/lib/cart-store';
-import { toPersianDigits, validateAndNormalizeIranianMobile } from '@/lib/domain-utils';
+import { toPersianDigits, validateAndNormalizeIranianMobile, normalizeDigits } from '@/lib/domain-utils';
 import { copyTextSync, copyTextToClipboard } from '@/lib/clipboard';
 import { fetchFreshCartAction } from '@/server/actions/cart-actions';
 import { buildOrderAction, BuildOrderResult } from '@/server/actions/order-actions';
@@ -178,7 +178,7 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
 
     const customerData: SavedCustomerData = {
       fullName: fullName.trim(),
-      mobile: mobile.trim(),
+      mobile: normalizeDigits(mobile).trim(),
       address: address.trim(),
       preferredContactMethod,
     };
@@ -760,8 +760,9 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
                   </label>
                   <input
                     type="tel"
+                    inputMode="numeric"
                     value={mobile}
-                    onChange={(e) => setMobile(e.target.value)}
+                    onChange={(e) => setMobile(normalizeDigits(e.target.value))}
                     placeholder="09123456789"
                     className="w-full h-11 px-3.5 bg-[#FAF7F2] border border-[#EFE9E0] text-[#2B2017] text-sm focus:outline-none focus:border-[#D97706] focus:bg-white rounded-none transition-colors text-right"
                     dir="ltr"

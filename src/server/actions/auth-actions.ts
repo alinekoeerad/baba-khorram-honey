@@ -18,10 +18,11 @@ import {
   getGenericAuthError,
 } from '@/lib/rate-limit';
 import { recordAuditLog } from '@/server/services/audit-log-service';
+import { normalizeDigits } from '@/lib/domain-utils';
 
 export async function adminLoginAction(data: { email: string; password: string }) {
   const { email, password } = data;
-  const normalizedEmail = (email || '').trim().toLowerCase();
+  const normalizedEmail = normalizeDigits((email || '').trim().toLowerCase());
 
   let ip = '127.0.0.1';
   let userAgent = '';

@@ -12,6 +12,7 @@ import { ControlledLinkPicker } from './controlled-link-picker';
 import { ControlledLink, SectionImage } from '@/server/validation/homepage-schemas';
 import { createHomepageSectionAction, updateHomepageSectionAction } from '@/server/actions/homepage-actions';
 import { SectionType, SectionStatus, SectionBackground } from '@prisma/client';
+import { parseLocalizedInt } from '@/lib/domain-utils';
 import {
   Save,
   AlertTriangle,
@@ -548,12 +549,15 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
               <div className="space-y-1">
                 <label className="block text-xs font-bold text-stone-700">حداکثر تعداد کارت‌ها</label>
                 <input
-                  type="number"
-                  min={1}
-                  max={24}
+                  type="text"
+                  inputMode="numeric"
+                  dir="ltr"
                   value={content.maxItems || 12}
-                  onChange={(e) => updateContentField('maxItems', parseInt(e.target.value) || 12)}
-                  className="w-full h-11 px-3 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B] focus:border-[#F59E0B] focus:outline-none"
+                  onChange={(e) => {
+                    const parsed = parseLocalizedInt(e.target.value);
+                    updateContentField('maxItems', Number.isFinite(parsed) ? parsed : 12);
+                  }}
+                  className="w-full h-11 px-3 text-sm font-bold font-mono bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B] focus:border-[#F59E0B] focus:outline-none"
                 />
               </div>
             </div>

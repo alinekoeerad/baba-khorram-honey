@@ -319,3 +319,10 @@ html[data-scroll-behavior="smooth"] {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Stable Scrollbar Gutter to prevent layout shifts across admin pages */
+[scrollbar-gutter\:stable],
+.scrollbar-gutter-stable {
+  scrollbar-gutter: stable;
+}
+

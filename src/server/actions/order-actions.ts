@@ -20,7 +20,7 @@ import { db, OrderRecord } from '@/server/db/client';
 import { requireAdmin } from '@/server/auth/require-admin';
 import { recordAuditLog } from '@/server/services/audit-log-service';
 import { checkRateLimit } from '@/lib/rate-limit';
-import { validateAndNormalizeIranianMobile } from '@/lib/domain-utils';
+import { validateAndNormalizeIranianMobile, normalizeDigits, parseLocalizedInt } from '@/lib/domain-utils';
 import {
   generateOrderReferenceCode,
   buildFullOrderMessage,
@@ -39,7 +39,10 @@ const BuildOrderInputSchema = z.object({
       z.object({
         optionId: z.string().min(1),
         productId: z.string().min(1),
-        qty: z.number().int().min(1).max(50),
+        qty: z.preprocess(
+          (val) => parseLocalizedInt(val),
+          z.number().int().min(1).max(50)
+        ),
       })
     )
     .min(1, 'سبد خرید خالی است.')
@@ -50,11 +53,17 @@ const BuildOrderInputSchema = z.object({
       fullName: z.string().max(100).optional(),
       firstName: z.string().max(50).optional(),
       lastName: z.string().max(50).optional(),
-      mobile: z.string().min(1, 'شماره تماس الزامی است.').max(20),
+      mobile: z.preprocess(
+        (val) => normalizeDigits(String(val || '')).replace(/[\s-]/g, ''),
+        z.string().min(1, 'شماره تماس الزامی است.').max(20)
+      ),
       province: z.string().max(50).optional(),
       city: z.string().max(50).optional(),
       address: z.string().max(500).optional(),
-      postalCode: z.string().max(10).optional(),
+      postalCode: z.preprocess(
+        (val) => (val ? normalizeDigits(String(val)).replace(/[\s-]/g, '') : val),
+        z.string().max(10).optional()
+      ),
       notes: z.string().max(300).optional(),
       preferredContactMethod: z.string().max(50).optional(),
     })

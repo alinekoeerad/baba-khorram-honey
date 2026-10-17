@@ -23,6 +23,11 @@ import {
   validateChannel,
 } from '@/lib/contact-channels';
 import {
+  normalizeDigits,
+  parseLocalizedNumber,
+  parseLocalizedInt,
+} from '@/lib/domain-utils';
+import {
   Globe,
   PhoneCall,
   Search,
@@ -56,6 +61,17 @@ export function SettingsManager({
   const [channels, setChannels] = useState<ContactChannelData[]>(initialChannels);
   const [isPending, startTransition] = useTransition();
 
+  // Local string states for smooth localized digit input
+  const [latInput, setLatInput] = useState<string>(
+    initialSettings.latitude != null ? String(initialSettings.latitude) : ''
+  );
+  const [lngInput, setLngInput] = useState<string>(
+    initialSettings.longitude != null ? String(initialSettings.longitude) : ''
+  );
+  const [zoomInput, setZoomInput] = useState<string>(
+    initialSettings.mapZoom != null ? String(initialSettings.mapZoom) : ''
+  );
+
   // Channel Modal State
   const [isChannelModalOpen, setIsChannelModalOpen] = useState(false);
   const [editingChannel, setEditingChannel] = useState<ContactChannelData | null>(null);
@@ -85,7 +101,18 @@ export function SettingsManager({
 
   const handleSaveSettings = () => {
     startTransition(async () => {
-      const res = await updateSiteSettingsAction(settings);
+      const parsedLat = latInput ? parseLocalizedNumber(latInput) : null;
+      const parsedLng = lngInput ? parseLocalizedNumber(lngInput) : null;
+      const parsedZoom = zoomInput ? parseLocalizedInt(zoomInput) : null;
+
+      const payload: SiteSettingsData = {
+        ...settings,
+        latitude: Number.isFinite(parsedLat) ? parsedLat : null,
+        longitude: Number.isFinite(parsedLng) ? parsedLng : null,
+        mapZoom: Number.isFinite(parsedZoom) ? parsedZoom : null,
+      };
+
+      const res = await updateSiteSettingsAction(payload);
       if (res.success) {
         showSuccess('تنظیمات با موفقیت ذخیره شد.');
         router.refresh();
@@ -373,17 +400,20 @@ export function SettingsManager({
                   عرض جغرافیایی (Latitude)
                 </label>
                 <input
-                  type="number"
-                  step="0.0001"
+                  type="text"
+                  inputMode="decimal"
                   dir="ltr"
-                  value={settings.latitude ?? ''}
-                  onChange={(e) =>
-                    setSettings({
-                      ...settings,
-                      latitude: e.target.value ? parseFloat(e.target.value) : null,
-                    })
-                  }
-                  className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-4 py-2.5 text-sm text-left focus:outline-none focus:border-[#F59E0B]"
+                  value={latInput}
+                  onChange={(e) => {
+                    const norm = normalizeDigits(e.target.value);
+                    setLatInput(norm);
+                    const parsed = parseLocalizedNumber(norm);
+                    setSettings((prev) => ({
+                      ...prev,
+                      latitude: Number.isFinite(parsed) ? parsed : null,
+                    }));
+                  }}
+                  className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-4 py-2.5 text-sm text-left font-mono focus:outline-none focus:border-[#F59E0B]"
                   placeholder="35.8339878"
                 />
               </div>
@@ -392,17 +422,20 @@ export function SettingsManager({
                   طول جغرافیایی (Longitude)
                 </label>
                 <input
-                  type="number"
-                  step="0.0001"
+                  type="text"
+                  inputMode="decimal"
                   dir="ltr"
-                  value={settings.longitude ?? ''}
-                  onChange={(e) =>
-                    setSettings({
-                      ...settings,
-                      longitude: e.target.value ? parseFloat(e.target.value) : null,
-                    })
-                  }
-                  className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-4 py-2.5 text-sm text-left focus:outline-none focus:border-[#F59E0B]"
+                  value={lngInput}
+                  onChange={(e) => {
+                    const norm = normalizeDigits(e.target.value);
+                    setLngInput(norm);
+                    const parsed = parseLocalizedNumber(norm);
+                    setSettings((prev) => ({
+                      ...prev,
+                      longitude: Number.isFinite(parsed) ? parsed : null,
+                    }));
+                  }}
+                  className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-4 py-2.5 text-sm text-left font-mono focus:outline-none focus:border-[#F59E0B]"
                   placeholder="50.9915841"
                 />
               </div>
@@ -411,18 +444,20 @@ export function SettingsManager({
                   بزرگ‌نمایی نقشه (Zoom)
                 </label>
                 <input
-                  type="number"
-                  min="10"
-                  max="18"
+                  type="text"
+                  inputMode="numeric"
                   dir="ltr"
-                  value={settings.mapZoom ?? ''}
-                  onChange={(e) =>
-                    setSettings({
-                      ...settings,
-                      mapZoom: e.target.value ? parseInt(e.target.value, 10) : null,
-                    })
-                  }
-                  className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-4 py-2.5 text-sm text-left focus:outline-none focus:border-[#F59E0B]"
+                  value={zoomInput}
+                  onChange={(e) => {
+                    const norm = normalizeDigits(e.target.value);
+                    setZoomInput(norm);
+                    const parsed = parseLocalizedInt(norm);
+                    setSettings((prev) => ({
+                      ...prev,
+                      mapZoom: Number.isFinite(parsed) ? parsed : null,
+                    }));
+                  }}
+                  className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-4 py-2.5 text-sm text-left font-mono focus:outline-none focus:border-[#F59E0B]"
                   placeholder="15"
                 />
               </div>
@@ -716,7 +751,7 @@ export function SettingsManager({
                   type="text"
                   dir="ltr"
                   value={channelForm.value}
-                  onChange={(e) => setChannelForm({ ...channelForm, value: e.target.value })}
+                  onChange={(e) => setChannelForm({ ...channelForm, value: normalizeDigits(e.target.value) })}
                   placeholder={selectedMeta.placeholderFa}
                   className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-3 py-2 text-sm text-left font-mono focus:outline-none focus:border-[#F59E0B]"
                 />

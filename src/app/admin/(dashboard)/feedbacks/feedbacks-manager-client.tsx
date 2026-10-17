@@ -11,6 +11,7 @@ import {
   deleteFeedbackAction,
 } from '@/server/actions/feedback-actions';
 import { copyTextToClipboard } from '@/lib/clipboard';
+import { normalizeDigits } from '@/lib/domain-utils';
 import {
   Phone,
   Calendar,
@@ -356,7 +357,7 @@ export function FeedbacksManagerClient({
                   <div className="flex flex-wrap items-center gap-3 text-xs font-bold text-[#332115]">
                     <span className="text-[#5C5248]">شماره تماس:</span>
                     <a
-                      href={`tel:${item.phone}`}
+                      href={`tel:${normalizeDigits(item.phone).replace(/[^0-9+]/g, '')}`}
                       className="text-[#D97706] hover:underline font-mono text-sm"
                       dir="ltr"
                     >

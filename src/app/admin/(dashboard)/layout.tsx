@@ -17,14 +17,14 @@ export default async function AdminDashboardLayout({
 
   return (
     <ToastProvider>
-      <div className="flex h-screen overflow-hidden bg-[#FDFBF8]">
+      <div className="flex min-h-screen h-screen overflow-hidden bg-[#FDFBF8]">
         {/* Desktop Sidebar (Fixed on visual right in RTL) */}
         <div className="hidden md:flex md:w-64 md:flex-col md:shrink-0">
           <AdminSidebar />
         </div>
 
         {/* Main Content Area */}
-        <div className="flex flex-col flex-1 min-w-0 overflow-y-auto">
+        <div className="flex flex-col flex-1 min-w-0 overflow-y-auto [scrollbar-gutter:stable]">
           <AdminHeader
             user={{
               name: user.name,

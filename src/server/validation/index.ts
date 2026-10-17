@@ -6,8 +6,31 @@
 
 import { z } from 'zod';
 import { uiStringsFa } from '@/content/ui-strings.fa';
+import { parseLocalizedInt, parseLocalizedNumber } from '@/lib/domain-utils';
 
 const latinSlugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+/**
+ * Zod preprocessor to reliably parse Persian/Arabic digits, thousands separators,
+ * and strings into a clean JavaScript integer with fallback default.
+ */
+export const localizedIntSchema = (defaultValue = 0) =>
+  z.preprocess((val) => {
+    if (val === undefined || val === null || val === '') return defaultValue;
+    const parsed = parseLocalizedInt(val);
+    return Number.isNaN(parsed) ? val : parsed;
+  }, z.number().int().default(defaultValue));
+
+/**
+ * Zod preprocessor to reliably parse Persian/Arabic digits, decimal points,
+ * and strings into a clean JavaScript float number with fallback default.
+ */
+export const localizedNumberSchema = (defaultValue = 0) =>
+  z.preprocess((val) => {
+    if (val === undefined || val === null || val === '') return defaultValue;
+    const parsed = parseLocalizedNumber(val);
+    return Number.isNaN(parsed) ? val : parsed;
+  }, z.number().default(defaultValue));
 
 // ---------------------------------------------------------------
 // Category Schemas
@@ -25,7 +48,7 @@ export const categoryInputSchema = z.object({
     .trim(),
   type: z.enum(['PRODUCT', 'RECIPE'] as const),
   status: z.enum(['ACTIVE', 'ARCHIVED']).default('ACTIVE'),
-  sortOrder: z.coerce.number().int().default(0),
+  sortOrder: localizedIntSchema(0),
 });
 
 export type CategoryInput = z.infer<typeof categoryInputSchema>;
@@ -41,7 +64,7 @@ export const productOptionInputSchema = z.object({
     .min(1, uiStringsFa.validation.optionLabelRequired)
     .trim(),
   isAvailable: z.boolean().default(true),
-  sortOrder: z.coerce.number().int().default(0),
+  sortOrder: localizedIntSchema(0),
 });
 
 export type ProductOptionInput = z.infer<typeof productOptionInputSchema>;
@@ -61,7 +84,7 @@ export const productInputSchema = z.object({
   isAvailable: z.boolean().default(true),
   isFeatured: z.boolean().default(false),
   cardTheme: z.enum(['AUTO', 'GREEN', 'ORANGE', 'YELLOW', 'BURGUNDY']).default('AUTO'),
-  sortOrder: z.coerce.number().int().default(0),
+  sortOrder: localizedIntSchema(0),
   shortDescription: z.string().trim().optional().nullable(),
   description: z.string().trim().optional().nullable(),
   foodNature: z.string().trim().optional().nullable(),
@@ -89,7 +112,7 @@ export const recipeIngredientInputSchema = z.object({
   equivalentText: z.string().trim().optional().nullable(),
   isOptional: z.boolean().default(false),
   note: z.string().trim().optional().nullable(),
-  sortOrder: z.coerce.number().int().default(0),
+  sortOrder: localizedIntSchema(0),
 });
 
 export type RecipeIngredientInput = z.infer<typeof recipeIngredientInputSchema>;
@@ -97,7 +120,7 @@ export type RecipeIngredientInput = z.infer<typeof recipeIngredientInputSchema>;
 export const recipeStepInputSchema = z.object({
   id: z.string().optional(),
   text: z.string().min(1, uiStringsFa.validation.required).trim(),
-  sortOrder: z.coerce.number().int().default(0),
+  sortOrder: localizedIntSchema(0),
 });
 
 export type RecipeStepInput = z.infer<typeof recipeStepInputSchema>;
@@ -123,7 +146,7 @@ export const recipeInputSchema = z.object({
   status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']).default('DRAFT'),
   isFeatured: z.boolean().default(false),
   cardTheme: z.enum(['AUTO', 'GREEN', 'ORANGE', 'YELLOW', 'BURGUNDY']).default('AUTO'),
-  sortOrder: z.coerce.number().int().default(0),
+  sortOrder: localizedIntSchema(0),
   ingredients: z.array(recipeIngredientInputSchema).default([]),
   steps: z.array(recipeStepInputSchema).default([]),
   categoryIds: z.array(z.string()).default([]),

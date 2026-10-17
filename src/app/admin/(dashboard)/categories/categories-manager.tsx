@@ -19,7 +19,7 @@ import {
   toggleCategoryStatusAction,
   deleteCategoryAction,
 } from '@/server/actions/category-actions';
-import { slugify } from '@/lib/domain-utils';
+import { slugify, parseLocalizedInt } from '@/lib/domain-utils';
 import { useToast } from '@/components/admin/toast-provider';
 import { ConfirmModal } from '@/components/admin/confirm-modal';
 import { AdminBadge } from '@/components/admin/admin-badge';
@@ -345,9 +345,11 @@ export function CategoriesManager({ initialCategories }: { initialCategories: Ca
                     {uiStringsFa.adminCategories.sortOrder}
                   </label>
                   <input
-                    type="number"
+                    type="text"
+                    inputMode="numeric"
+                    dir="ltr"
                     value={sortOrder}
-                    onChange={(e) => setSortOrder(parseInt(e.target.value, 10) || 0)}
+                    onChange={(e) => setSortOrder(parseLocalizedInt(e.target.value) || 0)}
                     className="w-full px-3 py-1.5 border border-[#EFE9E0] text-xs focus:outline-none focus:border-[#D97706]"
                   />
                 </div>

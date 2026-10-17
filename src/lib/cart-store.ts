@@ -14,6 +14,7 @@
  */
 
 import { useSyncExternalStore } from 'react';
+import { parseLocalizedNumber } from './domain-utils';
 
 export const CART_STORAGE_KEY = 'cart:v1';
 export const CUSTOMER_STORAGE_KEY = 'cart-customer:v1';
@@ -50,10 +51,11 @@ export interface SavedCustomerData {
 // Pure Utility Functions (100% Deterministic & Unit-Testable)
 // ----------------------------------------------------------------------
 
-export function clampQuantity(qty: number): number {
-  if (isNaN(qty) || qty < MIN_QUANTITY) return MIN_QUANTITY;
-  if (qty > MAX_QUANTITY) return MAX_QUANTITY;
-  return Math.floor(qty);
+export function clampQuantity(qty: number | unknown): number {
+  const parsed = typeof qty === 'number' ? qty : parseLocalizedNumber(qty);
+  if (isNaN(parsed) || parsed < MIN_QUANTITY) return MIN_QUANTITY;
+  if (parsed > MAX_QUANTITY) return MAX_QUANTITY;
+  return Math.floor(parsed);
 }
 
 export function isCartExpired(updatedAt: number, now: number = Date.now()): boolean {

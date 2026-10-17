@@ -28,6 +28,7 @@ interface CommandItem {
 
 const COMMAND_ITEMS: CommandItem[] = [
   { id: 'dashboard', title: 'داشبورد مدیریت', category: 'بخش‌ها', href: '/admin', icon: LayoutDashboard },
+  { id: 'orders', title: 'مدیریت و پیگیری سفارشات', category: 'بخش‌ها', href: '/admin/orders', icon: Package },
   { id: 'products', title: 'مدیریت محصولات عسل', category: 'بخش‌ها', href: '/admin/products', icon: Package },
   { id: 'new-product', title: 'افزودن محصول جدید', category: 'اقدامات سریع', href: '/admin/products/new', icon: Plus },
   { id: 'recipes', title: 'مدیریت دستورهای مصرف و دسرها', category: 'بخش‌ها', href: '/admin/recipes', icon: BookOpen },

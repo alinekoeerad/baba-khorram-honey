@@ -11,7 +11,7 @@ import {
   deleteOrderAction,
 } from '@/server/actions/order-actions';
 import { copyTextSync, copyTextToClipboard } from '@/lib/clipboard';
-import { toPersianDigits } from '@/lib/domain-utils';
+import { toPersianDigits, normalizeDigits } from '@/lib/domain-utils';
 import {
   Phone,
   Calendar,
@@ -363,7 +363,7 @@ export function OrdersManagerClient({
                       <div className="flex items-center gap-1.5 font-mono text-sm text-[#2B2017]">
                         <Phone className="w-3.5 h-3.5 text-[#D97706]" />
                         <a
-                          href={`tel:${order.customerMobile}`}
+                          href={`tel:${normalizeDigits(order.customerMobile).replace(/[^0-9+]/g, '')}`}
                           className="hover:text-[#D97706] hover:underline"
                         >
                           {order.customerMobile}

@@ -4,7 +4,7 @@
   "siteNameEn": "Baba Khorram Honey",
   "tagline": "طعم اصیل و طبیعی کوهستان",
   "isPlaceholder": false,
-  "cartEnabled": false,
+  "cartEnabled": true,
   "cartNotice": "قیمت و هزینه‌ی ارسال پس از تأیید اعلام می‌شود.",
   "orderIntroText": null,
   "orderOutroText": null,

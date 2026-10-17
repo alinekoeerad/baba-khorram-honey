@@ -14,6 +14,7 @@ import React, { useState, useTransition } from 'react';
 import { uiStringsFa } from '@/content/ui-strings.fa';
 import { adminLoginAction } from '@/server/actions/auth-actions';
 import { DottedArrowIcon } from '@/components/ui/dotted-arrow-icon';
+import { normalizeDigits } from '@/lib/domain-utils';
 
 export default function AdminLoginPage() {
   const [isPending, startTransition] = useTransition();
@@ -28,7 +29,7 @@ export default function AdminLoginPage() {
 
     startTransition(async () => {
       try {
-        const result = await adminLoginAction({ email, password });
+        const result = await adminLoginAction({ email: normalizeDigits(email).trim(), password });
         if (result.success) {
           setIsSuccess(true);
           // Hard document navigation ensures session cookies are transmitted directly to Next.js RSC
@@ -86,7 +87,7 @@ export default function AdminLoginPage() {
               autoComplete="email"
               dir="ltr"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setEmail(normalizeDigits(e.target.value))}
               placeholder="admin@honey.ir"
               disabled={isPending || isSuccess}
               className="w-full px-3.5 py-2.5 bg-[#FFFBEB]/40 border border-[#EFE9E0] text-[#2B2017] text-start focus:outline-none focus:border-[#D97706] transition-colors rounded-none disabled:opacity-50"

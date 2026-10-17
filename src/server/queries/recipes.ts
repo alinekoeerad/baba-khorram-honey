@@ -16,7 +16,7 @@
  */
 
 import { db } from '@/server/db/client';
-import { normalizeSearchText, CardTheme, ServingTypeValue } from '@/lib/domain-utils';
+import { normalizeSearchText, toPersianDigits, CardTheme, ServingTypeValue } from '@/lib/domain-utils';
 
 export interface RecipeCursor {
   sortOrder: number;
@@ -104,13 +104,20 @@ export async function getPublicRecipes(filters: PublicRecipeFilters = {}) {
     const normalized = normalizeSearchText(queryText);
     const words = normalized.split(' ').filter(Boolean);
     if (words.length > 0) {
-      where.AND = words.map((word) => ({
-        OR: [
+      where.AND = words.map((word) => {
+        const persianWord = toPersianDigits(word);
+        const orList: any[] = [
           { searchText: { contains: word } },
           { nameFa: { contains: queryText } },
+          { nameFa: { contains: word } },
           { nameOriginal: { contains: queryText, mode: 'insensitive' } },
-        ],
-      }));
+        ];
+        if (persianWord !== word) {
+          orList.push({ nameFa: { contains: persianWord } });
+          orList.push({ searchText: { contains: persianWord } });
+        }
+        return { OR: orList };
+      });
     }
   }
 

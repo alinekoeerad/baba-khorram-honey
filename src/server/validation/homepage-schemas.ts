@@ -8,6 +8,14 @@
  */
 
 import { z } from 'zod';
+import { parseLocalizedInt } from '@/lib/domain-utils';
+
+const localizedIntSchema = (defaultValue = 0) =>
+  z.preprocess((val) => {
+    if (val === undefined || val === null || val === '') return defaultValue;
+    const parsed = parseLocalizedInt(val);
+    return Number.isNaN(parsed) ? val : parsed;
+  }, z.number().int().default(defaultValue));
 
 // ---------------------------------------------------------------
 // Controlled Link Schema
@@ -149,7 +157,7 @@ export const cardCarouselContentSchema = z.object({
   subtitle: z.string().max(200, 'زیرعنوان اسلایدر حداکثر ۲۰۰ کاراکتر است').optional().nullable(),
   source: z.enum(['RECIPES', 'PRODUCTS', 'SELECTED']).default('RECIPES'),
   selectedItems: z.array(z.string()).default([]),
-  maxItems: z.coerce.number().int().min(1).max(24).default(12),
+  maxItems: localizedIntSchema(12).pipe(z.number().int().min(1).max(24)),
   cta: controlledLinkSchema.optional().nullable(),
   preserved: z.record(z.string(), z.any()).optional(),
 });
@@ -202,7 +210,7 @@ export const homepageSectionInputSchema = z.object({
   template: z.string().min(1, 'قالب سکشن الزامی است').trim(),
   status: sectionStatusEnum.default('DRAFT'),
   background: sectionBackgroundEnum.default('NONE'),
-  sortOrder: z.coerce.number().int().default(0),
+  sortOrder: localizedIntSchema(0),
   content: z.record(z.string(), z.any()).default({}),
 });
 

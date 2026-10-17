@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { normalizePersianDigits } from '@/lib/domain-utils';
+import { normalizeDigits } from '@/lib/domain-utils';
 
 export const feedbackTypeEnum = z.enum([
   'SUGGESTION',
@@ -22,7 +22,7 @@ export const feedbackSubmissionSchema = z.object({
     .trim(),
   phone: z
     .string()
-    .transform((val) => normalizePersianDigits(val).replace(/[\s-]/g, ''))
+    .transform((val) => normalizeDigits(val).replace(/[\s-]/g, ''))
     .refine(
       (val) => /^(\+98|0)?9\d{9}$/.test(val) || /^(\+98|0)[1-8]\d{8,9}$/.test(val),
       'شماره تماس وارد شده معتبر نیست (مثال: 09123456789)'
@@ -46,11 +46,11 @@ export const feedbackStatusUpdateSchema = z.object({
 export const trackFeedbackSchema = z.object({
   trackingCode: z
     .string()
-    .transform((val) => normalizePersianDigits(val).trim().toUpperCase())
+    .transform((val) => normalizeDigits(val).trim().toUpperCase())
     .refine((val) => /^FB-\d+-[A-Z0-9]+$/i.test(val) || val.length >= 5, 'کد پیگیری نامعتبر است.'),
   phone: z
     .string()
-    .transform((val) => normalizePersianDigits(val).replace(/[\s-]/g, ''))
+    .transform((val) => normalizeDigits(val).replace(/[\s-]/g, ''))
     .refine(
       (val) => /^(\+98|0)?9\d{9}$/.test(val) || /^(\+98|0)[1-8]\d{8,9}$/.test(val),
       'شماره تماس وارد شده معتبر نیست (مثال: 09123456789)'

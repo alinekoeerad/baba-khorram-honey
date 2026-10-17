@@ -17,7 +17,7 @@ import React, { useState, useEffect, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { uiStringsFa } from '@/content/ui-strings.fa';
-import { slugify } from '@/lib/domain-utils';
+import { slugify, parseLocalizedInt } from '@/lib/domain-utils';
 import { ImageUploader } from '@/components/admin/image-uploader';
 import { MultiImageUploader } from '@/components/admin/multi-image-uploader';
 import { createProductAction, updateProductAction } from '@/server/actions/product-actions';
@@ -497,13 +497,16 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
               {uiStringsFa.adminProducts.sortOrder}
             </label>
             <input
-              type="number"
+              type="text"
+              inputMode="numeric"
+              dir="ltr"
               value={sortOrder}
               onChange={(e) => {
-                setSortOrder(parseInt(e.target.value, 10) || 0);
+                const parsed = parseLocalizedInt(e.target.value);
+                setSortOrder(Number.isFinite(parsed) ? parsed : 0);
                 markDirty();
               }}
-              className="w-full px-3 py-2 border border-[#EFE9E0] text-xs"
+              className="w-full px-3 py-2 border border-[#EFE9E0] text-xs font-mono"
             />
           </div>
 

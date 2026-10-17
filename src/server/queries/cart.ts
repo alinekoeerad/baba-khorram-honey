@@ -11,11 +11,12 @@
 
 import { z } from 'zod';
 import { db } from '@/server/db/client';
+import { parseLocalizedInt } from '@/lib/domain-utils';
 
 export const CartLookupLineSchema = z.object({
   optionId: z.string().min(1),
   productId: z.string().min(1),
-  qty: z.number().int().min(1).max(50),
+  qty: z.preprocess((val) => parseLocalizedInt(val), z.number().int().min(1).max(50)),
 });
 
 export const CartLookupInputSchema = z.array(CartLookupLineSchema).max(30);

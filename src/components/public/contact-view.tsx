@@ -100,8 +100,8 @@ export function ContactView({
                 <a
                   key={ch.id}
                   href={ch.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target={ch.type === 'PHONE' ? undefined : '_blank'}
+                  rel={ch.type === 'PHONE' ? undefined : 'noopener noreferrer'}
                   className="flex items-center justify-between text-xs sm:text-sm text-[#3F2A1D] hover:text-[#C58A2A] transition-colors pt-2 group font-medium"
                 >
                   <div className="flex items-center gap-2">

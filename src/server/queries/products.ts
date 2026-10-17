@@ -12,7 +12,7 @@
  */
 
 import { db } from '@/server/db/client';
-import { normalizeSearchText, CardTheme } from '@/lib/domain-utils';
+import { normalizeSearchText, toPersianDigits, CardTheme } from '@/lib/domain-utils';
 
 export interface ProductCursor {
   sortOrder: number;
@@ -86,13 +86,20 @@ export async function getPublicProducts(filters: PublicProductFilters = {}) {
     const normalized = normalizeSearchText(queryText);
     const words = normalized.split(' ').filter(Boolean);
     if (words.length > 0) {
-      where.AND = words.map((word) => ({
-        OR: [
+      where.AND = words.map((word) => {
+        const persianWord = toPersianDigits(word);
+        const orList: any[] = [
           { searchText: { contains: word } },
           { nameFa: { contains: queryText } },
+          { nameFa: { contains: word } },
           { nameOriginal: { contains: queryText, mode: 'insensitive' } },
-        ],
-      }));
+        ];
+        if (persianWord !== word) {
+          orList.push({ nameFa: { contains: persianWord } });
+          orList.push({ searchText: { contains: persianWord } });
+        }
+        return { OR: orList };
+      });
     }
   }
 

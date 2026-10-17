@@ -258,28 +258,64 @@ export function validateAndNormalizeIranianMobile(input: string | null | undefin
 }
 
 /**
+ * Converts all Persian (۰-۹ / \u06F0-\u06F9) and Arabic-Indic (٠-٩ / \u0660-\u0669) digits
+ * to standard ASCII/Latin digits (0-9).
+ */
+export function normalizeDigits(input: string | number | null | undefined): string {
+  if (input === null || input === undefined) return '';
+  return String(input)
+    .replace(/[\u06F0\u0660]/g, '0')
+    .replace(/[\u06F1\u0661]/g, '1')
+    .replace(/[\u06F2\u0662]/g, '2')
+    .replace(/[\u06F3\u0663]/g, '3')
+    .replace(/[\u06F4\u0664]/g, '4')
+    .replace(/[\u06F5\u0665]/g, '5')
+    .replace(/[\u06F6\u0666]/g, '6')
+    .replace(/[\u06F7\u0667]/g, '7')
+    .replace(/[\u06F8\u0668]/g, '8')
+    .replace(/[\u06F9\u0669]/g, '9');
+}
+
+/**
+ * Backward compatibility alias for normalizeDigits
+ */
+export const normalizePersianDigits = normalizeDigits;
+
+/**
+ * Normalizes Persian/Arabic digits, strips thousand separators (`,` / `،` / `_` / spaces),
+ * converts Persian decimal separator (`٫` / `/`) to `.`, and parses into a clean JavaScript number.
+ * Returns NaN if input cannot be parsed.
+ */
+export function parseLocalizedNumber(input: unknown): number {
+  if (input === null || input === undefined || input === '') return NaN;
+  if (typeof input === 'number') return Number.isFinite(input) ? input : NaN;
+
+  const str = normalizeDigits(String(input))
+    .trim()
+    // Strip thousand separators and spacing: English comma, Persian comma (، / \u060C), underscore, spaces
+    .replace(/[,\u060C_\s]/g, '')
+    // Convert Persian decimal separator (٫ / \u066B) or slash (/) to standard dot (.)
+    .replace(/[\u066B\/]/g, '.');
+
+  if (!str) return NaN;
+  const num = Number(str);
+  return Number.isFinite(num) ? num : NaN;
+}
+
+/**
+ * Normalizes Persian/Arabic digits and thousand separators, returning an integer.
+ * Returns NaN if input cannot be parsed.
+ */
+export function parseLocalizedInt(input: unknown): number {
+  const num = parseLocalizedNumber(input);
+  if (Number.isNaN(num)) return NaN;
+  return Math.trunc(num);
+}
+
+/**
  * Formats a number or numeric string using standard Persian digits (۰-۹).
  * Brief Section 9 constraint: UI-generated numbers must use Persian digits.
  */
-
-/**
- * Converts Persian and Arabic digits (۰-۹ and ٠-٩) to standard ASCII/Latin digits (0-9).
- */
-export function normalizePersianDigits(text: string | null | undefined): string {
-  if (!text) return '';
-  return String(text)
-    .replace(/[۰٠]/g, '0')
-    .replace(/[۱١]/g, '1')
-    .replace(/[۲٢]/g, '2')
-    .replace(/[۳٣]/g, '3')
-    .replace(/[۴٤]/g, '4')
-    .replace(/[۵٥]/g, '5')
-    .replace(/[۶٦]/g, '6')
-    .replace(/[۷٧]/g, '7')
-    .replace(/[۸٨]/g, '8')
-    .replace(/[۹٩]/g, '9');
-}
-
 export function toPersianDigits(input: number | string | null | undefined): string {
   if (input === null || input === undefined) return '';
   const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];

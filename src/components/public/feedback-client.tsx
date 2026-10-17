@@ -12,6 +12,7 @@ import { PillButton } from '@/components/ui/pill-button';
 import { WoodBackground } from '@/components/ui/wood-background';
 import { submitFeedbackAction, trackFeedbackAction } from '@/server/actions/feedback-actions';
 import { copyTextToClipboard } from '@/lib/clipboard';
+import { normalizeDigits } from '@/lib/domain-utils';
 import {
   CheckCircle2,
   MessageSquareHeart,
@@ -76,7 +77,7 @@ export function FeedbackClient() {
       try {
         const res = await submitFeedbackAction({
           name: formData.name,
-          phone: formData.phone,
+          phone: normalizeDigits(formData.phone).trim(),
           type: formData.type as any,
           message: formData.message,
           honeypot: formData.honeypot,
@@ -101,8 +102,8 @@ export function FeedbackClient() {
     startTransition(async () => {
       try {
         const res = await trackFeedbackAction({
-          trackingCode: trackCode,
-          phone: trackPhone,
+          trackingCode: normalizeDigits(trackCode).trim(),
+          phone: normalizeDigits(trackPhone).trim(),
         });
 
         if (res.success && res.data) {
@@ -300,11 +301,12 @@ export function FeedbackClient() {
                       <input
                         id="fb_phone"
                         type="tel"
+                        inputMode="numeric"
                         required
                         dir="ltr"
                         placeholder="09xxxxxxxxx"
                         value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        onChange={(e) => setFormData({ ...formData, phone: normalizeDigits(e.target.value) })}
                         disabled={isPending}
                         className="w-full px-4 py-3 bg-white border border-[#DFD3C3] text-[#3F2A1D] placeholder-[#7A6553] text-sm text-right focus:outline-none focus:border-[#C58A2A] focus:ring-2 focus:ring-[#D9A441]/30 transition-colors rounded-none disabled:opacity-50"
                       />
@@ -425,7 +427,7 @@ export function FeedbackClient() {
                     dir="ltr"
                     placeholder="FB-1405-XXXXX"
                     value={trackCode}
-                    onChange={(e) => setTrackCode(e.target.value)}
+                    onChange={(e) => setTrackCode(normalizeDigits(e.target.value))}
                     disabled={isPending}
                     className="w-full px-4 py-3 bg-white border border-[#DFD3C3] text-[#3F2A1D] placeholder-[#7A6553] text-sm font-mono focus:outline-none focus:border-[#C58A2A] focus:ring-2 focus:ring-[#D9A441]/30 transition-colors rounded-none disabled:opacity-50"
                   />
@@ -438,11 +440,12 @@ export function FeedbackClient() {
                   <input
                     id="track_phone"
                     type="tel"
+                    inputMode="numeric"
                     required
                     dir="ltr"
                     placeholder="09xxxxxxxxx"
                     value={trackPhone}
-                    onChange={(e) => setTrackPhone(e.target.value)}
+                    onChange={(e) => setTrackPhone(normalizeDigits(e.target.value))}
                     disabled={isPending}
                     className="w-full px-4 py-3 bg-white border border-[#DFD3C3] text-[#3F2A1D] placeholder-[#7A6553] text-sm text-right focus:outline-none focus:border-[#C58A2A] focus:ring-2 focus:ring-[#D9A441]/30 transition-colors rounded-none disabled:opacity-50"
                   />

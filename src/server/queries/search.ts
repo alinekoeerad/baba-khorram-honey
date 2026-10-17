@@ -9,7 +9,7 @@
  */
 
 import { db } from '@/server/db/client';
-import { normalizeSearchText } from '@/lib/domain-utils';
+import { normalizeSearchText, toPersianDigits } from '@/lib/domain-utils';
 import type { ProductCardViewModel } from '@/server/queries/products';
 import type { RecipeCardViewModel } from '@/server/queries/recipes';
 
@@ -53,26 +53,30 @@ export async function searchGlobal({
     };
   }
 
+  const buildTermCondition = (term: string) => {
+    const persianTerm = toPersianDigits(term);
+    const orList: any[] = [
+      { searchText: { contains: term } },
+      { nameFa: { contains: queryText } },
+      { nameFa: { contains: term } },
+      { nameOriginal: { contains: queryText, mode: 'insensitive' } },
+      { nameOriginal: { contains: term, mode: 'insensitive' } },
+    ];
+    if (persianTerm !== term) {
+      orList.push({ nameFa: { contains: persianTerm } });
+      orList.push({ searchText: { contains: persianTerm } });
+    }
+    return { OR: orList };
+  };
+
   const productWhere: any = {
     status: 'PUBLISHED',
-    AND: terms.map((term) => ({
-      OR: [
-        { searchText: { contains: term } },
-        { nameFa: { contains: queryText } },
-        { nameOriginal: { contains: queryText, mode: 'insensitive' } },
-      ],
-    })),
+    AND: terms.map(buildTermCondition),
   };
 
   const recipeWhere: any = {
     status: 'PUBLISHED',
-    AND: terms.map((term) => ({
-      OR: [
-        { searchText: { contains: term } },
-        { nameFa: { contains: queryText } },
-        { nameOriginal: { contains: queryText, mode: 'insensitive' } },
-      ],
-    })),
+    AND: terms.map(buildTermCondition),
   };
 
   // Run searches in parallel

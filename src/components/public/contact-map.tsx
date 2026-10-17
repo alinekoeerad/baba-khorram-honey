@@ -13,7 +13,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { MapPin, Navigation, AlertTriangle } from 'lucide-react';
-import { toPersianDigits } from '@/lib/domain-utils';
+import { toPersianDigits, parseLocalizedNumber } from '@/lib/domain-utils';
 
 export interface ContactMapProps {
   latitude?: number;
@@ -39,6 +39,12 @@ export function ContactMap({
   const [hasError, setHasError] = useState(false);
   const [currentZoom, setCurrentZoom] = useState(zoom);
 
+  // Parse & guard coordinates to prevent NaN or non-finite errors
+  const parsedLat = typeof latitude === 'number' ? latitude : parseLocalizedNumber(latitude);
+  const parsedLng = typeof longitude === 'number' ? longitude : parseLocalizedNumber(longitude);
+  const safeLat = Number.isFinite(parsedLat) ? parsedLat : 35.8339878;
+  const safeLng = Number.isFinite(parsedLng) ? parsedLng : 50.9915841;
+
   // Lazy loading via IntersectionObserver
   useEffect(() => {
     if (!containerRef.current || isLoaded) return;
@@ -62,14 +68,14 @@ export function ContactMap({
     {
       name: 'مسیریاب نشان (Neshan)',
       desc: 'نقشه و راهنمای صوتی ایرانی',
-      url: `https://nshn.ir/?lat=${latitude}&lng=${longitude}`,
+      url: `https://nshn.ir/?lat=${safeLat}&lng=${safeLng}`,
       iconText: 'نشان',
       badgeClass: 'bg-[#00A859] text-white',
     },
     {
       name: 'مسیریاب بلد (Balad)',
       desc: 'نقشه و مسیریاب هوشمند بلد',
-      url: `https://balad.ir/location?latitude=${latitude}&longitude=${longitude}`,
+      url: `https://balad.ir/location?latitude=${safeLat}&longitude=${safeLng}`,
       iconText: 'بلد',
       badgeClass: 'bg-[#2E5BFF] text-white',
     },
@@ -83,7 +89,7 @@ export function ContactMap({
     {
       name: 'ویز (Waze)',
       desc: 'Waze GPS Navigation & Traffic',
-      url: `https://waze.com/ul?ll=${latitude},${longitude}&navigate=yes`,
+      url: `https://waze.com/ul?ll=${safeLat},${safeLng}&navigate=yes`,
       iconText: 'Waze',
       badgeClass: 'bg-[#33CCFF] text-[#2B2017]',
     },
@@ -99,8 +105,8 @@ export function ContactMap({
         Math.pow(2, z)
     );
 
-  const centerTileX = lon2tile(longitude, currentZoom);
-  const centerTileY = lat2tile(latitude, currentZoom);
+  const centerTileX = lon2tile(safeLng, currentZoom);
+  const centerTileY = lat2tile(safeLat, currentZoom);
 
   // 3x3 tile grid around center
   const tiles: Array<{ x: number; y: number; offsetX: number; offsetY: number }> = [];

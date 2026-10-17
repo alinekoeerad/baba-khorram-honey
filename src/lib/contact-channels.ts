@@ -5,7 +5,7 @@
  * and Addendum A2 (Cart & Order Channel Rules).
  */
 
-import { validateAndNormalizeIranianMobile } from './domain-utils';
+import { validateAndNormalizeIranianMobile, normalizeDigits } from './domain-utils';
 
 export type ChannelType =
   | 'PHONE'
@@ -113,7 +113,7 @@ export const CHANNEL_TYPES_META: Record<ChannelType, ChannelTypeMeta> = {
  * Normalizes input value for channel storage
  */
 export function normalizeChannelValue(type: ChannelType, rawValue: string): string {
-  let val = rawValue.trim();
+  let val = normalizeDigits(rawValue).trim();
   if (type === 'YOUTUBE') {
     val = val.replace(/^(https?:\/\/)?(www\.)?youtube\.com\/(@)?/i, '');
   }
@@ -121,11 +121,6 @@ export function normalizeChannelValue(type: ChannelType, rawValue: string): stri
   if (val.startsWith('@')) {
     val = val.substring(1);
   }
-  // Convert Persian/Arabic digits to Latin digits
-  val = val
-    .replace(/[۰-۹]/g, (d) => String.fromCharCode(d.charCodeAt(0) - 1728))
-    .replace(/[٠-٩]/g, (d) => String.fromCharCode(d.charCodeAt(0) - 1584));
-
   return val;
 }
 
@@ -319,8 +314,10 @@ export function buildChannelUrl(
   const value = normalizeChannelValue(type, rawValue);
 
   switch (type) {
-    case 'PHONE':
-      return `tel:${value}`;
+    case 'PHONE': {
+      const clean = value.replace(/[^0-9+]/g, '');
+      return `tel:${clean}`;
+    }
     case 'WHATSAPP': {
       const clean = value.replace(/[^0-9]/g, '');
       return `https://wa.me/${clean}`;

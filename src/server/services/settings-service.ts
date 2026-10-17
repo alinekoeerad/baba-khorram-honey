@@ -8,6 +8,7 @@ import { db } from '../db/client';
 import { recordAuditLog } from './audit-log-service';
 import { revalidateTag, revalidatePath } from 'next/cache';
 import { validateChannel, ChannelType } from '@/lib/contact-channels';
+import { parseLocalizedNumber, parseLocalizedInt } from '@/lib/domain-utils';
 
 export interface SiteSettingsData {
   id?: number;
@@ -207,6 +208,15 @@ export class SettingsService {
     }
 
     const { logo, footerLogo, ogImage, ...dataToSave } = input as any;
+    if (dataToSave.latitude !== undefined && dataToSave.latitude !== null && dataToSave.latitude !== '') {
+      dataToSave.latitude = parseLocalizedNumber(dataToSave.latitude);
+    }
+    if (dataToSave.longitude !== undefined && dataToSave.longitude !== null && dataToSave.longitude !== '') {
+      dataToSave.longitude = parseLocalizedNumber(dataToSave.longitude);
+    }
+    if (dataToSave.mapZoom !== undefined && dataToSave.mapZoom !== null && dataToSave.mapZoom !== '') {
+      dataToSave.mapZoom = parseLocalizedInt(dataToSave.mapZoom);
+    }
     const current = await this.getSettings();
     const updated = await db.siteSettings.upsert({
       where: { id: 1 },

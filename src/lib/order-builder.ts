@@ -9,7 +9,7 @@
  * - Verified channel URL generators with copy-then-open fallbacks.
  */
 
-import { toPersianDigits } from '@/lib/domain-utils';
+import { toPersianDigits, normalizeDigits } from '@/lib/domain-utils';
 import type { ChannelType } from '@prisma/client';
 
 export interface OrderItemLine {
@@ -180,7 +180,7 @@ export function buildChannelOrderLink(
   switch (type) {
     case 'PHONE': {
       // Clean phone number for tel/sms protocols with iOS vs Android support
-      const cleanPhone = value.replace(/[^0-9+]/g, '');
+      const cleanPhone = normalizeDigits(value).replace(/[^0-9+]/g, '');
       const separator = options?.isIos ? '&' : '?';
       return {
         directUrl: `sms:${cleanPhone}${separator}body=${encodedText}`,
@@ -191,7 +191,7 @@ export function buildChannelOrderLink(
 
     case 'WHATSAPP': {
       // Digits only strictly in international format starting with 98 (e.g. 989389196010)
-      let cleanPhone = value.replace(/[^0-9]/g, '');
+      let cleanPhone = normalizeDigits(value).replace(/[^0-9]/g, '');
       if (cleanPhone.startsWith('00')) {
         cleanPhone = cleanPhone.substring(2);
       } else if (cleanPhone.startsWith('0')) {

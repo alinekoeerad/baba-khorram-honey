@@ -62,7 +62,7 @@ export function AdminHeader({ user }: AdminHeaderProps) {
 
   return (
     <>
-      <header className="h-16 bg-white border-b border-[#EFE9E0] px-4 md:px-8 flex items-center justify-between gap-4 sticky top-0 z-30 shadow-2xs">
+      <header className="sticky top-0 z-30 flex h-20 min-h-[5rem] w-full shrink-0 items-center justify-between border-b border-[#E5D5C5] bg-white px-6">
         {/* Right Section in RTL: Mobile Menu Toggle & Dynamic Breadcrumbs (ADM-UI-03) */}
         <div className="flex items-center gap-3">
           <button
@@ -111,7 +111,7 @@ export function AdminHeader({ user }: AdminHeaderProps) {
           <button
             type="button"
             onClick={handleOpenSearch}
-            className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 bg-stone-100 hover:bg-stone-200 border border-stone-200 text-stone-600 rounded-none text-xs font-bold transition-colors cursor-pointer"
+            className="hidden sm:inline-flex items-center gap-2 px-3.5 h-12 bg-stone-100 hover:bg-stone-200 border border-stone-200 text-stone-600 rounded-none text-xs font-bold transition-colors cursor-pointer shrink-0"
           >
             <Search className="w-3.5 h-3.5" />
             <span>جستجو...</span>
@@ -119,10 +119,11 @@ export function AdminHeader({ user }: AdminHeaderProps) {
               Ctrl K
             </kbd>
           </button>
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-[#FDFBF8] border border-[#D5C7B8] rounded-none text-xs">
-            <UserIcon className="w-4 h-4 text-[#F59E0B]" />
-            <div className="flex flex-col text-right">
-              <span className="font-bold text-[#2B2017]">{user.name || user.email}</span>
+
+          <div className="py-1.5 px-3.5 h-12 flex items-center gap-2.5 border border-[#D5C7B8] bg-[#FAF8F5] rounded-none text-xs shrink-0">
+            <UserIcon className="w-4 h-4 text-[#F59E0B] shrink-0" />
+            <div className="flex flex-col text-right leading-tight">
+              <span className="font-bold text-[#2B2017]">{user.name || (user.email === 'admin@honey.ir' ? 'مدیر کل' : user.email)}</span>
               <span className="text-[10px] text-stone-500 font-mono" dir="ltr">
                 {user.email}
               </span>
