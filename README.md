@@ -1,102 +1,281 @@
-# Persian Honey Project - Foundation & CMS
+# 🍯 وب‌سایت و سامانه مدیریت محتوای عسل باباخُرم (Persian Honey Brand Website + CMS)
 
-A production-grade Persian (RTL) website and custom CMS, built with Next.js 16 (App Router), React 19, TypeScript 7, Tailwind CSS v4, and PostgreSQL.
-
----
-
-## 🍯 Tech Stack & Foundation
-
-- **Framework**: Next.js 16.4.0 (App Router, Server Components by default)
-- **Runtime Target**: Node.js >= 22.12.0 (Node 24 LTS specified in `.nvmrc` and `engines`)
-- **Language**: TypeScript 7.0.2 (`strict: true`)
-- **Styling**: Tailwind CSS 4.3.3 using `@theme` and CSS Logical Properties (`ms-`, `me-`, `ps-`, `pe-`, `text-start`, `start-`, `end-`)
-- **UI System**: shadcn/ui with RTL configuration and amber/honey theme
-- **Typography**: Self-hosted official Vazirmatn Variable Font (`Vazirmatn[wght].woff2`, v33.003, SIL OFL 1.1), zero external font/CDN runtime requests
-- **Database**: PostgreSQL 16 (via Docker Compose in local development, neutral db name: `honey_dev`)
-- **Validation**: Zod 4.6.5 (fail-fast environment and mutation schemas)
-- **Testing**: Vitest 5.0.3 (Unit tests) & Playwright 1.64.0 (E2E smoke tests for Desktop Chrome, Mobile Chrome, Mobile Safari)
-- **Package Manager**: pnpm 9.15.0
+یک پلتفرم فروشگاهی و سامانه اختصاصی مدیریت محتوا (CMS) با طراحی مدرن ایرانی (RTL)، ساخته شده با **Next.js 16 (App Router)**، **React 19**، **TypeScript**، **Tailwind CSS v4** و **PostgreSQL**.
 
 ---
 
-## 🚀 Quick Start & Setup
-
-### 1. Prerequisites
-- **Node.js**: v24 LTS (minimum v22.12.0)
-- **pnpm**: v9.0.0+
-- **Docker**: For running local PostgreSQL development database
-
-### 2. Environment Configuration
-Copy `.env.example` to create your local `.env.local` configuration:
-```bash
-cp .env.example .env.local
-```
-Key variables validated at boot:
-- `DATABASE_URL`: PostgreSQL connection string (default: `postgresql://postgres:postgres@localhost:5432/honey_dev?schema=public`)
-- `SITE_URL`: Base canonical URL (e.g. `http://localhost:3000`)
-- `UPLOAD_DIR`: Local media directory (`./uploads`)
-- `ORDER_LINK_SECRET`: 32-character AES-256-GCM encryption key
-
-### 3. Start Local PostgreSQL Database
-Run the development database container with automated healthcheck:
-```bash
-docker compose -f docker-compose.dev.yml up -d
-```
-
-### 4. Install Dependencies
-```bash
-pnpm install --frozen-lockfile
-```
-
-### 5. Start Development Server
-```bash
-pnpm dev
-```
-Open [http://localhost:3000](http://localhost:3000) in your browser to view the temporary foundation demo page.
+## 📑 فهرست مطالب
+- [درباره پروژه](#-درباره-پروژه)
+- [امکانات فروشگاه عمومی (Storefront)](#-امکانات-فروشگاه-عمومی-storefront)
+- [امکانات پنل مدیریت و CMS (Admin Panel)](#-امکانات-پنل-مدیریت-و-cms-admin-panel)
+- [پشته فناوری (Tech Stack)](#-پشته-فناوری-tech-stack)
+- [ساختار مخزن و ماژول‌ها](#-ساختار-مخزن-و-ماژولها)
+- [راهنمای نصب و راه‌اندازی سریع](#-راهنمای-نصب-و-راهاندازی-سریع)
+- [تنظیم متغیرهای محیطی (.env)](#-تنظیم-متغیرهای-محیطی-env)
+- [دستورات خط فرمان (Scripts)](#-دستورات-خط-فرمان-scripts)
+- [تست و تضمین کیفیت نرم‌افزار](#-تست-و-تضمین-کیفیت-نرم‌افزار)
+- [معماری دیتابیس و داده‌ها](#-معماری-دیتابیس-و-داده‌ها)
+- [دستورالعمل استقرار در محیط پروداکشن](#-دستورالعمل-استقرار-در-محیط-پروداکشن)
 
 ---
 
-## 🛠 Available Scripts
+## 🌿 درباره پروژه
 
-| Command | Description |
-|---|---|
-| `pnpm dev` | Starts local Next.js development server on `http://localhost:3000` |
-| `pnpm build` | Compiles production-ready standalone build |
-| `pnpm start` | Runs the compiled production build |
-| `pnpm lint` | Runs ESLint analysis across `src/` and `tests/` (excluding `/reference` and `/data`) |
-| `pnpm typecheck` | Executes strict TypeScript compiler verification (`tsc --noEmit`) |
-| `pnpm test` | Runs Vitest unit tests |
-| `pnpm check` | Runs full quality gate: `typecheck && lint && test && build` (fails fast) |
-| `pnpm test:db` | Runs database-integrated tests against dedicated `honey_test` database |
-| `pnpm db:test:setup` | Prepares and migrates the separate `honey_test` database |
-| `pnpm test:e2e` | Runs Playwright E2E tests (Desktop Chrome, Mobile Chrome, Mobile Safari) |
-| `pnpm exec playwright install` | Installs browser binaries for Playwright E2E testing |
+برند **«عسل باباخُرم»** با سال‌ها تجربه در زمینه پرورش زنبور عسل و برداشت تخصصی عسل‌های تک‌گل و چندگل ارگانیک در ارتفاعات و مراتع بکر ایران، این وب‌سایت را با هدف عرضه مستقیم و بدون واسطه عسل‌های شناسنامه‌دار، معرفی خواص دارویی در طب سنتی ایرانی، و ساده‌سازی حداکثری فرآیند سفارش‌گیری آنلاین پایه‌گذاری کرده است.
+
+این سامانه به صورت کاملاً سفارشی و بدون استفاده از وردپرس طراحی شده تا بالاترین سرعت لود، امنیت فوق‌العاده، سئوی استاندارد و سازگاری کامل با زیرساخت‌های اینترنت داخل ایران (پیام‌رسان‌های بله و ایتا، مسیریاب‌های نشان و بلد) را برای مشتریان به ارمغان آورد.
 
 ---
 
-## 📁 Repository Structure
+## 🛒 امکانات فروشگاه عمومی (Storefront)
+
+1. **طراحی بصری لوکس با تم عسل و شکلات (`#D97706` و `#2B2017`)**:
+   - بهره‌گیری از تایپوگرافی رسمی و خودمیزبان **وزیرمتن (Vazirmatn Variable)** بدون وابستگی به CDN خارجی.
+   - پشتیبانی عمیق از جهت‌بندی راست‌به‌چپ (RTL) با ویژگی‌های منطقی مدرن در Tailwind CSS v4.
+   - لوگوی وکتوری و باکیفیت بهینه‌سازی‌شده برای نمایشگرهای رتینا و موبایل.
+
+2. **کاتالوگ جامع محصولات و دسته‌بندی‌ها**:
+   - معرفی ویژگی‌های تخصصی هر عسل شامل: طبع غذایی، ویتامین‌ها و املاح، فصل و منطقه برداشت، رنگ و بافت، و موارد منع مصرف.
+   - گالری تصاویر بهینه‌شده به همراه انتخابگر هوشمند وزن و بسته‌بندی شیشه‌ای.
+   - نمایش وضعیت زنده موجودی انبار با نشان‌های هشداردهنده بدون برهم‌زدن نظم صفحه.
+
+3. **بانک جامع دستورهای درمانی و ترکیب‌های طب سنتی (Honey Recipes)**:
+   - آموزش تهیه انواع معجون‌ها و نوشیدنی‌های سلامتی بر پایه عسل طبیعی با دستورالعمل گام‌به‌گام.
+   - نمایش محصولات مرتبط با هر دستور جهت سفارش سریع با یک کلیک.
+
+4. **فرآیند ثبت سفارش ۱-کلیکه و بدون اصطکاک (Frictionless 1-Click Checkout)**:
+   - بدون نیاز به ثبت‌نام اجباری، ایجاد رمز عبور یا ورود مراحل دست‌وپاگیر.
+   - مشتری صرفاً نام، شماره همراه و آدرس/توضیحات را وارد کرده و با یک کلیک روی **«ثبت نهایی سفارش»** کد پیگیری یکتا (`e.g. 4KDE-7V`) دریافت می‌کند.
+   - اتصال به پیام‌رسان‌های ایرانی و بین‌المللی (بله، ایتا، واتساپ، تلگرام و تماس/پیامک) با پیش‌فاکتور متن‌باز و قالب‌بندی‌شده.
+   - پیوند رمزنگاری‌شده AES-256-GCM برای اشتراک‌گذاری یا مشاهده فاکتور در هر زمان.
+
+5. **موقعیت‌یابی و ناوبری دقیق فروشگاه**:
+   - درج مختصات جغرافیایی دقیق شعبه مرکزی فروشگاه (`35.8339878, 50.9915841`).
+   - دکمه‌های مستقیم مسیریابی در اپلیکیشن‌های **نشان**، **بلد**، **ویز (Waze)** و **گوگل مپس (Google Maps)**.
+
+6. **جستجوی هوشمند سراسری و صندوق ارتباط با ما**:
+   - جستجوی سریع در عنوان، متن و خواص محصولات و مقالات در سرور با محدودسازی نرخ درخواست‌ها.
+   - فرم بازخورد، مشاوره و پیشنهادات مشتریان با تایید اعتبار Zod.
+
+---
+
+## ⚡ امکانات پنل مدیریت و CMS (Admin Panel)
+
+1. **داشبورد مانیتورینگ و آمار عملکرد فروشگاه (Store Monitoring & Analytics)**:
+   - **نمودار میله‌ای روند ثبت سفارشات (۷ روز اخیر)** با ارزش ریالی و میانگین روزانه با SVG خالص و بدون پکیج‌های خارجی.
+   - **نمودار تفکیک وضعیت چرخه سفارشات** (جدید، هماهنگ‌شده، ارسال‌شده، لغو شده).
+   - **جدول رتبه‌بندی ۵ محصول پرفروش** همراه با تعداد ظروف خریداری‌شده و درصد محبوبیت.
+   - **توزیع کانال‌های ارتباطی ترجیحی مشتریان** (بله، ایتا، واتساپ، تلگرام، تماس).
+
+2. **مدیریت سفارشات و تاریخچه دائمی مشتریان**:
+   - مشاهده لیست کامل سفارشات با فیلتر وضعیت و جستجوی کد پیگیری و شماره تلفن.
+   - امکان تغییر وضعیت سفارش به «هماهنگ شده»، «ارسال شده» و «لغو شده» به همراه تغییر تاریخچه.
+   - محافظت در برابر حذف خودکار: سفارشات ثبت‌شده به صورت همیشگی در سیستم حفظ می‌شوند.
+
+3. **سامانه مدیریت محتوای صفحه اصلی (Visual Homepage CMS Builder)**:
+   - امکان افزودن، ویرایش، جابجایی (Sort Order) و غیرفعال‌سازی سکشن‌های مختلف صفحه اصلی.
+   - انتخاب قالب‌های گرافیکی آماده و پیونددهی کنترل‌شده به محصولات یا دستورها.
+
+4. **مدیریت کاتالوگ و انبارداری محصولات و دستورها**:
+   - تعریف محصولات جدید با خواص چندگانه، گزینه‌های وزنی و گالری چندتصویری.
+   - کنترل سریع وضعیت انتشار (منتشرشده، پیش‌نویس، بایگانی) و نشان ویژه (Featured).
+   - عملیات گروهی (Bulk Actions) برای تغییر وضعیت محصولات منتخب.
+
+5. **دیزاین سیستم یکپارچه با زاویه ۹۰ درجه (`rounded-none`)**:
+   - رعایت سخت‌گیرانه لبه‌های شارپ در تمام کارت‌ها، بج‌ها، دکمه‌ها، جداول و مدال‌ها.
+   - هشدارهای با کنتراست بالا (سبز زمردی برای موفقیت و قرمز شفاف برای خطا) مطابق با استاندارد WCAG.
+
+6. **امنیت و مدیریت دسترسی مدیران**:
+   - ورود امن مبتنی بر نشست‌های کوکی رمزگذاری‌شده `HttpOnly`.
+   - هش اختصاصی گذرواژه‌ها با الگوریتم قدرتمند Argon2id و Fallback خودکار به Scrypt.
+   - امکان ایجاد و حذف مدیران با **حفاظت دائم از حساب کاربری مدیر کل اصلی** (`admin@honey.ir`).
+   - ثبت وقایع و لاگ امنیتی (Audit Log) برای کلیه فعالیت‌های ثبت، ویرایش و حذف در پنل.
+
+---
+
+## 🛠 پشته فناوری (Tech Stack)
+
+| حوزه | ابزار / فناوری | نسخه / توضیحات |
+|---|---|---|
+| **فریم‌ورک اصلی** | Next.js | 16.4.0 (App Router, Server Actions) |
+| **موتور رندرینگ** | React | 19.0.0 (Server Components by default) |
+| **زبان برنامه‌نویسی** | TypeScript | 7.0.2 با استانداردهای سخت‌گیرانه `strict: true` |
+| **سیستم استایل** | Tailwind CSS | v4.3.3 با استفاده از `@theme` و ساختار منطقی RTL |
+| **پایگاه داده** | PostgreSQL | Prisma ORM 5.x با لایه اختصاصی JSON Fallback برای توسعه آفلاین |
+| **اعتبارسنجی** | Zod | اعتبارسنجی مقادیر فرم‌ها و متغیرهای محیطی |
+| **مدیریت وضعیت کلاینت** | Zustand | مدیریت سبد خرید با ماندگاری در LocalStorage |
+| **آیکون‌ها** | Lucide React | آیکون‌های وکتوری مدرن و سبک |
+| **تست و آزمون** | Vitest & Playwright | ۱۳۵ تست واحد موفق + تست‌های دودویی E2E در مرورگرهای دسکتاپ و موبایل |
+| **امنیت کلمه عبور** | @node-rs/argon2 | هش پیشرفته گذرواژه‌ها با پشتیبانی از ساب‌روتین بومی |
+
+---
+
+## 📁 ساختار مخزن و ماژول‌ها
 
 ```
-├── prisma/                    # Database schema and seed migrations (Phase 1)
-├── public/fonts/              # Official Vazirmatn variable font and OFL.txt license
+├── data/
+│   └── seed/                  # داده‌های اولیه محصولات، تنظیمات، مدیران و سفارشات
+├── prisma/
+│   └── schema.prisma          # مدل‌های داده‌ای، روابط و نمایه‌های دیتابیس
+├── public/
+│   ├── fonts/                 # فونت خودمیزبان وزیرمتن متغیر (Vazirmatn)
+│   └── images/                # آیکون‌ها، تصاویر محصول و نشان تجاری
 ├── src/
-│   ├── app/                   # Next.js App Router (public and admin layouts)
-│   ├── components/            # UI primitives (PillButton, Cards) and domain components
-│   ├── content/               # Centralized Persian strings (ui-strings.fa.ts)
-│   ├── lib/                   # Utility functions and Zod env validator
-│   └── server/                # Server-only modules (db, auth, queries, actions, services, storage, search)
+│   ├── app/
+│   │   ├── (public)/          # صفحات عمومی فروشگاه (خانه، محصولات، دستورها، سبد خرید، تماس)
+│   │   ├── admin/             # پنل مدیریت اختصاصی و مسیرهای لاگین و پیش‌نمایش
+│   │   └── api/               # اندپوینت‌های وب‌هوک و آپلود مدیا
+│   ├── components/
+│   │   ├── admin/             # کامپوننت‌های پنل مدیریت (فرم‌ها، آپلودر، هشدارها، جداول)
+│   │   ├── public/            # کامپوننت‌های ویترین فروشگاه (سبد خرید، هدر، منو، نقشه)
+│   │   └── ui/                # کامپوننت‌های پایه رابط کاربری (دکمه‌ها، ورودی‌ها)
+│   ├── content/               # متن‌های ثابت فارسی و عبارات رابط کاربری (ui-strings.fa.ts)
+│   ├── lib/                   # ابزارهای کمکی، کلیپ‌بورد، اعتبار سنجی محیطی Zod
+│   └── server/
+│       ├── actions/           # توابع Next.js Server Actions برای جهش داده‌ها
+│       ├── auth/              # احراز هویت، نشست‌ها و رمزنگاری گذرواژه‌ها
+│       ├── db/                # کلاینت پایگاه داده و لایه همگام‌ساز فایل/دیتابیس
+│       ├── queries/           # توابع واکشی داده برای رندر سروری
+│       └── services/          # سرویس‌های سفارشات، ممیزی، سئو، تنظیمات و وب‌هوک‌ها
 ├── tests/
-│   ├── unit/                  # Vitest unit test suite
-│   └── e2e/                   # Playwright end-to-end smoke test suite
-├── docs/                      # Progress roadmap, architecture, and project briefs
-├── data/source/               # Authoritative raw content data (excluded from build)
-└── reference/                 # Read-only visual prototype (strictly excluded from builds)
+│   ├── unit/                  # تست‌های واحد Vitest (اعتبارسنجی، محاسبات قیمت، امنیت)
+│   └── e2e/                   # سناریوهای آزمون E2E با Playwright
+└── uploads/                   # محل ذخیره‌سازی تصاویر آپلودشده فروشگاه
 ```
 
 ---
 
-## 📄 License & Notes
+## 🚀 راهنمای نصب و راه‌اندازی سریع
 
-- Vazirmatn font is licensed under the SIL Open Font License, Version 1.1 (`public/fonts/OFL.txt`).
-- All Persian user-facing text resides in `src/content/ui-strings.fa.ts`.
-- The prototype folder `/reference` is a visual reference only and is strictly excluded from all builds, typechecking, and linting.
+### پیش‌نیازها:
+- **Node.js**: نسخه 22.12.0 به بالا (نسخه پیشنهادی: Node.js 24 LTS)
+- **pnpm**: نسخه 9 به بالا (`npm i -g pnpm`)
+- **Docker** (اختیاری جهت اجرای محلی دیتابیس PostgreSQL)
+
+### مراحل راه‌اندازی:
+
+1. **کلون کردن مخزن**:
+   ```bash
+   git clone https://github.com/your-username/honey-website.git
+   cd honey-website
+   ```
+
+2. **نصب وابستگی‌ها**:
+   ```bash
+   pnpm install --frozen-lockfile
+   ```
+
+3. **تنظیم فایل پیکربندی محیطی**:
+   ```bash
+   cp .env.example .env.local
+   ```
+   *(مقادیر داخل `.env.local` را در صورت تمایل تنظیم کنید)*
+
+4. **راه‌اندازی پایگاه داده (اختیاری)**:
+   پروژه دارای یک لایه دیتابیس هوشمند بدون وقفه است که حتی بدون نیاز به اجرای PostgreSQL می‌تواند داده‌ها را از `data/seed` بخواند و ذخیره کند. اما برای اتصال به PostgreSQL از طریق داکر می‌توانید اجرا کنید:
+   ```bash
+   docker compose -f docker-compose.dev.yml up -d
+   pnpm prisma db push
+   ```
+
+5. **اجرای سرور توسعه**:
+   ```bash
+   pnpm dev
+   ```
+   اکنون وب‌سایت در آدرس [http://localhost:3000](http://localhost:3000) و پنل مدیریت در آدرس [http://localhost:3000/admin](http://localhost:3000/admin) در دسترس است.
+
+---
+
+## 🔐 اطلاعات حساب کاربری پیش‌فرض مدیر
+
+- **آدرس ورود به پنل**: `http://localhost:3000/admin/login`
+- **نام کاربری / ایمیل**: `admin@honey.ir`
+- **کلمه عبور**: `Admin@123456`
+
+---
+
+## ⚙ تنظیم متغیرهای محیطی (.env)
+
+| متغیر | ضرورت | توضیح | مقدار نمونه |
+|---|---|---|---|
+| `DATABASE_URL` | الزامی برای پروداکشن | رشته اتصال به دیتابیس PostgreSQL | `postgresql://postgres:pass@localhost:5432/honey_db` |
+| `SITE_URL` | الزامی | آدرس اصلی دامنه سایت برای سئو و متادیتا | `http://localhost:3000` یا `https://honey.ir` |
+| `ORDER_LINK_SECRET` | الزامی | کلید امنیتی ۳۲ کاراکتری جهت رمزگذاری پیوندهای سفارش | یک رشته رندوم ۳۲ حرفی |
+| `UPLOAD_DIR` | اختیاری | مسیر ذخیره فایل‌ها و تصاویر آپلودشده | `./uploads` |
+| `BALE_BOT_TOKEN` | اختیاری | توکن ربات بله جهت دریافت نوتیفیکیشن سفارشات | `123456:ABC-DEF...` |
+| `BALE_CHAT_ID` | اختیاری | شناسه کانال یا پی‌وی مدیر در بله | `12345678` |
+| `EITAA_BOT_TOKEN` | اختیاری | توکن وب‌سرویس ایتا یار | `bot123456...` |
+| `EITAA_CHAT_ID` | اختیاری | شناسه دریافت‌کننده در ایتا | `user_or_channel_id` |
+
+---
+
+## 📜 دستورات خط فرمان (Scripts)
+
+| دستور | کارکرد |
+|---|---|
+| `pnpm dev` | راه‌اندازی سرور توسعه در حالت زنده |
+| `pnpm build` | کامپایل پروژه برای محیط پروداکشن |
+| `pnpm start` | اجرای نسخه کامپایل‌شده پروداکشن |
+| `pnpm typecheck` | بررسی کامل تطابق قوانین تایپ‌اسکریپت (`tsc --noEmit`) |
+| `pnpm test` | اجرای آزمون‌های واحد Vitest |
+| `pnpm test:e2e` | اجرای سناریوهای کامل مرورگری Playwright |
+| `pnpm check` | بررسی همه‌جانبه سیستم: تست، تایپ‌چک، لینت و بیلد |
+| `pnpm prisma studio` | باز کردن پنل بصری مدیریت مستقیم رکوردهای دیتابیس |
+
+---
+
+## 🧪 تست و تضمین کیفیت نرم‌افزار
+
+پروژه دارای ۱۵ سوئیت تست واحد مجزا با **۱۳۵ تست خودکار** است که کلیه عملکردهای حساس زیر را اعتبارسنجی می‌کنند:
+- اعتبارسنجی اقلام سبد خرید و ممانعت از ارسال قیمت‌های دستکاری‌شده به سرور.
+- رمزنگاری متقارن AES-256-GCM پیوندهای به اشتراک‌گذاری سفارش.
+- بررسی الگوریتم‌های هشینگ گذرواژه (Argon2id و Scrypt).
+- کنترل نرخ درخواست‌های جستجو و امنیت متغیرهای محیطی با Zod.
+
+برای اجرای کلیه آزمون‌ها:
+```bash
+pnpm test
+```
+
+---
+
+## 🌐 دستورالعمل استقرار در محیط پروداکشن
+
+جهت استقرار در سرورهای ابری ایران (مانند آروان، پارس‌پک، هاست‌ایران) یا پلتفرم‌های ابری (مانند لیارا - Liara):
+
+1. **مشخصات سرور پیشنهادی**:
+   - پردازنده: ۲ الی ۴ هسته
+   - حافظه رم: حداقل ۴ گیگابایت (جهت بیلد سریع Next.js بدون خطای کمبود حافظه)
+   - فضای دیسک: حداقل ۲۰ گیگابایت NVMe SSD
+   - سیستم‌عامل: Ubuntu 22.04 LTS / 24.04 LTS
+
+2. **استقرار سریع با Docker**:
+   ```bash
+   docker build -t honey-website:latest .
+   docker run -d -p 3000:3000 --env-file .env.production honey-website:latest
+   ```
+
+3. **تنظیم Nginx Reverse Proxy و گواهی رایگان SSL (Certbot)**:
+   ```nginx
+   server {
+       server_name yourdomain.ir www.yourdomain.ir;
+
+       location / {
+           proxy_pass http://localhost:3000;
+           proxy_http_version 1.1;
+           proxy_set_header Upgrade $http_upgrade;
+           proxy_set_header Connection 'upgrade';
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+           proxy_set_header X-Forwarded-Proto $scheme;
+       }
+   }
+   ```
+
+---
+
+## 🍯 مشارکت و توسعه
+
+توسعه‌داده‌شده با افتخار برای برند **عسل باباخُرم**. تمامی حقوق مادی و معنوی برای صاحب نشان محفوظ است.
+جهت گزارش باگ یا پیشنهاد قابلیت جدید، لطفاً یک Issue جدید ثبت فرمایید.
