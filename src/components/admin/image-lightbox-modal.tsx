@@ -55,12 +55,24 @@ export function ImageLightboxModal({
 
   return (
     <div
-      className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-3 sm:p-6"
+      className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-label="بزرگنمایی تصویر"
     >
+      {/* 1. Fixed Top-Left Floating Close Button (Never pushed off-screen) */}
+      <button
+        type="button"
+        onClick={onClose}
+        className="fixed top-5 left-5 z-[110] flex items-center gap-2 bg-[#2B2017] hover:bg-red-700 text-white border-2 border-[#F59E0B] px-4 py-2.5 text-sm font-bold shadow-2xl transition-colors cursor-pointer rounded-none"
+        title="بستن (Esc)"
+        aria-label="بستن پنجره بزرگنمایی"
+      >
+        <X className="w-5 h-5 text-[#F59E0B]" strokeWidth={2.5} />
+        <span>بستن (Esc)</span>
+      </button>
+
       <div
         className="relative flex flex-col items-center max-w-[95vw] max-h-[92vh] w-auto"
         onClick={(e) => e.stopPropagation()}
@@ -101,7 +113,7 @@ export function ImageLightboxModal({
             <button
               type="button"
               onClick={onClose}
-              className="h-8 px-3 bg-[#D97706] hover:bg-[#B45309] text-white border border-[#D97706] rounded-none text-xs font-bold inline-flex items-center gap-1.5 transition-colors cursor-pointer"
+              className="h-8 px-3 bg-[#D97706] hover:bg-red-700 text-white border border-[#D97706] rounded-none text-xs font-bold inline-flex items-center gap-1.5 transition-colors cursor-pointer"
               title="بستن (Esc)"
               aria-label="بستن پنجره بزرگنمایی"
             >
@@ -111,8 +123,19 @@ export function ImageLightboxModal({
           </div>
         </div>
 
-        {/* High-Resolution Centered Image */}
+        {/* High-Resolution Centered Image Frame */}
         <div className="relative border-2 border-[#D97706] bg-[#1A130E] flex items-center justify-center overflow-hidden rounded-none shadow-2xl">
+          {/* 2. Direct Corner Close Button on Image Frame */}
+          <button
+            type="button"
+            onClick={onClose}
+            className="absolute top-2 left-2 z-20 w-10 h-10 bg-black/80 hover:bg-red-600 text-white border border-white/30 flex items-center justify-center text-xl font-bold transition-colors cursor-pointer rounded-none shadow-lg"
+            title="بستن (Esc)"
+            aria-label="بستن پنجره"
+          >
+            ✕
+          </button>
+
           <img
             src={imageUrl}
             alt={alt || caption || 'بزرگنمایی تصویر'}

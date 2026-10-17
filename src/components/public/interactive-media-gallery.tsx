@@ -274,7 +274,22 @@ export function InteractiveMediaGallery({
         <div
           className="fixed inset-0 z-[100] bg-black/92 backdrop-blur-md flex flex-col justify-between items-center p-4 sm:p-6 select-none animate-in fade-in duration-200"
           onClick={() => setIsLightboxOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="بزرگنمایی تصویر"
         >
+          {/* 1. Fixed Top-Left Floating Close Button (Never pushed off-screen) */}
+          <button
+            type="button"
+            onClick={() => setIsLightboxOpen(false)}
+            className="fixed top-5 left-5 z-[110] flex items-center gap-2 bg-[#2B2017] hover:bg-red-700 text-white border-2 border-[#F59E0B] px-4 py-2.5 text-sm font-bold shadow-2xl transition-colors cursor-pointer rounded-none"
+            title="بستن (Esc)"
+            aria-label="بستن پنجره بزرگنمایی"
+          >
+            <X className="w-5 h-5 text-[#F59E0B]" strokeWidth={2.5} />
+            <span>بستن (Esc)</span>
+          </button>
+
           {/* Header Bar */}
           <div
             className="w-full max-w-5xl flex items-center justify-between text-white pb-3 border-b border-stone-800"
@@ -306,11 +321,11 @@ export function InteractiveMediaGallery({
               <button
                 type="button"
                 onClick={() => setIsLightboxOpen(false)}
-                className="flex items-center gap-1 px-3 py-1 bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-bold transition-colors rounded-none border border-stone-700 cursor-pointer"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 bg-[#2B2017] hover:bg-red-700 text-white text-xs font-bold transition-colors rounded-none border border-amber-500/50 cursor-pointer shadow-sm"
                 title="بستن (Esc)"
               >
-                <X className="w-4 h-4" />
-                <span>بستن</span>
+                <X className="w-4 h-4 text-amber-400" />
+                <span>بستن (Esc)</span>
               </button>
             </div>
           </div>
@@ -333,12 +348,25 @@ export function InteractiveMediaGallery({
               </button>
             )}
 
-            {/* Display High-Res Image */}
-            <img
-              src={currentSlide.url || fallbackImageUrl || '/images/honey-jar.jpg'}
-              alt={currentSlide.alt || title}
-              className="max-w-[88vw] max-h-[72vh] object-contain rounded-none border-2 border-stone-800 shadow-2xl bg-[#140E0A]"
-            />
+            {/* Display High-Res Image Frame with Direct Corner Close Button */}
+            <div className="relative flex items-center justify-center">
+              {/* 2. Direct Corner Close Button on Image Frame */}
+              <button
+                type="button"
+                onClick={() => setIsLightboxOpen(false)}
+                className="absolute top-2 left-2 z-20 w-10 h-10 bg-black/80 hover:bg-red-600 text-white border border-white/30 flex items-center justify-center text-xl font-bold transition-colors cursor-pointer rounded-none shadow-lg"
+                title="بستن (Esc)"
+                aria-label="بستن پنجره"
+              >
+                ✕
+              </button>
+
+              <img
+                src={currentSlide.url || fallbackImageUrl || '/images/honey-jar.jpg'}
+                alt={currentSlide.alt || title}
+                className="max-w-[88vw] max-h-[72vh] object-contain rounded-none border-2 border-stone-800 shadow-2xl bg-[#140E0A]"
+              />
+            </div>
 
             {/* Next Navigation Button */}
             {slides.length > 1 && (
