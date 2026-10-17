@@ -27,87 +27,27 @@ import { getPublicRecipes } from '@/server/queries/recipes';
 
 export const revalidate = 3600;
 
-// Canonical fallback recipes matching database slugs
-const CANONICAL_RECIPES = [
-  {
-    id: 'rec-1',
-    title: 'شربت آمالاکی و عسل تقویت سیستم ایمنی',
-    slug: 'amalaki-panaka',
-    imageUrl: '/images/recipe-1.jpg',
-    theme: 'green' as const,
-  },
-  {
-    id: 'rec-2',
-    title: 'چای آرامش‌بخش گریپ‌فروت و عسل',
-    slug: 'fengmi-youzi-cha',
-    imageUrl: '/images/recipe-2.jpg',
-    theme: 'orange' as const,
-  },
-  {
-    id: 'rec-3',
-    title: 'معجون گرم هاتشیمیتسو شوگایو با زنجبیل',
-    slug: 'hachimitsu-shogayu',
-    imageUrl: '/images/recipe-3.jpg',
-    theme: 'yellow' as const,
-  },
-  {
-    id: 'rec-4',
-    title: 'دمنوش نیوک موت گیاهی با شهد عسل',
-    slug: 'nuoc-mot',
-    imageUrl: '/images/recipe-4.jpg',
-    theme: 'burgundy' as const,
-  },
-  {
-    id: 'rec-5',
-    title: 'لیموناد خنک سنتی با شهد عسل طبیعی',
-    slug: 'greek-homemade-lemonad-with-honey',
-    imageUrl: '/images/recipe-5.jpg',
-    theme: 'green' as const,
-  },
-  {
-    id: 'rec-6',
-    title: 'شربت سکنجبین عسلی و نعناع خنک',
-    slug: 'sekanjabin-sharbat',
-    imageUrl: '/images/recipe-6.jpg',
-    theme: 'orange' as const,
-  },
-];
-
-// Canonical fallback products matching database slugs
-const CANONICAL_PRODUCTS = [
-  {
-    id: 'prod-1',
-    nameFa: 'عسل طبیعی گون گز',
-    slug: 'astragalus',
-    imageUrl: '/images/honey-jar.jpg',
-    theme: 'yellow' as const,
-    isAvailable: true,
-  },
-  {
-    id: 'prod-2',
-    nameFa: 'عسل وحشی کنار (سدر) جنوب',
-    slug: 'ziziphus',
-    imageUrl: '/images/honey-jar.jpg',
-    theme: 'orange' as const,
-    isAvailable: true,
-  },
-  {
-    id: 'prod-3',
-    nameFa: 'عسل آویشن وحشی البرز',
-    slug: 'thymus',
-    imageUrl: '/images/honey-jar.jpg',
-    theme: 'green' as const,
-    isAvailable: true,
-  },
-  {
-    id: 'prod-4',
-    nameFa: 'عسل چهل‌گیاه ییلاقی ارسباران',
-    slug: 'multi-plants',
-    imageUrl: '/images/honey-jar.jpg',
-    theme: 'burgundy' as const,
-    isAvailable: true,
-  },
-];
+function isSectionVisible(section: any, products: any[], recipes: any[]): boolean {
+  if (section.type === 'CARD_CAROUSEL') {
+    const source = section.content?.source || 'RECIPES';
+    if (source === 'PRODUCTS') {
+      return Array.isArray(products) && products.length > 0;
+    }
+    if (source === 'RECIPES') {
+      return Array.isArray(recipes) && recipes.length > 0;
+    }
+    if (source === 'SELECTED') {
+      const selectedIds: string[] = Array.isArray(section.content?.selectedItems) ? section.content.selectedItems : [];
+      const matchedP = products.filter((p) => (p.status === 'PUBLISHED' || !p.status) && selectedIds.includes(p.id));
+      const matchedR = recipes.filter((r) => (r.status === 'PUBLISHED' || !r.status) && selectedIds.includes(r.id));
+      return matchedP.length > 0 || matchedR.length > 0;
+    }
+  }
+  if (section.type === 'HONEY_FINDER' || section.template === 'honey-finder-default') {
+    return Array.isArray(products) && products.length > 0;
+  }
+  return true;
+}
 
 export default async function HomePage() {
   let dbSections: any[] = [];
@@ -134,8 +74,8 @@ export default async function HomePage() {
     dbRecipes = [];
   }
 
-  const displayProducts = dbProducts.length > 0 ? dbProducts : CANONICAL_PRODUCTS;
-  const displayRecipes = dbRecipes.length >= 4 ? dbRecipes : CANONICAL_RECIPES;
+  const displayProducts = dbProducts;
+  const displayRecipes = dbRecipes;
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://babakhorram.com';
   const jsonLd = {
@@ -170,11 +110,14 @@ export default async function HomePage() {
     ],
   };
 
+  // Filter out sections that have no content to display
+  const visibleSections = dbSections.filter((sec) => isSectionVisible(sec, displayProducts, displayRecipes));
+
   // If active CMS database sections exist, render them dynamically
-  if (dbSections.length > 0) {
+  if (visibleSections.length > 0) {
     // Group consecutive sections by background === 'WOOD' for seamless merging
     const groupedSections: Array<{ isWood: boolean; sections: any[] }> = [];
-    dbSections.forEach((sec) => {
+    visibleSections.forEach((sec) => {
       const isWood = sec.background === 'WOOD';
       const lastGroup = groupedSections[groupedSections.length - 1];
       if (lastGroup && lastGroup.isWood === isWood) {
@@ -328,7 +271,7 @@ export default async function HomePage() {
       </section>
 
       {/* 5. Interactive Honey Finder Widget (SEC-04) */}
-      <HoneyFinder products={displayProducts} />
+      {displayProducts.length > 0 && <HoneyFinder products={displayProducts} />}
 
       {/* 
         Consecutive Wood Sections (6, 7, 8):
@@ -336,10 +279,14 @@ export default async function HomePage() {
       */}
       <WoodGroup>
         {/* 6. Recipe Showcase */}
-        <RecipeCarousel recipes={displayRecipes as any} noBackground={true} />
+        {displayRecipes.length > 0 && (
+          <RecipeCarousel recipes={displayRecipes as any} noBackground={true} />
+        )}
 
         {/* 7. Products Showcase */}
-        <ProductCarousel products={displayProducts as any} noBackground={true} />
+        {displayProducts.length > 0 && (
+          <ProductCarousel products={displayProducts as any} noBackground={true} />
+        )}
 
         {/* 8. Blog Section: Honey Month with Warm Ivory / Gold Contrast */}
         <section className="py-14 sm:py-20 lg:py-28 border-none overflow-hidden" aria-labelledby="blog-heading">

@@ -180,6 +180,8 @@ export class RecipeService {
 
     try {
       revalidateTag('recipes', 'max');
+      revalidatePath('/');
+      revalidatePath('/products');
       revalidatePath('/recipes');
       revalidatePath('/admin/recipes');
     } catch {}
@@ -333,6 +335,8 @@ export class RecipeService {
     try {
       revalidateTag('recipes', 'max');
       revalidateTag(`recipe-${id}`, 'max');
+      revalidatePath('/');
+      revalidatePath('/products');
       revalidatePath('/recipes');
       revalidatePath(`/recipes/${newSlug}`);
       revalidatePath('/admin/recipes');
@@ -374,6 +378,9 @@ export class RecipeService {
 
     try {
       revalidateTag('recipes', 'max');
+      revalidatePath('/');
+      revalidatePath('/products');
+      revalidatePath('/recipes');
       revalidatePath('/admin/recipes');
     } catch {}
 
@@ -398,6 +405,8 @@ export class RecipeService {
 
     try {
       revalidateTag('recipes', 'max');
+      revalidatePath('/');
+      revalidatePath('/products');
       revalidatePath('/recipes');
       revalidatePath('/admin/recipes');
     } catch {}
@@ -425,6 +434,8 @@ export class RecipeService {
 
     try {
       revalidateTag('recipes', 'max');
+      revalidatePath('/');
+      revalidatePath('/products');
       revalidatePath('/recipes');
       revalidatePath('/admin/recipes');
     } catch {}
@@ -457,6 +468,8 @@ export class RecipeService {
 
     try {
       revalidateTag('recipes', 'max');
+      revalidatePath('/');
+      revalidatePath('/products');
       revalidatePath('/recipes');
       revalidatePath('/admin/recipes');
     } catch {}

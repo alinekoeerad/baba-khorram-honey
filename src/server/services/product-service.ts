@@ -197,7 +197,9 @@ export class ProductService {
 
     try {
       revalidateTag('products', 'max');
+      revalidatePath('/');
       revalidatePath('/products');
+      revalidatePath('/recipes');
       revalidatePath('/admin/products');
     } catch {}
 
@@ -357,8 +359,10 @@ export class ProductService {
     try {
       revalidateTag('products', 'max');
       revalidateTag(`product-${id}`, 'max');
+      revalidatePath('/');
       revalidatePath('/products');
       revalidatePath(`/products/${newSlug}`);
+      revalidatePath('/recipes');
       revalidatePath('/admin/products');
     } catch {}
 
@@ -387,6 +391,9 @@ export class ProductService {
     try {
       revalidateTag('products', 'max');
       revalidateTag(`product-${id}`, 'max');
+      revalidatePath('/');
+      revalidatePath('/products');
+      revalidatePath('/recipes');
       revalidatePath('/admin/products');
     } catch {}
 
@@ -430,6 +437,9 @@ export class ProductService {
 
     try {
       revalidateTag('products', 'max');
+      revalidatePath('/');
+      revalidatePath('/products');
+      revalidatePath('/recipes');
       revalidatePath('/admin/products');
     } catch {}
 
@@ -454,7 +464,9 @@ export class ProductService {
 
     try {
       revalidateTag('products', 'max');
+      revalidatePath('/');
       revalidatePath('/products');
+      revalidatePath('/recipes');
       revalidatePath('/admin/products');
     } catch {}
 
@@ -481,7 +493,9 @@ export class ProductService {
 
     try {
       revalidateTag('products', 'max');
+      revalidatePath('/');
       revalidatePath('/products');
+      revalidatePath('/recipes');
       revalidatePath('/admin/products');
     } catch {}
 
@@ -509,6 +523,9 @@ export class ProductService {
 
     try {
       revalidateTag('products', 'max');
+      revalidatePath('/');
+      revalidatePath('/products');
+      revalidatePath('/recipes');
       revalidatePath('/admin/products');
     } catch {}
 

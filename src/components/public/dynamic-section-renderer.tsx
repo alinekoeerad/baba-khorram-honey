@@ -265,12 +265,13 @@ export function DynamicSectionRenderer({
         } else {
           displayList = displayList.slice(0, maxItems);
         }
+        if (displayList.length === 0) return null;
         return (
           <div id={`section-${section.id}`}>
             <ProductCarousel products={displayList} noBackground={noBackground || isWood} />
           </div>
         );
-      } else {
+      } else if (matchedRecipes.length > 0) {
         let displayList = [...matchedRecipes];
         if (displayList.length < 3) {
           const backfill = recipes.filter(
@@ -280,21 +281,27 @@ export function DynamicSectionRenderer({
         } else {
           displayList = displayList.slice(0, maxItems);
         }
+        if (displayList.length === 0) return null;
         return (
           <div id={`section-${section.id}`}>
             <RecipeCarousel recipes={displayList} noBackground={noBackground || isWood} />
           </div>
         );
+      } else {
+        return null;
       }
     }
 
     if (source === 'PRODUCTS') {
+      if (!products || products.length === 0) return null;
       return (
         <div id={`section-${section.id}`}>
           <ProductCarousel products={products} noBackground={noBackground || isWood} />
         </div>
       );
     }
+
+    if (!recipes || recipes.length === 0) return null;
     return (
       <div id={`section-${section.id}`}>
         <RecipeCarousel recipes={recipes} noBackground={noBackground || isWood} />
@@ -382,6 +389,7 @@ export function DynamicSectionRenderer({
 
   // 8. HONEY_FINDER (honey-finder-default)
   if (type === 'HONEY_FINDER' || template === 'honey-finder-default') {
+    if (!products || products.length === 0) return null;
     return (
       <div id={`section-${section.id}`}>
         <HoneyFinder products={products} />

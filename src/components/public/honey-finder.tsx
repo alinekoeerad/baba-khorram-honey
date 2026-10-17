@@ -74,6 +74,10 @@ export function HoneyFinder({ products = [] }: { products?: any[] }) {
     (p) => (p.status === 'PUBLISHED' || !p.status) && p.isAvailable !== false
   );
 
+  if (activeProducts.length === 0) {
+    return null;
+  }
+
   // Match recommendation dynamically
   let matchedProduct: any = null;
   if (activeProducts.length > 0) {
