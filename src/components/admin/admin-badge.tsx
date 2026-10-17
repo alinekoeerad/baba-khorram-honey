@@ -96,10 +96,10 @@ export function AdminBadge({ status, label, className = '' }: AdminBadgeProps) {
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold border ${current.bg} ${current.text} ${current.border} ${className}`}
+      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-none text-xs font-bold border ${current.bg} ${current.text} ${current.border} ${className}`}
     >
       {current.pulse && (
-        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+        <span className="w-1.5 h-1.5 rounded-none bg-emerald-500 animate-pulse shrink-0" />
       )}
       <span>{displayText}</span>
     </span>

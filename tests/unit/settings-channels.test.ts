@@ -96,8 +96,8 @@ describe('SiteSettings Validation & Length Limits (Addendum A2)', () => {
   it('returns official store location in Karaj (Jahanshahr, Blvd Molana) by default', async () => {
     const settings = await SettingsService.getSettings();
     expect(settings.address).toContain('کرج، جهانشهر، بلوار مولانا');
-    expect(settings.latitude).toBeCloseTo(35.8415, 4);
-    expect(settings.longitude).toBeCloseTo(50.9850, 4);
+    expect(settings.latitude).toBeCloseTo(35.8339878, 4);
+    expect(settings.longitude).toBeCloseTo(50.9915841, 4);
     expect(settings.mapZoom).toBe(15);
   });
 });

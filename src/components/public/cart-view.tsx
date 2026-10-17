@@ -13,7 +13,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { WoodBackground } from '@/components/ui/wood-background';
-import { Container } from '@/components/ui/container';
 import { PillButton } from '@/components/ui/pill-button';
 import { Picture } from '@/components/ui/picture';
 import {
@@ -268,8 +267,8 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
   // Empty Cart Screen (Only when not showing confirmation receipt)
   if (lines.length === 0 && !orderResult) {
     return (
-      <WoodBackground className="py-16 sm:py-24 min-h-[70vh] flex items-center">
-        <Container size="narrow">
+      <WoodBackground className="py-16 sm:py-24 min-h-[70vh] flex items-center justify-center">
+        <div className="w-full max-w-2xl mx-auto px-4 sm:px-6">
           <div className="bg-white border-2 border-[#FDE68A] p-8 sm:p-12 text-center space-y-6 shadow-xl rounded-none">
             <div className="w-20 h-20 mx-auto rounded-full bg-[#FAF7F2] border border-[#EFE9E0] flex items-center justify-center text-[#D97706]">
               <ShoppingCart className="w-10 h-10" />
@@ -292,14 +291,14 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
               </Link>
             </div>
           </div>
-        </Container>
+        </div>
       </WoodBackground>
     );
   }
 
   return (
     <WoodBackground className="py-10 sm:py-16 min-h-screen">
-      <Container size="default" className="space-y-8">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {/* Page Title & Subtitle */}
         <div className="text-center space-y-2">
           <h1 className="text-2xl sm:text-4xl font-black text-[#2B2017]">
@@ -331,7 +330,7 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
         {/* POST-ORDER CONFIRMATION RECEIPT (Rendered immediately upon orderResult)  */}
         {/* ========================================================================= */}
         {orderResult && (
-          <div ref={receiptRef} className="space-y-8 animate-in fade-in duration-300">
+          <div ref={receiptRef} className="w-full max-w-3xl mx-auto space-y-8 animate-in fade-in duration-300">
             {/* 1. Success Header Card (Green/Gold Luxury Theme) */}
             <div className="bg-gradient-to-br from-[#064e3b] via-[#065f46] to-[#047857] text-white border-2 border-[#10b981] p-6 sm:p-8 shadow-2xl rounded-none text-right space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-emerald-500/30 pb-4">
@@ -871,7 +870,7 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
             </div>
           </div>
         )}
-      </Container>
+      </div>
     </WoodBackground>
   );
 }

@@ -60,7 +60,7 @@ export function TemplateSwitchModal({
       <div className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity" onClick={onClose} />
 
       {/* Modal Dialog */}
-      <div className="relative w-full max-w-4xl max-h-[90vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden text-right border border-stone-200 z-10 animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-4xl max-h-[90vh] bg-white rounded-none shadow-2xl flex flex-col overflow-hidden text-right border-2 border-stone-300 z-10 animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
         <div className="px-6 py-4 border-b border-stone-200 flex items-center justify-between bg-stone-50">
           <div className="flex items-center gap-2">
@@ -70,7 +70,7 @@ export function TemplateSwitchModal({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 text-stone-400 hover:text-stone-700 hover:bg-stone-200/50 rounded-lg transition-colors cursor-pointer"
+            className="p-1.5 text-stone-400 hover:text-stone-700 hover:bg-stone-200/50 rounded-none transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -90,9 +90,9 @@ export function TemplateSwitchModal({
 
           {/* Field Mapping & Preserved Bucket Warning */}
           {selectedTemplate && selectedTemplate.id !== currentTemplateId && analysis && (
-            <div className="p-5 bg-amber-50 border-2 border-amber-200 rounded-xl space-y-3">
-              <div className="flex items-center gap-2 text-amber-800 font-black text-sm">
-                <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
+            <div className="p-5 bg-amber-50 border-2 border-amber-400 rounded-none space-y-3">
+              <div className="flex items-center gap-2 text-amber-950 font-black text-sm">
+                <AlertTriangle className="w-5 h-5 text-amber-700 shrink-0" />
                 <span>بررسی تطبیق داده‌ها (حفظ امن اطلاعات)</span>
               </div>
 
@@ -115,8 +115,9 @@ export function TemplateSwitchModal({
           )}
 
           {error && (
-            <div className="p-3 bg-red-100 border border-red-300 text-red-700 text-xs font-bold rounded-lg">
-              {error}
+            <div className="p-3 bg-red-50 border-2 border-red-600 text-red-950 text-xs font-bold rounded-none flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 shrink-0 text-red-700" />
+              <span>{error}</span>
             </div>
           )}
         </div>
@@ -126,7 +127,7 @@ export function TemplateSwitchModal({
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2 rounded-xl text-xs font-bold text-stone-600 hover:bg-stone-200 transition-colors cursor-pointer"
+            className="px-5 py-2 rounded-none text-xs font-bold text-stone-600 hover:bg-stone-200 transition-colors cursor-pointer"
           >
             انصراف
           </button>
@@ -134,7 +135,7 @@ export function TemplateSwitchModal({
             type="button"
             onClick={handleConfirmSwitch}
             disabled={!selectedTemplate || selectedTemplate.id === currentTemplateId || isSubmitting}
-            className="px-6 py-2.5 rounded-xl bg-[#F59E0B] hover:bg-[#D97706] text-white font-black text-xs sm:text-sm transition-all shadow-md disabled:opacity-50 cursor-pointer flex items-center gap-2"
+            className="px-6 py-2.5 rounded-none bg-[#F59E0B] hover:bg-[#D97706] text-white font-black text-xs sm:text-sm transition-all shadow-md disabled:opacity-50 cursor-pointer flex items-center gap-2 whitespace-nowrap min-w-max"
           >
             {isSubmitting ? (
               <>

@@ -13,12 +13,14 @@ export interface ToastMessage {
   duration?: number;
 }
 
-interface ToastContextValue {
+export interface ToastContextValue {
   showToast: (toast: Omit<ToastMessage, 'id'>) => void;
   success: (message: string, title?: string) => void;
   error: (message: string, title?: string) => void;
   warning: (message: string, title?: string) => void;
   info: (message: string, title?: string) => void;
+  showSuccess: (message: string, title?: string) => void;
+  showError: (message: string, title?: string) => void;
 }
 
 const ToastContext = createContext<ToastContextValue | null>(null);
@@ -61,7 +63,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   }, [showToast]);
 
   return (
-    <ToastContext.Provider value={{ showToast, success, error, warning, info }}>
+    <ToastContext.Provider value={{ showToast, success, error, warning, info, showSuccess: success, showError: error }}>
       {children}
       {/* Toast container pinned to bottom-left (in RTL, natural reading flow) */}
       <div
@@ -71,28 +73,28 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {toasts.map((t) => {
           const config = {
             success: {
-              border: 'border-emerald-500',
-              bg: 'bg-emerald-950/95 text-emerald-50',
+              border: 'border-emerald-600',
+              bg: 'bg-emerald-50 text-emerald-950 font-bold',
               icon: CheckCircle2,
-              iconColor: 'text-emerald-400',
+              iconColor: 'text-emerald-700',
             },
             error: {
-              border: 'border-rose-500',
-              bg: 'bg-rose-950/95 text-rose-50',
+              border: 'border-red-600',
+              bg: 'bg-red-50 text-red-950 font-bold',
               icon: AlertCircle,
-              iconColor: 'text-rose-400',
+              iconColor: 'text-red-700',
             },
             warning: {
               border: 'border-amber-500',
-              bg: 'bg-amber-950/95 text-amber-50',
+              bg: 'bg-amber-50 text-amber-950 font-semibold',
               icon: AlertTriangle,
-              iconColor: 'text-amber-400',
+              iconColor: 'text-amber-700',
             },
             info: {
               border: 'border-sky-500',
-              bg: 'bg-stone-900/95 text-stone-100',
+              bg: 'bg-sky-50 text-sky-950 font-semibold',
               icon: Info,
-              iconColor: 'text-sky-400',
+              iconColor: 'text-sky-700',
             },
           }[t.type];
 

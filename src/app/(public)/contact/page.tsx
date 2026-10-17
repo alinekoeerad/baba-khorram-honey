@@ -61,8 +61,8 @@ export default async function ContactPage() {
   const workingHours =
     settings.workingHours ||
     'همه‌روزه از ساعت ۹:۰۰ الی ۲۱:۰۰';
-  const latitude = settings.latitude ?? 35.8415;
-  const longitude = settings.longitude ?? 50.9850;
+  const latitude = settings.latitude ?? 35.8339878;
+  const longitude = settings.longitude ?? 50.9915841;
   const zoom = settings.mapZoom ?? 15;
 
   const phoneChannel = channels.find((c) => c.type === 'PHONE');

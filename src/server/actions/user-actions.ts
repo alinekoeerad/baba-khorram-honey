@@ -198,7 +198,72 @@ export const changeUserPasswordAction = createAdminAction({
 });
 
 // -----------------------------------------------------------------
-// 4. Query Admin Users List
+// 4. Delete Admin User (With Super Admin & Last Admin Protection)
+// -----------------------------------------------------------------
+
+const deleteAdminUserSchema = z.object({
+  userId: z.string().min(1),
+});
+
+export const deleteAdminUserAction = createAdminAction({
+  schema: deleteAdminUserSchema,
+  audit: {
+    action: 'USER_DELETE',
+    entityType: 'User',
+    getEntityId: (_result, input) => input.userId,
+    getSummary: (_input, user, result: any) =>
+      `Admin user «${result?.email || 'admin'}» permanently deleted by «${user.name || user.email}»`,
+  },
+  handler: async (input, context) => {
+    const { userId } = input;
+
+    // Protection 1: Never delete self
+    if (userId === context.user.id) {
+      throw new Error('حذف حساب کاربری فعال خودتان امکان‌پذیر نیست.');
+    }
+
+    const targetUser = await db.user.findUnique({ where: { id: userId } });
+    if (!targetUser) {
+      throw new Error('کاربر مورد نظر یافت نشد.');
+    }
+
+    // Protection 2: Primary Super Admin protection (admin@honey.ir or root initial admin)
+    const normalizedEmail = targetUser.email.toLowerCase().trim();
+    if (normalizedEmail === 'admin@honey.ir') {
+      throw new Error('حذف حساب مدیر کل اصلی امکان‌پذیر نیست.');
+    }
+
+    const allAdmins = await db.user.findMany({
+      where: { role: 'ADMIN' },
+      orderBy: { createdAt: 'asc' },
+    });
+    if (allAdmins.length > 0 && allAdmins[0].id === targetUser.id) {
+      throw new Error('حذف حساب مدیر کل اصلی امکان‌پذیر نیست.');
+    }
+
+    // Protection 3: Never delete the last active admin
+    const activeAdminCount = await db.user.count({
+      where: { role: 'ADMIN', isActive: true },
+    });
+    if (targetUser.isActive && activeAdminCount <= 1) {
+      throw new Error('امکان حذف آخرین مدیر فعال سامانه وجود ندارد.');
+    }
+
+    // Delete related sessions & accounts
+    await db.session.deleteMany({ where: { userId } });
+    await db.account.deleteMany({ where: { userId } });
+    await db.user.delete({ where: { id: userId } });
+
+    return {
+      success: true,
+      id: targetUser.id,
+      email: targetUser.email,
+    };
+  },
+});
+
+// -----------------------------------------------------------------
+// 5. Query Admin Users List
 // -----------------------------------------------------------------
 
 export async function getAdminUsersList(): Promise<UserRecord[]> {
@@ -207,3 +272,4 @@ export async function getAdminUsersList(): Promise<UserRecord[]> {
     orderBy: { createdAt: 'asc' },
   });
 }
+

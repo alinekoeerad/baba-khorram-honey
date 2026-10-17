@@ -304,7 +304,7 @@ export function ProductsList({ initialProducts, categories, totalCount }: Produc
       {selectedIds.size > 0 && (
         <div className="sticky top-20 z-20 bg-[#332115] text-white p-3.5 rounded-none shadow-xl flex flex-wrap items-center justify-between gap-4 animate-in slide-in-from-top-2">
           <div className="flex items-center gap-2 text-xs font-bold">
-            <span className="w-5 h-5 rounded-full bg-[#F59E0B] text-[#2B2017] flex items-center justify-center font-black text-[11px]">
+            <span className="w-5 h-5 rounded-none bg-[#F59E0B] text-[#2B2017] flex items-center justify-center font-black text-[11px]">
               {selectedIds.size}
             </span>
             <span>محصول انتخاب شده است</span>
@@ -463,39 +463,41 @@ export function ProductsList({ initialProducts, categories, totalCount }: Produc
                         {prod.cardTheme}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-end space-x-reverse space-x-2 whitespace-nowrap">
-                      <Link
-                        href={`/admin/preview/products/${prod.id}`}
-                        target="_blank"
-                        className="px-2 py-1 text-[11px] font-bold text-[#5C5248] hover:bg-[#EFE9E0] border border-[#EFE9E0] rounded-none"
-                      >
-                        پیش‌نمایش
-                      </Link>
+                    <td className="py-3 px-4 text-end whitespace-nowrap">
+                      <div className="inline-flex items-center gap-1.5 flex-nowrap">
+                        <Link
+                          href={`/admin/preview/products/${prod.id}`}
+                          target="_blank"
+                          className="inline-flex items-center justify-center whitespace-nowrap shrink-0 px-3 py-1.5 min-w-max text-xs font-bold text-[#5C5248] hover:bg-[#EFE9E0] border border-[#D5C7B8] rounded-none transition-colors"
+                        >
+                          پیش‌نمایش
+                        </Link>
 
-                      <Link
-                        href={`/admin/products/${prod.id}`}
-                        className="px-2 py-1 text-[11px] font-bold text-[#D97706] hover:bg-[#FEF3C7] border border-[#FDE68A] rounded-none"
-                      >
-                        ویرایش
-                      </Link>
+                        <Link
+                          href={`/admin/products/${prod.id}`}
+                          className="inline-flex items-center justify-center whitespace-nowrap shrink-0 px-3 py-1.5 min-w-max text-xs font-bold text-[#D97706] hover:bg-[#FEF3C7] border border-[#FDE68A] rounded-none transition-colors"
+                        >
+                          ویرایش
+                        </Link>
 
-                      <button
-                        type="button"
-                        disabled={isPending}
-                        onClick={() => handleDuplicate(prod)}
-                        className="px-2 py-1 text-[11px] font-bold text-[#5C5248] hover:bg-[#EFE9E0] border border-[#EFE9E0] rounded-none cursor-pointer"
-                      >
-                        کپی
-                      </button>
+                        <button
+                          type="button"
+                          disabled={isPending}
+                          onClick={() => handleDuplicate(prod)}
+                          className="inline-flex items-center justify-center whitespace-nowrap shrink-0 px-3 py-1.5 min-w-max text-xs font-bold text-[#5C5248] hover:bg-[#EFE9E0] border border-[#D5C7B8] rounded-none cursor-pointer transition-colors"
+                        >
+                          کپی
+                        </button>
 
-                      <button
-                        type="button"
-                        disabled={isPending}
-                        onClick={() => setConfirmDelete({ isOpen: true, prod })}
-                        className="px-2 py-1 text-[11px] font-bold text-[#9E3556] hover:bg-[#FEF2F2] border border-[#FECACA] rounded-none cursor-pointer"
-                      >
-                        حذف
-                      </button>
+                        <button
+                          type="button"
+                          disabled={isPending}
+                          onClick={() => setConfirmDelete({ isOpen: true, prod })}
+                          className="inline-flex items-center justify-center whitespace-nowrap shrink-0 px-3 py-1.5 min-w-max text-xs font-bold text-[#9E3556] hover:bg-[#FEF2F2] border border-[#FECACA] rounded-none cursor-pointer transition-colors"
+                        >
+                          حذف
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );

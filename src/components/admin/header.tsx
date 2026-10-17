@@ -119,7 +119,7 @@ export function AdminHeader({ user }: AdminHeaderProps) {
               Ctrl K
             </kbd>
           </button>
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl text-xs">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-[#FDFBF8] border border-[#D5C7B8] rounded-none text-xs">
             <UserIcon className="w-4 h-4 text-[#F59E0B]" />
             <div className="flex flex-col text-right">
               <span className="font-bold text-[#2B2017]">{user.name || user.email}</span>
@@ -142,7 +142,7 @@ export function AdminHeader({ user }: AdminHeaderProps) {
             type="button"
             onClick={handleLogout}
             title="خروج از حساب کاربری"
-            className="p-2 text-rose-600 hover:bg-rose-50 rounded-xl transition-colors"
+            className="p-2 text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-200 rounded-none transition-colors cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
           </button>

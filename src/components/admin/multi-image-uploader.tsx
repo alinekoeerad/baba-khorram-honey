@@ -179,7 +179,7 @@ export function MultiImageUploader({
           }}
           className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-[#EFE9E0] bg-[#FFFBEB]/30 hover:border-[#D97706] cursor-pointer transition-colors"
         >
-          <div className="w-10 h-10 rounded-full bg-[#FEF3C7] text-[#D97706] flex items-center justify-center mb-2">
+          <div className="w-10 h-10 rounded-none bg-[#FEF3C7] text-[#D97706] flex items-center justify-center mb-2">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
@@ -213,13 +213,13 @@ export function MultiImageUploader({
               <div className="flex-1 space-y-1.5 w-full">
                 <div className="flex flex-wrap items-center justify-between gap-1 text-[11px] text-[#5C5248]">
                   <div className="flex items-center gap-1.5">
-                    <span className="bg-emerald-50 text-emerald-800 border border-emerald-200 font-mono font-bold px-1.5 py-0.2 text-[9px] rounded-full">
+                    <span className="bg-emerald-50 text-emerald-800 border border-emerald-200 font-mono font-bold px-1.5 py-0.2 text-[9px] rounded-none">
                       WebP
                     </span>
-                    <span className="bg-amber-50 text-amber-800 border border-amber-200 font-mono font-bold px-1.5 py-0.2 text-[9px] rounded-full" dir="ltr">
+                    <span className="bg-amber-50 text-amber-800 border border-amber-200 font-mono font-bold px-1.5 py-0.2 text-[9px] rounded-none" dir="ltr">
                       {item.width} × {item.height}
                     </span>
-                    <span className="bg-stone-100 text-stone-700 border border-stone-200 font-mono font-bold px-1.5 py-0.2 text-[9px] rounded-full" dir="ltr">
+                    <span className="bg-stone-100 text-stone-700 border border-stone-200 font-mono font-bold px-1.5 py-0.2 text-[9px] rounded-none" dir="ltr">
                       {Math.round(item.bytes / 1024)} KB
                     </span>
                   </div>

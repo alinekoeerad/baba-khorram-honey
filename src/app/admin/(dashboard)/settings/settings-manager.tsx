@@ -38,6 +38,7 @@ import {
 } from 'lucide-react';
 import { ConfirmModal } from '@/components/admin/confirm-modal';
 import { ImageUploader } from '@/components/admin/image-uploader';
+import { useToast } from '@/components/admin/toast-provider';
 
 interface SettingsManagerProps {
   initialSettings: SiteSettingsData;
@@ -49,11 +50,11 @@ export function SettingsManager({
   initialChannels,
 }: SettingsManagerProps) {
   const router = useRouter();
+  const { showSuccess, showError } = useToast();
   const [activeTab, setActiveTab] = useState<'general' | 'contact' | 'seo' | 'cart'>('general');
   const [settings, setSettings] = useState<SiteSettingsData>(initialSettings);
   const [channels, setChannels] = useState<ContactChannelData[]>(initialChannels);
   const [isPending, startTransition] = useTransition();
-  const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   // Channel Modal State
   const [isChannelModalOpen, setIsChannelModalOpen] = useState(false);
@@ -82,19 +83,14 @@ export function SettingsManager({
   const [confirmDeleteChannel, setConfirmDeleteChannel] = useState<{ isOpen: boolean; id?: string }>({ isOpen: false });
   const [channelError, setChannelError] = useState<string | null>(null);
 
-  const showToast = (type: 'success' | 'error', message: string) => {
-    setToast({ type, message });
-    setTimeout(() => setToast(null), 4000);
-  };
-
   const handleSaveSettings = () => {
     startTransition(async () => {
       const res = await updateSiteSettingsAction(settings);
       if (res.success) {
-        showToast('success', 'تنظیمات با موفقیت ذخیره شد.');
+        showSuccess('تنظیمات با موفقیت ذخیره شد.');
         router.refresh();
       } else {
-        showToast('error', res.error || 'خطا در ذخیره تنظیمات.');
+        showError(res.error || 'خطا در ذخیره تنظیمات.');
       }
     });
   };
@@ -150,7 +146,7 @@ export function SettingsManager({
         if (res.success && res.data) {
           setChannels(channels.map((c) => (c.id === editingChannel.id ? res.data! : c)));
           setIsChannelModalOpen(false);
-          showToast('success', 'کانال ارتباطی با موفقیت ویرایش شد.');
+          showSuccess('کانال ارتباطی با موفقیت ویرایش شد.');
           router.refresh();
         } else {
           setChannelError(res.error || 'خطا در ویرایش کانال.');
@@ -163,7 +159,7 @@ export function SettingsManager({
         if (res.success && res.data) {
           setChannels([...channels, res.data]);
           setIsChannelModalOpen(false);
-          showToast('success', 'کانال ارتباطی جدید با موفقیت ایجاد شد.');
+          showSuccess('کانال ارتباطی جدید با موفقیت ایجاد شد.');
           router.refresh();
         } else {
           setChannelError(res.error || 'خطا در ایجاد کانال.');
@@ -183,11 +179,11 @@ export function SettingsManager({
       const res = await deleteContactChannelAction(id);
       if (res.success) {
         setChannels(channels.filter((c) => c.id !== id));
-        showToast('success', 'کانال ارتباطی حذف شد.');
+        showSuccess('کانال ارتباطی حذف شد.');
         setConfirmDeleteChannel({ isOpen: false });
         router.refresh();
       } else {
-        showToast('error', res.error || 'خطا در حذف کانال.');
+        showError(res.error || 'خطا در حذف کانال.');
       }
     });
   };
@@ -196,26 +192,8 @@ export function SettingsManager({
 
   return (
     <div className="space-y-6">
-      {/* Toast Notification */}
-      {toast && (
-        <div
-          className={`fixed top-4 left-4 right-4 md:right-auto md:left-6 md:w-96 z-50 p-4 rounded-xl shadow-lg border flex items-center gap-3 transition-all ${
-            toast.type === 'success'
-              ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
-              : 'bg-rose-50 border-rose-200 text-rose-800'
-          }`}
-        >
-          {toast.type === 'success' ? (
-            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-          ) : (
-            <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
-          )}
-          <span className="text-sm font-medium">{toast.message}</span>
-        </div>
-      )}
-
       {/* Header & Save Action */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#EFE9E0]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#D5C7B8]">
         <div>
           <h1 className="text-2xl font-black text-[#2B2017]">تنظیمات سایت و ارتباطات</h1>
           <p className="text-sm text-[#5C5248] mt-1">
@@ -225,7 +203,7 @@ export function SettingsManager({
         <button
           onClick={handleSaveSettings}
           disabled={isPending}
-          className="inline-flex items-center justify-center gap-2 bg-[#F59E0B] hover:bg-[#D97706] text-white px-6 py-2.5 rounded-xl font-bold shadow-sm transition-colors disabled:opacity-50"
+          className="inline-flex items-center justify-center gap-2 bg-[#F59E0B] hover:bg-[#D97706] text-white px-6 py-2.5 rounded-none font-bold shadow-xs transition-colors disabled:opacity-50 whitespace-nowrap shrink-0 min-w-max cursor-pointer"
         >
           {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           <span>ذخیره تنظیمات</span>
@@ -233,10 +211,10 @@ export function SettingsManager({
       </div>
 
       {/* Tabs Bar */}
-      <div className="flex gap-2 border-b border-[#EFE9E0] overflow-x-auto pb-1">
+      <div className="flex gap-2 border-b border-[#D5C7B8] overflow-x-auto pb-1">
         <button
           onClick={() => setActiveTab('general')}
-          className={`flex items-center gap-2 px-5 py-3 rounded-t-xl text-sm font-bold transition-all border-b-2 whitespace-nowrap ${
+          className={`flex items-center gap-2 px-5 py-3 rounded-none text-sm font-bold transition-all border-b-2 whitespace-nowrap shrink-0 min-w-max cursor-pointer ${
             activeTab === 'general'
               ? 'border-[#F59E0B] text-[#D97706] bg-amber-50/50'
               : 'border-transparent text-[#5C5248] hover:text-[#2B2017]'
@@ -247,7 +225,7 @@ export function SettingsManager({
         </button>
         <button
           onClick={() => setActiveTab('contact')}
-          className={`flex items-center gap-2 px-5 py-3 rounded-t-xl text-sm font-bold transition-all border-b-2 whitespace-nowrap ${
+          className={`flex items-center gap-2 px-5 py-3 rounded-none text-sm font-bold transition-all border-b-2 whitespace-nowrap shrink-0 min-w-max cursor-pointer ${
             activeTab === 'contact'
               ? 'border-[#F59E0B] text-[#D97706] bg-amber-50/50'
               : 'border-transparent text-[#5C5248] hover:text-[#2B2017]'
@@ -258,7 +236,7 @@ export function SettingsManager({
         </button>
         <button
           onClick={() => setActiveTab('seo')}
-          className={`flex items-center gap-2 px-5 py-3 rounded-t-xl text-sm font-bold transition-all border-b-2 whitespace-nowrap ${
+          className={`flex items-center gap-2 px-5 py-3 rounded-none text-sm font-bold transition-all border-b-2 whitespace-nowrap shrink-0 min-w-max cursor-pointer ${
             activeTab === 'seo'
               ? 'border-[#F59E0B] text-[#D97706] bg-amber-50/50'
               : 'border-transparent text-[#5C5248] hover:text-[#2B2017]'
@@ -269,7 +247,7 @@ export function SettingsManager({
         </button>
         <button
           onClick={() => setActiveTab('cart')}
-          className={`flex items-center gap-2 px-5 py-3 rounded-t-xl text-sm font-bold transition-all border-b-2 whitespace-nowrap ${
+          className={`flex items-center gap-2 px-5 py-3 rounded-none text-sm font-bold transition-all border-b-2 whitespace-nowrap shrink-0 min-w-max cursor-pointer ${
             activeTab === 'cart'
               ? 'border-[#F59E0B] text-[#D97706] bg-amber-50/50'
               : 'border-transparent text-[#5C5248] hover:text-[#2B2017]'
@@ -282,7 +260,7 @@ export function SettingsManager({
 
       {/* Tab 1: General */}
       {activeTab === 'general' && (
-        <div className="bg-white border border-[#EFE9E0] rounded-2xl p-6 shadow-xs space-y-6">
+        <div className="bg-white border border-[#D5C7B8] rounded-none p-6 shadow-sm space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-bold text-[#2B2017] mb-2">
@@ -292,7 +270,7 @@ export function SettingsManager({
                 type="text"
                 value={settings.siteNameFa}
                 onChange={(e) => setSettings({ ...settings, siteNameFa: e.target.value })}
-                className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#F59E0B]"
+                className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-4 py-2.5 text-sm focus:outline-none focus:border-[#F59E0B]"
                 placeholder="عسل باباخُرم"
               />
             </div>
@@ -305,7 +283,7 @@ export function SettingsManager({
                 dir="ltr"
                 value={settings.siteNameEn || ''}
                 onChange={(e) => setSettings({ ...settings, siteNameEn: e.target.value })}
-                className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-4 py-2.5 text-sm text-left focus:outline-none focus:border-[#F59E0B]"
+                className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-4 py-2.5 text-sm text-left focus:outline-none focus:border-[#F59E0B]"
                 placeholder="Baba Khorram Honey"
               />
             </div>
@@ -317,7 +295,7 @@ export function SettingsManager({
                 type="text"
                 value={settings.tagline || ''}
                 onChange={(e) => setSettings({ ...settings, tagline: e.target.value })}
-                className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#F59E0B]"
+                className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-4 py-2.5 text-sm focus:outline-none focus:border-[#F59E0B]"
                 placeholder="طعم اصیل و طبیعی کوهستان"
               />
             </div>
@@ -329,13 +307,13 @@ export function SettingsManager({
                 type="text"
                 value={settings.copyrightText || ''}
                 onChange={(e) => setSettings({ ...settings, copyrightText: e.target.value })}
-                className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#F59E0B]"
+                className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-4 py-2.5 text-sm focus:outline-none focus:border-[#F59E0B]"
                 placeholder="تمامی حقوق برای برند عسل باباخُرم محفوظ است. طراحی و توسعه ۱۴۰۵."
               />
             </div>
 
             {/* Media Uploaders: Logo & Footer Logo */}
-            <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 border-t border-[#EFE9E0]">
+            <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 border-t border-[#D5C7B8]">
               <div>
                 <label className="block text-sm font-bold text-[#2B2017] mb-2">لوگوی اصلی سایت (Header Logo)</label>
                 <ImageUploader
@@ -361,8 +339,8 @@ export function SettingsManager({
       {activeTab === 'contact' && (
         <div className="space-y-8">
           {/* Physical Address & Working Hours */}
-          <div className="bg-white border border-[#EFE9E0] rounded-2xl p-6 shadow-xs space-y-6">
-            <h2 className="text-lg font-black text-[#2B2017] border-b border-[#EFE9E0] pb-3">
+          <div className="bg-white border border-[#D5C7B8] rounded-none p-6 shadow-sm space-y-6">
+            <h2 className="text-lg font-black text-[#2B2017] border-b border-[#D5C7B8] pb-3">
               نشانی فیزیکی و ساعات کاری
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -374,7 +352,7 @@ export function SettingsManager({
                   rows={2}
                   value={settings.address || ''}
                   onChange={(e) => setSettings({ ...settings, address: e.target.value })}
-                  className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#F59E0B]"
+                  className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-4 py-2.5 text-sm focus:outline-none focus:border-[#F59E0B]"
                   placeholder="کرج، جهانشهر، بلوار مولانا"
                 />
               </div>
@@ -386,7 +364,7 @@ export function SettingsManager({
                   type="text"
                   value={settings.workingHours || ''}
                   onChange={(e) => setSettings({ ...settings, workingHours: e.target.value })}
-                  className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#F59E0B]"
+                  className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-4 py-2.5 text-sm focus:outline-none focus:border-[#F59E0B]"
                   placeholder="همه‌روزه از ساعت ۹:۰۰ الی ۲۱:۰۰"
                 />
               </div>
@@ -405,8 +383,8 @@ export function SettingsManager({
                       latitude: e.target.value ? parseFloat(e.target.value) : null,
                     })
                   }
-                  className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-4 py-2.5 text-sm text-left focus:outline-none focus:border-[#F59E0B]"
-                  placeholder="35.8415"
+                  className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-4 py-2.5 text-sm text-left focus:outline-none focus:border-[#F59E0B]"
+                  placeholder="35.8339878"
                 />
               </div>
               <div>
@@ -424,8 +402,8 @@ export function SettingsManager({
                       longitude: e.target.value ? parseFloat(e.target.value) : null,
                     })
                   }
-                  className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-4 py-2.5 text-sm text-left focus:outline-none focus:border-[#F59E0B]"
-                  placeholder="50.9850"
+                  className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-4 py-2.5 text-sm text-left focus:outline-none focus:border-[#F59E0B]"
+                  placeholder="50.9915841"
                 />
               </div>
               <div className="md:col-span-2">
@@ -444,7 +422,7 @@ export function SettingsManager({
                       mapZoom: e.target.value ? parseInt(e.target.value, 10) : null,
                     })
                   }
-                  className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-4 py-2.5 text-sm text-left focus:outline-none focus:border-[#F59E0B]"
+                  className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-4 py-2.5 text-sm text-left focus:outline-none focus:border-[#F59E0B]"
                   placeholder="15"
                 />
               </div>
@@ -452,8 +430,8 @@ export function SettingsManager({
           </div>
 
           {/* Contact Channels Manager */}
-          <div className="bg-white border border-[#EFE9E0] rounded-2xl p-6 shadow-xs space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#EFE9E0] pb-3">
+          <div className="bg-white border border-[#D5C7B8] rounded-none p-6 shadow-sm space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#D5C7B8] pb-3">
               <div>
                 <h2 className="text-lg font-black text-[#2B2017]">کانال‌های ارتباطی و شبکه‌های اجتماعی</h2>
                 <p className="text-xs text-[#5C5248] mt-0.5">
@@ -463,7 +441,7 @@ export function SettingsManager({
               <button
                 type="button"
                 onClick={openNewChannelModal}
-                className="inline-flex items-center gap-1.5 bg-amber-50 text-[#D97706] hover:bg-amber-100 border border-amber-200 px-4 py-2 rounded-xl text-sm font-bold transition-colors"
+                className="inline-flex items-center gap-1.5 bg-[#F59E0B] text-white hover:bg-[#D97706] px-4 py-2 rounded-none text-xs font-bold transition-colors whitespace-nowrap shrink-0 min-w-max cursor-pointer shadow-xs"
               >
                 <Plus className="w-4 h-4" />
                 <span>افزودن کانال جدید</span>
@@ -474,7 +452,7 @@ export function SettingsManager({
             <div className="overflow-x-auto">
               <table className="w-full text-right border-collapse text-sm">
                 <thead>
-                  <tr className="border-b border-[#EFE9E0] text-xs font-bold text-[#5C5248] bg-[#FDFBF8]">
+                  <tr className="border-b border-[#D5C7B8] text-xs font-bold text-[#5C5248] bg-[#FDFBF8]">
                     <th className="py-3 px-4">نوع کانال</th>
                     <th className="py-3 px-4">عنوان نمایشی</th>
                     <th className="py-3 px-4">مقدار / شماره</th>
@@ -484,7 +462,7 @@ export function SettingsManager({
                     <th className="py-3 px-4 text-center">عملیات</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#EFE9E0]">
+                <tbody className="divide-y divide-[#D5C7B8]">
                   {channels.map((ch) => (
                     <tr key={ch.id} className="hover:bg-amber-50/20 transition-colors">
                       <td className="py-3 px-4 font-bold text-[#2B2017]">
@@ -497,17 +475,17 @@ export function SettingsManager({
                       <td className="py-3 px-4 text-center">
                         <div className="inline-flex gap-1 text-[11px] font-bold">
                           {ch.showInContactBar && (
-                            <span className="bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full">نوار بالا</span>
+                            <span className="bg-amber-100 text-amber-900 px-2 py-0.5 rounded-none">نوار بالا</span>
                           )}
                           {ch.showInFooter && (
-                            <span className="bg-stone-100 text-stone-700 px-2 py-0.5 rounded-full">فوتر</span>
+                            <span className="bg-stone-100 text-stone-700 px-2 py-0.5 rounded-none">فوتر</span>
                           )}
                         </div>
                       </td>
                       <td className="py-3 px-4 text-center">
                         {ch.acceptsOrders ? (
-                          <span className="inline-flex items-center gap-1 text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full text-xs font-bold">
-                            <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span className="inline-flex items-center gap-1 text-emerald-800 bg-emerald-50 border border-emerald-300 px-2 py-0.5 rounded-none text-xs font-bold">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
                             <span>فعال</span>
                           </span>
                         ) : (
@@ -516,9 +494,9 @@ export function SettingsManager({
                       </td>
                       <td className="py-3 px-4 text-center">
                         {ch.isActive ? (
-                          <span className="text-emerald-700 font-bold text-xs">فعال</span>
+                          <span className="text-emerald-800 font-bold text-xs bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-none">فعال</span>
                         ) : (
-                          <span className="text-stone-400 font-bold text-xs">غیرفعال</span>
+                          <span className="text-stone-500 font-bold text-xs bg-stone-100 px-2 py-0.5 rounded-none">غیرفعال</span>
                         )}
                       </td>
                       <td className="py-3 px-4 text-center">
@@ -526,7 +504,7 @@ export function SettingsManager({
                           <button
                             type="button"
                             onClick={() => openEditChannelModal(ch)}
-                            className="p-1.5 text-stone-600 hover:text-amber-700 hover:bg-amber-50 rounded-lg transition-colors"
+                            className="p-1.5 text-stone-600 hover:text-amber-700 hover:bg-amber-50 rounded-none transition-colors cursor-pointer"
                             title="ویرایش"
                           >
                             <Edit2 className="w-4 h-4" />
@@ -534,7 +512,7 @@ export function SettingsManager({
                           <button
                             type="button"
                             onClick={() => ch.id && handleDeleteChannel(ch.id)}
-                            className="p-1.5 text-rose-600 hover:text-rose-800 hover:bg-rose-50 rounded-lg transition-colors"
+                            className="p-1.5 text-rose-600 hover:text-rose-800 hover:bg-rose-50 rounded-none transition-colors cursor-pointer"
                             title="حذف"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -559,7 +537,7 @@ export function SettingsManager({
 
       {/* Tab 3: SEO */}
       {activeTab === 'seo' && (
-        <div className="bg-white border border-[#EFE9E0] rounded-2xl p-6 shadow-xs space-y-6">
+        <div className="bg-white border border-[#D5C7B8] rounded-none p-6 shadow-sm space-y-6">
           <div className="space-y-6">
             <div>
               <label className="block text-sm font-bold text-[#2B2017] mb-2">
@@ -569,7 +547,7 @@ export function SettingsManager({
                 type="text"
                 value={settings.seoTitle || ''}
                 onChange={(e) => setSettings({ ...settings, seoTitle: e.target.value })}
-                className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#F59E0B]"
+                className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-4 py-2.5 text-sm focus:outline-none focus:border-[#F59E0B]"
                 placeholder="عسل باباخُرم | طعم اصیل و طبیعی کوهستان"
               />
             </div>
@@ -581,13 +559,13 @@ export function SettingsManager({
                 rows={3}
                 value={settings.seoDescription || ''}
                 onChange={(e) => setSettings({ ...settings, seoDescription: e.target.value })}
-                className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#F59E0B]"
+                className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-4 py-2.5 text-sm focus:outline-none focus:border-[#F59E0B]"
                 placeholder="تولید و عرضه مستقیم انواع عسل طبیعی و ارگانیک از دامنه‌های ارسباران و قره‌داغ."
               />
             </div>
 
             {/* OG Image Uploader */}
-            <div className="pt-4 border-t border-[#EFE9E0]">
+            <div className="pt-4 border-t border-[#D5C7B8]">
               <label className="block text-sm font-bold text-[#2B2017] mb-2">
                 تصویر پیش‌فرض اشتراک‌گذاری شبکه‌های اجتماعی (OpenGraph Image)
               </label>
@@ -603,23 +581,23 @@ export function SettingsManager({
 
       {/* Tab 4: Cart & Orders */}
       {activeTab === 'cart' && (
-        <div className="bg-white border border-[#EFE9E0] rounded-2xl p-6 shadow-xs space-y-6">
+        <div className="bg-white border border-[#D5C7B8] rounded-none p-6 shadow-sm space-y-6">
           {/* Zero Active Order Channels Safety Warning */}
           {settings.cartEnabled && channels.filter((c) => c.isActive && c.acceptsOrders).length === 0 && (
-            <div className="p-4 bg-amber-50 border-2 border-amber-300 rounded-xl text-amber-950 flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+            <div className="p-4 bg-amber-50 border-2 border-amber-500 rounded-none text-amber-950 flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-black text-sm text-amber-900 mb-1">
+                <h4 className="font-black text-sm text-amber-950 mb-1">
                   هشدار: هیچ کانال فعالی برای دریافت سفارش تنظیم نشده است!
                 </h4>
-                <p className="text-xs text-amber-800 leading-relaxed font-medium">
+                <p className="text-xs text-amber-900 leading-relaxed font-semibold">
                   سبد خرید فعال است، اما هیچ کانال ارتباطی فعالی با گزینه «دریافت سفارش» فعال نیست. لطفاً در تب «اطلاعات تماس و کانال‌ها» حداقل یک کانال فعال (مانند واتساپ، ایتا، بله یا تلگرام) را به عنوان پذیرنده سفارش علامت‌گذاری نمایید تا فرآیند ثبت سفارش مشتریان تکمیل گردد.
                 </p>
               </div>
             </div>
           )}
 
-          <div className="flex items-center justify-between p-4 bg-amber-50/60 border border-amber-200 rounded-xl">
+          <div className="flex items-center justify-between p-4 bg-amber-50/60 border border-amber-200 rounded-none">
             <div className="space-y-0.5">
               <h3 className="text-base font-bold text-[#2B2017]">فعال‌سازی سبد خرید و ثبت سفارش آنلاین</h3>
               <p className="text-xs text-[#5C5248]">
@@ -633,7 +611,7 @@ export function SettingsManager({
                 onChange={(e) => setSettings({ ...settings, cartEnabled: e.target.checked })}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-stone-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#3F8F3B]"></div>
+              <div className="w-11 h-6 bg-stone-300 peer-focus:outline-none rounded-none peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-none after:h-5 after:w-5 after:transition-all peer-checked:bg-[#3F8F3B]"></div>
             </label>
           </div>
 
@@ -646,7 +624,7 @@ export function SettingsManager({
                 rows={2}
                 value={settings.cartNotice}
                 onChange={(e) => setSettings({ ...settings, cartNotice: e.target.value })}
-                className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#F59E0B]"
+                className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-4 py-2.5 text-sm focus:outline-none focus:border-[#F59E0B]"
                 placeholder="قیمت و هزینه‌ی ارسال پس از تأیید اعلام می‌شود."
               />
             </div>
@@ -665,7 +643,7 @@ export function SettingsManager({
                 maxLength={200}
                 value={settings.orderIntroText || ''}
                 onChange={(e) => setSettings({ ...settings, orderIntroText: e.target.value })}
-                className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#F59E0B]"
+                className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-4 py-2.5 text-sm focus:outline-none focus:border-[#F59E0B]"
                 placeholder="سلام، مایلم سفارش زیر را ثبت نمایم:"
               />
             </div>
@@ -684,7 +662,7 @@ export function SettingsManager({
                 maxLength={200}
                 value={settings.orderOutroText || ''}
                 onChange={(e) => setSettings({ ...settings, orderOutroText: e.target.value })}
-                className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#F59E0B]"
+                className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-4 py-2.5 text-sm focus:outline-none focus:border-[#F59E0B]"
                 placeholder="لطفاً پیش‌فاکتور و اطلاعات پرداخت را برای من ارسال فرمایید."
               />
             </div>
@@ -695,14 +673,14 @@ export function SettingsManager({
       {/* Channel Create/Edit Modal */}
       {isChannelModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-          <div className="bg-white border border-[#EFE9E0] rounded-2xl p-6 max-w-lg w-full shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-200">
-            <h3 className="text-lg font-black text-[#2B2017] border-b border-[#EFE9E0] pb-3">
+          <div className="bg-white border-2 border-stone-300 rounded-none p-6 max-w-lg w-full shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-150">
+            <h3 className="text-lg font-black text-[#2B2017] border-b border-[#D5C7B8] pb-3">
               {editingChannel ? 'ویرایش کانال ارتباطی' : 'افزودن کانال ارتباطی جدید'}
             </h3>
 
             {channelError && (
-              <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-bold flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+              <div className="p-3 rounded-none bg-red-50 border-2 border-red-600 text-red-950 text-xs font-bold flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 text-red-700" />
                 <span>{channelError}</span>
               </div>
             )}
@@ -720,7 +698,7 @@ export function SettingsManager({
                       acceptsOrders: (newType === 'INSTAGRAM' || newType === 'YOUTUBE') ? false : channelForm.acceptsOrders,
                     });
                   }}
-                  className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#F59E0B]"
+                  className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-3 py-2 text-sm focus:outline-none focus:border-[#F59E0B]"
                 >
                   {Object.values(CHANNEL_TYPES_META).map((m) => (
                     <option key={m.type} value={m.type}>
@@ -740,7 +718,7 @@ export function SettingsManager({
                   value={channelForm.value}
                   onChange={(e) => setChannelForm({ ...channelForm, value: e.target.value })}
                   placeholder={selectedMeta.placeholderFa}
-                  className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-3 py-2 text-sm text-left font-mono focus:outline-none focus:border-[#F59E0B]"
+                  className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-3 py-2 text-sm text-left font-mono focus:outline-none focus:border-[#F59E0B]"
                 />
                 <span className="text-[11px] text-[#5C5248] mt-1 block">
                   مثال: <span dir="ltr">{selectedMeta.example}</span>
@@ -754,19 +732,19 @@ export function SettingsManager({
                   value={channelForm.label}
                   onChange={(e) => setChannelForm({ ...channelForm, label: e.target.value })}
                   placeholder={selectedMeta.defaultLabel}
-                  className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#F59E0B]"
+                  className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-3 py-2 text-sm focus:outline-none focus:border-[#F59E0B]"
                 />
               </div>
 
               {/* Order Channel Toggle (Addendum A2) */}
-              <div className="p-3.5 bg-amber-50/50 border border-amber-200 rounded-xl space-y-2">
+              <div className="p-3.5 bg-amber-50/50 border border-amber-300 rounded-none space-y-2">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={channelForm.acceptsOrders}
                     disabled={channelForm.type === 'INSTAGRAM' || channelForm.type === 'YOUTUBE'}
                     onChange={(e) => setChannelForm({ ...channelForm, acceptsOrders: e.target.checked })}
-                    className="w-4 h-4 rounded text-[#3F8F3B] focus:ring-0 disabled:opacity-50"
+                    className="w-4 h-4 rounded-none text-[#3F8F3B] focus:ring-0 disabled:opacity-50"
                   />
                   <span
                     className={`text-xs font-bold ${
@@ -778,7 +756,7 @@ export function SettingsManager({
                 </label>
                 {selectedMeta.orderChannelHintFa && (
                   <p className="text-[11px] text-[#5C5248] flex items-start gap-1">
-                    <Info className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
+                    <Info className="w-3.5 h-3.5 text-amber-700 shrink-0 mt-0.5" />
                     <span>{selectedMeta.orderChannelHintFa}</span>
                   </p>
                 )}
@@ -786,50 +764,50 @@ export function SettingsManager({
 
               {/* Visibility Options */}
               <div className="grid grid-cols-2 gap-2 text-xs font-medium text-[#2B2017]">
-                <label className="flex items-center gap-2 p-2 bg-[#FDFBF8] border border-[#EFE9E0] rounded-lg cursor-pointer">
+                <label className="flex items-center gap-2 p-2 bg-[#FDFBF8] border border-[#D5C7B8] rounded-none cursor-pointer">
                   <input
                     type="checkbox"
                     checked={channelForm.showInContactBar}
                     onChange={(e) => setChannelForm({ ...channelForm, showInContactBar: e.target.checked })}
-                    className="w-4 h-4 rounded text-[#F59E0B]"
+                    className="w-4 h-4 rounded-none text-[#F59E0B]"
                   />
                   <span>نوار بالای سایت</span>
                 </label>
-                <label className="flex items-center gap-2 p-2 bg-[#FDFBF8] border border-[#EFE9E0] rounded-lg cursor-pointer">
+                <label className="flex items-center gap-2 p-2 bg-[#FDFBF8] border border-[#D5C7B8] rounded-none cursor-pointer">
                   <input
                     type="checkbox"
                     checked={channelForm.showInFooter}
                     onChange={(e) => setChannelForm({ ...channelForm, showInFooter: e.target.checked })}
-                    className="w-4 h-4 rounded text-[#F59E0B]"
+                    className="w-4 h-4 rounded-none text-[#F59E0B]"
                   />
                   <span>فوتر سایت</span>
                 </label>
-                <label className="flex items-center gap-2 p-2 bg-[#FDFBF8] border border-[#EFE9E0] rounded-lg cursor-pointer">
+                <label className="flex items-center gap-2 p-2 bg-[#FDFBF8] border border-[#D5C7B8] rounded-none cursor-pointer">
                   <input
                     type="checkbox"
                     checked={channelForm.showInContactPage}
                     onChange={(e) => setChannelForm({ ...channelForm, showInContactPage: e.target.checked })}
-                    className="w-4 h-4 rounded text-[#F59E0B]"
+                    className="w-4 h-4 rounded-none text-[#F59E0B]"
                   />
                   <span>صفحه تماس با ما</span>
                 </label>
-                <label className="flex items-center gap-2 p-2 bg-[#FDFBF8] border border-[#EFE9E0] rounded-lg cursor-pointer">
+                <label className="flex items-center gap-2 p-2 bg-[#FDFBF8] border border-[#D5C7B8] rounded-none cursor-pointer">
                   <input
                     type="checkbox"
                     checked={channelForm.isActive}
                     onChange={(e) => setChannelForm({ ...channelForm, isActive: e.target.checked })}
-                    className="w-4 h-4 rounded text-[#3F8F3B]"
+                    className="w-4 h-4 rounded-none text-[#3F8F3B]"
                   />
                   <span className="font-bold text-emerald-800">کانال فعال باشد</span>
                 </label>
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 border-t border-[#EFE9E0] pt-4">
+            <div className="flex justify-end gap-2 border-t border-[#D5C7B8] pt-4">
               <button
                 type="button"
                 onClick={() => setIsChannelModalOpen(false)}
-                className="px-4 py-2 border border-[#EFE9E0] rounded-xl text-xs font-bold text-[#5C5248] hover:bg-[#FDFBF8] transition-colors"
+                className="px-4 py-2 border border-[#D5C7B8] rounded-none text-xs font-bold text-[#5C5248] hover:bg-stone-50 transition-colors cursor-pointer"
               >
                 انصراف
               </button>
@@ -837,7 +815,7 @@ export function SettingsManager({
                 type="button"
                 onClick={handleSaveChannel}
                 disabled={isPending}
-                className="px-5 py-2 bg-[#3F8F3B] hover:bg-[#347831] text-white rounded-xl text-xs font-bold shadow-sm transition-colors flex items-center gap-1.5"
+                className="px-5 py-2 bg-[#3F8F3B] hover:bg-[#347831] text-white rounded-none text-xs font-bold shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer whitespace-nowrap min-w-max"
               >
                 {isPending && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                 <span>{editingChannel ? 'ذخیره تغییرات' : 'افزودن کانال'}</span>

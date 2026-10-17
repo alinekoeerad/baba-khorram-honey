@@ -1,7 +1,7 @@
 /**
- * Admin Users Manager Client Component (Phase 2, Task 8)
+ * Admin Users Manager Client Component (Phase 2, Task 8 & Refinement Pass)
  * Manages admin accounts, status activation/deactivation, password resets,
- * and enforces self-deactivation and last-admin safety protections.
+ * deletion with super-admin protection, and sharp 90-degree corners.
  */
 
 'use client';
@@ -12,6 +12,7 @@ import {
   createAdminUserAction,
   toggleUserStatusAction,
   changeUserPasswordAction,
+  deleteAdminUserAction,
 } from '@/server/actions/user-actions';
 import { uiStringsFa } from '@/content/ui-strings.fa';
 import {
@@ -21,10 +22,13 @@ import {
   KeyRound,
   ShieldCheck,
   AlertCircle,
-  CheckCircle2,
   Loader2,
   X,
+  Trash2,
+  ShieldAlert,
 } from 'lucide-react';
+import { useToast } from '@/components/admin/toast-provider';
+import { ConfirmModal } from '@/components/admin/confirm-modal';
 
 interface UserItem {
   id: string;
@@ -45,28 +49,26 @@ export function AdminUsersManager({
   currentUserId,
 }: AdminUsersManagerProps) {
   const router = useRouter();
+  const toast = useToast();
   const [users, setUsers] = useState<UserItem[]>(initialUsers);
   const [isPending, startTransition] = useTransition();
-  const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   // Modals
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [selectedUserForPassword, setSelectedUserForPassword] = useState<UserItem | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<{ isOpen: boolean; user?: UserItem }>({
+    isOpen: false,
+  });
 
   // Form states
   const [createForm, setCreateForm] = useState({ name: '', email: '', password: '' });
   const [newPassword, setNewPassword] = useState('');
   const [modalError, setModalError] = useState<string | null>(null);
 
-  const showToast = (type: 'success' | 'error', message: string) => {
-    setToast({ type, message });
-    setTimeout(() => setToast(null), 4000);
-  };
-
   const handleToggleStatus = (user: UserItem) => {
     if (user.id === currentUserId && user.isActive) {
-      showToast('error', uiStringsFa.adminUsers.cannotDeactivateSelf);
+      toast.error(uiStringsFa.adminUsers.cannotDeactivateSelf, 'خطا در عملیات');
       return;
     }
 
@@ -80,15 +82,15 @@ export function AdminUsersManager({
         setUsers(
           users.map((u) => (u.id === user.id ? { ...u, isActive: !user.isActive } : u))
         );
-        showToast(
-          'success',
+        toast.success(
           !user.isActive
             ? 'کاربر با موفقیت فعال شد.'
-            : 'کاربر با موفقیت غیرفعال شد و نشست‌های آن منقضی گردید.'
+            : 'کاربر با موفقیت غیرفعال شد و نشست‌های آن منقضی گردید.',
+          'تغییر وضعیت کاربر'
         );
         router.refresh();
       } else {
-        showToast('error', res.error || 'خطا در تغییر وضعیت کاربر.');
+        toast.error(res.error || 'خطا در تغییر وضعیت کاربر.', 'خطا در تغییر وضعیت');
       }
     });
   };
@@ -108,7 +110,7 @@ export function AdminUsersManager({
         setUsers([...users, { ...(res.data as any), createdAt: new Date() }]);
         setIsCreateModalOpen(false);
         setCreateForm({ name: '', email: '', password: '' });
-        showToast('success', uiStringsFa.adminUsers.userCreatedSuccess);
+        toast.success(uiStringsFa.adminUsers.userCreatedSuccess, 'ثبت مدیر جدید');
         router.refresh();
       } else {
         setModalError((res as any).error || 'خطا در ایجاد مدیر جدید.');
@@ -131,7 +133,7 @@ export function AdminUsersManager({
         setIsPasswordModalOpen(false);
         setNewPassword('');
         setSelectedUserForPassword(null);
-        showToast('success', 'رمز عبور با موفقیت تغییر یافت و نشست‌های فعال کاربر لغو شدند.');
+        toast.success('رمز عبور با موفقیت تغییر یافت و نشست‌های فعال کاربر لغو شدند.', 'تغییر رمز عبور');
         router.refresh();
       } else {
         setModalError(res.error || 'خطا در تغییر رمز عبور.');
@@ -139,26 +141,26 @@ export function AdminUsersManager({
     });
   };
 
+  const handleDeleteUser = async () => {
+    if (!confirmDelete.user) return;
+    const target = confirmDelete.user;
+
+    startTransition(async () => {
+      const res = await deleteAdminUserAction({ userId: target.id });
+      if (res.success) {
+        setUsers(users.filter((u) => u.id !== target.id));
+        toast.success(`حساب مدیر «${target.name || target.email}» برای همیشه از سامانه حذف شد.`, 'حذف مدیر');
+        setConfirmDelete({ isOpen: false });
+        router.refresh();
+      } else {
+        toast.error(res.error || 'خطا در حذف حساب مدیر.', 'خطا در حذف');
+        setConfirmDelete({ isOpen: false });
+      }
+    });
+  };
+
   return (
     <div className="space-y-6">
-      {/* Toast */}
-      {toast && (
-        <div
-          className={`fixed top-4 left-4 right-4 md:right-auto md:left-6 md:w-96 z-50 p-4 rounded-xl shadow-lg border flex items-center gap-3 transition-all ${
-            toast.type === 'success'
-              ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
-              : 'bg-rose-50 border-rose-200 text-rose-800'
-          }`}
-        >
-          {toast.type === 'success' ? (
-            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-          ) : (
-            <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
-          )}
-          <span className="text-sm font-medium">{toast.message}</span>
-        </div>
-      )}
-
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#EFE9E0]">
         <div>
@@ -175,15 +177,15 @@ export function AdminUsersManager({
             setModalError(null);
             setIsCreateModalOpen(true);
           }}
-          className="inline-flex items-center gap-2 bg-[#F59E0B] hover:bg-[#D97706] text-white px-5 py-2.5 rounded-xl font-bold shadow-xs transition-colors"
+          className="inline-flex items-center gap-2 bg-[#F59E0B] hover:bg-[#D97706] text-white px-5 py-2.5 rounded-none font-bold shadow-xs transition-colors cursor-pointer"
         >
           <UserPlus className="w-4 h-4" />
           <span>افزودن مدیر جدید</span>
         </button>
       </div>
 
-      {/* Users Table */}
-      <div className="bg-white border border-[#EFE9E0] rounded-2xl shadow-xs overflow-hidden">
+      {/* Users Table Card */}
+      <div className="bg-white border border-[#D5C7B8] rounded-none shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-right border-collapse text-xs">
             <thead>
@@ -197,14 +199,16 @@ export function AdminUsersManager({
               </tr>
             </thead>
             <tbody className="divide-y divide-[#EFE9E0]">
-              {users.map((u) => {
+              {users.map((u, index) => {
                 const isSelf = u.id === currentUserId;
+                const isSuperAdmin = u.email.toLowerCase() === 'admin@honey.ir' || index === 0;
+
                 return (
                   <tr key={u.id} className="hover:bg-amber-50/20 transition-colors">
                     <td className="py-3.5 px-4 font-bold text-[#2B2017]">
                       {u.name || '—'}
                       {isSelf && (
-                        <span className="ms-2 px-2 py-0.5 rounded-full text-[10px] bg-amber-100 text-amber-900 font-normal">
+                        <span className="ms-2 px-2 py-0.5 rounded-none text-[10px] bg-amber-100 text-amber-900 font-normal">
                           (حساب شما)
                         </span>
                       )}
@@ -213,7 +217,7 @@ export function AdminUsersManager({
                       {u.email}
                     </td>
                     <td className="py-3.5 px-4 text-center">
-                      <span className="inline-block px-2.5 py-0.5 rounded-md font-mono text-[10px] font-bold bg-stone-100 text-stone-700">
+                      <span className="inline-block px-2.5 py-0.5 rounded-none font-mono text-[10px] font-bold bg-stone-100 text-stone-700 border border-stone-200">
                         {u.role}
                       </span>
                     </td>
@@ -238,13 +242,13 @@ export function AdminUsersManager({
                         {/* Status Toggle Button */}
                         <button
                           type="button"
-                          disabled={isPending || (isSelf && u.isActive)}
+                          disabled={isPending || (isSelf && u.isActive) || isSuperAdmin}
                           onClick={() => handleToggleStatus(u)}
-                          title={isSelf ? 'امکان غیرفعال‌سازی حساب جاری وجود ندارد' : 'تغییر وضعیت فعال/غیرفعال'}
-                          className={`p-1.5 rounded-lg border text-xs font-bold transition-colors disabled:opacity-40 ${
+                          title={isSuperAdmin ? 'مدیر کل اصلی غیرقابل غیرفعال‌سازی است' : isSelf ? 'امکان غیرفعال‌سازی حساب جاری وجود ندارد' : 'تغییر وضعیت فعال/غیرفعال'}
+                          className={`px-2.5 py-1.5 rounded-none border text-xs font-bold transition-colors cursor-pointer disabled:opacity-40 ${
                             u.isActive
-                              ? 'text-rose-600 border-rose-200 hover:bg-rose-50'
-                              : 'text-emerald-700 border-emerald-200 hover:bg-emerald-50'
+                              ? 'text-rose-700 border-rose-300 hover:bg-rose-50'
+                              : 'text-emerald-700 border-emerald-300 hover:bg-emerald-50'
                           }`}
                         >
                           {u.isActive ? 'غیرفعال‌سازی' : 'فعال‌سازی'}
@@ -260,10 +264,35 @@ export function AdminUsersManager({
                             setIsPasswordModalOpen(true);
                           }}
                           title="تغییر رمز عبور"
-                          className="p-1.5 rounded-lg border border-[#EFE9E0] text-stone-600 hover:text-amber-800 hover:bg-amber-50 transition-colors"
+                          className="px-2.5 py-1.5 rounded-none border border-[#EFE9E0] text-stone-700 hover:text-amber-800 hover:bg-amber-50 transition-colors cursor-pointer"
                         >
                           <KeyRound className="w-3.5 h-3.5" />
                         </button>
+
+                        {/* Delete Admin Button with Super Admin Protection */}
+                        {isSuperAdmin ? (
+                          <span
+                            className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-bold bg-amber-50 border border-amber-300 text-amber-900 rounded-none whitespace-nowrap"
+                            title="این حساب مدیر کل اصلی است و از حذف محافظت می‌شود"
+                          >
+                            <ShieldAlert className="w-3 h-3 text-amber-600" />
+                            <span>مدیر کل (محافظت‌شده)</span>
+                          </span>
+                        ) : isSelf ? (
+                          <span className="text-[11px] text-stone-400 font-medium px-2 py-1">
+                            حساب جاری
+                          </span>
+                        ) : (
+                          <button
+                            type="button"
+                            disabled={isPending}
+                            onClick={() => setConfirmDelete({ isOpen: true, user: u })}
+                            title="حذف دائمی این حساب مدیر"
+                            className="px-3 py-1.5 text-xs font-bold bg-red-50 hover:bg-red-100 text-red-900 border border-red-400 rounded-none whitespace-nowrap transition-colors cursor-pointer disabled:opacity-40"
+                          >
+                            حذف مدیر
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -276,22 +305,22 @@ export function AdminUsersManager({
 
       {/* 1. Modal Create Admin User */}
       {isCreateModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-          <div className="bg-white border border-[#EFE9E0] rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white border-2 border-stone-300 rounded-none p-6 max-w-md w-full shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-[#EFE9E0] pb-3">
               <h3 className="font-bold text-base text-[#2B2017]">افزودن مدیر جدید</h3>
               <button
                 type="button"
                 onClick={() => setIsCreateModalOpen(false)}
-                className="text-stone-400 hover:text-stone-700 p-1"
+                className="text-stone-400 hover:text-stone-700 p-1 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {modalError && (
-              <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800 flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+              <div className="p-3 bg-red-50 border-2 border-red-600 rounded-none text-xs text-red-950 font-bold flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 text-red-700 shrink-0" />
                 <span>{modalError}</span>
               </div>
             )}
@@ -307,7 +336,7 @@ export function AdminUsersManager({
                   value={createForm.name}
                   onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
                   placeholder="علی محمدی"
-                  className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#F59E0B]"
+                  className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-3 py-2 text-xs focus:outline-none focus:border-[#F59E0B]"
                 />
               </div>
 
@@ -322,7 +351,7 @@ export function AdminUsersManager({
                   value={createForm.email}
                   onChange={(e) => setCreateForm({ ...createForm, email: e.target.value })}
                   placeholder="admin2@honey.ir"
-                  className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-3 py-2 text-xs text-left font-mono focus:outline-none focus:border-[#F59E0B]"
+                  className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-3 py-2 text-xs text-left font-mono focus:outline-none focus:border-[#F59E0B]"
                 />
               </div>
 
@@ -337,7 +366,7 @@ export function AdminUsersManager({
                   dir="ltr"
                   value={createForm.password}
                   onChange={(e) => setCreateForm({ ...createForm, password: e.target.value })}
-                  className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-3 py-2 text-xs text-left font-mono focus:outline-none focus:border-[#F59E0B]"
+                  className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-3 py-2 text-xs text-left font-mono focus:outline-none focus:border-[#F59E0B]"
                 />
               </div>
 
@@ -345,14 +374,14 @@ export function AdminUsersManager({
                 <button
                   type="button"
                   onClick={() => setIsCreateModalOpen(false)}
-                  className="px-4 py-2 border border-[#EFE9E0] rounded-xl text-xs font-bold text-[#5C5248] hover:bg-stone-50"
+                  className="px-4 py-2 border border-[#D5C7B8] rounded-none text-xs font-bold text-[#5C5248] hover:bg-stone-50 cursor-pointer"
                 >
                   انصراف
                 </button>
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="px-5 py-2 bg-[#F59E0B] hover:bg-[#D97706] text-white rounded-xl text-xs font-bold transition-colors shadow-xs flex items-center gap-1.5"
+                  className="px-5 py-2 bg-[#F59E0B] hover:bg-[#D97706] text-white rounded-none text-xs font-bold transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer"
                 >
                   {isPending && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                   <span>ایجاد حساب مدیر</span>
@@ -365,8 +394,8 @@ export function AdminUsersManager({
 
       {/* 2. Modal Change User Password */}
       {isPasswordModalOpen && selectedUserForPassword && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-          <div className="bg-white border border-[#EFE9E0] rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white border-2 border-stone-300 rounded-none p-6 max-w-md w-full shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-[#EFE9E0] pb-3">
               <h3 className="font-bold text-base text-[#2B2017]">
                 تغییر رمز عبور برای «{selectedUserForPassword.name || selectedUserForPassword.email}»
@@ -374,15 +403,15 @@ export function AdminUsersManager({
               <button
                 type="button"
                 onClick={() => setIsPasswordModalOpen(false)}
-                className="text-stone-400 hover:text-stone-700 p-1"
+                className="text-stone-400 hover:text-stone-700 p-1 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {modalError && (
-              <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800 flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+              <div className="p-3 bg-red-50 border-2 border-red-600 rounded-none text-xs text-red-950 font-bold flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 text-red-700 shrink-0" />
                 <span>{modalError}</span>
               </div>
             )}
@@ -400,7 +429,7 @@ export function AdminUsersManager({
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="********"
-                  className="w-full bg-[#FDFBF8] border border-[#EFE9E0] rounded-xl px-3 py-2 text-xs text-left font-mono focus:outline-none focus:border-[#F59E0B]"
+                  className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-3 py-2 text-xs text-left font-mono focus:outline-none focus:border-[#F59E0B]"
                 />
                 <span className="text-[11px] text-[#5C5248] mt-1 block">
                   با تغییر رمز عبور، تمام نشست‌های ورود قبلی این کاربر بلافاصله منقضی می‌شوند.
@@ -411,14 +440,14 @@ export function AdminUsersManager({
                 <button
                   type="button"
                   onClick={() => setIsPasswordModalOpen(false)}
-                  className="px-4 py-2 border border-[#EFE9E0] rounded-xl text-xs font-bold text-[#5C5248] hover:bg-stone-50"
+                  className="px-4 py-2 border border-[#D5C7B8] rounded-none text-xs font-bold text-[#5C5248] hover:bg-stone-50 cursor-pointer"
                 >
                   انصراف
                 </button>
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="px-5 py-2 bg-[#D97706] hover:bg-[#B45309] text-white rounded-xl text-xs font-bold transition-colors shadow-xs flex items-center gap-1.5"
+                  className="px-5 py-2 bg-[#D97706] hover:bg-[#B45309] text-white rounded-none text-xs font-bold transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer"
                 >
                   {isPending && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                   <span>بروزرسانی رمز عبور</span>
@@ -428,6 +457,19 @@ export function AdminUsersManager({
           </div>
         </div>
       )}
+
+      {/* 3. Confirm Delete Modal */}
+      <ConfirmModal
+        isOpen={confirmDelete.isOpen}
+        title="حذف حساب مدیر"
+        itemName={confirmDelete.user?.name || confirmDelete.user?.email}
+        message="آیا از حذف کامل و دائمی این حساب مدیر اطمینان دارید؟ تمام نشست‌ها و دسترسی‌های این کاربر به پنل مدیریت بلافاصله قطع خواهند شد."
+        confirmLabel="بله، حذف کن"
+        cancelLabel="انصراف"
+        onConfirm={handleDeleteUser}
+        onCancel={() => setConfirmDelete({ isOpen: false })}
+        isLoading={isPending}
+      />
     </div>
   );
 }

@@ -54,7 +54,7 @@ export function ControlledLinkPicker({
       : null;
 
   return (
-    <div className="p-4 bg-stone-50 border border-stone-200 rounded-xl space-y-4">
+    <div className="p-4 bg-stone-50 border border-stone-200 rounded-none space-y-4">
       <div className="flex items-center gap-2 text-sm font-black text-[#2B2017] border-b border-stone-200 pb-2">
         <LinkIcon className="w-4 h-4 text-[#D97706]" />
         <span>{label}</span>
@@ -69,7 +69,7 @@ export function ControlledLinkPicker({
           <select
             value={current.type}
             onChange={(e) => handleTypeChange(e.target.value as LinkType)}
-            className="w-full h-10 px-3 text-xs sm:text-sm font-bold bg-white border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:outline-none"
+            className="w-full h-10 px-3 text-xs sm:text-sm font-bold bg-white border border-stone-300 rounded-none focus:ring-2 focus:ring-[#F59E0B] focus:outline-none"
           >
             {Object.entries(LINK_TYPE_LABELS).map(([k, text]) => (
               <option key={k} value={k}>
@@ -90,7 +90,7 @@ export function ControlledLinkPicker({
               value={current.label || ''}
               onChange={(e) => onChange({ ...current, label: e.target.value })}
               placeholder="مثلاً: مشاهده بیشتر، شناخت بیشتر عسل..."
-              className="w-full h-10 px-3 text-xs sm:text-sm font-bold bg-white border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:outline-none"
+              className="w-full h-10 px-3 text-xs sm:text-sm font-bold bg-white border border-stone-300 rounded-none focus:ring-2 focus:ring-[#F59E0B] focus:outline-none"
             />
           </div>
         )}
@@ -107,7 +107,7 @@ export function ControlledLinkPicker({
             value={current.targetId || ''}
             onChange={(e) => onChange({ ...current, targetId: e.target.value.trim() })}
             placeholder="مثلاً: mountain-astragalus-honey یا blueberry-citrus-honey-smoothie"
-            className="w-full h-10 px-3 text-xs sm:text-sm font-bold bg-white border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:outline-none font-mono"
+            className="w-full h-10 px-3 text-xs sm:text-sm font-bold bg-white border border-stone-300 rounded-none focus:ring-2 focus:ring-[#F59E0B] focus:outline-none font-mono"
             dir="ltr"
           />
         </div>
@@ -124,7 +124,7 @@ export function ControlledLinkPicker({
             value={current.path || ''}
             onChange={(e) => onChange({ ...current, path: e.target.value.trim() })}
             placeholder="/feedback یا /about"
-            className={`w-full h-10 px-3 text-xs sm:text-sm font-bold bg-white border rounded-lg focus:ring-2 focus:outline-none font-mono ${
+            className={`w-full h-10 px-3 text-xs sm:text-sm font-bold bg-white border rounded-none focus:ring-2 focus:outline-none font-mono ${
               pathError ? 'border-red-500 focus:ring-red-400' : 'border-stone-300 focus:ring-[#F59E0B]'
             }`}
             dir="ltr"

@@ -452,8 +452,8 @@ model SiteSettings {
   ogImage        MediaAsset? @relation("SiteSettingsOgImage", fields: [ogImageId], references: [id], onDelete: SetNull)
   address        String?     @default("کرج، جهانشهر، بلوار مولانا")
   workingHours   String?     @default("همه‌روزه از ساعت ۹:۰۰ الی ۲۱:۰۰")
-  latitude       Float?      @default(35.8415)
-  longitude      Float?      @default(50.9850)
+  latitude       Float?      @default(35.8339878)
+  longitude      Float?      @default(50.9915841)
   mapZoom        Int?        @default(15)
   copyrightText  String?
   seoTitle       String?

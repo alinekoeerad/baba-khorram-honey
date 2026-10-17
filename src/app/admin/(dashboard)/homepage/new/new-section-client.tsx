@@ -33,7 +33,7 @@ export function NewSectionClient() {
 
         <Link
           href="/admin/homepage"
-          className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-stone-600 hover:text-stone-900 hover:bg-stone-100 transition-colors"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-none text-xs sm:text-sm font-bold text-stone-600 hover:text-stone-900 hover:bg-stone-100 transition-colors"
         >
           <ArrowRight className="w-4 h-4" />
           <span>انصراف و بازگشت</span>
@@ -43,7 +43,7 @@ export function NewSectionClient() {
       {/* Step 1: Choose Template */}
       {step === 1 && (
         <div className="space-y-6">
-          <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-3">
+          <div className="p-4 bg-amber-50 border border-amber-200 rounded-none flex items-center gap-3">
             <Sparkles className="w-5 h-5 text-amber-600 shrink-0" />
             <p className="text-xs sm:text-sm text-amber-900 font-bold">
               لطفاً یکی از قالب‌های بصری استاندارد زیر را جهت ایجاد بخش جدید انتخاب کنید:
@@ -59,7 +59,7 @@ export function NewSectionClient() {
             <button
               type="button"
               onClick={() => setStep(2)}
-              className="flex items-center gap-2 px-8 py-3 bg-[#F59E0B] hover:bg-[#D97706] text-white font-black text-sm rounded-xl transition-all shadow-md cursor-pointer"
+              className="flex items-center gap-2 px-8 py-3 bg-[#F59E0B] hover:bg-[#D97706] text-white font-black text-sm rounded-none transition-all shadow-md cursor-pointer"
             >
               <span>مرحله بعد: تنظیم محتوا</span>
               <Check className="w-4 h-4" />
@@ -71,7 +71,7 @@ export function NewSectionClient() {
       {/* Step 2: Content Form */}
       {step === 2 && (
         <div className="space-y-4">
-          <div className="flex items-center justify-between p-3.5 bg-stone-100 rounded-xl text-xs font-bold text-stone-700">
+          <div className="flex items-center justify-between p-3.5 bg-stone-100 rounded-none text-xs font-bold text-stone-700">
             <span>
               قالب انتخاب‌شده: <strong className="text-stone-900">{selectedTemplate.name}</strong> ({selectedTemplate.id})
             </span>

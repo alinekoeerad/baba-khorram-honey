@@ -37,7 +37,7 @@ export default async function EditHomepageSectionPage({ params }: EditSectionPag
 
         <Link
           href="/admin/homepage"
-          className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-stone-600 hover:text-stone-900 hover:bg-stone-100 transition-colors"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-none text-xs sm:text-sm font-bold text-stone-600 hover:text-stone-900 hover:bg-stone-100 transition-colors"
         >
           <ArrowRight className="w-4 h-4" />
           <span>بازگشت به لیست سکشن‌ها</span>

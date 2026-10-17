@@ -41,8 +41,8 @@ export function ConfirmModal({
           <div
             className={`w-10 h-10 rounded-none flex items-center justify-center shrink-0 ${
               isDestructive
-                ? 'bg-rose-100 text-rose-700 border border-rose-300'
-                : 'bg-amber-100 text-amber-700 border border-amber-300'
+                ? 'bg-red-50 text-red-700 border-2 border-red-600'
+                : 'bg-amber-50 text-amber-950 border-2 border-amber-500'
             }`}
           >
             <AlertTriangle className="w-5 h-5" />

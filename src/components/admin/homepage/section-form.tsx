@@ -143,9 +143,9 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
     <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl mx-auto pb-16 text-right">
       {/* Top Banner Warning for Active Sections */}
       {status === 'ACTIVE' && (
-        <div className="p-4 bg-amber-50 border-2 border-amber-300 rounded-xl flex items-start gap-3 shadow-xs">
-          <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-          <div className="text-xs sm:text-sm text-amber-900 leading-relaxed font-bold">
+        <div className="p-4 bg-amber-50 border-2 border-amber-500 rounded-none flex items-start gap-3 shadow-xs">
+          <AlertTriangle className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
+          <div className="text-xs sm:text-sm text-amber-950 leading-relaxed font-bold">
             <span className="font-black text-amber-950">هشدار اعمال فوری: </span>
             این سکشن در وضعیت <span className="underline decoration-amber-600">فعال (ACTIVE)</span> قرار دارد. هر تغییری پس از ذخیره بلافاصله در صفحه اصلی سایت عمومی نمایش داده خواهد شد.
           </div>
@@ -153,7 +153,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
       )}
 
       {/* 1. General Section Configuration */}
-      <div className="p-6 bg-white border border-stone-200 rounded-2xl shadow-sm space-y-6">
+      <div className="p-6 bg-white border border-[#D5C7B8] rounded-none shadow-sm space-y-6">
         <h3 className="font-black text-base text-[#2B2017] border-b border-stone-100 pb-3">
           تنظیمات عمومی سکشن
         </h3>
@@ -170,7 +170,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
               value={internalName}
               onChange={(e) => setInternalName(e.target.value)}
               placeholder="مثلاً: هیرو اصلی پاییزه، بنر زنبورداری..."
-              className="w-full h-11 px-3.5 text-sm font-bold bg-stone-50 border border-stone-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#F59E0B] focus:outline-none"
+              className="w-full h-11 px-3.5 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B] focus:border-[#F59E0B] focus:outline-none"
             />
           </div>
 
@@ -182,7 +182,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value as SectionStatus)}
-              className="w-full h-11 px-3.5 text-sm font-bold bg-stone-50 border border-stone-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#F59E0B] focus:outline-none"
+              className="w-full h-11 px-3.5 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B] focus:border-[#F59E0B] focus:outline-none"
             >
               <option value="DRAFT">پیش‌نویس (DRAFT - فقط در پنل ادمین)</option>
               <option value="ACTIVE">فعال (ACTIVE - نمایش در سایت عمومی)</option>
@@ -195,7 +195,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
             <label className="block text-xs font-bold text-stone-700">
               نوع بخش (Section Type)
             </label>
-            <div className="w-full h-11 px-3.5 text-sm font-black bg-stone-100 border border-stone-200 rounded-xl flex items-center text-stone-600">
+            <div className="w-full h-11 px-3.5 text-sm font-black bg-stone-100 border border-[#D5C7B8] rounded-none flex items-center text-stone-600">
               {type} (قالب: {template})
             </div>
           </div>
@@ -208,7 +208,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
             <select
               value={background}
               onChange={(e) => setBackground(e.target.value as SectionBackground)}
-              className="w-full h-11 px-3.5 text-sm font-bold bg-stone-50 border border-stone-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#F59E0B] focus:outline-none"
+              className="w-full h-11 px-3.5 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B] focus:border-[#F59E0B] focus:outline-none"
             >
               <option value="NONE">ساده (پس‌زمینه سفید / پیش‌فرض)</option>
               <option value="WOOD">طرح چوب اصیل (WoodBackground)</option>
@@ -218,7 +218,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
       </div>
 
       {/* 2. Type-Specific Content Form */}
-      <div className="p-6 bg-white border border-stone-200 rounded-2xl shadow-sm space-y-6">
+      <div className="p-6 bg-white border border-[#D5C7B8] rounded-none shadow-sm space-y-6">
         <h3 className="font-black text-base text-[#2B2017] border-b border-stone-100 pb-3">
           محتوا و تنظیمات سکشن ({type})
         </h3>
@@ -234,7 +234,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                 value={content.title || ''}
                 onChange={(e) => updateContentField('title', e.target.value)}
                 placeholder="شاهکار بی‌نظیر طبیعت"
-                className="w-full h-11 px-3.5 text-sm font-bold bg-stone-50 border border-stone-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#F59E0B] focus:outline-none"
+                className="w-full h-11 px-3.5 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B] focus:border-[#F59E0B] focus:outline-none"
               />
             </div>
 
@@ -245,7 +245,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                 value={content.subtitle || ''}
                 onChange={(e) => updateContentField('subtitle', e.target.value)}
                 placeholder="تغذیه اصیل، طعمی تکرارنشدنی و سرشار از انرژی طلایی برای زندگی روزمره"
-                className="w-full p-3.5 text-sm font-bold bg-stone-50 border border-stone-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#F59E0B] focus:outline-none"
+                className="w-full p-3.5 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B] focus:border-[#F59E0B] focus:outline-none"
               />
             </div>
 
@@ -259,7 +259,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                   <button
                     type="button"
                     onClick={handleAddImage}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#FEF3C7] text-[#92400E] hover:bg-[#FDE68A] text-xs font-black rounded-lg transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#FEF3C7] text-[#92400E] hover:bg-[#FDE68A] text-xs font-black rounded-none transition-colors cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>افزودن تصویر</span>
@@ -269,8 +269,8 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
 
               <div className="space-y-3">
                 {imagesList.map((img, idx) => (
-                  <div key={idx} className="flex items-center gap-3 p-3 bg-stone-50 border border-stone-200 rounded-xl">
-                    <div className="w-12 h-12 rounded-lg bg-stone-200 overflow-hidden shrink-0 border border-stone-300">
+                  <div key={idx} className="flex items-center gap-3 p-3 bg-stone-50 border border-stone-200 rounded-none">
+                    <div className="w-12 h-12 rounded-none bg-stone-200 overflow-hidden shrink-0 border border-stone-300">
                       <img src={img.url} alt={img.alt} className="w-full h-full object-cover" />
                     </div>
 
@@ -280,7 +280,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                         value={img.url}
                         onChange={(e) => handleUpdateImage(idx, 'url', e.target.value)}
                         placeholder="آدرس تصویر (مثلاً /images/hero-1.jpg)"
-                        className="h-9 px-2.5 text-xs font-bold bg-white border border-stone-300 rounded-lg focus:ring-1 focus:ring-[#F59E0B] font-mono"
+                        className="h-9 px-2.5 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B] font-mono"
                         dir="ltr"
                       />
                       <input
@@ -288,7 +288,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                         value={img.alt}
                         onChange={(e) => handleUpdateImage(idx, 'alt', e.target.value)}
                         placeholder="متن جایگزین (Alt)"
-                        className="h-9 px-2.5 text-xs font-bold bg-white border border-stone-300 rounded-lg focus:ring-1 focus:ring-[#F59E0B]"
+                        className="h-9 px-2.5 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
                       />
                     </div>
 
@@ -296,7 +296,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                       <button
                         type="button"
                         onClick={() => handleRemoveImage(idx)}
-                        className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                        className="p-2 text-red-500 hover:bg-red-50 rounded-none transition-colors cursor-pointer"
                         title="حذف این تصویر"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -320,7 +320,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                   value={content.kicker || ''}
                   onChange={(e) => updateContentField('kicker', e.target.value)}
                   placeholder="مثلاً: تنها ماده‌ای که..."
-                  className="w-full h-11 px-3 text-sm font-bold bg-stone-50 border border-stone-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#F59E0B] focus:outline-none"
+                  className="w-full h-11 px-3 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B] focus:border-[#F59E0B] focus:outline-none"
                 />
               </div>
 
@@ -329,7 +329,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                 <select
                   value={content.theme || 'GREEN'}
                   onChange={(e) => updateContentField('theme', e.target.value)}
-                  className="w-full h-11 px-3 text-sm font-bold bg-stone-50 border border-stone-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#F59E0B] focus:outline-none"
+                  className="w-full h-11 px-3 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B] focus:border-[#F59E0B] focus:outline-none"
                 >
                   <option value="GREEN">سبز طبیعی (GREEN)</option>
                   <option value="ORANGE">نارنجی کهربایی (ORANGE)</option>
@@ -342,7 +342,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                 <select
                   value={content.imagePosition || 'RIGHT'}
                   onChange={(e) => updateContentField('imagePosition', e.target.value)}
-                  className="w-full h-11 px-3 text-sm font-bold bg-stone-50 border border-stone-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#F59E0B] focus:outline-none"
+                  className="w-full h-11 px-3 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B] focus:border-[#F59E0B] focus:outline-none"
                 >
                   <option value="RIGHT">سمت راست (پیش‌فرض RTL)</option>
                   <option value="LEFT">سمت چپ</option>
@@ -358,7 +358,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                 value={content.title || ''}
                 onChange={(e) => updateContentField('title', e.target.value)}
                 placeholder="تجلیل از صنعت زنبورداری"
-                className="w-full h-11 px-3.5 text-sm font-bold bg-stone-50 border border-stone-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#F59E0B] focus:outline-none"
+                className="w-full h-11 px-3.5 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B] focus:border-[#F59E0B] focus:outline-none"
               />
             </div>
 
@@ -370,12 +370,12 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                 value={content.body || ''}
                 onChange={(e) => updateContentField('body', e.target.value)}
                 placeholder="توضیحات مفصل این بخش..."
-                className="w-full p-3.5 text-sm font-bold bg-stone-50 border border-stone-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#F59E0B] focus:outline-none"
+                className="w-full p-3.5 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B] focus:border-[#F59E0B] focus:outline-none"
               />
             </div>
 
             {/* Single Image Setting */}
-            <div className="p-4 bg-stone-50 border border-stone-200 rounded-xl space-y-3">
+            <div className="p-4 bg-stone-50 border border-stone-200 rounded-none space-y-3">
               <div className="flex items-center gap-2 text-xs font-black text-stone-800">
                 <ImageIcon className="w-4 h-4 text-[#D97706]" />
                 <span>تصویر شاخص سکشن *</span>
@@ -389,7 +389,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                     updateContentField('image', { ...content.image, url: e.target.value })
                   }
                   placeholder="آدرس فایل تصویر (مثلاً /images/beekeeping.jpg)"
-                  className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-lg focus:ring-1 focus:ring-[#F59E0B] font-mono"
+                  className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B] font-mono"
                   dir="ltr"
                 />
                 <input
@@ -399,7 +399,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                     updateContentField('image', { ...content.image, alt: e.target.value })
                   }
                   placeholder="متن جایگزین (Alt)"
-                  className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-lg focus:ring-1 focus:ring-[#F59E0B]"
+                  className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
                 />
               </div>
             </div>
@@ -423,7 +423,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                   value={content.kicker || ''}
                   onChange={(e) => updateContentField('kicker', e.target.value)}
                   placeholder="با افتخار"
-                  className="w-full h-11 px-3 text-sm font-bold bg-stone-50 border border-stone-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#F59E0B] focus:outline-none"
+                  className="w-full h-11 px-3 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B] focus:border-[#F59E0B] focus:outline-none"
                 />
               </div>
               <div className="space-y-1">
@@ -431,7 +431,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                 <select
                   value={content.theme || 'ORANGE'}
                   onChange={(e) => updateContentField('theme', e.target.value)}
-                  className="w-full h-11 px-3 text-sm font-bold bg-stone-50 border border-stone-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#F59E0B] focus:outline-none"
+                  className="w-full h-11 px-3 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B] focus:border-[#F59E0B] focus:outline-none"
                 >
                   <option value="ORANGE">نارنجی (ORANGE)</option>
                   <option value="GREEN">سبز (GREEN)</option>
@@ -451,7 +451,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                   updateContentField('title', e.target.value);
                 }}
                 placeholder="کارِ زنبورها"
-                className="w-full h-11 px-3.5 text-sm font-bold bg-stone-50 border border-stone-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#F59E0B] focus:outline-none"
+                className="w-full h-11 px-3.5 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B] focus:border-[#F59E0B] focus:outline-none"
               />
             </div>
 
@@ -462,12 +462,12 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                 value={content.body || ''}
                 onChange={(e) => updateContentField('body', e.target.value)}
                 placeholder="توضیحات کوتاه اختیاری روی تصویر..."
-                className="w-full p-3.5 text-sm font-bold bg-stone-50 border border-stone-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#F59E0B] focus:outline-none"
+                className="w-full p-3.5 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B] focus:border-[#F59E0B] focus:outline-none"
               />
             </div>
 
             {/* Background Image Setting */}
-            <div className="p-4 bg-stone-50 border border-stone-200 rounded-xl space-y-3">
+            <div className="p-4 bg-stone-50 border border-stone-200 rounded-none space-y-3">
               <div className="flex items-center gap-2 text-xs font-black text-stone-800">
                 <ImageIcon className="w-4 h-4 text-[#D97706]" />
                 <span>تصویر پس‌زمینه بنر *</span>
@@ -481,7 +481,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                     updateContentField('image', { ...content.image, url: e.target.value })
                   }
                   placeholder="آدرس فایل تصویر (مثلاً /images/bees-banner.jpg)"
-                  className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-lg focus:ring-1 focus:ring-[#F59E0B] font-mono"
+                  className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B] font-mono"
                   dir="ltr"
                 />
                 <input
@@ -491,7 +491,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                     updateContentField('image', { ...content.image, alt: e.target.value })
                   }
                   placeholder="متن جایگزین (Alt)"
-                  className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-lg focus:ring-1 focus:ring-[#F59E0B]"
+                  className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
                 />
               </div>
             </div>
@@ -515,7 +515,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                   value={content.title || ''}
                   onChange={(e) => updateContentField('title', e.target.value)}
                   placeholder="محصولات ممتاز باباخُرم یا دستور پخت‌های منتخب"
-                  className="w-full h-11 px-3 text-sm font-bold bg-stone-50 border border-stone-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#F59E0B] focus:outline-none"
+                  className="w-full h-11 px-3 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B] focus:border-[#F59E0B] focus:outline-none"
                 />
               </div>
 
@@ -524,7 +524,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                 <select
                   value={content.source || 'RECIPES'}
                   onChange={(e) => updateContentField('source', e.target.value)}
-                  className="w-full h-11 px-3 text-sm font-bold bg-stone-50 border border-stone-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#F59E0B] focus:outline-none"
+                  className="w-full h-11 px-3 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B] focus:border-[#F59E0B] focus:outline-none"
                 >
                   <option value="PRODUCTS">تمام محصولات فعال (PRODUCTS)</option>
                   <option value="RECIPES">تمام دستور پخت‌های فعال (RECIPES)</option>
@@ -541,7 +541,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                   value={content.subtitle || ''}
                   onChange={(e) => updateContentField('subtitle', e.target.value)}
                   placeholder="ترکیبات، نوشیدنی‌ها و دسرهای اصیل تهیه‌شده با عسل خالص"
-                  className="w-full h-11 px-3 text-sm font-bold bg-stone-50 border border-stone-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#F59E0B] focus:outline-none"
+                  className="w-full h-11 px-3 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B] focus:border-[#F59E0B] focus:outline-none"
                 />
               </div>
 
@@ -553,7 +553,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                   max={24}
                   value={content.maxItems || 12}
                   onChange={(e) => updateContentField('maxItems', parseInt(e.target.value) || 12)}
-                  className="w-full h-11 px-3 text-sm font-bold bg-stone-50 border border-stone-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#F59E0B] focus:outline-none"
+                  className="w-full h-11 px-3 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B] focus:border-[#F59E0B] focus:outline-none"
                 />
               </div>
             </div>
@@ -577,7 +577,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                 value={content.title || ''}
                 onChange={(e) => updateContentField('title', e.target.value)}
                 placeholder="ویژگی‌ها و استانداردهای عسل باباخُرم"
-                className="w-full h-11 px-3.5 text-sm font-bold bg-stone-50 border border-stone-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#F59E0B] focus:outline-none"
+                className="w-full h-11 px-3.5 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B] focus:border-[#F59E0B] focus:outline-none"
               />
             </div>
 
@@ -589,7 +589,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                   <button
                     type="button"
                     onClick={handleAddGridItem}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#FEF3C7] text-[#92400E] hover:bg-[#FDE68A] text-xs font-black rounded-lg transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#FEF3C7] text-[#92400E] hover:bg-[#FDE68A] text-xs font-black rounded-none transition-colors cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>افزودن آیتم گرید</span>
@@ -599,7 +599,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
 
               <div className="space-y-4">
                 {gridItems.map((item, idx) => (
-                  <div key={item.id || idx} className="p-4 bg-stone-50 border border-stone-200 rounded-xl space-y-3">
+                  <div key={item.id || idx} className="p-4 bg-stone-50 border border-stone-200 rounded-none space-y-3">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-black text-amber-700">آیتم شماره {idx + 1}</span>
                       <button
@@ -619,7 +619,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                         value={item.title || ''}
                         onChange={(e) => handleUpdateGridItem(idx, 'title', e.target.value)}
                         placeholder="عنوان آیتم *"
-                        className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-lg focus:ring-1 focus:ring-[#F59E0B]"
+                        className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
                       />
                       <input
                         type="text"
@@ -628,7 +628,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                           handleUpdateGridItem(idx, 'image', { url: e.target.value, alt: item.title })
                         }
                         placeholder="آدرس آیکون/تصویر (اختیاری)"
-                        className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-lg focus:ring-1 focus:ring-[#F59E0B] font-mono"
+                        className="h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B] font-mono"
                         dir="ltr"
                       />
                     </div>
@@ -638,7 +638,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                       value={item.description || ''}
                       onChange={(e) => handleUpdateGridItem(idx, 'description', e.target.value)}
                       placeholder="توضیحات کوتاه آیتم..."
-                      className="w-full p-2.5 text-xs font-bold bg-white border border-stone-300 rounded-lg focus:ring-1 focus:ring-[#F59E0B]"
+                      className="w-full p-2.5 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
                     />
                   </div>
                 ))}
@@ -650,24 +650,24 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
 
       {/* Messages */}
       {errorMessage && (
-        <div className="p-4 bg-red-100 border border-red-300 text-red-700 text-xs sm:text-sm font-bold rounded-xl flex items-center gap-2">
-          <AlertTriangle className="w-5 h-5 shrink-0 text-red-600" />
+        <div className="p-4 bg-red-50 border-2 border-red-600 text-red-950 text-xs sm:text-sm font-bold rounded-none shadow-md flex items-center gap-2">
+          <AlertTriangle className="w-5 h-5 shrink-0 text-red-700" />
           <span>{errorMessage}</span>
         </div>
       )}
 
       {successMessage && (
-        <div className="p-4 bg-emerald-100 border border-emerald-300 text-emerald-800 text-xs sm:text-sm font-bold rounded-xl flex items-center gap-2">
-          <CheckCircle className="w-5 h-5 shrink-0 text-emerald-600" />
+        <div className="p-4 bg-emerald-50 border-2 border-emerald-600 text-emerald-950 text-xs sm:text-sm font-bold rounded-none shadow-md flex items-center gap-2">
+          <CheckCircle className="w-5 h-5 shrink-0 text-emerald-700" />
           <span>{successMessage}</span>
         </div>
       )}
 
       {/* Action Buttons */}
-      <div className="flex items-center justify-between pt-4 border-t border-stone-200">
+      <div className="flex items-center justify-between pt-4 border-t border-[#D5C7B8]">
         <Link
           href="/admin/homepage"
-          className="flex items-center gap-2 px-5 py-2.5 text-xs sm:text-sm font-bold text-stone-600 hover:text-stone-900 transition-colors"
+          className="flex items-center gap-2 px-5 py-2.5 text-xs sm:text-sm font-bold text-stone-600 hover:text-stone-900 transition-colors whitespace-nowrap min-w-max"
         >
           <ArrowRight className="w-4 h-4" />
           <span>بازگشت به لیست سکشن‌ها</span>
@@ -676,7 +676,7 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex items-center gap-2 px-8 py-3 bg-[#F59E0B] hover:bg-[#D97706] text-white font-black text-sm rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-50 cursor-pointer"
+          className="flex items-center gap-2 px-8 py-3 bg-[#F59E0B] hover:bg-[#D97706] text-white font-black text-sm rounded-none transition-all shadow-md hover:shadow-lg disabled:opacity-50 cursor-pointer whitespace-nowrap min-w-max"
         >
           {isSubmitting ? (
             <>

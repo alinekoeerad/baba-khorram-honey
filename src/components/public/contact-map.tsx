@@ -26,8 +26,8 @@ export interface ContactMapProps {
 }
 
 export function ContactMap({
-  latitude = 35.8415,
-  longitude = 50.9850,
+  latitude = 35.8339878,
+  longitude = 50.9915841,
   zoom = 15,
   siteNameFa = 'عسل باباخُرم',
   address = 'کرج، جهانشهر، بلوار مولانا',
@@ -75,8 +75,8 @@ export function ContactMap({
     },
     {
       name: 'گوگل مپ (Google Maps)',
-      desc: 'Google Maps Navigation',
-      url: `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`,
+      desc: 'صفحه اختصاصی عسل باباخُرم در گوگل مپ',
+      url: 'https://www.google.com/maps/place/%D8%B9%D8%B3%D9%84+%D8%A8%D8%A7%D8%A8%D8%A7%D8%AE%D8%B1%D9%85%E2%80%AD/@35.8336078,50.9902363,17.64z/data=!4m6!3m5!1s0x3f8dbf002df3abe9:0xf0a3e39932747914!8m2!3d35.8339878!4d50.9915841!16s%2Fg%2F11x2l52vmk',
       iconText: 'Google',
       badgeClass: 'bg-[#EA4335] text-white',
     },

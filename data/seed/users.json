@@ -24,18 +24,6 @@
     "updatedAt": "2026-10-08T13:21:48.552Z"
   },
   {
-    "id": "usr_1791808332244_d3lg5",
-    "name": "مدیر تستی",
-    "email": "testadmin_1791808332244@honey.ir",
-    "emailVerified": false,
-    "image": null,
-    "role": "ADMIN",
-    "isActive": false,
-    "lastLoginAt": null,
-    "createdAt": "2026-10-12T12:32:12.244Z",
-    "updatedAt": "2026-10-13T09:47:39.490Z"
-  },
-  {
     "id": "usr_1791809477828_wg0ft",
     "name": "مدیر تستی",
     "email": "testadmin_1791809477828@honey.ir",

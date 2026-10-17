@@ -430,7 +430,7 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
             {isSlugChanged && (
               <div className="mt-2.5 p-3 bg-amber-50 border border-amber-300 text-amber-900 text-xs rounded-none space-y-1">
                 <div className="font-bold flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                  <span className="w-2 h-2 rounded-none bg-amber-500 animate-pulse" />
                   <span>پیش‌نمایش انتقال نشانی (301 Permanent Redirect):</span>
                 </div>
                 <div className="font-mono text-[11px] text-amber-800 flex items-center gap-2" dir="ltr">
@@ -842,7 +842,7 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
         <div className="flex items-center gap-2 text-xs">
           {isDirty ? (
             <span className="text-amber-700 font-bold flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+              <span className="w-2 h-2 rounded-none bg-amber-500 animate-pulse"></span>
               تغییرات ذخیره‌نشده دارید
             </span>
           ) : (

@@ -33,9 +33,9 @@ export function TemplatePicker({
           <div
             key={tpl.id}
             onClick={() => onSelectTemplate(tpl)}
-            className={`group relative rounded-xl border-2 overflow-hidden transition-all duration-200 cursor-pointer flex flex-col justify-between bg-white text-right ${
+            className={`group relative rounded-none border-2 overflow-hidden transition-all duration-200 cursor-pointer flex flex-col justify-between bg-white text-right ${
               isSelected
-                ? 'border-[#F59E0B] ring-4 ring-[#FBBF24]/20 shadow-lg'
+                ? 'border-[#F59E0B] ring-2 ring-[#FBBF24]/30 shadow-lg'
                 : 'border-stone-200 hover:border-amber-400 hover:shadow-md'
             }`}
           >
@@ -52,7 +52,7 @@ export function TemplatePicker({
               </div>
 
               {isSelected && (
-                <div className="absolute top-2.5 left-2.5 w-6 h-6 rounded-full bg-[#F59E0B] text-white flex items-center justify-center shadow-md">
+                <div className="absolute top-2.5 left-2.5 w-6 h-6 rounded-none bg-[#F59E0B] text-white flex items-center justify-center shadow-md">
                   <Check className="w-4 h-4 stroke-[3]" />
                 </div>
               )}

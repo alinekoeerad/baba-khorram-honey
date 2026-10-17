@@ -43,7 +43,7 @@ export default async function AdminHomepagePreviewPage() {
       {/* Sticky Top Preview Banner */}
       <div className="sticky top-0 z-50 bg-[#1C120C] text-white border-b-2 border-[#F59E0B] px-4 py-3 shadow-xl flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-[#F59E0B] text-[#332115] flex items-center justify-center font-black">
+          <div className="w-8 h-8 rounded-none bg-[#F59E0B] text-[#332115] flex items-center justify-center font-black">
             <Eye className="w-5 h-5" />
           </div>
           <div>
@@ -58,7 +58,7 @@ export default async function AdminHomepagePreviewPage() {
 
         <Link
           href="/admin/homepage"
-          className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-black text-white transition-colors cursor-pointer"
+          className="flex items-center gap-1.5 px-4 py-1.5 rounded-none bg-white/10 hover:bg-white/20 text-xs font-black text-white transition-colors cursor-pointer"
         >
           <ArrowRight className="w-4 h-4" />
           <span>بازگشت به پنل مدیریت</span>
@@ -75,7 +75,7 @@ export default async function AdminHomepagePreviewPage() {
                   <div key={section.id} className="relative group">
                     {/* Status Floating Pill for Admin Awareness */}
                     {section.status !== 'ACTIVE' && (
-                      <div className="absolute top-4 right-4 z-30 px-3 py-1 bg-black/80 backdrop-blur-xs text-white text-xs font-black rounded-full border border-amber-500/50 shadow-lg">
+                      <div className="absolute top-4 right-4 z-30 px-3 py-1 bg-black/80 backdrop-blur-xs text-white text-xs font-black rounded-none border border-amber-500/50 shadow-lg">
                         وضعیت: {section.status === 'DRAFT' ? 'پیش‌نویس (DRAFT)' : 'غیرفعال (DISABLED)'}
                       </div>
                     )}
@@ -94,7 +94,7 @@ export default async function AdminHomepagePreviewPage() {
             <div key={section.id} className="relative group">
               {/* Status Floating Pill for Admin Awareness */}
               {section.status !== 'ACTIVE' && (
-                <div className="absolute top-4 right-4 z-30 px-3 py-1 bg-black/80 backdrop-blur-xs text-white text-xs font-black rounded-full border border-amber-500/50 shadow-lg">
+                <div className="absolute top-4 right-4 z-30 px-3 py-1 bg-black/80 backdrop-blur-xs text-white text-xs font-black rounded-none border border-amber-500/50 shadow-lg">
                   وضعیت: {section.status === 'DRAFT' ? 'پیش‌نویس (DRAFT)' : 'غیرفعال (DISABLED)'}
                 </div>
               )}
