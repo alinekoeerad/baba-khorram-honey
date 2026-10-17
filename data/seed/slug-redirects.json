@@ -75,5 +75,19 @@
     "oldSlug": "thyme-honey-test-slug",
     "targetId": "prd_thyme-honey-test-slug",
     "createdAt": "2026-10-12T22:33:49.813Z"
+  },
+  {
+    "id": "red_1792269739011_nyy77",
+    "entityType": "RECIPE",
+    "oldSlug": "greek-homemade-lemonad-with-honey",
+    "targetId": "rcp_greek-homemade-lemonade-with-honey",
+    "createdAt": "2026-10-17T20:42:19.011Z"
+  },
+  {
+    "id": "red_1792269739012_l3q2g",
+    "entityType": "RECIPE",
+    "oldSlug": "agua-fresca-de-citricoc",
+    "targetId": "rcp_agua-fresca-de-citricos",
+    "createdAt": "2026-10-17T20:42:19.012Z"
   }
 ]
