@@ -18,5 +18,9 @@
   "mapZoom": 15,
   "copyrightText": "تمامی حقوق برای برند عسل باباخُرم محفوظ است. طراحی و توسعه ۱۴۰۵.",
   "seoTitle": "عسل باباخُرم | طعم اصیل و طبیعی کوهستان",
-  "seoDescription": "تولید و عرضه مستقیم انواع عسل طبیعی و ارگانیک از دامنه‌های ارسباران و قره‌داغ."
+  "seoDescription": "تولید و عرضه مستقیم انواع عسل طبیعی و ارگانیک از دامنه‌های ارسباران و قره‌داغ.",
+  "baleBotToken": "123456789:ABCdefGHI",
+  "baleChatId": "987654321",
+  "eitaaBotToken": "bot_eitaa_token_xyz",
+  "eitaaChatId": "eitaa_chat_admin"
 }

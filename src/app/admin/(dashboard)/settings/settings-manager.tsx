@@ -16,6 +16,7 @@ import {
   createContactChannelAction,
   updateContactChannelAction,
   deleteContactChannelAction,
+  testMessengerConnectionAction,
 } from '@/server/actions/settings-actions';
 import {
   CHANNEL_TYPES_META,
@@ -40,10 +41,13 @@ import {
   Save,
   Loader2,
   Info,
+  Send,
+  Bot,
 } from 'lucide-react';
 import { ConfirmModal } from '@/components/admin/confirm-modal';
 import { ImageUploader } from '@/components/admin/image-uploader';
 import { useToast } from '@/components/admin/toast-provider';
+import { AdminToggleSwitch } from '@/components/admin/toggle-switch';
 
 interface SettingsManagerProps {
   initialSettings: SiteSettingsData;
@@ -56,10 +60,11 @@ export function SettingsManager({
 }: SettingsManagerProps) {
   const router = useRouter();
   const { showSuccess, showError } = useToast();
-  const [activeTab, setActiveTab] = useState<'general' | 'contact' | 'seo' | 'cart'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'contact' | 'seo' | 'cart' | 'messengers'>('general');
   const [settings, setSettings] = useState<SiteSettingsData>(initialSettings);
   const [channels, setChannels] = useState<ContactChannelData[]>(initialChannels);
   const [isPending, startTransition] = useTransition();
+  const [testingMessenger, setTestingMessenger] = useState<'BALE' | 'EITAA' | null>(null);
 
   // Local string states for smooth localized digit input
   const [latInput, setLatInput] = useState<string>(
@@ -99,6 +104,26 @@ export function SettingsManager({
   const [confirmDeleteChannel, setConfirmDeleteChannel] = useState<{ isOpen: boolean; id?: string }>({ isOpen: false });
   const [channelError, setChannelError] = useState<string | null>(null);
 
+  const handleTestMessenger = async (platform: 'BALE' | 'EITAA') => {
+    setTestingMessenger(platform);
+    try {
+      const res = await testMessengerConnectionAction({
+        platform,
+        token: platform === 'BALE' ? settings.baleBotToken : settings.eitaaBotToken,
+        chatId: platform === 'BALE' ? settings.baleChatId : settings.eitaaChatId,
+      });
+      if (res.success) {
+        showSuccess(res.message || 'پیام تست با موفقیت ارسال شد.');
+      } else {
+        showError(res.error || 'خطا در ارسال پیام تست.');
+      }
+    } catch {
+      showError('خطای ارتباطی در ارسال پیام تست.');
+    } finally {
+      setTestingMessenger(null);
+    }
+  };
+
   const handleSaveSettings = () => {
     startTransition(async () => {
       const parsedLat = latInput ? parseLocalizedNumber(latInput) : null;
@@ -110,6 +135,10 @@ export function SettingsManager({
         latitude: Number.isFinite(parsedLat) ? parsedLat : null,
         longitude: Number.isFinite(parsedLng) ? parsedLng : null,
         mapZoom: Number.isFinite(parsedZoom) ? parsedZoom : null,
+        baleBotToken: settings.baleBotToken?.trim() || null,
+        baleChatId: settings.baleChatId?.trim() || null,
+        eitaaBotToken: settings.eitaaBotToken?.trim() || null,
+        eitaaChatId: settings.eitaaChatId?.trim() || null,
       };
 
       const res = await updateSiteSettingsAction(payload);
@@ -282,6 +311,17 @@ export function SettingsManager({
         >
           <ShoppingCart className="w-4 h-4" />
           <span>سبد خرید و سفارش</span>
+        </button>
+        <button
+          onClick={() => setActiveTab('messengers')}
+          className={`flex items-center gap-2 px-5 py-3 rounded-none text-sm font-bold transition-all border-b-2 whitespace-nowrap shrink-0 min-w-max cursor-pointer ${
+            activeTab === 'messengers'
+              ? 'border-[#F59E0B] text-[#D97706] bg-amber-50/50'
+              : 'border-transparent text-[#5C5248] hover:text-[#2B2017]'
+          }`}
+        >
+          <Bot className="w-4 h-4" />
+          <span>ربات‌های اطلاع‌رسانی (بله و ایتا)</span>
         </button>
       </div>
 
@@ -632,22 +672,13 @@ export function SettingsManager({
             </div>
           )}
 
-          <div className="flex items-center justify-between p-4 bg-amber-50/60 border border-amber-200 rounded-none">
-            <div className="space-y-0.5">
-              <h3 className="text-base font-bold text-[#2B2017]">فعال‌سازی سبد خرید و ثبت سفارش آنلاین</h3>
-              <p className="text-xs text-[#5C5248]">
-                در صورت فعال بودن، آیکون سبد خرید در هدر و دکمه‌های افزودن به سبد در صفحات محصولات نمایش داده می‌شوند.
-              </p>
-            </div>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={settings.cartEnabled}
-                onChange={(e) => setSettings({ ...settings, cartEnabled: e.target.checked })}
-                className="sr-only peer"
-              />
-              <div className="w-11 h-6 bg-stone-300 peer-focus:outline-none rounded-none peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-none after:h-5 after:w-5 after:transition-all peer-checked:bg-[#3F8F3B]"></div>
-            </label>
+          <div className="p-4 bg-amber-50/60 border border-amber-200 rounded-none">
+            <AdminToggleSwitch
+              checked={settings.cartEnabled}
+              onChange={(checked) => setSettings({ ...settings, cartEnabled: checked })}
+              label="فعال‌سازی سبد خرید و ثبت سفارش آنلاین"
+              description="در صورت فعال بودن، آیکون سبد خرید در هدر و دکمه‌های افزودن به سبد در صفحات محصولات نمایش داده می‌شوند."
+            />
           </div>
 
           <div className="space-y-6">
@@ -700,6 +731,173 @@ export function SettingsManager({
                 className="w-full bg-[#FDFBF8] border border-[#D5C7B8] rounded-none px-4 py-2.5 text-sm focus:outline-none focus:border-[#F59E0B]"
                 placeholder="لطفاً پیش‌فاکتور و اطلاعات پرداخت را برای من ارسال فرمایید."
               />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Tab 5: Messenger Bot Tokens & Live Connection Test */}
+      {activeTab === 'messengers' && (
+        <div className="bg-white border border-[#D5C7B8] rounded-none p-6 shadow-sm space-y-8">
+          <div className="border-b border-[#D5C7B8] pb-4">
+            <h2 className="text-lg font-black text-[#2B2017] flex items-center gap-2">
+              <Bot className="w-5 h-5 text-[#D97706]" />
+              <span>ربات‌های اطلاع‌رسانی لحظه‌ای سفارشات (بله و ایتا)</span>
+            </h2>
+            <p className="text-xs text-[#5C5248] mt-1.5 leading-relaxed">
+              با تنظیم توکن ربات‌ها و شناسه کاربری/کانال مدیریت، به محض ثبت هر سفارش جدید در وب‌سایت، پیام کامل سفارش به صورت خودکار و در لحظه به پیام‌رسان شما مخابره می‌شود.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* 1. Bale Bot Card */}
+            <div className="p-5 bg-[#F0FDF4]/60 border-2 border-[#86EFAC] rounded-none space-y-5">
+              <div className="flex items-center justify-between border-b border-[#BBF7D0] pb-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-none bg-[#00A859] text-white flex items-center justify-center font-bold text-sm">
+                    بله
+                  </div>
+                  <div>
+                    <h3 className="font-black text-sm text-[#14532D]">ربات پیام‌رسان بله (Bale)</h3>
+                    <span className="text-[11px] text-[#166534]">tapi.bale.ai API</span>
+                  </div>
+                </div>
+                <span className="text-[10px] font-bold bg-[#DCFCE7] text-[#15803D] px-2 py-0.5 border border-[#86EFAC]">
+                  فعال
+                </span>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-[#14532D] mb-1.5">
+                    توکن ربات بله (Bale Bot Token)
+                  </label>
+                  <input
+                    type="text"
+                    dir="ltr"
+                    value={settings.baleBotToken || ''}
+                    onChange={(e) => setSettings({ ...settings, baleBotToken: e.target.value })}
+                    placeholder="123456789:ABCdefGhIjkLmNoPqRsTuVwXyZ"
+                    className="w-full bg-white border border-[#86EFAC] text-[#14532D] text-xs font-mono p-2.5 focus:outline-none focus:border-[#00A859] rounded-none"
+                  />
+                  <span className="text-[10px] text-[#166534] mt-1 block">
+                    توکن اختصاصی ساخته شده از طریق BotFather@ در بله
+                  </span>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#14532D] mb-1.5">
+                    شناسه چت یا کانال مدیر در بله (Chat ID)
+                  </label>
+                  <input
+                    type="text"
+                    dir="ltr"
+                    value={settings.baleChatId || ''}
+                    onChange={(e) => setSettings({ ...settings, baleChatId: e.target.value })}
+                    placeholder="987654321"
+                    className="w-full bg-white border border-[#86EFAC] text-[#14532D] text-xs font-mono p-2.5 focus:outline-none focus:border-[#00A859] rounded-none"
+                  />
+                  <span className="text-[10px] text-[#166534] mt-1 block">
+                    شناسه عددی کاربری شما یا کانال/گروه اختصاصی مدیریت
+                  </span>
+                </div>
+
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => handleTestMessenger('BALE')}
+                    disabled={testingMessenger === 'BALE'}
+                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#00A859] hover:bg-[#008f4c] text-white text-xs font-black transition-colors rounded-none disabled:opacity-50 cursor-pointer shadow-xs"
+                  >
+                    {testingMessenger === 'BALE' ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>در حال ارسال پیام تست به بله...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-3.5 h-3.5" />
+                        <span>تست اتصال ربات بله</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* 2. Eitaa Bot Card */}
+            <div className="p-5 bg-[#FFF7ED]/60 border-2 border-[#FED7AA] rounded-none space-y-5">
+              <div className="flex items-center justify-between border-b border-[#FFEDD5] pb-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-none bg-[#FF6600] text-white flex items-center justify-center font-bold text-sm">
+                    ایتا
+                  </div>
+                  <div>
+                    <h3 className="font-black text-sm text-[#7C2D12]">ربات پیام‌رسان ایتا (Eitaa)</h3>
+                    <span className="text-[11px] text-[#9A3412]">eitaayar.ir Webhook API</span>
+                  </div>
+                </div>
+                <span className="text-[10px] font-bold bg-[#FFEDD5] text-[#C2410C] px-2 py-0.5 border border-[#FDBA74]">
+                  فعال
+                </span>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-[#7C2D12] mb-1.5">
+                    توکن ربات در ایتایار (Eitaa Bot Token)
+                  </label>
+                  <input
+                    type="text"
+                    dir="ltr"
+                    value={settings.eitaaBotToken || ''}
+                    onChange={(e) => setSettings({ ...settings, eitaaBotToken: e.target.value })}
+                    placeholder="bot12345:xxxxxxxxxxxxxxxxxxxxxx"
+                    className="w-full bg-white border border-[#FED7AA] text-[#7C2D12] text-xs font-mono p-2.5 focus:outline-none focus:border-[#EA580C] rounded-none"
+                  />
+                  <span className="text-[10px] text-[#9A3412] mt-1 block">
+                    توکن دریافتی از پنل توسعه‌دهندگان eitaayar.ir
+                  </span>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#7C2D12] mb-1.5">
+                    شناسه چت یا کانال مدیر در ایتا (Chat ID)
+                  </label>
+                  <input
+                    type="text"
+                    dir="ltr"
+                    value={settings.eitaaChatId || ''}
+                    onChange={(e) => setSettings({ ...settings, eitaaChatId: e.target.value })}
+                    placeholder="12345678 یا @channel_name"
+                    className="w-full bg-white border border-[#FED7AA] text-[#7C2D12] text-xs font-mono p-2.5 focus:outline-none focus:border-[#EA580C] rounded-none"
+                  />
+                  <span className="text-[10px] text-[#9A3412] mt-1 block">
+                    شناسه عددی یا آیدی کانال/چت دریافت‌کننده پیام
+                  </span>
+                </div>
+
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => handleTestMessenger('EITAA')}
+                    disabled={testingMessenger === 'EITAA'}
+                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#EA580C] hover:bg-[#C2410C] text-white text-xs font-black transition-colors rounded-none disabled:opacity-50 cursor-pointer shadow-xs"
+                  >
+                    {testingMessenger === 'EITAA' ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>در حال ارسال پیام تست به ایتا...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-3.5 h-3.5" />
+                        <span>تست اتصال ربات ایتا</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -5,11 +5,13 @@
  * RTL top bar showing active administrator credentials, public site link, and mobile drawer toggle.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
-import { Menu, X, ExternalLink, LogOut, User as UserIcon, Search, ChevronLeft } from 'lucide-react';
+import { Menu, X, ExternalLink, LogOut, User as UserIcon, Search, ChevronLeft, Bell } from 'lucide-react';
 import { AdminSidebar } from './sidebar';
+import { getNewOrdersCountAction } from '@/server/actions/order-actions';
+import { toPersianDigits } from '@/lib/domain-utils';
 
 interface AdminHeaderProps {
   user: {
@@ -38,6 +40,26 @@ export function AdminHeader({ user }: AdminHeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [newOrdersCount, setNewOrdersCount] = useState<number>(0);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchOrdersCount = async () => {
+      try {
+        const res = await getNewOrdersCountAction();
+        if (isMounted && res.success && typeof res.count === 'number') {
+          setNewOrdersCount(res.count);
+        }
+      } catch {}
+    };
+
+    fetchOrdersCount();
+    const timer = setInterval(fetchOrdersCount, 15000); // 15-second silent live polling
+    return () => {
+      isMounted = false;
+      clearInterval(timer);
+    };
+  }, [pathname]);
 
   // Generate dynamic breadcrumbs
   const pathSegments = pathname.split('/').filter(Boolean);
@@ -106,7 +128,22 @@ export function AdminHeader({ user }: AdminHeaderProps) {
         </div>
 
         {/* Left Section in RTL: Search Command Button + User Badge & Actions */}
-        <div className="flex items-center gap-3 sm:gap-4">
+        <div className="flex items-center gap-2.5 sm:gap-3.5">
+          {/* Silent Live Order Notification Badge (ADM-ORD-NOTIF) */}
+          {newOrdersCount > 0 && (
+            <Link
+              href="/admin/orders"
+              className="inline-flex items-center gap-2 px-3 h-12 bg-rose-50 hover:bg-rose-100 border border-rose-300 text-rose-800 rounded-none text-xs font-black transition-all cursor-pointer shadow-xs animate-pulse"
+              title="سفارش‌های جدید در انتظار هماهنگی"
+            >
+              <span className="flex h-2 w-2 relative">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-none bg-rose-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-none h-2 w-2 bg-rose-600"></span>
+              </span>
+              <span>🔔 {toPersianDigits(newOrdersCount)} سفارش جدید در انتظار هماهنگی</span>
+            </Link>
+          )}
+
           {/* Quick Spotlight Search Button (Ctrl+K) */}
           <button
             type="button"

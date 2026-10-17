@@ -526,3 +526,18 @@ export async function deleteOrderAction(id: string) {
 
   return { success: true };
 }
+
+/**
+ * Admin Action: Get count of new pending orders (for silent live notification badge)
+ */
+export async function getNewOrdersCountAction() {
+  try {
+    await requireAdmin({ allowRedirect: false });
+    const count = await db.order.count({
+      where: { status: 'NEW' },
+    });
+    return { success: true, count };
+  } catch {
+    return { success: false, count: 0 };
+  }
+}

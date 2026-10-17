@@ -26,18 +26,28 @@ export interface OrderNotificationResult {
   };
 }
 
+import { SettingsService } from './settings-service';
+
 export async function notifyAdminOfOrder(
   messageText: string,
   channelType: string
 ): Promise<OrderNotificationResult> {
-  const eitaaToken = process.env.EITAA_BOT_TOKEN?.trim();
-  const eitaaChatId = process.env.EITAA_CHAT_ID?.trim();
-
-  const baleToken = process.env.BALE_BOT_TOKEN?.trim();
-  const baleChatId = process.env.BALE_CHAT_ID?.trim();
+  let eitaaToken = process.env.EITAA_BOT_TOKEN?.trim();
+  let eitaaChatId = process.env.EITAA_CHAT_ID?.trim();
 
   const telegramToken = process.env.TELEGRAM_BOT_TOKEN?.trim();
   const telegramChatId = process.env.TELEGRAM_CHAT_ID?.trim();
+
+  let baleToken = process.env.BALE_BOT_TOKEN?.trim();
+  let baleChatId = process.env.BALE_CHAT_ID?.trim();
+
+  try {
+    const settings = await SettingsService.getSettings();
+    if (settings.eitaaBotToken?.trim()) eitaaToken = settings.eitaaBotToken.trim();
+    if (settings.eitaaChatId?.trim()) eitaaChatId = settings.eitaaChatId.trim();
+    if (settings.baleBotToken?.trim()) baleToken = settings.baleBotToken.trim();
+    if (settings.baleChatId?.trim()) baleChatId = settings.baleChatId.trim();
+  } catch {}
 
   const result: OrderNotificationResult = {
     dispatched: false,

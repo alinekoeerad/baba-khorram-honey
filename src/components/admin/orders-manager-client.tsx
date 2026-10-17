@@ -31,9 +31,11 @@ import {
   Package,
   MapPin,
   FileText,
+  Printer,
 } from 'lucide-react';
 import { useToast } from '@/components/admin/toast-provider';
 import { ConfirmModal } from '@/components/admin/confirm-modal';
+import { OrderPrintModal } from '@/components/admin/order-print-modal';
 
 export interface OrderItem {
   id: string;
@@ -125,6 +127,7 @@ export function OrdersManagerClient({
   }>({
     isOpen: false,
   });
+  const [printModalOrder, setPrintModalOrder] = useState<OrderItem | null>(null);
 
   // Filter items
   const filtered = orders.filter((o) => {
@@ -417,6 +420,17 @@ export function OrdersManagerClient({
                       )}
                     </button>
 
+                    {/* Print Invoice & Shipping Label */}
+                    <button
+                      type="button"
+                      onClick={() => setPrintModalOrder(order)}
+                      className="h-8 px-2.5 inline-flex items-center gap-1.5 bg-[#FAF7F2] hover:bg-stone-200 border border-[#EFE9E0] text-[#2B2017] text-xs font-bold transition-colors cursor-pointer rounded-none"
+                      title="چاپ فاکتور و برچسب پستی مرسوله"
+                    >
+                      <Printer className="w-3.5 h-3.5 text-[#D97706]" />
+                      <span>چاپ فاکتور و برچسب پستی</span>
+                    </button>
+
                     {/* Direct Contact Buttons */}
                     <a
                       href={`https://wa.me/98${cleanMobile}?text=${encodeURIComponent(
@@ -563,6 +577,15 @@ export function OrdersManagerClient({
         onCancel={() => setConfirmDelete({ isOpen: false })}
         isLoading={isPending}
       />
+
+      {/* Editable Printable Invoice & Shipping Label Modal */}
+      {printModalOrder && (
+        <OrderPrintModal
+          order={printModalOrder}
+          isOpen={Boolean(printModalOrder)}
+          onClose={() => setPrintModalOrder(null)}
+        />
+      )}
     </div>
   );
 }

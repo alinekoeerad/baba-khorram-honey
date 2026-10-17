@@ -49,8 +49,24 @@ export function Picture({
   width: customWidth,
   height: customHeight,
 }: PictureProps) {
-  // Graceful fallback when asset is missing or corrupted
-  if (!asset || !asset.variants || Object.keys(asset.variants).length === 0) {
+  let variantsObj = asset?.variants;
+  if (typeof variantsObj === 'string') {
+    try {
+      variantsObj = JSON.parse(variantsObj);
+    } catch {}
+  }
+
+  const rawVariants: Array<{ url: string; width: number; height: number }> =
+    variantsObj && typeof variantsObj === 'object' ? Object.values(variantsObj) : [];
+
+  const sortedVariants = rawVariants
+    .filter((v) => v && v.url && v.width)
+    .sort((a, b) => a.width - b.width);
+
+  const directSrc = (asset as any)?.url || (asset?.storageKey ? `/uploads/${asset.storageKey}` : null);
+
+  // Graceful fallback when asset is missing or has no source
+  if (sortedVariants.length === 0 && !directSrc) {
     return (
       <div
         className={`flex flex-col items-center justify-center bg-[#FFFBEB] border border-[#EFE9E0] text-[#5C5248] p-4 text-xs text-center select-none ${className}`}
@@ -79,29 +95,21 @@ export function Picture({
     );
   }
 
-  // Extract variants and sort by width ascending
-  const rawVariants: Array<{ url: string; width: number; height: number }> =
-    typeof asset.variants === 'object' ? Object.values(asset.variants) : [];
-
-  const sortedVariants = rawVariants
-    .filter((v) => v && v.url && v.width)
-    .sort((a, b) => a.width - b.width);
-
   // Generate srcSet
   const srcSet = sortedVariants
     .map((v) => `${v.url} ${v.width}w`)
     .join(', ');
 
-  // Default src is the largest or master variant
-  const defaultSrc = sortedVariants[sortedVariants.length - 1]?.url || `/uploads/${asset.storageKey}`;
+  // Default src is the largest variant or direct storage path
+  const defaultSrc = sortedVariants[sortedVariants.length - 1]?.url || directSrc || '';
 
   // Dimensions
-  const intrinsicWidth = customWidth || asset.width || sortedVariants[sortedVariants.length - 1]?.width || 800;
-  const intrinsicHeight = customHeight || asset.height || sortedVariants[sortedVariants.length - 1]?.height || 600;
+  const intrinsicWidth = customWidth || asset?.width || sortedVariants[sortedVariants.length - 1]?.width || 800;
+  const intrinsicHeight = customHeight || asset?.height || sortedVariants[sortedVariants.length - 1]?.height || 600;
 
-  const resolvedAlt = alt || asset.alt || 'عسل باباخُرم';
+  const resolvedAlt = alt || asset?.alt || 'عسل باباخُرم';
 
-  const blurStyle: React.CSSProperties = asset.blurDataUrl
+  const blurStyle: React.CSSProperties = asset?.blurDataUrl
     ? {
         backgroundImage: `url("${asset.blurDataUrl}")`,
         backgroundSize: 'cover',

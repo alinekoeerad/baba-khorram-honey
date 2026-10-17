@@ -33,6 +33,10 @@ export interface SiteSettingsData {
   cartNotice: string;
   orderIntroText?: string | null;
   orderOutroText?: string | null;
+  baleBotToken?: string | null;
+  baleChatId?: string | null;
+  eitaaBotToken?: string | null;
+  eitaaChatId?: string | null;
   isPlaceholder?: boolean;
 }
 
@@ -69,6 +73,10 @@ const DEFAULT_SETTINGS: SiteSettingsData = {
   cartNotice: 'قیمت و هزینه‌ی ارسال پس از تأیید اعلام می‌شود.',
   orderIntroText: null,
   orderOutroText: null,
+  baleBotToken: null,
+  baleChatId: null,
+  eitaaBotToken: null,
+  eitaaChatId: null,
   isPlaceholder: false,
 };
 
@@ -182,10 +190,28 @@ export class SettingsService {
     if (!raw || Object.keys(raw).length === 0) {
       return DEFAULT_SETTINGS;
     }
-    return {
+    const merged: SiteSettingsData = {
       ...DEFAULT_SETTINGS,
       ...raw,
     };
+
+    if (merged.logoId && !merged.logo && typeof db.mediaAsset?.findUnique === 'function') {
+      try {
+        merged.logo = await db.mediaAsset.findUnique({ where: { id: merged.logoId } });
+      } catch {}
+    }
+    if (merged.footerLogoId && !merged.footerLogo && typeof db.mediaAsset?.findUnique === 'function') {
+      try {
+        merged.footerLogo = await db.mediaAsset.findUnique({ where: { id: merged.footerLogoId } });
+      } catch {}
+    }
+    if (merged.ogImageId && !merged.ogImage && typeof db.mediaAsset?.findUnique === 'function') {
+      try {
+        merged.ogImage = await db.mediaAsset.findUnique({ where: { id: merged.ogImageId } });
+      } catch {}
+    }
+
+    return merged;
   }
 
   /**

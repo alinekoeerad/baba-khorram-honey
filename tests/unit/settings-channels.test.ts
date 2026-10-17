@@ -100,4 +100,25 @@ describe('SiteSettings Validation & Length Limits (Addendum A2)', () => {
     expect(settings.longitude).toBeCloseTo(50.9915841, 4);
     expect(settings.mapZoom).toBe(15);
   });
+
+  it('supports persisting and retrieving Bale and Eitaa bot tokens and chat IDs', async () => {
+    const updated = await SettingsService.updateSettings({
+      baleBotToken: '123456789:ABCdefGHI',
+      baleChatId: '987654321',
+      eitaaBotToken: 'bot_eitaa_token_xyz',
+      eitaaChatId: 'eitaa_chat_admin',
+    });
+
+    expect(updated.baleBotToken).toBe('123456789:ABCdefGHI');
+    expect(updated.baleChatId).toBe('987654321');
+    expect(updated.eitaaBotToken).toBe('bot_eitaa_token_xyz');
+    expect(updated.eitaaChatId).toBe('eitaa_chat_admin');
+
+    const fresh = await SettingsService.getSettings();
+    expect(fresh.baleBotToken).toBe('123456789:ABCdefGHI');
+    expect(fresh.baleChatId).toBe('987654321');
+    expect(fresh.eitaaBotToken).toBe('bot_eitaa_token_xyz');
+    expect(fresh.eitaaChatId).toBe('eitaa_chat_admin');
+  });
 });
+
