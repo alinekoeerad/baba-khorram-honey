@@ -103,24 +103,14 @@ export interface OrderRecord {
   updatedAt: Date;
 }
 
-const seedDir = path.resolve(process.cwd(), 'data/seed');
+const seedDir = path.join(process.cwd(), 'data', 'seed');
 
 function loadJson<T>(filename: string, defaultValue: T): T {
   try {
-    const candidateDirs = [
-      path.resolve(process.cwd(), 'data/seed'),
-      path.resolve(__dirname, '../../../data/seed'),
-      path.resolve(__dirname, '../../../../data/seed'),
-      path.resolve(__dirname, '../../data/seed'),
-      path.resolve(__dirname, '../data/seed'),
-      path.resolve('data/seed'),
-    ];
-    for (const dir of candidateDirs) {
-      const fullPath = path.join(dir, filename);
-      if (fs.existsSync(fullPath)) {
-        const raw = fs.readFileSync(fullPath, 'utf8');
-        return JSON.parse(raw);
-      }
+    const fullPath = path.join(process.cwd(), 'data', 'seed', filename);
+    if (fs.existsSync(fullPath)) {
+      const raw = fs.readFileSync(fullPath, 'utf8');
+      return JSON.parse(raw);
     }
   } catch {
     // Return default on error

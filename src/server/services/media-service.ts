@@ -94,7 +94,7 @@ export async function processImage(
   buffer: Buffer,
   filePrefix: string
 ): Promise<ProcessedImageResult> {
-  const uploadDir = path.resolve(process.cwd(), process.env.UPLOAD_DIR || './uploads');
+  const uploadDir = path.join(process.cwd(), process.env.UPLOAD_DIR || 'uploads');
   if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
   }

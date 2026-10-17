@@ -31,6 +31,7 @@ export default defineConfig({
       name: 'Desktop Chrome',
       use: {
         ...devices['Desktop Chrome'],
+        channel: process.env.PLAYWRIGHT_CHANNEL || 'chrome',
         viewport: { width: 1280, height: 800 },
       },
     },
@@ -38,6 +39,7 @@ export default defineConfig({
       name: 'Mobile Chrome (Pixel 5)',
       use: {
         ...devices['Pixel 5'],
+        channel: process.env.PLAYWRIGHT_CHANNEL || 'chrome',
       },
     },
     {

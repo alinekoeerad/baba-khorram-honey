@@ -27,58 +27,58 @@ import { getPublicRecipes } from '@/server/queries/recipes';
 
 export const revalidate = 3600;
 
-// Canonical fallback recipes matching reference/index.html & site-content.json
+// Canonical fallback recipes matching database slugs
 const CANONICAL_RECIPES = [
   {
     id: 'rec-1',
-    title: 'اسموتی خنک بلوبری، مرکبات و عسل',
-    slug: 'blueberry-citrus-honey-smoothie',
+    title: 'شربت آمالاکی و عسل تقویت سیستم ایمنی',
+    slug: 'amalaki-panaka',
     imageUrl: '/images/recipe-1.jpg',
     theme: 'green' as const,
   },
   {
     id: 'rec-2',
-    title: 'گرانیتای هندوانه و عسل با موم طبیعی',
-    slug: 'watermelon-honey-granita',
+    title: 'چای آرامش‌بخش گریپ‌فروت و عسل',
+    slug: 'fengmi-youzi-cha',
     imageUrl: '/images/recipe-2.jpg',
     theme: 'orange' as const,
   },
   {
     id: 'rec-3',
-    title: 'بستنی عسلی نمکی با کباب میوه‌های گریل‌شده',
-    slug: 'salted-honey-ice-cream-grilled-fruit',
+    title: 'معجون گرم هاتشیمیتسو شوگایو با زنجبیل',
+    slug: 'hachimitsu-shogayu',
     imageUrl: '/images/recipe-3.jpg',
     theme: 'yellow' as const,
   },
   {
     id: 'rec-4',
-    title: 'پای ماست بستنی میوه‌ای با شهد عسل',
-    slug: 'frozen-yogurt-honey-berry-pie',
+    title: 'دمنوش نیوک موت گیاهی با شهد عسل',
+    slug: 'nuoc-mot',
     imageUrl: '/images/recipe-4.jpg',
     theme: 'burgundy' as const,
   },
   {
     id: 'rec-5',
-    title: 'کیک خانگی لایه‌ای با شهد عسل کوهی',
-    slug: 'mountain-honey-layer-cake',
+    title: 'لیموناد خنک سنتی با شهد عسل طبیعی',
+    slug: 'greek-homemade-lemonad-with-honey',
     imageUrl: '/images/recipe-5.jpg',
     theme: 'green' as const,
   },
   {
     id: 'rec-6',
-    title: 'نوشیدنی آرامش‌بخش عسل، لیمو و زنجبیل',
-    slug: 'soothing-honey-lemon-ginger-tea',
+    title: 'شربت سکنجبین عسلی و نعناع خنک',
+    slug: 'sekanjabin-sharbat',
     imageUrl: '/images/recipe-6.jpg',
     theme: 'orange' as const,
   },
 ];
 
-// Canonical fallback products
+// Canonical fallback products matching database slugs
 const CANONICAL_PRODUCTS = [
   {
     id: 'prod-1',
-    nameFa: 'عسل طبیعی گون کوهستان',
-    slug: 'mountain-astragalus-honey',
+    nameFa: 'عسل طبیعی گون گز',
+    slug: 'astragalus',
     imageUrl: '/images/honey-jar.jpg',
     theme: 'yellow' as const,
     isAvailable: true,
@@ -86,7 +86,7 @@ const CANONICAL_PRODUCTS = [
   {
     id: 'prod-2',
     nameFa: 'عسل وحشی کنار (سدر) جنوب',
-    slug: 'wild-sidr-honey',
+    slug: 'ziziphus',
     imageUrl: '/images/honey-jar.jpg',
     theme: 'orange' as const,
     isAvailable: true,
@@ -94,7 +94,7 @@ const CANONICAL_PRODUCTS = [
   {
     id: 'prod-3',
     nameFa: 'عسل آویشن وحشی البرز',
-    slug: 'wild-thyme-honey',
+    slug: 'thymus',
     imageUrl: '/images/honey-jar.jpg',
     theme: 'green' as const,
     isAvailable: true,
@@ -102,7 +102,7 @@ const CANONICAL_PRODUCTS = [
   {
     id: 'prod-4',
     nameFa: 'عسل چهل‌گیاه ییلاقی ارسباران',
-    slug: 'multifloral-mountain-honey',
+    slug: 'multi-plants',
     imageUrl: '/images/honey-jar.jpg',
     theme: 'burgundy' as const,
     isAvailable: true,

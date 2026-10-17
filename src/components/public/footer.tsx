@@ -78,22 +78,22 @@ export function Footer({ settings, channels }: FooterProps) {
             </h4>
             <ul className="space-y-2.5 text-xs sm:text-sm font-bold flex flex-col text-white/95">
               <li>
-                <Link href="/products/mountain-astragalus-honey" className="hover:text-[#FBBF24] transition-colors">
+                <Link href="/products/astragalus" className="hover:text-[#FBBF24] transition-colors">
                   عسل طبیعی گون کوهستان
                 </Link>
               </li>
               <li>
-                <Link href="/products/wild-sidr-honey" className="hover:text-[#FBBF24] transition-colors">
+                <Link href="/products/ziziphus" className="hover:text-[#FBBF24] transition-colors">
                   عسل وحشی کنار (سدر) جنوب
                 </Link>
               </li>
               <li>
-                <Link href="/products/wild-thyme-honey" className="hover:text-[#FBBF24] transition-colors">
+                <Link href="/products/thymus" className="hover:text-[#FBBF24] transition-colors">
                   عسل آویشن وحشی البرز
                 </Link>
               </li>
               <li>
-                <Link href="/products/multifloral-mountain-honey" className="hover:text-[#FBBF24] transition-colors">
+                <Link href="/products/multi-plants" className="hover:text-[#FBBF24] transition-colors">
                   عسل چهل‌گیاه ییلاقی ارسباران
                 </Link>
               </li>
@@ -103,7 +103,7 @@ export function Footer({ settings, channels }: FooterProps) {
                 </Link>
               </li>
               <li>
-                <Link href="/products?q=بهارنارنج" className="hover:text-[#FBBF24] transition-colors">
+                <Link href="/products/citrus-bigaradia" className="hover:text-[#FBBF24] transition-colors">
                   عسل معطر بهارنارنج و مرکبات
                 </Link>
               </li>
