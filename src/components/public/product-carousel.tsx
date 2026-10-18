@@ -166,11 +166,11 @@ export function ProductCarousel({
             const theme = THEME_CLASSES[themeKey] || THEME_CLASSES.GREEN;
             const titleText = p.nameFa || p.title || 'عسل ممتاز باباخُرم';
             const imageSrc =
-              p.imageUrl ||
               (p as any).imageAsset?.url ||
               ((p as any).imageAsset?.storageKey ? ((p as any).imageAsset.storageKey.startsWith('/') ? (p as any).imageAsset.storageKey : `/uploads/${(p as any).imageAsset.storageKey}`) : null) ||
               (p as any).mainImage?.url ||
               ((p as any).mainImage?.storageKey ? ((p as any).mainImage.storageKey.startsWith('/') ? (p as any).mainImage.storageKey : `/uploads/${(p as any).mainImage.storageKey}`) : null) ||
+              p.imageUrl ||
               (p.slug ? `/images/products/${p.slug}.webp` : null) ||
               (p.slug ? `/images/products/${p.slug}.jpg` : null) ||
               '/images/honey-jar.jpg';

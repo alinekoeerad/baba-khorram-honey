@@ -55,6 +55,7 @@ export interface MediaAssetRecord {
   createdById: string | null;
   createdAt: Date;
   updatedAt: Date;
+  url?: string;
 }
 
 export interface AuditLogRecord {
@@ -323,7 +324,7 @@ function createFallbackClient() {
         const m = mediaAssetsStore.find(
           (x) => (args.where.id && x.id === args.where.id) || (args.where.storageKey && x.storageKey === args.where.storageKey)
         );
-        return m ? { ...m } : null;
+        return m ? { ...m, url: m.url || `/uploads/${encodeURIComponent(m.storageKey)}` } : null;
       },
       async findMany(args?: { where?: any; orderBy?: any }) {
         let list = [...mediaAssetsStore];
@@ -339,13 +340,14 @@ function createFallbackClient() {
             list = list.filter((m) => new Date(m.createdAt).getTime() < threshold);
           }
         }
-        return list.map((m) => ({ ...m }));
+        return list.map((m) => ({ ...m, url: m.url || `/uploads/${encodeURIComponent(m.storageKey)}` }));
       },
       async create(args: { data: any }) {
         const now = new Date();
+        const storageKey = args.data.storageKey;
         const newAsset: MediaAssetRecord = {
           id: args.data.id || `ast_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
-          storageKey: args.data.storageKey,
+          storageKey,
           mime: args.data.mime || 'image/webp',
           bytes: args.data.bytes,
           width: args.data.width ?? null,
@@ -356,6 +358,7 @@ function createFallbackClient() {
           createdById: args.data.createdById || null,
           createdAt: now,
           updatedAt: now,
+          url: `/uploads/${encodeURIComponent(storageKey)}`,
         };
         mediaAssetsStore.push(newAsset);
         saveJson('media-assets.json', mediaAssetsStore);
@@ -462,6 +465,12 @@ function createFallbackClient() {
         }
         if (args.include?.mainImage) {
           let asset = res.mainImageId ? mediaAssetsStore.find((m) => m.id === res.mainImageId) : null;
+          if (asset) {
+            asset = {
+              ...asset,
+              url: (asset as any).url || `/uploads/${asset.storageKey}`,
+            };
+          }
           const fallbackUrl = (res as any).imageUrl || (typeof (res as any).mainImage === 'string' ? (res as any).mainImage : null) || (res as any).image || (res.slug ? `/images/products/${res.slug}.webp` : null);
           if (!asset && fallbackUrl) {
             asset = {
@@ -622,6 +631,12 @@ function createFallbackClient() {
           }
           if (args?.include?.mainImage) {
             let asset = item.mainImageId ? mediaAssetsStore.find((m) => m.id === item.mainImageId) : null;
+            if (asset) {
+              asset = {
+                ...asset,
+                url: (asset as any).url || `/uploads/${asset.storageKey}`,
+              };
+            }
             const fallbackUrl = (item as any).imageUrl || (typeof (item as any).mainImage === 'string' ? (item as any).mainImage : null) || (item as any).image || (item.slug ? `/images/products/${item.slug}.webp` : null);
             if (!asset && fallbackUrl) {
               asset = {
@@ -698,6 +713,21 @@ function createFallbackClient() {
           ...args.data,
           updatedAt: new Date().toISOString(),
         };
+        if (args.data.mainImageId !== undefined) {
+          if (args.data.mainImageId) {
+            const asset = mediaAssetsStore.find((m) => m.id === args.data.mainImageId);
+            if (asset) {
+              const newUrl = `/uploads/${encodeURIComponent(asset.storageKey)}`;
+              (updated as any).imageUrl = newUrl;
+              (updated as any).image = newUrl;
+              (updated as any).mainImage = newUrl;
+            }
+          } else {
+            (updated as any).imageUrl = null;
+            (updated as any).image = null;
+            (updated as any).mainImage = null;
+          }
+        }
         productsStore[idx] = updated;
         saveJson('products.json', productsStore);
         return this.findUnique({ where: { id: updated.id }, include: args.include });
@@ -849,6 +879,12 @@ function createFallbackClient() {
         }
         if (args.include?.mainImage) {
           let asset = res.mainImageId ? mediaAssetsStore.find((m) => m.id === res.mainImageId) : null;
+          if (asset) {
+            asset = {
+              ...asset,
+              url: (asset as any).url || `/uploads/${asset.storageKey}`,
+            };
+          }
           const isDessert = (res.categories && (res.categories.includes('desserts') || res.categories.includes('cat_desserts'))) || (res.categoryIds && res.categoryIds.includes('cat_desserts'));
           const slugUrl = res.slug ? (isDessert ? `/uploads/recipes/dessert-${res.slug}.webp` : `/uploads/recipes/drink-${res.slug}.webp`) : null;
           const fallbackUrl = (res as any).imageUrl || (typeof (res as any).mainImage === 'string' ? (res as any).mainImage : null) || (res as any).image || slugUrl;
@@ -1023,6 +1059,12 @@ function createFallbackClient() {
           }
           if (args?.include?.mainImage) {
             let asset = item.mainImageId ? mediaAssetsStore.find((m) => m.id === item.mainImageId) : null;
+            if (asset) {
+              asset = {
+                ...asset,
+                url: (asset as any).url || `/uploads/${asset.storageKey}`,
+              };
+            }
             const isDessert = (item.categories && (item.categories.includes('desserts') || item.categories.includes('cat_desserts'))) || (item.categoryIds && item.categoryIds.includes('cat_desserts'));
             const slugUrl = item.slug ? (isDessert ? `/uploads/recipes/dessert-${item.slug}.webp` : `/uploads/recipes/drink-${item.slug}.webp`) : null;
             const fallbackUrl = (item as any).imageUrl || (typeof (item as any).mainImage === 'string' ? (item as any).mainImage : null) || (item as any).image || slugUrl;
@@ -1095,6 +1137,21 @@ function createFallbackClient() {
           ...args.data,
           updatedAt: new Date().toISOString(),
         };
+        if (args.data.mainImageId !== undefined) {
+          if (args.data.mainImageId) {
+            const asset = mediaAssetsStore.find((m) => m.id === args.data.mainImageId);
+            if (asset) {
+              const newUrl = `/uploads/${encodeURIComponent(asset.storageKey)}`;
+              (updated as any).imageUrl = newUrl;
+              (updated as any).image = newUrl;
+              (updated as any).mainImage = newUrl;
+            }
+          } else {
+            (updated as any).imageUrl = null;
+            (updated as any).image = null;
+            (updated as any).mainImage = null;
+          }
+        }
         recipesStore[idx] = updated;
         saveJson('recipes.json', recipesStore);
         return this.findUnique({ where: { id: updated.id }, include: args.include });

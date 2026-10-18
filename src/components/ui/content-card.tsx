@@ -184,14 +184,17 @@ export function ContentCard({
     ? (rawSlug ? `/images/products/${rawSlug}.webp` : '/images/honey-jar.jpg')
     : (rawSlug ? `/uploads/recipes/dessert-${rawSlug}.webp` : '/images/recipe-1.jpg');
 
-  const directUrl =
-    imageUrl ||
+  const assetUrl =
     (imageAsset as any)?.url ||
     (imageAsset?.storageKey
       ? (imageAsset.storageKey.startsWith('/')
           ? imageAsset.storageKey
           : `/uploads/${imageAsset.storageKey}`)
-      : null) ||
+      : null);
+
+  const directUrl =
+    assetUrl ||
+    imageUrl ||
     slugFallback;
 
   const effectiveAsset = imageAsset

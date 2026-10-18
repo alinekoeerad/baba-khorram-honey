@@ -3,11 +3,16 @@ import {
   validateImageMagicBytes,
   MAX_FILE_SIZE_BYTES,
   MAX_DIMENSION_PX,
+  uploadAndProcessMedia,
+  deleteMediaAsset,
+  deletePhysicalImageFile,
 } from '@/server/services/media-service';
 import { isMediaAssetReferenced } from '@/server/services/media-reference-tracker';
 import { LocalDiskStorage } from '@/server/storage/storage-provider';
 import { uiStringsFa } from '@/content/ui-strings.fa';
 import { db } from '@/server/db/client';
+import fs from 'fs';
+import path from 'path';
 
 describe('Image Upload Validation & Magic Bytes (Phase 3, Task 2)', () => {
   it('identifies and accepts genuine JPEG magic bytes (FF D8 FF)', () => {
@@ -79,5 +84,39 @@ describe('Storage Provider & Path Traversal Prevention (Phase 3, Task 1)', () =>
     const storage = new LocalDiskStorage('./uploads');
     const url = storage.getPublicUrl('my-image-480.webp');
     expect(url).toBe('/uploads/my-image-480.webp');
+  });
+});
+
+describe('Cache-Busting Unique Filenames & File Cleanup (Phase 10 Fix)', () => {
+  it('appends unique timestamps and short hashes to uploaded images', async () => {
+    const minimalWebp = Buffer.from(
+      'UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=',
+      'base64'
+    );
+
+    const asset = await uploadAndProcessMedia({
+      buffer: minimalWebp,
+      filename: 'dessert-amalaki.webp',
+      alt: 'دسر املکی',
+    });
+
+    expect(asset.storageKey).toMatch(/^dessert-amalaki-\d+-[a-f0-9]+-\d+\.webp$/);
+    expect(asset.url).toMatch(/^\/uploads\/dessert-amalaki-\d+-[a-f0-9]+-\d+\.webp$/);
+    expect(asset.alt).toBe('دسر املکی');
+
+    // Verify physical file was written
+    const publicPath = path.join(process.cwd(), 'public', 'uploads', asset.storageKey);
+    expect(fs.existsSync(publicPath)).toBe(true);
+
+    // Clean up physical file via deleteMediaAsset
+    await deleteMediaAsset(asset.id);
+    expect(fs.existsSync(publicPath)).toBe(false);
+  });
+
+  it('safely deletes physical image files and ignores non-existent or safe relative paths', async () => {
+    // Should not throw when deleting non-existent file
+    await expect(deletePhysicalImageFile('non-existent-img-123.webp')).resolves.toBeUndefined();
+    await expect(deletePhysicalImageFile(null)).resolves.toBeUndefined();
+    await expect(deletePhysicalImageFile('')).resolves.toBeUndefined();
   });
 });

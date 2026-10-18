@@ -174,11 +174,11 @@ export function RecipeCarousel({
             const slugFallback = r.slug ? (isDessert ? `/uploads/recipes/dessert-${r.slug}.webp` : `/uploads/recipes/drink-${r.slug}.webp`) : null;
 
             const imageSrc =
-              r.imageUrl ||
               (r as any).imageAsset?.url ||
               ((r as any).imageAsset?.storageKey ? ((r as any).imageAsset.storageKey.startsWith('/') ? (r as any).imageAsset.storageKey : `/uploads/${(r as any).imageAsset.storageKey}`) : null) ||
               (r as any).mainImage?.url ||
               ((r as any).mainImage?.storageKey ? ((r as any).mainImage.storageKey.startsWith('/') ? (r as any).mainImage.storageKey : `/uploads/${(r as any).mainImage.storageKey}`) : null) ||
+              r.imageUrl ||
               slugFallback ||
               `/images/recipe-${((idx % 6) + 1)}.jpg`;
 

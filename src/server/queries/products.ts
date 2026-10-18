@@ -159,14 +159,17 @@ export async function getPublicProducts(filters: PublicProductFilters = {}) {
   const items = hasMore ? rawItems.slice(0, takeLimit) : rawItems;
 
   const cardItems: ProductCardViewModel[] = items.map((p: any) => {
-    const resolvedImageUrl =
-      (p as any).imageUrl ||
+    const mainImageUrl =
       (p.mainImage?.url ? p.mainImage.url : null) ||
       (p.mainImage?.storageKey
         ? (p.mainImage.storageKey.startsWith('/')
             ? p.mainImage.storageKey
             : `/uploads/${p.mainImage.storageKey}`)
-        : null) ||
+        : null);
+
+    const resolvedImageUrl =
+      mainImageUrl ||
+      (p as any).imageUrl ||
       (p.slug ? `/images/products/${p.slug}.webp` : null) ||
       (p.slug ? `/images/products/${p.slug}.jpg` : null) ||
       null;
@@ -356,14 +359,17 @@ export async function getPublicProductBySlug(slug: string) {
       });
 
       relatedProducts = rawRelated.map((p: any) => {
-        const resolvedRelUrl =
-          (p as any).imageUrl ||
+        const relMainImageUrl =
           (p.mainImage?.url ? p.mainImage.url : null) ||
           (p.mainImage?.storageKey
             ? (p.mainImage.storageKey.startsWith('/')
                 ? p.mainImage.storageKey
                 : `/uploads/${p.mainImage.storageKey}`)
-            : null) ||
+            : null);
+
+        const resolvedRelUrl =
+          relMainImageUrl ||
+          (p as any).imageUrl ||
           (p.slug ? `/images/products/${p.slug}.webp` : null) ||
           (p.slug ? `/images/products/${p.slug}.jpg` : null) ||
           null;

@@ -183,16 +183,19 @@ export async function getPublicRecipes(filters: PublicRecipeFilters = {}) {
 
     const slugFallback = r.slug ? (isDessert ? `/uploads/recipes/dessert-${r.slug}.webp` : `/uploads/recipes/drink-${r.slug}.webp`) : null;
 
-    const resolvedImageUrl =
-      (r as any).imageUrl ||
-      (typeof (r as any).mainImage === 'string' ? (r as any).mainImage : null) ||
-      (typeof (r as any).image === 'string' ? (r as any).image : null) ||
+    const mainImageUrl =
       (r.mainImage?.url ? r.mainImage.url : null) ||
       (r.mainImage?.storageKey
         ? (r.mainImage.storageKey.startsWith('/')
             ? r.mainImage.storageKey
             : `/uploads/${r.mainImage.storageKey}`)
-        : null) ||
+        : null);
+
+    const resolvedImageUrl =
+      mainImageUrl ||
+      (r as any).imageUrl ||
+      (typeof (r as any).mainImage === 'string' ? (r as any).mainImage : null) ||
+      (typeof (r as any).image === 'string' ? (r as any).image : null) ||
       slugFallback ||
       null;
 
@@ -392,16 +395,19 @@ export async function getPublicRecipeBySlug(slug: string) {
 
         const relSlugFallback = r.slug ? (isRelDessert ? `/uploads/recipes/dessert-${r.slug}.webp` : `/uploads/recipes/drink-${r.slug}.webp`) : null;
 
-        const resolvedRelUrl =
-          (r as any).imageUrl ||
-          (typeof (r as any).mainImage === 'string' ? (r as any).mainImage : null) ||
-          (typeof (r as any).image === 'string' ? (r as any).image : null) ||
+        const relMainImageUrl =
           (r.mainImage?.url ? r.mainImage.url : null) ||
           (r.mainImage?.storageKey
             ? (r.mainImage.storageKey.startsWith('/')
                 ? r.mainImage.storageKey
                 : `/uploads/${r.mainImage.storageKey}`)
-            : null) ||
+            : null);
+
+        const resolvedRelUrl =
+          relMainImageUrl ||
+          (r as any).imageUrl ||
+          (typeof (r as any).mainImage === 'string' ? (r as any).mainImage : null) ||
+          (typeof (r as any).image === 'string' ? (r as any).image : null) ||
           relSlugFallback ||
           null;
 

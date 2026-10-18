@@ -12,6 +12,8 @@ import { recordAuditLog } from '@/server/services/audit-log-service';
 import { resolveSlugCollision } from '@/lib/domain-utils';
 import { ConcurrencyConflictError } from '@/server/services/product-service';
 import { uiStringsFa } from '@/content/ui-strings.fa';
+import { deletePhysicalImageFile, deleteMediaAsset } from '@/server/services/media-service';
+import { findMediaAssetReferences } from '@/server/services/media-reference-tracker';
 
 export interface RecipeListFilters {
   search?: string;
@@ -306,6 +308,29 @@ export class RecipeService {
     if (rawInput.servingTypes) changedFields.push('servingTypes');
     if (rawInput.ingredients) changedFields.push('ingredients');
     if (rawInput.steps) changedFields.push('steps');
+
+    // Clean up old mainImage files and orphan asset if main image is being replaced
+    if (rawInput.mainImageId !== undefined && rawInput.mainImageId !== existing.mainImageId) {
+      if (existing.mainImageId) {
+        try {
+          const refs = await findMediaAssetReferences(existing.mainImageId);
+          const otherRefs = refs.filter((r) => !(r.entityType === 'Recipe' && r.entityId === id));
+          if (otherRefs.length === 0) {
+            await deleteMediaAsset(existing.mainImageId);
+          }
+        } catch (cleanupErr) {
+          console.warn('Non-critical: Failed to cleanup previous mainImage asset:', cleanupErr);
+        }
+      }
+      const legacyImageUrl =
+        (existing as any).imageUrl ||
+        (typeof (existing as any).mainImage === 'string' ? (existing as any).mainImage : null);
+      if (legacyImageUrl && typeof legacyImageUrl === 'string' && legacyImageUrl.includes('/uploads/')) {
+        try {
+          await deletePhysicalImageFile(legacyImageUrl);
+        } catch {}
+      }
+    }
 
     const updated = await db.recipe.update({
       where: { id },

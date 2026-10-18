@@ -95,8 +95,89 @@ export function validateImageMagicBytes(buffer: Buffer): ImageValidationResult {
 }
 
 /**
+ * Safely deletes physical image files and variants from both uploads/ and public/uploads/.
+ * Strictly prevents path traversal and only touches files in the uploads directories.
+ */
+export async function deletePhysicalImageFile(
+  filePathOrKey?: string | null,
+  variants?: any
+): Promise<void> {
+  if (!filePathOrKey || typeof filePathOrKey !== 'string') return;
+
+  const storage = getStorageProvider();
+  // Strip leading slashes and leading uploads/
+  const cleanKey = filePathOrKey.trim().replace(/^\/+/, '').replace(/^uploads\//, '');
+  if (!cleanKey) return;
+
+  const baseName = path.basename(cleanKey);
+  const relativeSubdir = path.dirname(cleanKey); // e.g. '.' or 'recipes'
+
+  const targetRoots = [
+    path.join(process.cwd(), process.env.UPLOAD_DIR || 'uploads'),
+    path.join(process.cwd(), 'public', 'uploads'),
+  ];
+
+  for (const root of targetRoots) {
+    try {
+      const fullPath =
+        relativeSubdir && relativeSubdir !== '.'
+          ? path.resolve(root, relativeSubdir, baseName)
+          : path.resolve(root, baseName);
+
+      if (fullPath.startsWith(root) && fs.existsSync(fullPath)) {
+        const stat = fs.statSync(fullPath);
+        if (stat.isFile()) {
+          await fs.promises.unlink(fullPath);
+        }
+      }
+    } catch {
+      // Ignore non-fatal unlink errors
+    }
+  }
+
+  // Also notify storage provider if key matches
+  try {
+    await storage.delete(baseName);
+  } catch {}
+
+  // Clean up variants if supplied
+  if (variants && typeof variants === 'object') {
+    const variantList = Array.isArray(variants) ? variants : Object.values(variants);
+    for (const v of variantList as any[]) {
+      const vKey = v?.key || (typeof v === 'string' ? v : null);
+      if (vKey && typeof vKey === 'string') {
+        const cleanVKey = vKey.trim().replace(/^\/+/, '').replace(/^uploads\//, '');
+        const vBaseName = path.basename(cleanVKey);
+        const vSubdir = path.dirname(cleanVKey);
+
+        for (const root of targetRoots) {
+          try {
+            const vFullPath =
+              vSubdir && vSubdir !== '.'
+                ? path.resolve(root, vSubdir, vBaseName)
+                : path.resolve(root, vBaseName);
+
+            if (vFullPath.startsWith(root) && fs.existsSync(vFullPath)) {
+              const stat = fs.statSync(vFullPath);
+              if (stat.isFile()) {
+                await fs.promises.unlink(vFullPath);
+              }
+            }
+          } catch {}
+        }
+
+        try {
+          await storage.delete(vBaseName);
+        } catch {}
+      }
+    }
+  }
+}
+
+/**
  * Processes image buffer: auto-rotates, strips metadata, validates dimensions,
  * generates responsive WebP variants, and creates blur placeholder.
+ * Guarantees unique timestamped filenames to bust Next.js & browser caches.
  */
 export async function processImage(
   buffer: Buffer,
@@ -105,6 +186,12 @@ export async function processImage(
   const uploadDir = path.join(process.cwd(), process.env.UPLOAD_DIR || 'uploads');
   if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
+  }
+
+  // Ensure filePrefix has unique timestamp to bust browser & Next.js cache
+  let uniquePrefix = filePrefix;
+  if (!/[-_]\d{10,}/.test(uniquePrefix)) {
+    uniquePrefix = `${uniquePrefix}-${Date.now()}`;
   }
 
   // Try primary engine: native sharp
@@ -130,7 +217,7 @@ export async function processImage(
     const variants: Record<string, ImageVariantInfo> = {};
 
     for (const w of targetWidths) {
-      const outFilename = `${filePrefix}-${w}.webp`;
+      const outFilename = `${uniquePrefix}-${w}.webp`;
       const outPath = path.join(uploadDir, outFilename);
 
       const variantBuffer = await sharp(buffer)
@@ -170,7 +257,7 @@ export async function processImage(
       .toBuffer();
 
     const blurDataUrl = `data:image/webp;base64,${blurBuffer.toString('base64')}`;
-    const masterKey = `${filePrefix}-${origWidth}.webp`;
+    const masterKey = `${uniquePrefix}-${origWidth}.webp`;
 
     return {
       width: origWidth,
@@ -186,12 +273,12 @@ export async function processImage(
     }
 
     // Fallback engine: Python Pillow script
-    const tempInput = path.join(os.tmpdir(), `temp-${filePrefix}.raw`);
+    const tempInput = path.join(os.tmpdir(), `temp-${uniquePrefix}.raw`);
     await fs.promises.writeFile(tempInput, buffer);
 
     try {
       const scriptPath = path.resolve(process.cwd(), 'scripts/process-image.py');
-      const proc = spawnSync('python3', [scriptPath, tempInput, uploadDir, filePrefix], {
+      const proc = spawnSync('python3', [scriptPath, tempInput, uploadDir, uniquePrefix], {
         encoding: 'utf8',
       });
 
@@ -219,8 +306,9 @@ export async function processImage(
 /**
  * End-to-end media upload pipeline:
  * 1. Validates size & magic bytes
- * 2. Processes image into responsive WebP variants
- * 3. Saves MediaAsset record to database
+ * 2. Generates unique, descriptive filename with Date.now() timestamp & short hash
+ * 3. Processes image into responsive WebP variants
+ * 4. Saves MediaAsset record to database with unique cache-busted storageKey & URL
  */
 export async function uploadAndProcessMedia(params: {
   buffer: Buffer;
@@ -228,7 +316,7 @@ export async function uploadAndProcessMedia(params: {
   alt?: string;
   createdById?: string;
 }): Promise<MediaAssetRecord> {
-  const { buffer, alt, createdById } = params;
+  const { buffer, alt, createdById, filename } = params;
 
   // 1. File size check
   if (buffer.length > MAX_FILE_SIZE_BYTES) {
@@ -241,11 +329,26 @@ export async function uploadAndProcessMedia(params: {
     throw new Error(validation.error || uiStringsFa.adminMedia.fileSpoofed);
   }
 
-  // 3. Process into WebP variants
-  const filePrefix = `img_${Date.now()}_${crypto.randomBytes(8).toString('hex')}`;
+  // 3. Formulate clean base name and unique cache-busting timestamp + hash
+  let baseName = 'img';
+  if (filename) {
+    const parsed = path.parse(filename).name;
+    // Strip previous timestamps / hashes if present
+    const stripped = parsed.replace(/[-_]\d{10,}(?:[-_][a-f0-9]+)?$/i, '');
+    const sanitized = stripped.replace(/[^a-zA-Z0-9_\-\u0600-\u06FF]/g, '_').toLowerCase().trim();
+    if (sanitized && sanitized !== '_') {
+      baseName = sanitized;
+    }
+  }
+
+  const timestamp = Date.now();
+  const shortHash = crypto.randomBytes(3).toString('hex');
+  const filePrefix = `${baseName}-${timestamp}-${shortHash}`;
+
+  // 4. Process into WebP variants
   const processed = await processImage(buffer, filePrefix);
 
-  // 4. Persist MediaAsset in database
+  // 5. Persist MediaAsset in database
   const asset = await db.mediaAsset.create({
     data: {
       storageKey: processed.masterKey,
@@ -260,7 +363,10 @@ export async function uploadAndProcessMedia(params: {
     },
   });
 
-  return asset;
+  return {
+    ...asset,
+    url: `/uploads/${encodeURIComponent(processed.masterKey)}`,
+  };
 }
 
 /**
@@ -272,15 +378,7 @@ export async function deleteMediaAsset(assetId: string): Promise<void> {
     throw new Error('تصویر یافت نشد.');
   }
 
-  const storage = getStorageProvider();
-  if (asset.variants && typeof asset.variants === 'object') {
-    for (const variant of Object.values(asset.variants) as any[]) {
-      if (variant?.key) {
-        await storage.delete(variant.key);
-      }
-    }
-  }
-  await storage.delete(asset.storageKey);
+  await deletePhysicalImageFile(asset.storageKey, asset.variants);
 
   await db.mediaAsset.delete({ where: { id: assetId } });
 }

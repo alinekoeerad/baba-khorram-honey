@@ -11,6 +11,8 @@ import { buildProductSearchText } from '@/server/services/search-text';
 import { recordAuditLog } from '@/server/services/audit-log-service';
 import { resolveSlugCollision } from '@/lib/domain-utils';
 import { uiStringsFa } from '@/content/ui-strings.fa';
+import { deletePhysicalImageFile, deleteMediaAsset } from '@/server/services/media-service';
+import { findMediaAssetReferences } from '@/server/services/media-reference-tracker';
 
 export class ConcurrencyConflictError extends Error {
   constructor(message = 'این مورد از زمان باز شدن توسط کاربر دیگری ویرایش شده است.') {
@@ -325,6 +327,29 @@ export class ProductService {
     if (rawInput.options) changedFields.push('options');
     if (rawInput.benefits) changedFields.push('benefits');
     if (rawInput.galleryAssetIds) changedFields.push('gallery');
+
+    // Clean up old mainImage files and orphan asset if main image is being replaced
+    if (rawInput.mainImageId !== undefined && rawInput.mainImageId !== existing.mainImageId) {
+      if (existing.mainImageId) {
+        try {
+          const refs = await findMediaAssetReferences(existing.mainImageId);
+          const otherRefs = refs.filter((r) => !(r.entityType === 'Product' && r.entityId === id));
+          if (otherRefs.length === 0) {
+            await deleteMediaAsset(existing.mainImageId);
+          }
+        } catch (cleanupErr) {
+          console.warn('Non-critical: Failed to cleanup previous mainImage asset:', cleanupErr);
+        }
+      }
+      const legacyImageUrl =
+        (existing as any).imageUrl ||
+        (typeof (existing as any).mainImage === 'string' ? (existing as any).mainImage : null);
+      if (legacyImageUrl && typeof legacyImageUrl === 'string' && legacyImageUrl.includes('/uploads/')) {
+        try {
+          await deletePhysicalImageFile(legacyImageUrl);
+        } catch {}
+      }
+    }
 
     const updated = await db.product.update({
       where: { id },

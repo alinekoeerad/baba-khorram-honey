@@ -227,18 +227,30 @@ for (let i = 0; i < DESSERT_DEFS.length; i++) {
     continue;
   }
 
-  const destFilename = `dessert-${def.slug}.webp`;
+  const timestamp = Date.now();
+  const destFilename = `dessert-${def.slug}-${timestamp}.webp`;
   const targetPublicUploadPath = path.join(publicUploadsRecipesDir, destFilename);
   const targetUploadPath = path.join(uploadsRecipesDir, destFilename);
   const targetImagesPath = path.join(publicImagesRecipesDir, destFilename);
-  const targetImagesFallbackPath = path.join(publicImagesRecipesDir, `${def.slug}.webp`);
+
+  // Clean up any old unversioned or previously versioned files for this dessert
+  const oldFilesPattern = new RegExp(`^dessert-${def.slug}(?:-\\d+)?\\.webp$`);
+  for (const dir of [publicUploadsRecipesDir, uploadsRecipesDir, publicImagesRecipesDir]) {
+    if (fs.existsSync(dir)) {
+      const files = fs.readdirSync(dir);
+      for (const f of files) {
+        if (oldFilesPattern.test(f) && f !== destFilename) {
+          try { fs.unlinkSync(path.join(dir, f)); } catch {}
+        }
+      }
+    }
+  }
 
   const { bytes, width, height, blurDataUrl } = await optimizeImage(sourcePath, targetPublicUploadPath, 800, 82);
 
   // Sync to sibling directories for full runtime compatibility
   fs.copyFileSync(targetPublicUploadPath, targetUploadPath);
   fs.copyFileSync(targetPublicUploadPath, targetImagesPath);
-  fs.copyFileSync(targetPublicUploadPath, targetImagesFallbackPath);
 
   const webpUrl = `/uploads/recipes/${destFilename}`;
   const assetId = `ast_recipe_dessert_${def.slug}`;
@@ -254,7 +266,7 @@ for (let i = 0; i < DESSERT_DEFS.length; i++) {
   }
 
   // Update or insert MediaAsset
-  const existingAssetIdx = mediaAssets.findIndex((a) => a.id === assetId || a.storageKey === `recipes/${destFilename}`);
+  const existingAssetIdx = mediaAssets.findIndex((a) => a.id === assetId || a.storageKey === `recipes/${destFilename}` || (a.storageKey && a.storageKey.startsWith(`recipes/dessert-${def.slug}`)));
   const assetRecord = {
     id: assetId,
     storageKey: `recipes/${destFilename}`,
@@ -264,6 +276,7 @@ for (let i = 0; i < DESSERT_DEFS.length; i++) {
     height,
     blurDataUrl,
     alt: def.nameFa,
+    url: webpUrl,
     createdById: 'usr_system',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -308,18 +321,30 @@ if (kirDir && fs.existsSync(kirDir)) {
       continue;
     }
 
-    const destFilename = `drink-${r.slug}.webp`;
+    const timestamp = Date.now();
+    const destFilename = `drink-${r.slug}-${timestamp}.webp`;
     const targetPublicUploadPath = path.join(publicUploadsRecipesDir, destFilename);
     const targetUploadPath = path.join(uploadsRecipesDir, destFilename);
     const targetImagesPath = path.join(publicImagesRecipesDir, destFilename);
-    const targetImagesFallbackPath = path.join(publicImagesRecipesDir, `${r.slug}.webp`);
+
+    // Clean up any old unversioned or previously versioned files for this drink
+    const oldFilesPattern = new RegExp(`^drink-${r.slug}(?:-\\d+)?\\.webp$`);
+    for (const dir of [publicUploadsRecipesDir, uploadsRecipesDir, publicImagesRecipesDir]) {
+      if (fs.existsSync(dir)) {
+        const files = fs.readdirSync(dir);
+        for (const f of files) {
+          if (oldFilesPattern.test(f) && f !== destFilename) {
+            try { fs.unlinkSync(path.join(dir, f)); } catch {}
+          }
+        }
+      }
+    }
 
     const { bytes, width, height, blurDataUrl } = await optimizeImage(sourcePath, targetPublicUploadPath, 800, 82);
 
     // Sync to sibling directories
     fs.copyFileSync(targetPublicUploadPath, targetUploadPath);
     fs.copyFileSync(targetPublicUploadPath, targetImagesPath);
-    fs.copyFileSync(targetPublicUploadPath, targetImagesFallbackPath);
 
     const webpUrl = `/uploads/recipes/${destFilename}`;
     const assetId = `ast_recipe_drink_${r.slug}`;
@@ -330,7 +355,7 @@ if (kirDir && fs.existsSync(kirDir)) {
     r.image = webpUrl;
     r.updatedAt = new Date().toISOString();
 
-    const existingAssetIdx = mediaAssets.findIndex((a) => a.id === assetId || a.storageKey === `recipes/${destFilename}`);
+    const existingAssetIdx = mediaAssets.findIndex((a) => a.id === assetId || a.storageKey === `recipes/${destFilename}` || (a.storageKey && a.storageKey.startsWith(`recipes/drink-${r.slug}`)));
     const assetRecord = {
       id: assetId,
       storageKey: `recipes/${destFilename}`,
@@ -340,6 +365,7 @@ if (kirDir && fs.existsSync(kirDir)) {
       height,
       blurDataUrl,
       alt: r.nameFa,
+      url: webpUrl,
       createdById: 'usr_system',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),

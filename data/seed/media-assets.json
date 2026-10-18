@@ -1503,7 +1503,7 @@
   },
   {
     "id": "ast_recipe_dessert_tamina",
-    "storageKey": "recipes/dessert-tamina.webp",
+    "storageKey": "recipes/dessert-tamina-1792331669925.webp",
     "mime": "image/webp",
     "bytes": 56470,
     "width": 800,
@@ -1511,12 +1511,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAAAwAgCdASoQAAoABUB8JbACdIExFjIMm1DNAAD+2mM+DiPN38E85CoosUjaeEvZa2gCKyrDztC2zEDW79RXAAAA",
     "alt": "طمینه",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:42.908Z",
-    "updatedAt": "2026-10-18T08:44:42.908Z"
+    "createdAt": "2026-10-18T13:54:30.080Z",
+    "updatedAt": "2026-10-18T13:54:30.080Z",
+    "url": "/uploads/recipes/dessert-tamina-1792331669925.webp"
   },
   {
     "id": "ast_recipe_dessert_yaksik",
-    "storageKey": "recipes/dessert-yaksik.webp",
+    "storageKey": "recipes/dessert-yaksik-1792331670082.webp",
     "mime": "image/webp",
     "bytes": 88074,
     "width": 800,
@@ -1524,12 +1525,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAADwAQCdASoQABAABUB8JbACdADpCMKZnwAAyqKFAgq9DVgxyRuKMjwLqh3tHGIJdZxC+e29wEx+fwEuZz6axdLZq9ujAuQDTwTMC21PQK7QeyUfHWytiUxr13KPtSDL3Q5CplSAAAA=",
     "alt": "یاکباپ (برنج شیرین کُره ای)",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:43.100Z",
-    "updatedAt": "2026-10-18T08:44:43.100Z"
+    "createdAt": "2026-10-18T13:54:30.247Z",
+    "updatedAt": "2026-10-18T13:54:30.247Z",
+    "url": "/uploads/recipes/dessert-yaksik-1792331670082.webp"
   },
   {
     "id": "ast_recipe_dessert_american-honey-pudding",
-    "storageKey": "recipes/dessert-american-honey-pudding.webp",
+    "storageKey": "recipes/dessert-american-honey-pudding-1792331670247.webp",
     "mime": "image/webp",
     "bytes": 71224,
     "width": 800,
@@ -1537,12 +1539,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAAAwAgCdASoQABAABUB8JbACdAEDE250Mo32AAD9dUo1sX1fMCrIyv0ckWKp+sk8wo0p9M0kd6z0ctMWucdjZ391Vm+9rVMA7P1z6BaFIKrYh4jDRnZQCgZAAAA=",
     "alt": "پودینگ عسل آمریکایی",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:43.260Z",
-    "updatedAt": "2026-10-18T08:44:43.260Z"
+    "createdAt": "2026-10-18T13:54:30.398Z",
+    "updatedAt": "2026-10-18T13:54:30.398Z",
+    "url": "/uploads/recipes/dessert-american-honey-pudding-1792331670247.webp"
   },
   {
     "id": "ast_recipe_dessert_mel-i-mato",
-    "storageKey": "recipes/dessert-mel-i-mato.webp",
+    "storageKey": "recipes/dessert-mel-i-mato-1792331670398.webp",
     "mime": "image/webp",
     "bytes": 44512,
     "width": 800,
@@ -1550,12 +1553,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAADwAQCdASoQAAsABUB8JQBOgB8tvHth0QAA/lMrAPrPz6BwDldOmlbGQz5kc4OWUsicTij89N7HQlXrJXXYzEMvLAA=",
     "alt": "پنیر تازه با عسل",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:43.381Z",
-    "updatedAt": "2026-10-18T08:44:43.381Z"
+    "createdAt": "2026-10-18T13:54:30.511Z",
+    "updatedAt": "2026-10-18T13:54:30.511Z",
+    "url": "/uploads/recipes/dessert-mel-i-mato-1792331670398.webp"
   },
   {
     "id": "ast_recipe_dessert_rys",
-    "storageKey": "recipes/dessert-rys.webp",
+    "storageKey": "recipes/dessert-rys-1792331670511.webp",
     "mime": "image/webp",
     "bytes": 52772,
     "width": 800,
@@ -1563,12 +1567,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADQAQCdASoMABAABUB8JQBOgBuj8zeEAAD947NLm6Bts6O6ZVDoJiM+kBGcV3aM87uJ1SmjUjJXHp4IdG0FLdFzPXQkMP2hn4ZkRx+IrT4AAA==",
     "alt": "برنج با شیر بادام",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:43.567Z",
-    "updatedAt": "2026-10-18T08:44:43.567Z"
+    "createdAt": "2026-10-18T13:54:30.684Z",
+    "updatedAt": "2026-10-18T13:54:30.684Z",
+    "url": "/uploads/recipes/dessert-rys-1792331670511.webp"
   },
   {
     "id": "ast_recipe_dessert_irish-honey-pudding",
-    "storageKey": "recipes/dessert-irish-honey-pudding.webp",
+    "storageKey": "recipes/dessert-irish-honey-pudding-1792331670684.webp",
     "mime": "image/webp",
     "bytes": 72114,
     "width": 650,
@@ -1576,12 +1581,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAAAwAgCdASoMABAABUB8JbACdAELZETXRwfK6AD+5+KkBrgCyCZE7CLH9xacl27DWmUOneoM6ToID5HW4IkJY2T5aVAAAA==",
     "alt": "پودینگ عسل ایرلندی",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:43.727Z",
-    "updatedAt": "2026-10-18T08:44:43.727Z"
+    "createdAt": "2026-10-18T13:54:30.810Z",
+    "updatedAt": "2026-10-18T13:54:30.810Z",
+    "url": "/uploads/recipes/dessert-irish-honey-pudding-1792331670684.webp"
   },
   {
     "id": "ast_recipe_dessert_sombi",
-    "storageKey": "recipes/dessert-sombi.webp",
+    "storageKey": "recipes/dessert-sombi-1792331670810.webp",
     "mime": "image/webp",
     "bytes": 141780,
     "width": 800,
@@ -1589,12 +1595,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAwAgCdASoMABAABUB8JagCdAEX6xmdFcwWwAD+vhZigle1ax71vH6kj4376/MaCcNyhVxpfrovtJ6f7nsvOhcndblFiR+UP/22DK20LuhC4PHwYyUM9GpecMi0UIgA",
     "alt": "سومبی",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:43.991Z",
-    "updatedAt": "2026-10-18T08:44:43.991Z"
+    "createdAt": "2026-10-18T13:54:31.014Z",
+    "updatedAt": "2026-10-18T13:54:31.014Z",
+    "url": "/uploads/recipes/dessert-sombi-1792331670810.webp"
   },
   {
     "id": "ast_recipe_dessert_kafbikh",
-    "storageKey": "recipes/dessert-kafbikh.webp",
+    "storageKey": "recipes/dessert-kafbikh-1792331671015.webp",
     "mime": "image/webp",
     "bytes": 87794,
     "width": 640,
@@ -1602,12 +1609,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAADwAQCdASoQAAwABUB8JQBOgBotCXbyHcAA/nFBrFLcYtlYjSUpKy5Rc62/Lpke3igM3LOGmODJElgtDPEAAA==",
     "alt": "کفبیخ",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:44.099Z",
-    "updatedAt": "2026-10-18T08:44:44.099Z"
+    "createdAt": "2026-10-18T13:54:31.104Z",
+    "updatedAt": "2026-10-18T13:54:31.104Z",
+    "url": "/uploads/recipes/dessert-kafbikh-1792331671015.webp"
   },
   {
     "id": "ast_recipe_dessert_sudanese-asida",
-    "storageKey": "recipes/dessert-sudanese-asida.webp",
+    "storageKey": "recipes/dessert-sudanese-asida-1792331671104.webp",
     "mime": "image/webp",
     "bytes": 53482,
     "width": 800,
@@ -1615,12 +1623,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAAAQAgCdASoQABAABUB8JbACdADpNUCkpMOAAPhSURFXzpCiW2MAQHuCa9BhnDIz9ya5Jk5CmpxDozeqSUO4ZSmjErJ/cEdI9LyTNwP7iETeNNg2nL1E4XUO/k/qUO1gVNveoAAA",
     "alt": "عصیده سودانی",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:44.273Z",
-    "updatedAt": "2026-10-18T08:44:44.273Z"
+    "createdAt": "2026-10-18T13:54:31.266Z",
+    "updatedAt": "2026-10-18T13:54:31.266Z",
+    "url": "/uploads/recipes/dessert-sudanese-asida-1792331671104.webp"
   },
   {
     "id": "ast_recipe_dessert_lgeimat",
-    "storageKey": "recipes/dessert-lgeimat.webp",
+    "storageKey": "recipes/dessert-lgeimat-1792331671267.webp",
     "mime": "image/webp",
     "bytes": 43768,
     "width": 800,
@@ -1628,12 +1637,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAAAQAgCdASoQAAkABUB8JaACdAD8LS7+6o1IAP6o6QuDO1ZvRvOZ9x5F/1E7Gq4k9XV6A6WGUONUZdWVXmgekz2jcxVEn7sAAAA=",
     "alt": "لقیمات اماراتی",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:44.366Z",
-    "updatedAt": "2026-10-18T08:44:44.366Z"
+    "createdAt": "2026-10-18T13:54:31.343Z",
+    "updatedAt": "2026-10-18T13:54:31.343Z",
+    "url": "/uploads/recipes/dessert-lgeimat-1792331671267.webp"
   },
   {
     "id": "ast_recipe_dessert_rupjmaizes-kartojums",
-    "storageKey": "recipes/dessert-rupjmaizes-kartojums.webp",
+    "storageKey": "recipes/dessert-rupjmaizes-kartojums-1792331671344.webp",
     "mime": "image/webp",
     "bytes": 86028,
     "width": 800,
@@ -1641,12 +1651,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAAAQAgCdASoMABAABUB8JYgC7ADdaJVjxTAAAP7NleCLJnNGv0yYpc5Ioi7+pIZcv4RcLoB10ld5jKSIj6qmUhkpSItS4MNpbKgeds+MP4kYYhlvfhyUAA==",
     "alt": "روپجمایزه کارتوژومس",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:44.568Z",
-    "updatedAt": "2026-10-18T08:44:44.568Z"
+    "createdAt": "2026-10-18T13:54:31.528Z",
+    "updatedAt": "2026-10-18T13:54:31.528Z",
+    "url": "/uploads/recipes/dessert-rupjmaizes-kartojums-1792331671344.webp"
   },
   {
     "id": "ast_recipe_dessert_masoub",
-    "storageKey": "recipes/dessert-masoub.webp",
+    "storageKey": "recipes/dessert-masoub-1792331671528.webp",
     "mime": "image/webp",
     "bytes": 42740,
     "width": 600,
@@ -1654,12 +1665,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADwAQCdASoNABAABUB8JQBOgBtsmM7jvpgA/rCrHyTWXj//6bCOzXeyEUlKfs/MwKE9dcqizdmG6z6bJslVzy4+K8X9DdLwhSBFf7ceIU/uNAAA",
     "alt": "مَعصوب یمنی",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:44.670Z",
-    "updatedAt": "2026-10-18T08:44:44.670Z"
+    "createdAt": "2026-10-18T13:54:31.624Z",
+    "updatedAt": "2026-10-18T13:54:31.624Z",
+    "url": "/uploads/recipes/dessert-masoub-1792331671528.webp"
   },
   {
     "id": "ast_recipe_dessert_areeka",
-    "storageKey": "recipes/dessert-areeka.webp",
+    "storageKey": "recipes/dessert-areeka-1792331671624.webp",
     "mime": "image/webp",
     "bytes": 52766,
     "width": 800,
@@ -1667,12 +1679,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAAAQAgCdASoQAAwABUB8JagCdAYuk9vVyrwAAPr/H4xtH383SrzXtgGKH8d953JeSBGcgd1YBCfYbQ+CGTLDJkq04zvnQnPjCaSdDXim1AAAAA==",
     "alt": "عَریکه",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:44.805Z",
-    "updatedAt": "2026-10-18T08:44:44.805Z"
+    "createdAt": "2026-10-18T13:54:31.766Z",
+    "updatedAt": "2026-10-18T13:54:31.766Z",
+    "url": "/uploads/recipes/dessert-areeka-1792331671624.webp"
   },
   {
     "id": "ast_recipe_dessert_arabian-masoub",
-    "storageKey": "recipes/dessert-arabian-masoub.webp",
+    "storageKey": "recipes/dessert-arabian-masoub-1792331671766.webp",
     "mime": "image/webp",
     "bytes": 169634,
     "width": 800,
@@ -1680,12 +1693,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAAAwAgCdASoLABAABUB8JYgCdAEfB71A5YWagAD+JSX0ZWB6QibGBzi8nQ3PkD40qA3tu+EASA/DTWeIZIqTbmWkdCHLeHG97khOwAwA",
     "alt": "مَعصوب عربی",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:45.043Z",
-    "updatedAt": "2026-10-18T08:44:45.043Z"
+    "createdAt": "2026-10-18T13:54:31.996Z",
+    "updatedAt": "2026-10-18T13:54:31.996Z",
+    "url": "/uploads/recipes/dessert-arabian-masoub-1792331671766.webp"
   },
   {
     "id": "ast_recipe_dessert_marsah",
-    "storageKey": "recipes/dessert-marsah.webp",
+    "storageKey": "recipes/dessert-marsah-1792331671996.webp",
     "mime": "image/webp",
     "bytes": 40840,
     "width": 800,
@@ -1693,12 +1707,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAAAQAgCdASoQAAoABUB8JbACdADMEZsBQaSAAPxmIUy3lpDhkmTsYuYdpIr+z41JsCY7HQRBeJcz36wLLMVS6ndx8HUo8CfNUj8uIdvDzEeAAA==",
     "alt": "مَرسه",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:45.180Z",
-    "updatedAt": "2026-10-18T08:44:45.180Z"
+    "createdAt": "2026-10-18T13:54:32.124Z",
+    "updatedAt": "2026-10-18T13:54:32.124Z",
+    "url": "/uploads/recipes/dessert-marsah-1792331671996.webp"
   },
   {
     "id": "ast_recipe_dessert_luqimat",
-    "storageKey": "recipes/dessert-luqimat.webp",
+    "storageKey": "recipes/dessert-luqimat-1792331672124.webp",
     "mime": "image/webp",
     "bytes": 117018,
     "width": 800,
@@ -1706,12 +1721,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAAAwAgCdASoLABAABUB8JbACdAD0u78zIN0OoAD+k11kfjAUuEMgIr80y3TVE0lTtot36txW5L7Mw2MMyMwXbLjX9TIj9GIf++qqebFnd6XbPjLoAAA=",
     "alt": "لقیمات قطری",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:45.394Z",
-    "updatedAt": "2026-10-18T08:44:45.394Z"
+    "createdAt": "2026-10-18T13:54:32.324Z",
+    "updatedAt": "2026-10-18T13:54:32.324Z",
+    "url": "/uploads/recipes/dessert-luqimat-1792331672124.webp"
   },
   {
     "id": "ast_recipe_dessert_omani-asida",
-    "storageKey": "recipes/dessert-omani-asida.webp",
+    "storageKey": "recipes/dessert-omani-asida-1792331672324.webp",
     "mime": "image/webp",
     "bytes": 98324,
     "width": 800,
@@ -1719,12 +1735,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADQAQCdASoOABAABUB8JbACdAClVPGUAAD+ARqm+RLHcXm3XVQ5t0rWTj8626pK7m4Y4klf3hpMeZmHsgSHBI99fw+7UgyDX9z+daSBZNsAAA==",
     "alt": "عصیده عمانی",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:45.593Z",
-    "updatedAt": "2026-10-18T08:44:45.593Z"
+    "createdAt": "2026-10-18T13:54:32.509Z",
+    "updatedAt": "2026-10-18T13:54:32.509Z",
+    "url": "/uploads/recipes/dessert-omani-asida-1792331672324.webp"
   },
   {
     "id": "ast_recipe_dessert_aseeda-al-bobber",
-    "storageKey": "recipes/dessert-aseeda-al-bobber.webp",
+    "storageKey": "recipes/dessert-aseeda-al-bobber-1792331672509.webp",
     "mime": "image/webp",
     "bytes": 21692,
     "width": 800,
@@ -1732,12 +1749,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAACwAQCdASoQAAwABUB8JbACdADQfogAAP7n7hAl/0lj5IDGchCfMEGyvLa8+k/VjqadQN8iks3Ih/a0YfYM53UJ0PucSWXfCiAAAA==",
     "alt": "عصیده بوبر",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:45.720Z",
-    "updatedAt": "2026-10-18T08:44:45.720Z"
+    "createdAt": "2026-10-18T13:54:32.635Z",
+    "updatedAt": "2026-10-18T13:54:32.635Z",
+    "url": "/uploads/recipes/dessert-aseeda-al-bobber-1792331672509.webp"
   },
   {
     "id": "ast_recipe_dessert_lebanese-fruit-cocktail-ashta",
-    "storageKey": "recipes/dessert-lebanese-fruit-cocktail-ashta.webp",
+    "storageKey": "recipes/dessert-lebanese-fruit-cocktail-ashta-1792331672635.webp",
     "mime": "image/webp",
     "bytes": 43810,
     "width": 800,
@@ -1745,12 +1763,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAAAQAgCdASoMABAABUB8JbACdAEQZ99r5YQAAP5/+4OfoH9QVMAFux/25k9YcV9fE/wpTcnkktKXHK3hap/I+AV9Zu651ETYAAA=",
     "alt": "کوکتل میوه با عَشته",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:45.898Z",
-    "updatedAt": "2026-10-18T08:44:45.898Z"
+    "createdAt": "2026-10-18T13:54:32.806Z",
+    "updatedAt": "2026-10-18T13:54:32.806Z",
+    "url": "/uploads/recipes/dessert-lebanese-fruit-cocktail-ashta-1792331672635.webp"
   },
   {
     "id": "ast_recipe_dessert_giaourti-me-meli",
-    "storageKey": "recipes/dessert-giaourti-me-meli.webp",
+    "storageKey": "recipes/dessert-giaourti-me-meli-1792331672806.webp",
     "mime": "image/webp",
     "bytes": 44800,
     "width": 800,
@@ -1758,12 +1777,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAABwAgCdASoQABAABUB8JZgCdAYwxdyZbcIwOxwAAPw2MxHp4ZXxxSrui/LpD/KDRnWNjG6fzhL3wBTXEkD4eVTmIoZr0vt/a3geFY6Jhfec/TbfCT+u07wbjIgnNEmldiNn3ra1RRcAAA==",
     "alt": "ماست یونانی",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:46.070Z",
-    "updatedAt": "2026-10-18T08:44:46.070Z"
+    "createdAt": "2026-10-18T13:54:32.962Z",
+    "updatedAt": "2026-10-18T13:54:32.962Z",
+    "url": "/uploads/recipes/dessert-giaourti-me-meli-1792331672806.webp"
   },
   {
     "id": "ast_recipe_dessert_struklji",
-    "storageKey": "recipes/dessert-struklji.webp",
+    "storageKey": "recipes/dessert-struklji-1792331672962.webp",
     "mime": "image/webp",
     "bytes": 84124,
     "width": 800,
@@ -1771,12 +1791,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAwAgCdASoQAAsABUB8JZgCdAD6fGEjrLPyAADKQe/WDl8/smgWwmacLuc0PUhR0Sapy/1ZuoCpOBdwzrksjIAfvQueQIw+NsJsnleLnX7gabzd7LwIlAAA",
     "alt": "اشترُوکلی",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:46.181Z",
-    "updatedAt": "2026-10-18T08:44:46.181Z"
+    "createdAt": "2026-10-18T13:54:33.138Z",
+    "updatedAt": "2026-10-18T13:54:33.138Z",
+    "url": "/uploads/recipes/dessert-struklji-1792331672962.webp"
   },
   {
     "id": "ast_recipe_dessert_embelsire-me-geshtenje-nga-junik",
-    "storageKey": "recipes/dessert-embelsire-me-geshtenje-nga-junik.webp",
+    "storageKey": "recipes/dessert-embelsire-me-geshtenje-nga-junik-1792331673138.webp",
     "mime": "image/webp",
     "bytes": 26180,
     "width": 600,
@@ -1784,12 +1805,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAACwAQCdASoLABAABUB8JZQAAudKtW/AAP6xaenuj/29OMNCvSrOrE/m2LyHwM7a+s35RAAA",
     "alt": "شاه بلوط یونیک",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:46.283Z",
-    "updatedAt": "2026-10-18T08:44:46.283Z"
+    "createdAt": "2026-10-18T13:54:33.269Z",
+    "updatedAt": "2026-10-18T13:54:33.269Z",
+    "url": "/uploads/recipes/dessert-embelsire-me-geshtenje-nga-junik-1792331673138.webp"
   },
   {
     "id": "ast_recipe_dessert_gamula",
-    "storageKey": "recipes/dessert-gamula.webp",
+    "storageKey": "recipes/dessert-gamula-1792331673269.webp",
     "mime": "image/webp",
     "bytes": 98598,
     "width": 800,
@@ -1797,12 +1819,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAQCdASoNABAABUB8JQBdgBwySlDMIAD+5aBtxEV72QnRjm1mAYBFAQSgBHur1eayJJdSG6S/oc9cH6VFUfhSkxy+vq4AAAA=",
     "alt": "گامولا",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:46.485Z",
-    "updatedAt": "2026-10-18T08:44:46.485Z"
+    "createdAt": "2026-10-18T13:54:33.474Z",
+    "updatedAt": "2026-10-18T13:54:33.474Z",
+    "url": "/uploads/recipes/dessert-gamula-1792331673269.webp"
   },
   {
     "id": "ast_recipe_dessert_kama-meega",
-    "storageKey": "recipes/dessert-kama-meega.webp",
+    "storageKey": "recipes/dessert-kama-meega-1792331673475.webp",
     "mime": "image/webp",
     "bytes": 33736,
     "width": 800,
@@ -1810,12 +1833,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAAAwAgCdASoQAA8ABUB8JYgCw7D6KtmZZxfkAAD+26UdFZEJw/INKMh7OLmT0i3hz6oIKhCZXGRiDRepuR2GUUZn5hVRzo3rUvlZgYm6ZxuU7t9zwgCAAA==",
     "alt": "کاما",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:46.626Z",
-    "updatedAt": "2026-10-18T08:44:46.626Z"
+    "createdAt": "2026-10-18T13:54:33.619Z",
+    "updatedAt": "2026-10-18T13:54:33.619Z",
+    "url": "/uploads/recipes/dessert-kama-meega-1792331673475.webp"
   },
   {
     "id": "ast_recipe_dessert_kulaha",
-    "storageKey": "recipes/dessert-kulaha.webp",
+    "storageKey": "recipes/dessert-kulaha-1792331673619.webp",
     "mime": "image/webp",
     "bytes": 67638,
     "width": 800,
@@ -1823,12 +1847,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAAAwAgCdASoNABAABUB8JbACdAELKM1U//neAAD+l+MGyOEDkTSQNTqiILA/3t/OgT7OqWOAUCY6CIr5Jlsk7NXh3qaqy/1hp5rl1egBAS8IzhSJJAFXkc3xN61jnM9iGAOAAA==",
     "alt": "کولاگا",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:46.805Z",
-    "updatedAt": "2026-10-18T08:44:46.805Z"
+    "createdAt": "2026-10-18T13:54:33.807Z",
+    "updatedAt": "2026-10-18T13:54:33.807Z",
+    "url": "/uploads/recipes/dessert-kulaha-1792331673619.webp"
   },
   {
     "id": "ast_recipe_dessert_torrijas-madrilenas",
-    "storageKey": "recipes/dessert-torrijas-madrilenas.webp",
+    "storageKey": "recipes/dessert-torrijas-madrilenas-1792331673807.webp",
     "mime": "image/webp",
     "bytes": 102270,
     "width": 800,
@@ -1836,12 +1861,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADwAQCdASoQAAsABUB8JbACdADcpIqgyRQA/uHh1BDkNnuJ16jW6OCnDnhBpjDQO2xa3KOIJsJN36uI4xuciU8qCCedU3tPsiZ1rV/cOUw0oD/wAAA=",
     "alt": "توریخاس مادریدی",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:46.968Z",
-    "updatedAt": "2026-10-18T08:44:46.968Z"
+    "createdAt": "2026-10-18T13:54:33.966Z",
+    "updatedAt": "2026-10-18T13:54:33.966Z",
+    "url": "/uploads/recipes/dessert-torrijas-madrilenas-1792331673807.webp"
   },
   {
     "id": "ast_recipe_dessert_anoush-abour",
-    "storageKey": "recipes/dessert-anoush-abour.webp",
+    "storageKey": "recipes/dessert-anoush-abour-1792331673966.webp",
     "mime": "image/webp",
     "bytes": 31010,
     "width": 500,
@@ -1849,12 +1875,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAADwAQCdASoQABAABUB8JbACdAYtyt0D8AAA/sWH6BR4Ezd/ziwfPfwTdfV2w3Nnun2Tq8BrOV9CLr6MbRNvj/C16CyZeLT2/ywEEP0uTVsULv7rjzLf2pU4mIF9es4wyvAAAA==",
     "alt": "آنوشابور",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:47.036Z",
-    "updatedAt": "2026-10-18T08:44:47.036Z"
+    "createdAt": "2026-10-18T13:54:34.031Z",
+    "updatedAt": "2026-10-18T13:54:34.031Z",
+    "url": "/uploads/recipes/dessert-anoush-abour-1792331673966.webp"
   },
   {
     "id": "ast_recipe_drink_amalaki-panaka",
-    "storageKey": "recipes/drink-amalaki-panaka.webp",
+    "storageKey": "recipes/drink-amalaki-panaka-1792331674032.webp",
     "mime": "image/webp",
     "bytes": 27970,
     "width": 600,
@@ -1862,12 +1889,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADwAQCdASoQABAABUB8JbACsADvgYofuQAA/u6fYubNmJnZyL7sLADupHsN1Fc0X+mQrDznHR5s4YPqQsFN7srhXS0/IIb7TiqPa3rGY/2ba2mA5eKnTGAA",
     "alt": "آمالاکی پاناکا",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:47.112Z",
-    "updatedAt": "2026-10-18T08:44:47.112Z"
+    "createdAt": "2026-10-18T13:54:34.106Z",
+    "updatedAt": "2026-10-18T13:54:34.106Z",
+    "url": "/uploads/recipes/drink-amalaki-panaka-1792331674032.webp"
   },
   {
     "id": "ast_recipe_drink_fengmi-youzi-cha",
-    "storageKey": "recipes/drink-fengmi-youzi-cha.webp",
+    "storageKey": "recipes/drink-fengmi-youzi-cha-1792331674106.webp",
     "mime": "image/webp",
     "bytes": 27932,
     "width": 640,
@@ -1875,12 +1903,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAADwAQCdASoQABAABUB8JbACdADbk3i+v4AA/p/c8sLotJ11yTowdHeZlnPOoTEROT4jAVOlWUVegA21eSLnfmU7toKMN/0VLsh97CB+TEdIdhZ2p4eOg/7WhoIbIof0bCamUGGaKPYAAA==",
     "alt": "چای پوملو",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:47.199Z",
-    "updatedAt": "2026-10-18T08:44:47.199Z"
+    "createdAt": "2026-10-18T13:54:34.183Z",
+    "updatedAt": "2026-10-18T13:54:34.183Z",
+    "url": "/uploads/recipes/drink-fengmi-youzi-cha-1792331674106.webp"
   },
   {
     "id": "ast_recipe_drink_hachimitsu-shogayu",
-    "storageKey": "recipes/drink-hachimitsu-shogayu.webp",
+    "storageKey": "recipes/drink-hachimitsu-shogayu-1792331674183.webp",
     "mime": "image/webp",
     "bytes": 67246,
     "width": 800,
@@ -1888,8 +1917,9 @@
     "blurDataUrl": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAADwAQCdASoNABAABUB8JbACdBagCikesgAA7b8oGRO49kapEJf5nyIUySM50scx1KkGboh5AAgwB9R2gV51A3Ua7DfgVE/bxNH3Fd1359euszuedNIOdMP1ebOr4PAAAAA=",
     "alt": "شوگایو",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:47.379Z",
-    "updatedAt": "2026-10-18T08:44:47.379Z"
+    "createdAt": "2026-10-18T13:54:34.362Z",
+    "updatedAt": "2026-10-18T13:54:34.362Z",
+    "url": "/uploads/recipes/drink-hachimitsu-shogayu-1792331674183.webp"
   },
   {
     "id": "ast_recipe_drink_nuoc-mot",
@@ -1906,7 +1936,7 @@
   },
   {
     "id": "ast_recipe_drink_greek-homemade-lemonad-with-honey",
-    "storageKey": "recipes/drink-greek-homemade-lemonad-with-honey.webp",
+    "storageKey": "recipes/drink-greek-homemade-lemonad-with-honey-1792331674362.webp",
     "mime": "image/webp",
     "bytes": 51962,
     "width": 600,
@@ -1914,12 +1944,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAAAwAgCdASoKABAABUB8JbACdAEDfGTcvURsAADh1LEJczywH4tjrjMH4GH6MFw1LtnuCijjZJTzfFOuU/g7ulYbZ/lknCzy92A+H0efa5kssbIKzIAAAA==",
     "alt": "لیموناد خانگی یونانی",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:47.590Z",
-    "updatedAt": "2026-10-18T08:44:47.590Z"
+    "createdAt": "2026-10-18T13:54:34.461Z",
+    "updatedAt": "2026-10-18T13:54:34.461Z",
+    "url": "/uploads/recipes/drink-greek-homemade-lemonad-with-honey-1792331674362.webp"
   },
   {
     "id": "ast_recipe_drink_karkadeh",
-    "storageKey": "recipes/drink-karkadeh.webp",
+    "storageKey": "recipes/drink-karkadeh-1792331674461.webp",
     "mime": "image/webp",
     "bytes": 84190,
     "width": 800,
@@ -1927,12 +1958,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAADwAQCdASoLABAABUB8JZgCdADhe20GG/AA/txaTG9mWlVgLrRW/HQMsrAvCsV+Qt4VFB0LWxkZ39jEXQl8xE/AAAA=",
     "alt": "کارکاده",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:47.775Z",
-    "updatedAt": "2026-10-18T08:44:47.775Z"
+    "createdAt": "2026-10-18T13:54:34.657Z",
+    "updatedAt": "2026-10-18T13:54:34.657Z",
+    "url": "/uploads/recipes/drink-karkadeh-1792331674461.webp"
   },
   {
     "id": "ast_recipe_drink_sahlab",
-    "storageKey": "recipes/drink-sahlab.webp",
+    "storageKey": "recipes/drink-sahlab-1792331674657.webp",
     "mime": "image/webp",
     "bytes": 78484,
     "width": 800,
@@ -1940,12 +1972,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADwAQCdASoLABAABUB8JZgCdAELKfPxv4AA/t2oE9QLmDfpMN+MqxkdtAbxcDtcA1TtSzceO57DImbX0N+rC1pRKCrL0wyskpiX36LCn0LdNWALGAA=",
     "alt": "سحلب",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:47.965Z",
-    "updatedAt": "2026-10-18T08:44:47.965Z"
+    "createdAt": "2026-10-18T13:54:34.868Z",
+    "updatedAt": "2026-10-18T13:54:34.868Z",
+    "url": "/uploads/recipes/drink-sahlab-1792331674657.webp"
   },
   {
     "id": "ast_recipe_drink_chai-noomi-basra",
-    "storageKey": "recipes/drink-chai-noomi-basra.webp",
+    "storageKey": "recipes/drink-chai-noomi-basra-1792331674868.webp",
     "mime": "image/webp",
     "bytes": 73742,
     "width": 700,
@@ -1953,12 +1986,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAACwAQCdASoLABAABUB8JbACdADbllwAAM4pQOWRZe/pfDn7+T0UdngSoYriZscc9w0M01ZlAN3wDsJY4EJ4w0ZnVWmEW0amXdJ+p/KAAAA=",
     "alt": "چای نومی بصره",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:48.082Z",
-    "updatedAt": "2026-10-18T08:44:48.082Z"
+    "createdAt": "2026-10-18T13:54:35.010Z",
+    "updatedAt": "2026-10-18T13:54:35.010Z",
+    "url": "/uploads/recipes/drink-chai-noomi-basra-1792331674868.webp"
   },
   {
     "id": "ast_recipe_drink_peshawari-kahwa",
-    "storageKey": "recipes/drink-peshawari-kahwa.webp",
+    "storageKey": "recipes/drink-peshawari-kahwa-1792331675010.webp",
     "mime": "image/webp",
     "bytes": 20376,
     "width": 600,
@@ -1966,12 +2000,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAABQAgCdASoQAAsABUB8JbACw7YvXbY7/emP/OAA/q00knBWQg4nMy095hEXbubcdYxaBaM5uNTFTmi6sNWG3vHg6eBb3tD6E4khJfRx3NSebb38mP4dzPocKaPyzu0RaoAAAA==",
     "alt": "قهوا پشاوری",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:48.150Z",
-    "updatedAt": "2026-10-18T08:44:48.150Z"
+    "createdAt": "2026-10-18T13:54:35.067Z",
+    "updatedAt": "2026-10-18T13:54:35.067Z",
+    "url": "/uploads/recipes/drink-peshawari-kahwa-1792331675010.webp"
   },
   {
     "id": "ast_recipe_drink_afghan-kahwah",
-    "storageKey": "recipes/drink-afghan-kahwah.webp",
+    "storageKey": "recipes/drink-afghan-kahwah-1792331675067.webp",
     "mime": "image/webp",
     "bytes": 41796,
     "width": 800,
@@ -1979,12 +2014,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADQAQCdASoQAAkABUB8JbACdAYrmjMzAAD+vn/EJOobMHQhH7WuLqc7UGrPkAfizdWKbcYT/plg+85nlbxFU6qjGil9V/LVHfx6a+bczIAAAA==",
     "alt": "قهوا افغانی",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:48.242Z",
-    "updatedAt": "2026-10-18T08:44:48.242Z"
+    "createdAt": "2026-10-18T13:54:35.176Z",
+    "updatedAt": "2026-10-18T13:54:35.176Z",
+    "url": "/uploads/recipes/drink-afghan-kahwah-1792331675067.webp"
   },
   {
     "id": "ast_recipe_drink_tashkent-tea",
-    "storageKey": "recipes/drink-tashkent-tea.webp",
+    "storageKey": "recipes/drink-tashkent-tea-1792331675176.webp",
     "mime": "image/webp",
     "bytes": 75656,
     "width": 800,
@@ -1992,12 +2028,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAAAwAgCdASoQABAABUB8JZgCdAEDH9tN9XSEAAD+tsKTLTbhulIUMEvG7B9iO/qRqZJIecWw0rEflnN2hfUbyVBP4mCezpYG37EuKuGkqzwoUyXrykafqSKQi0AGtCDUvHgXIAAA",
     "alt": "چای تاشکند",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:48.400Z",
-    "updatedAt": "2026-10-18T08:44:48.400Z"
+    "createdAt": "2026-10-18T13:54:35.323Z",
+    "updatedAt": "2026-10-18T13:54:35.323Z",
+    "url": "/uploads/recipes/drink-tashkent-tea-1792331675176.webp"
   },
   {
     "id": "ast_recipe_drink_iskencebi",
-    "storageKey": "recipes/drink-iskencebi.webp",
+    "storageKey": "recipes/drink-iskencebi-1792331675323.webp",
     "mime": "image/webp",
     "bytes": 36238,
     "width": 800,
@@ -2005,12 +2042,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAADQAQCdASoQAAoABUB8JZACdADwBkh0AAD+fAhhbfMpZIpYCeJrUhgTQ3DfrU19/0ljIAiRGAjzVho1ghF5upURP0lLAAAA",
     "alt": "ایسکَنجه‌بی",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:48.499Z",
-    "updatedAt": "2026-10-18T08:44:48.499Z"
+    "createdAt": "2026-10-18T13:54:35.439Z",
+    "updatedAt": "2026-10-18T13:54:35.439Z",
+    "url": "/uploads/recipes/drink-iskencebi-1792331675323.webp"
   },
   {
     "id": "ast_recipe_drink_honey-aroma",
-    "storageKey": "recipes/drink-honey-aroma.webp",
+    "storageKey": "recipes/drink-honey-aroma-1792331675439.webp",
     "mime": "image/webp",
     "bytes": 30804,
     "width": 768,
@@ -2018,12 +2056,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAAAQAgCdASoQAAwABUB8JbACsH8AFWHx/3gAAMs59ofLgOjF4tfMuwVcZh0ecbzNIof2pKBouLZbxALYH0VHpJOX8T4X1mste3URHbjpup7I8YObBYQDDLfwAAA=",
     "alt": "عطر عسل",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:48.573Z",
-    "updatedAt": "2026-10-18T08:44:48.573Z"
+    "createdAt": "2026-10-18T13:54:35.530Z",
+    "updatedAt": "2026-10-18T13:54:35.530Z",
+    "url": "/uploads/recipes/drink-honey-aroma-1792331675439.webp"
   },
   {
     "id": "ast_recipe_drink_qahwa-hadramiya",
-    "storageKey": "recipes/drink-qahwa-hadramiya.webp",
+    "storageKey": "recipes/drink-qahwa-hadramiya-1792331675530.webp",
     "mime": "image/webp",
     "bytes": 64950,
     "width": 800,
@@ -2031,12 +2070,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAADwAQCdASoQAAsABUB8JQBdgCMDdLGW3gAA/jL8VRUiG9Qxzg80AfN+JCvFL345kNAm/n27G3C9fUDZGT0jq5cMbQAAAA==",
     "alt": "قهوه حَضرمی",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:48.701Z",
-    "updatedAt": "2026-10-18T08:44:48.701Z"
+    "createdAt": "2026-10-18T13:54:35.643Z",
+    "updatedAt": "2026-10-18T13:54:35.643Z",
+    "url": "/uploads/recipes/drink-qahwa-hadramiya-1792331675530.webp"
   },
   {
     "id": "ast_recipe_drink_bsissa",
-    "storageKey": "recipes/drink-bsissa.webp",
+    "storageKey": "recipes/drink-bsissa-1792331675643.webp",
     "mime": "image/webp",
     "bytes": 36902,
     "width": 540,
@@ -2044,12 +2084,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADwAQCdASoHABAABUB8JYwAAvhZmoY86AAA/uyd+m3UZR5nij4DHqSIOTqZE7GootMJT0XIM6SgGITxy+p9NhkZ4dk8n/gAxnAAAA==",
     "alt": "بسیسه",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:48.803Z",
-    "updatedAt": "2026-10-18T08:44:48.803Z"
+    "createdAt": "2026-10-18T13:54:35.743Z",
+    "updatedAt": "2026-10-18T13:54:35.743Z",
+    "url": "/uploads/recipes/drink-bsissa-1792331675643.webp"
   },
   {
     "id": "ast_recipe_drink_lait-de-poule",
-    "storageKey": "recipes/drink-lait-de-poule.webp",
+    "storageKey": "recipes/drink-lait-de-poule-1792331675743.webp",
     "mime": "image/webp",
     "bytes": 57778,
     "width": 800,
@@ -2057,12 +2098,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADQAQCdASoQABAABUB8JaACdACC6vwT4AD+to17v3wA/mt9WiOGVQ/cioy8IwbSU6VGDqijO4GGlDUKKAKnkJVpcW1eQGgMsNaAAA==",
     "alt": "حَلیب الدجاج (شیر مرغ)",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:48.956Z",
-    "updatedAt": "2026-10-18T08:44:48.956Z"
+    "createdAt": "2026-10-18T13:54:35.894Z",
+    "updatedAt": "2026-10-18T13:54:35.894Z",
+    "url": "/uploads/recipes/drink-lait-de-poule-1792331675743.webp"
   },
   {
     "id": "ast_recipe_drink_the-a-la-menthe-algerien",
-    "storageKey": "recipes/drink-the-a-la-menthe-algerien.webp",
+    "storageKey": "recipes/drink-the-a-la-menthe-algerien-1792331675894.webp",
     "mime": "image/webp",
     "bytes": 67920,
     "width": 645,
@@ -2070,12 +2112,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAADwAQCdASoLABAABUB8JbACdAEDfCebQRAA/t/ood1khvmJcV+czLjKBS8Qq3Rma/3oF5xC8Ox0hUHh41x9Yp1Ev6D56U1AF5hwl9hrpIDxYA2aEJyEjrcUxxwZ/dMfS63QyctJQAA=",
     "alt": "چای نعناع الجزایری",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:49.083Z",
-    "updatedAt": "2026-10-18T08:44:49.083Z"
+    "createdAt": "2026-10-18T13:54:36.009Z",
+    "updatedAt": "2026-10-18T13:54:36.009Z",
+    "url": "/uploads/recipes/drink-the-a-la-menthe-algerien-1792331675894.webp"
   },
   {
     "id": "ast_recipe_drink_jus-de-bouye",
-    "storageKey": "recipes/drink-jus-de-bouye.webp",
+    "storageKey": "recipes/drink-jus-de-bouye-1792331676009.webp",
     "mime": "image/webp",
     "bytes": 63136,
     "width": 768,
@@ -2083,12 +2126,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADwAQCdASoQABAABUB8JagCdAEWAIxZxQAA/pZwzNjS9+iTnjJ6+Av6Y+WcBFU6WNpfHSienO0cqJ5+WvNihIuVZ4bG8uG+BLkAAA==",
     "alt": "بویه",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:49.201Z",
-    "updatedAt": "2026-10-18T08:44:49.201Z"
+    "createdAt": "2026-10-18T13:54:36.119Z",
+    "updatedAt": "2026-10-18T13:54:36.119Z",
+    "url": "/uploads/recipes/drink-jus-de-bouye-1792331676009.webp"
   },
   {
     "id": "ast_recipe_drink_zoom-koom",
-    "storageKey": "recipes/drink-zoom-koom.webp",
+    "storageKey": "recipes/drink-zoom-koom-1792331676120.webp",
     "mime": "image/webp",
     "bytes": 18894,
     "width": 500,
@@ -2096,12 +2140,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAACwAQCdASoQABAABUB8JbACdABPu5YAAP7nP19td7L/rvpopavoWgOeR4IIwtXk7Z0GIhVeo1to9/3fjEurZjeZmc6gHk3De52Y4QAA",
     "alt": "زوم کوم",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:49.272Z",
-    "updatedAt": "2026-10-18T08:44:49.272Z"
+    "createdAt": "2026-10-18T13:54:36.187Z",
+    "updatedAt": "2026-10-18T13:54:36.187Z",
+    "url": "/uploads/recipes/drink-zoom-koom-1792331676120.webp"
   },
   {
     "id": "ast_recipe_drink_agua-fresca-de-citricoc",
-    "storageKey": "recipes/drink-agua-fresca-de-citricoc.webp",
+    "storageKey": "recipes/drink-agua-fresca-de-citricoc-1792331676187.webp",
     "mime": "image/webp",
     "bytes": 46940,
     "width": 800,
@@ -2109,12 +2154,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAAAQAgCdASoLABAABUB8JbACdAEerhpOonvoAP5YlEk/lkQO9+WPmnfPTdAtXP5k7g/WSlYHeaF8bnm50qHE90L60WPh9lhyzOjZHt146g46AUKYAAA=",
     "alt": "آگواس فرسکاس",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:49.449Z",
-    "updatedAt": "2026-10-18T08:44:49.449Z"
+    "createdAt": "2026-10-18T13:54:36.351Z",
+    "updatedAt": "2026-10-18T13:54:36.351Z",
+    "url": "/uploads/recipes/drink-agua-fresca-de-citricoc-1792331676187.webp"
   },
   {
     "id": "ast_recipe_drink_balli-reyhan-serbeti",
-    "storageKey": "recipes/drink-balli-reyhan-serbeti.webp",
+    "storageKey": "recipes/drink-balli-reyhan-serbeti-1792331676351.webp",
     "mime": "image/webp",
     "bytes": 64734,
     "width": 800,
@@ -2122,12 +2168,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAAAwAgCdASoMABAABUB8JYgC7AEWZa6gWMNUAAD30zfUPA7pvUWMMFn0jjTy53TPbHKfey24iOkzSYP46hVlATxaY6t8LOQbKDuR4v9FQpaw/mXyISaHVxuTAAA=",
     "alt": "شربت ریحان",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:49.646Z",
-    "updatedAt": "2026-10-18T08:44:49.646Z"
+    "createdAt": "2026-10-18T13:54:36.532Z",
+    "updatedAt": "2026-10-18T13:54:36.533Z",
+    "url": "/uploads/recipes/drink-balli-reyhan-serbeti-1792331676351.webp"
   },
   {
     "id": "ast_recipe_drink_greek-mountain-tea-with-honey-lemon",
-    "storageKey": "recipes/drink-greek-mountain-tea-with-honey-lemon.webp",
+    "storageKey": "recipes/drink-greek-mountain-tea-with-honey-lemon-1792331676533.webp",
     "mime": "image/webp",
     "bytes": 150312,
     "width": 800,
@@ -2135,12 +2182,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRkIAAABXRUJQVlA4IDYAAACwAQCdASoLABAABUB8JQBOgB49wdWAAP6wqwZz7Q2IgNhZrQiBE2ZV2nRoPZusPqmW2JNAAAA=",
     "alt": "چای کوهستانی یونانی",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:49.874Z",
-    "updatedAt": "2026-10-18T08:44:49.874Z"
+    "createdAt": "2026-10-18T13:54:36.751Z",
+    "updatedAt": "2026-10-18T13:54:36.751Z",
+    "url": "/uploads/recipes/drink-greek-mountain-tea-with-honey-lemon-1792331676533.webp"
   },
   {
     "id": "ast_recipe_drink_latte-e-miele",
-    "storageKey": "recipes/drink-latte-e-miele.webp",
+    "storageKey": "recipes/drink-latte-e-miele-1792331676751.webp",
     "mime": "image/webp",
     "bytes": 53460,
     "width": 800,
@@ -2148,12 +2196,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAACwAQCdASoQAAsABUB8JbACdABqVqcoAM39jJobQZcMx+j6hZWGgHFTi9+CJP2YCKYajs9cEZPQEL1ZzkqqOsbWVp3fRzRqQEhJNcEwHqgAAA==",
     "alt": "شیر و عسل",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:49.984Z",
-    "updatedAt": "2026-10-18T08:44:49.984Z"
+    "createdAt": "2026-10-18T13:54:36.865Z",
+    "updatedAt": "2026-10-18T13:54:36.865Z",
+    "url": "/uploads/recipes/drink-latte-e-miele-1792331676751.webp"
   },
   {
     "id": "ast_recipe_drink_atay-b-naanaa",
-    "storageKey": "recipes/drink-atay-b-naanaa.webp",
+    "storageKey": "recipes/drink-atay-b-naanaa-1792331676865.webp",
     "mime": "image/webp",
     "bytes": 37646,
     "width": 540,
@@ -2161,12 +2210,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAAAQAgCdASoHABAABUB8JQBOkDgDBl1k4WAAAP7yotHgyA1vOEWFWztd9AQBgZesNrVctwodHOhwIs2iwEtfkdUgAAA=",
     "alt": "چای نعناع مراکشی",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:50.077Z",
-    "updatedAt": "2026-10-18T08:44:50.077Z"
+    "createdAt": "2026-10-18T13:54:36.963Z",
+    "updatedAt": "2026-10-18T13:54:36.963Z",
+    "url": "/uploads/recipes/drink-atay-b-naanaa-1792331676865.webp"
   },
   {
     "id": "ast_recipe_drink_limonata-con-miele",
-    "storageKey": "recipes/drink-limonata-con-miele.webp",
+    "storageKey": "recipes/drink-limonata-con-miele-1792331676963.webp",
     "mime": "image/webp",
     "bytes": 55088,
     "width": 800,
@@ -2174,12 +2224,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAAAQAgCdASoMABAABUB8JbAC7AEUJlhz2AToAP6vCOmm50EhUOBrPKnh71d2vwJ4gydeWvIsHEIRN5WW0oU9PnLSXubCCvH/r3SWAAAA",
     "alt": "لیموناد ایتالیایی",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:50.261Z",
-    "updatedAt": "2026-10-18T08:44:50.261Z"
+    "createdAt": "2026-10-18T13:54:37.144Z",
+    "updatedAt": "2026-10-18T13:54:37.144Z",
+    "url": "/uploads/recipes/drink-limonata-con-miele-1792331676963.webp"
   },
   {
     "id": "ast_recipe_drink_sekanjabin-sharbat",
-    "storageKey": "recipes/drink-sekanjabin-sharbat.webp",
+    "storageKey": "recipes/drink-sekanjabin-sharbat-1792331677144.webp",
     "mime": "image/webp",
     "bytes": 80758,
     "width": 780,
@@ -2187,12 +2238,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRkIAAABXRUJQVlA4IDYAAADQAQCdASoLABAABUB8JYwAAup1u9JgAAD+3pHzaDuQJnGpIusm25J5+cHKTHNBfMCvEY4AAAA=",
     "alt": "شربت سرکه انگبین (سکنجبین)",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:50.394Z",
-    "updatedAt": "2026-10-18T08:44:50.394Z"
+    "createdAt": "2026-10-18T13:54:37.287Z",
+    "updatedAt": "2026-10-18T13:54:37.287Z",
+    "url": "/uploads/recipes/drink-sekanjabin-sharbat-1792331677144.webp"
   },
   {
     "id": "ast_recipe_drink_fengmi-juhua-cha",
-    "storageKey": "recipes/drink-fengmi-juhua-cha.webp",
+    "storageKey": "recipes/drink-fengmi-juhua-cha-1792331677287.webp",
     "mime": "image/webp",
     "bytes": 92750,
     "width": 800,
@@ -2200,12 +2252,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAADwAQCdASoLABAABUB8JbACdADZmxTs5UAA9mt2UwLcp8jXwIlDGHm4BqL6MbcfkbQzFw6cQh3dEvS1u5T5IMezJ3zWzl1bp76JqbnY8cGsyuy+ReqBM+QAAAA=",
     "alt": "چای گل داوودی",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:50.588Z",
-    "updatedAt": "2026-10-18T08:44:50.588Z"
+    "createdAt": "2026-10-18T13:54:37.491Z",
+    "updatedAt": "2026-10-18T13:54:37.491Z",
+    "url": "/uploads/recipes/drink-fengmi-juhua-cha-1792331677287.webp"
   },
   {
     "id": "ast_recipe_drink_tombe-juice",
-    "storageKey": "recipes/drink-tombe-juice.webp",
+    "storageKey": "recipes/drink-tombe-juice-1792331677491.webp",
     "mime": "image/webp",
     "bytes": 43932,
     "width": 722,
@@ -2213,12 +2266,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAQAgCdASoLABAABUB8JbACdAEf5plT0JVEAP6pPu3hsHjuq0TBwfzUSvlQ6P018BQ1g3+3vV95WztHcONvQzGooeo9GSio9hgGvnhKU65t91XOf65t8wAA",
     "alt": "تامبه جوس",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:50.726Z",
-    "updatedAt": "2026-10-18T08:44:50.726Z"
+    "createdAt": "2026-10-18T13:54:37.607Z",
+    "updatedAt": "2026-10-18T13:54:37.607Z",
+    "url": "/uploads/recipes/drink-tombe-juice-1792331677491.webp"
   },
   {
     "id": "ast_recipe_drink_ginger-drink",
-    "storageKey": "recipes/drink-ginger-drink.webp",
+    "storageKey": "recipes/drink-ginger-drink-1792331677607.webp",
     "mime": "image/webp",
     "bytes": 66164,
     "width": 800,
@@ -2226,12 +2280,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAADwAQCdASoQABAABUB8JbACdADbHRuRn3QA/sXKVL0BUu1Vz/N9Z8chI1yOiYuPcUwkjbea8FUaT5zBoN7X7r2lX5IHulW7c0pP5Wlb78vK8ElIAnQmkHPx9SxZhEZhAAA=",
     "alt": "نوشیدنی زنجبیلی گینه",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:50.869Z",
-    "updatedAt": "2026-10-18T08:44:50.869Z"
+    "createdAt": "2026-10-18T13:54:37.756Z",
+    "updatedAt": "2026-10-18T13:54:37.756Z",
+    "url": "/uploads/recipes/drink-ginger-drink-1792331677607.webp"
   },
   {
     "id": "ast_recipe_drink_kuurma-chai",
-    "storageKey": "recipes/drink-kuurma-chai.webp",
+    "storageKey": "recipes/drink-kuurma-chai-1792331677756.webp",
     "mime": "image/webp",
     "bytes": 11616,
     "width": 600,
@@ -2239,12 +2294,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAAAQAgCdASoQAAgABUB8JagCdAECu7Yqle+AAP5mrTBKzlvlyVBh59ePw0+yemHZWyOxvoyQe11fDr/N2zkmMAAA",
     "alt": "کورما چای",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:50.925Z",
-    "updatedAt": "2026-10-18T08:44:50.925Z"
+    "createdAt": "2026-10-18T13:54:37.816Z",
+    "updatedAt": "2026-10-18T13:54:37.816Z",
+    "url": "/uploads/recipes/drink-kuurma-chai-1792331677756.webp"
   },
   {
     "id": "ast_recipe_drink_sladkiy-myod",
-    "storageKey": "recipes/drink-sladkiy-myod.webp",
+    "storageKey": "recipes/drink-sladkiy-myod-1792331677816.webp",
     "mime": "image/webp",
     "bytes": 64886,
     "width": 600,
@@ -2252,12 +2308,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADwAQCdASoLABAABUB8JbACdADbfstXkAAA9zsKpC1fmb5oAQbPGVNEb5/MGiFPlMRsJqU4gYmg/ElYg/t8anfkeHiqUjQZ97Oo/lcAAAA=",
     "alt": "شیرین عسل",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:51.019Z",
-    "updatedAt": "2026-10-18T08:44:51.019Z"
+    "createdAt": "2026-10-18T13:54:37.907Z",
+    "updatedAt": "2026-10-18T13:54:37.907Z",
+    "url": "/uploads/recipes/drink-sladkiy-myod-1792331677816.webp"
   },
   {
     "id": "ast_recipe_drink_kok-choy",
-    "storageKey": "recipes/drink-kok-choy.webp",
+    "storageKey": "recipes/drink-kok-choy-1792331677907.webp",
     "mime": "image/webp",
     "bytes": 41452,
     "width": 800,
@@ -2265,12 +2322,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAQAgCdASoQAAoABUB8JbACdAD7CHtK6NEoAP3gjBanwR+gmrGjZo0liRsuFPoqZ1fLd26N0WaXdhkTRL94smdMVVCuBdspr8wzkKggGAA=",
     "alt": "چای سبز ازبکی",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:51.124Z",
-    "updatedAt": "2026-10-18T08:44:51.124Z"
+    "createdAt": "2026-10-18T13:54:37.999Z",
+    "updatedAt": "2026-10-18T13:54:37.999Z",
+    "url": "/uploads/recipes/drink-kok-choy-1792331677907.webp"
   },
   {
     "id": "ast_recipe_drink_sattu-drink",
-    "storageKey": "recipes/drink-sattu-drink.webp",
+    "storageKey": "recipes/drink-sattu-drink-1792331677999.webp",
     "mime": "image/webp",
     "bytes": 58118,
     "width": 800,
@@ -2278,12 +2336,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAAAQAgCdASoLABAABUB8JZAC7AELYbKJ6aTAAP7cjeenrJr4Vh5+fv6CYTUbqJPF9g74s2R3jxGHCKNz+EL8MTjrldAAAA==",
     "alt": "سَتو",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:51.322Z",
-    "updatedAt": "2026-10-18T08:44:51.322Z"
+    "createdAt": "2026-10-18T13:54:38.183Z",
+    "updatedAt": "2026-10-18T13:54:38.183Z",
+    "url": "/uploads/recipes/drink-sattu-drink-1792331677999.webp"
   },
   {
     "id": "ast_recipe_drink_syrian-mate",
-    "storageKey": "recipes/drink-syrian-mate.webp",
+    "storageKey": "recipes/drink-syrian-mate-1792331678183.webp",
     "mime": "image/webp",
     "bytes": 24130,
     "width": 800,
@@ -2291,12 +2350,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAAAQAgCdASoQAAkABUB8JaACdAEe4H1ohc6QAPj0Nd2SIlTPJOJoUClwx0uakbCvs6gujdys6q5cXDIYXsh8IgAA",
     "alt": "متّه سوری",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:51.416Z",
-    "updatedAt": "2026-10-18T08:44:51.416Z"
+    "createdAt": "2026-10-18T13:54:38.282Z",
+    "updatedAt": "2026-10-18T13:54:38.282Z",
+    "url": "/uploads/recipes/drink-syrian-mate-1792331678183.webp"
   },
   {
     "id": "ast_recipe_drink_shai-bil-nana",
-    "storageKey": "recipes/drink-shai-bil-nana.webp",
+    "storageKey": "recipes/drink-shai-bil-nana-1792331678282.webp",
     "mime": "image/webp",
     "bytes": 69248,
     "width": 800,
@@ -2304,12 +2364,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAQCdASoLABAABUB8JbACdADygJhz0AD9T4cmE7IeIbbc1jLruCNdnI9CQMB99P5dsu6664HrjlR8HohjgoHqgfIAy8hgQAA=",
     "alt": "چای نعناع لبنانی",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:51.595Z",
-    "updatedAt": "2026-10-18T08:44:51.595Z"
+    "createdAt": "2026-10-18T13:54:38.466Z",
+    "updatedAt": "2026-10-18T13:54:38.466Z",
+    "url": "/uploads/recipes/drink-shai-bil-nana-1792331678282.webp"
   },
   {
     "id": "ast_recipe_drink_cha-takrai",
-    "storageKey": "recipes/drink-cha-takrai.webp",
+    "storageKey": "recipes/drink-cha-takrai-1792331678466.webp",
     "mime": "image/webp",
     "bytes": 25488,
     "width": 576,
@@ -2317,12 +2378,13 @@
     "blurDataUrl": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAADQAQCdASoJABAABUB8JagAAuYJ1IUBgAD6X58LhIu3S40NZPnjNrTNxInC7tuBBR/EeyD319noV9AAAAA=",
     "alt": "چای علف لیمو",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:51.693Z",
-    "updatedAt": "2026-10-18T08:44:51.693Z"
+    "createdAt": "2026-10-18T13:54:38.556Z",
+    "updatedAt": "2026-10-18T13:54:38.556Z",
+    "url": "/uploads/recipes/drink-cha-takrai-1792331678466.webp"
   },
   {
     "id": "ast_recipe_drink_saenggang-cha",
-    "storageKey": "recipes/drink-saenggang-cha.webp",
+    "storageKey": "recipes/drink-saenggang-cha-1792331678556.webp",
     "mime": "image/webp",
     "bytes": 10610,
     "width": 448,
@@ -2330,8 +2392,9 @@
     "blurDataUrl": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAAAQAgCdASoQAAsABUB8JbACdADdHtWhFOOAAPZnYZGB8xN1iOqDv9n9n7P3PZCV6cVzNoO9G/IMEhH5HxI9g3FX1HjMe3EAAAA=",
     "alt": "چای زنجبیل",
     "createdById": "usr_system",
-    "createdAt": "2026-10-18T08:44:51.732Z",
-    "updatedAt": "2026-10-18T08:44:51.732Z"
+    "createdAt": "2026-10-18T13:54:38.602Z",
+    "updatedAt": "2026-10-18T13:54:38.602Z",
+    "url": "/uploads/recipes/drink-saenggang-cha-1792331678556.webp"
   },
   {
     "id": "ast_1792316825847_gm78r",
