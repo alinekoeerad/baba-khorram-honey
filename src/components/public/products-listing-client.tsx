@@ -314,8 +314,8 @@ export function ProductsListingClient({
         </div>
       ) : (
         <div className="space-y-12">
-          {/* Desktop & Tablet: 3-column card grid (Brief Section 9) */}
-          <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {/* Desktop & Tablet: Multi-column compact luxury grid */}
+          <div className="hidden sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5 lg:gap-6">
             {displayedItems.map((item, idx) => (
               <ContentCard
                 key={"desk-" + item.id}

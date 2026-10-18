@@ -172,8 +172,8 @@ export function SearchResultsClient({
                 </span>
               </div>
 
-              {/* Desktop: 3-column grid */}
-              <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              {/* Desktop & Tablet: Multi-column compact luxury grid */}
+              <div className="hidden sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5 lg:gap-6">
                 {products.map((item) => (
                   <ContentCard
                     key={item.id}
@@ -195,7 +195,7 @@ export function SearchResultsClient({
               </div>
 
               {/* Mobile: 1 item per row (horizontal) */}
-              <div className="md:hidden space-y-4">
+              <div className="sm:hidden space-y-3.5">
                 {products.map((item) => (
                   <ContentCard
                     key={item.id}
@@ -251,8 +251,8 @@ export function SearchResultsClient({
                 </span>
               </div>
 
-              {/* Desktop: 3-column grid */}
-              <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              {/* Desktop & Tablet: Multi-column compact luxury grid */}
+              <div className="hidden sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5 lg:gap-6">
                 {recipes.map((item) => (
                   <ContentCard
                     key={item.id}
@@ -273,7 +273,7 @@ export function SearchResultsClient({
               </div>
 
               {/* Mobile: 1 item per row (horizontal) */}
-              <div className="md:hidden space-y-4">
+              <div className="sm:hidden space-y-3.5">
                 {recipes.map((item) => (
                   <ContentCard
                     key={item.id}

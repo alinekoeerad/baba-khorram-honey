@@ -418,82 +418,91 @@
         "name": "ساقه علف لیمو",
         "quantityText": "۳",
         "unit": "عدد",
-        "equivalentText": "",
+        "equivalentText": null,
         "isOptional": false,
         "note": "متوسط",
-        "sortOrder": 0
+        "isLowConfidence": false,
+        "raw": "ساقه علف لیمو: ۳ عدد متوسط"
       },
       {
         "name": "زنجبیل تازه",
         "quantityText": "۱۵",
         "unit": "گرم",
-        "equivalentText": "",
+        "equivalentText": null,
         "isOptional": false,
-        "note": "",
-        "sortOrder": 1
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "زنجبیل تازه: ۱۵ گرم"
       },
       {
         "name": "آب",
         "quantityText": "۹۰۰",
         "unit": "میلی لیتر",
-        "equivalentText": "",
+        "equivalentText": null,
         "isOptional": false,
-        "note": "",
-        "sortOrder": 2
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آب: ۹۰۰ میلی لیتر"
       },
       {
         "name": "کامکوات یا لیمو ترش",
         "quantityText": "۴ تا ۶",
         "unit": "عدد",
-        "equivalentText": "",
+        "equivalentText": null,
         "isOptional": false,
         "note": "کامکوات یا ۲ عدد لیمو ترش",
-        "sortOrder": 3
+        "isLowConfidence": false,
+        "raw": "کامکوات یا لیمو ترش: ۴ تا ۶ عدد کامکوات یا ۲ عدد لیمو ترش"
       },
       {
         "name": "عسل",
         "quantityText": "۵۰ تا ۷۰",
         "unit": "گرم",
-        "equivalentText": "",
+        "equivalentText": null,
         "isOptional": false,
-        "note": "",
-        "sortOrder": 4
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل: ۵۰ تا ۷۰ گرم"
       },
       {
         "name": "گل بابونه خشک",
         "quantityText": "۱",
         "unit": "قاشق غذا خوری",
-        "equivalentText": "",
+        "equivalentText": null,
         "isOptional": true,
-        "note": "",
-        "sortOrder": 5
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "گل بابونه خشک: ۱ قاشق غذا خوری (اختیاری)"
       },
       {
         "name": "چوب دارچین",
         "quantityText": "۱",
         "unit": "تکه",
-        "equivalentText": "",
+        "equivalentText": null,
         "isOptional": true,
         "note": "کوچک",
-        "sortOrder": 6
+        "isLowConfidence": false,
+        "raw": "چوب دارچین: ۱ تکه کوچک (اختیاری)"
       },
       {
         "name": "یخ",
         "quantityText": "به مقدار لازم",
-        "unit": "",
-        "equivalentText": "",
+        "unit": null,
+        "equivalentText": null,
         "isOptional": false,
-        "note": "",
-        "sortOrder": 7
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "یخ: به مقدار لازم"
       },
       {
         "name": "گلبرگ نیلوفر خوراکی",
         "quantityText": "برای تزئین",
-        "unit": "",
-        "equivalentText": "",
+        "unit": null,
+        "equivalentText": null,
         "isOptional": true,
-        "note": "",
-        "sortOrder": 8
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "گلبرگ نیلوفر خوراکی: اختیاری برای تزئین"
       }
     ],
     "steps": [

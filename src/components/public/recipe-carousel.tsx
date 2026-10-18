@@ -151,7 +151,7 @@ export function RecipeCarousel({
         {/* Viewport: Native Hardware-Accelerated CSS Scroll-Snap Container */}
         <div
           ref={scrollContainerRef}
-          className="w-full overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar py-4 px-[calc(50vw-135px)] xs:px-[calc(50vw-145px)] sm:px-4 flex gap-4 sm:gap-6 will-change-scroll"
+          className="w-full overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar py-4 px-[calc(50vw-112px)] sm:px-4 flex gap-3.5 sm:gap-5 will-change-scroll"
           style={{
             scrollSnapType: 'x mandatory',
             WebkitOverflowScrolling: 'touch',
@@ -195,7 +195,7 @@ export function RecipeCarousel({
             return (
               <article
                 key={r.key}
-                className="shrink-0 w-[270px] xs:w-[290px] sm:w-[320px] md:w-[340px] snap-center rounded-none overflow-hidden shadow-lg border border-black/10 transition-shadow duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] hover:shadow-[0_16px_36px_rgba(51,33,21,0.28)] group cursor-pointer bg-white flex flex-col"
+                className="shrink-0 w-56 sm:w-60 md:w-64 snap-center rounded-none overflow-hidden shadow-lg border border-black/10 transition-shadow duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] hover:shadow-[0_16px_36px_rgba(51,33,21,0.28)] group cursor-pointer bg-white flex flex-col"
                 style={{
                   scrollSnapAlign: 'center',
                   scrollSnapStop: 'always',
@@ -222,13 +222,13 @@ export function RecipeCarousel({
 
                   {/* Content Wrap */}
                   <div
-                    className={`p-5 sm:p-6 flex-1 flex flex-col justify-between ${theme.bg} ${theme.text}`}
+                    className={`p-3.5 sm:p-4 flex-1 flex flex-col justify-between ${theme.bg} ${theme.text}`}
                   >
-                    <h3 className="font-black text-base sm:text-xl leading-snug line-clamp-2">
+                    <h3 className="font-black text-sm sm:text-base leading-snug line-clamp-2">
                       {r.title}
                     </h3>
 
-                    <div className="mt-4 sm:mt-6 pt-3 border-t border-black/10 flex items-center justify-between text-xs sm:text-sm font-black">
+                    <div className="mt-3 pt-2.5 border-t border-black/10 flex items-center justify-between text-xs sm:text-sm font-black">
                       <span>مشاهده دستور پخت</span>
                       <DottedArrowIcon direction="left" className="w-4 h-4 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-x-1.5" />
                     </div>

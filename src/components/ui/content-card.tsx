@@ -390,21 +390,21 @@ export function ContentCard({
         )}
       </div>
 
-      {/* Card Body */}
-      <div className="p-5 flex-1 flex flex-col justify-between text-right">
+      {/* Card Body - Balanced for compact elegant card presentation */}
+      <div className="p-3.5 sm:p-4 flex-1 flex flex-col justify-between text-right">
         <div>
-          <h3 className={`font-black text-lg sm:text-xl leading-tight line-clamp-2 ${currentTheme.text}`}>
+          <h3 className={`font-black text-sm sm:text-base leading-snug line-clamp-2 ${currentTheme.text}`}>
             {title}
           </h3>
           {subtitle && (
-            <p className={`text-xs sm:text-sm mt-1.5 line-clamp-1 font-bold ${currentTheme.subtext}`}>
+            <p className={`text-[11px] sm:text-xs mt-1 line-clamp-1 font-bold ${currentTheme.subtext}`}>
               {subtitle}
             </p>
           )}
         </div>
 
         {/* Card Footer Link Label with signature Dotted Arrow */}
-        <div className={`mt-5 pt-3 border-t border-black/15 flex items-center justify-between text-sm font-black ${currentTheme.text}`}>
+        <div className={`mt-3 pt-2.5 border-t border-black/15 flex items-center justify-between text-xs sm:text-sm font-black ${currentTheme.text}`}>
           <span>{linkLabel}</span>
           <DottedArrowIcon
             direction="left"
