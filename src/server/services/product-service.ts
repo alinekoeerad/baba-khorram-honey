@@ -90,8 +90,14 @@ export class ProductService {
     if (filters.isAvailable !== undefined) {
       where.isAvailable = filters.isAvailable;
     }
-    if (filters.categorySlug) {
-      where.categorySlug = filters.categorySlug;
+    if (filters.categorySlug && filters.categorySlug !== 'all' && filters.categorySlug !== 'همه') {
+      where.categories = {
+        some: {
+          category: {
+            slug: filters.categorySlug,
+          },
+        },
+      };
     }
     if (filters.search) {
       where.searchQuery = filters.search;
@@ -102,7 +108,14 @@ export class ProductService {
       orderBy: { sortOrder: 'asc' },
       skip: filters.skip,
       take: filters.take,
-      include: { categories: true, mainImage: true },
+      include: {
+        categories: true,
+        mainImage: true,
+        options: true,
+        _count: {
+          select: { options: true },
+        },
+      },
     });
 
     const totalCount = await db.product.count({ where });
@@ -110,7 +123,9 @@ export class ProductService {
     return {
       items: items.map((p: any) => ({
         ...p,
-        optionCount: Array.isArray(p.options) ? p.options.length : 0,
+        optionCount: Array.isArray(p.options)
+          ? p.options.length
+          : (p._count?.options ?? 0),
       })),
       totalCount,
     };

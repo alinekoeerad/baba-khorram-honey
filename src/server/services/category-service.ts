@@ -141,16 +141,40 @@ export class CategoryService {
    * Deletes a category ONLY if it is not used by any products or recipes.
    */
   static async deleteCategory(id: string, userId?: string) {
-    const category = await db.category.findUnique({ where: { id } });
+    const category = await db.category.findUnique({
+      where: { id },
+      include: {
+        _count: {
+          select: {
+            products: true,
+            recipes: true,
+          },
+        },
+      },
+    });
     if (!category) {
       throw new Error('دسته‌بندی یافت نشد.');
     }
 
-    // Strict in-use guard
-    const categoriesWithCount = await this.listCategories(category.type);
-    const targetWithCount = categoriesWithCount.find((c: any) => c.id === id);
+    // Strict in-use guard preventing catastrophic cascade deletions
+    const linkedProducts = (category as any)._count?.products ?? (category as any).productCount ?? 0;
+    const linkedRecipes = (category as any)._count?.recipes ?? (category as any).recipeCount ?? 0;
 
-    const isUsed = (targetWithCount?.productCount || 0) > 0 || (targetWithCount?.recipeCount || 0) > 0;
+    let isUsed = linkedProducts > 0 || linkedRecipes > 0;
+
+    // Double-check junction relations directly if _count wasn't populated
+    if (!isUsed) {
+      try {
+        const [pCount, rCount] = await Promise.all([
+          db.productCategory?.count ? db.productCategory.count({ where: { categoryId: id } }) : 0,
+          db.recipeCategory?.count ? db.recipeCategory.count({ where: { categoryId: id } }) : 0,
+        ]);
+        if (pCount > 0 || rCount > 0) {
+          isUsed = true;
+        }
+      } catch {}
+    }
+
     if (isUsed) {
       throw new Error(
         'این دسته‌بندی دارای اقلام متصل است و نمی‌تواند حذف شود. ابتدا آن را بایگانی کنید یا اقلام متصل به آن را حذف نمایید.'

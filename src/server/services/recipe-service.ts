@@ -80,8 +80,14 @@ export class RecipeService {
     if (filters.status) {
       where.status = filters.status;
     }
-    if (filters.categorySlug) {
-      where.categoryIds = { hasSome: [`cat_${filters.categorySlug}`] };
+    if (filters.categorySlug && filters.categorySlug !== 'all' && filters.categorySlug !== 'همه') {
+      where.categories = {
+        some: {
+          category: {
+            slug: filters.categorySlug,
+          },
+        },
+      };
     }
     if (filters.search) {
       where.searchQuery = filters.search;
