@@ -4,7 +4,8 @@
 // ===============================================================
 
 generator client {
-  provider = "prisma-client-js"
+  provider   = "prisma-client-js"
+  engineType = "library"
 }
 
 datasource db {
@@ -507,6 +508,40 @@ model OrderShareLink {
   @@index([code])
   @@index([expiresAt])
   @@map("order_share_links")
+}
+
+// ---------------------------------------------------------------
+// Orders (Persisted Orders)
+// ---------------------------------------------------------------
+
+enum OrderStatus {
+  NEW
+  CONTACTED
+  SHIPPED
+  CANCELLED
+}
+
+model Order {
+  id               String       @id @default(cuid())
+  code             String       @unique
+  customerName     String
+  customerMobile   String
+  customerCity     String?
+  customerAddress  String?
+  customerNotes    String?
+  preferredContact ChannelType
+  lines            Json         @default("[]")
+  totalPrice       Int?
+  messageText      String
+  status           OrderStatus  @default(NEW)
+  channelType      String?
+  channelValue     String?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  @@index([status, createdAt])
+  @@index([customerMobile])
+  @@map("orders")
 }
 
 // ---------------------------------------------------------------

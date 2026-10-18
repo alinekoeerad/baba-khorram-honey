@@ -27,7 +27,8 @@
     "check": "pnpm typecheck && pnpm test && pnpm build",
     "test:db": "vitest run --config vitest.db.config.ts",
     "db:test:setup": "node scripts/db-test-setup.mjs",
-    "orders:cleanup": "node scripts/cleanup-orders.mjs"
+    "orders:cleanup": "node scripts/cleanup-orders.mjs",
+    "db:migrate:mock": "tsx scripts/migrate-mock-to-pg.ts"
   },
   "dependencies": {
     "@node-rs/argon2": "2.0.2",
