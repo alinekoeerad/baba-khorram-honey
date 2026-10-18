@@ -360,6 +360,7 @@ export function RecipesListingClient({
                 slug={item.slug}
                 linkLabel={item.linkLabel}
                 variant="vertical"
+                priority={idx < 4}
                 index={idx}
                 sortOrder={item.sortOrder}
                 itemType="recipe"
@@ -384,6 +385,7 @@ export function RecipesListingClient({
                 slug={item.slug}
                 linkLabel={item.linkLabel}
                 variant="horizontal"
+                priority={idx < 4}
                 index={idx}
                 sortOrder={item.sortOrder}
                 itemType="recipe"

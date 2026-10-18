@@ -14,7 +14,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Picture } from '@/components/ui/picture';
+import Image from 'next/image';
 import { toPersianDigits } from '@/lib/domain-utils';
 import {
   ZoomIn,
@@ -188,34 +188,20 @@ export function InteractiveMediaGallery({
             }
           }}
         >
-          {/* Active Slide Image */}
-          {currentSlide.storageKey || currentSlide.url ? (
-            <Picture
-              key={currentSlide.id || currentSlide.storageKey || currentSlide.url}
-              asset={currentSlide as any}
-              width={800}
-              height={800}
-              blurDataUrl={currentSlide.blurDataUrl}
-              alt={currentSlide.alt || title}
-              priority={activeIndex === 0}
-              className={isDynamic ? "w-full h-auto block rounded-none" : "w-full h-full block rounded-none"}
-              imgClassName={isDynamic
-                ? "w-full h-auto object-contain object-center transition-transform duration-300 group-hover:scale-102 rounded-none"
-                : "w-full h-full object-contain object-center p-2 transition-transform duration-300 group-hover:scale-102 rounded-none"
-              }
-            />
-          ) : (
-            <img
-              src={fallbackImageUrl || '/images/honey-jar.jpg'}
-              alt={currentSlide.alt || title}
-              width={800}
-              height={800}
-              className={isDynamic
-                ? "w-full h-auto object-contain object-center transition-transform duration-300 group-hover:scale-102 rounded-none"
-                : "w-full h-full object-contain object-center p-2 transition-transform duration-300 group-hover:scale-102 rounded-none"
-              }
-            />
-          )}
+          {/* Active Slide Hero Image (LCP Prioritized & Unoptimized to bypass server re-encoding) */}
+          <Image
+            key={currentSlide.id || currentSlide.storageKey || currentSlide.url || activeIndex}
+            src={currentSlide.url || fallbackImageUrl || '/images/honey-jar.jpg'}
+            alt={currentSlide.alt || title}
+            width={currentSlide.width ?? 800}
+            height={currentSlide.height ?? 800}
+            unoptimized={true}
+            priority={activeIndex === 0}
+            className={isDynamic
+              ? "w-full h-auto object-contain object-center transition-transform duration-300 group-hover:scale-102 rounded-none"
+              : "w-full h-full object-contain object-center p-2 transition-transform duration-300 group-hover:scale-102 rounded-none"
+            }
+          />
 
           {/* Featured Badge */}
           {featuredBadge && (
@@ -287,22 +273,14 @@ export function InteractiveMediaGallery({
                 }`}
                 aria-label={`نمایش تصویر ${toPersianDigits(idx + 1)}`}
               >
-                {slide.storageKey || slide.url ? (
-                  <Picture
-                    asset={slide as any}
-                    width={180}
-                    height={180}
-                    alt={slide.alt || title}
-                    className="w-full h-full block rounded-none"
-                    imgClassName="w-full h-full object-contain object-center rounded-none p-1"
-                  />
-                ) : (
-                  <img
-                    src={fallbackImageUrl || '/images/honey-jar.jpg'}
-                    alt={slide.alt || title}
-                    className="w-full h-full object-contain object-center rounded-none p-1"
-                  />
-                )}
+                <Image
+                  src={slide.url || fallbackImageUrl || '/images/honey-jar.jpg'}
+                  alt={slide.alt || title}
+                  width={180}
+                  height={180}
+                  unoptimized={true}
+                  className="w-full h-full object-contain object-center rounded-none p-1"
+                />
               </button>
             );
           })}

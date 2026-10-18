@@ -17,6 +17,7 @@
 
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { WoodBackground } from '@/components/ui/wood-background';
 import { Container } from '@/components/ui/container';
 import { PillButton } from '@/components/ui/pill-button';
@@ -204,13 +205,14 @@ export function RecipeCarousel({
                 <Link href={`/recipes/${r.slug}`} className="flex flex-col h-full">
                   {/* Image Wrap - Aspect 3:4 portrait presentation with Glassy Magnifier Hover */}
                   <div className="w-full aspect-[3/4] overflow-hidden shrink-0 relative bg-[#FAF8F5] rounded-none">
-                    <img
+                    <Image
                       src={imageSrc}
                       alt={r.title}
-                      className={`w-full h-full object-cover ${objectPositionClass} transform-gpu transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110 will-change-transform rounded-none`}
-                      loading="lazy"
                       width={360}
                       height={480}
+                      unoptimized={true}
+                      priority={idx < 4}
+                      className={`w-full h-full object-cover ${objectPositionClass} transform-gpu transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110 will-change-transform rounded-none`}
                     />
 
                     {/* Glassy Overlay on Hover */}

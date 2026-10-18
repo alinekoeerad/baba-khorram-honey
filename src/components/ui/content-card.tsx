@@ -15,8 +15,8 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { CardTheme, getCardThemeForSlug, getBalancedCardTheme, resolveItemCardTheme } from '@/lib/domain-utils';
-import { Picture } from './picture';
 import { DottedArrowIcon } from './dotted-arrow-icon';
 
 export interface ContentCardProps {
@@ -267,16 +267,15 @@ export function ContentCard({
         <div className="flex flex-row items-center h-28 sm:h-32">
           {/* Image Container - Visual Right in RTL (first in DOM under dir="rtl") */}
           <div className="relative w-28 sm:w-32 h-full shrink-0 overflow-hidden bg-[#FAF8F5] rounded-none">
-            {effectiveAsset ? (
-              <Picture
-                asset={effectiveAsset}
-                width={effectiveAsset.width ?? 800}
-                height={effectiveAsset.height ?? 1067}
-                blurDataUrl={effectiveAsset.blurDataUrl}
+            {directUrl ? (
+              <Image
+                src={directUrl}
                 alt={imageAlt || title}
-                className="w-full h-full block rounded-none overflow-hidden"
-                imgClassName={`w-full h-full object-cover ${objectPositionClass} transform-gpu transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110 will-change-transform rounded-none`}
+                width={effectiveAsset?.width ?? 800}
+                height={effectiveAsset?.height ?? 1067}
+                unoptimized={true}
                 priority={priority}
+                className={`w-full h-full object-cover ${objectPositionClass} transform-gpu transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110 will-change-transform rounded-none`}
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-[#FAF8F5] text-xs font-bold text-[#5C3A21] rounded-none">
@@ -285,16 +284,15 @@ export function ContentCard({
             )}
 
             {/* Optional Secondary Image on Desktop Hover */}
-            {effectiveSecondaryAsset && (
+            {secDirectUrl && (
               <div className="hidden sm:block absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none rounded-none overflow-hidden">
-                <Picture
-                  asset={effectiveSecondaryAsset}
-                  width={effectiveSecondaryAsset.width ?? 800}
-                  height={effectiveSecondaryAsset.height ?? 1067}
-                  blurDataUrl={effectiveSecondaryAsset.blurDataUrl}
+                <Image
+                  src={secDirectUrl}
                   alt={imageAlt || title}
-                  className="w-full h-full block rounded-none overflow-hidden"
-                  imgClassName={`w-full h-full object-cover ${objectPositionClass} transform-gpu transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110 will-change-transform rounded-none`}
+                  width={effectiveSecondaryAsset?.width ?? 800}
+                  height={effectiveSecondaryAsset?.height ?? 1067}
+                  unoptimized={true}
+                  className={`w-full h-full object-cover ${objectPositionClass} transform-gpu transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110 will-change-transform rounded-none`}
                 />
               </div>
             )}
@@ -347,16 +345,15 @@ export function ContentCard({
     >
       {/* Image Area - Aspect 3:4 portrait presentation with Glassy Magnifier Hover */}
       <div className="relative w-full aspect-[3/4] overflow-hidden shrink-0 bg-[#FAF8F5] rounded-none">
-        {effectiveAsset ? (
-          <Picture
-            asset={effectiveAsset}
-            width={effectiveAsset.width ?? 800}
-            height={effectiveAsset.height ?? 1067}
-            blurDataUrl={effectiveAsset.blurDataUrl}
+        {directUrl ? (
+          <Image
+            src={directUrl}
             alt={imageAlt || title}
-            className="w-full h-full block rounded-none overflow-hidden"
-            imgClassName={`w-full h-full object-cover ${objectPositionClass} transform-gpu transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110 will-change-transform rounded-none`}
+            width={effectiveAsset?.width ?? 800}
+            height={effectiveAsset?.height ?? 1067}
+            unoptimized={true}
             priority={priority}
+            className={`w-full h-full object-cover ${objectPositionClass} transform-gpu transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110 will-change-transform rounded-none`}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-[#FAF8F5] text-sm font-bold text-[#5C3A21] rounded-none">
@@ -365,16 +362,15 @@ export function ContentCard({
         )}
 
         {/* Optional Secondary Image on Desktop Hover */}
-        {effectiveSecondaryAsset && (
+        {secDirectUrl && (
           <div className="hidden sm:block absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none rounded-none overflow-hidden">
-            <Picture
-              asset={effectiveSecondaryAsset}
-              width={effectiveSecondaryAsset.width ?? 800}
-              height={effectiveSecondaryAsset.height ?? 1067}
-              blurDataUrl={effectiveSecondaryAsset.blurDataUrl}
+            <Image
+              src={secDirectUrl}
               alt={imageAlt || title}
-              className="w-full h-full block rounded-none overflow-hidden"
-              imgClassName={`w-full h-full object-cover ${objectPositionClass} transform-gpu transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110 will-change-transform rounded-none`}
+              width={effectiveSecondaryAsset?.width ?? 800}
+              height={effectiveSecondaryAsset?.height ?? 1067}
+              unoptimized={true}
+              className={`w-full h-full object-cover ${objectPositionClass} transform-gpu transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110 will-change-transform rounded-none`}
             />
           </div>
         )}

@@ -331,6 +331,7 @@ export function ProductsListingClient({
                 isAvailable={item.isAvailable}
                 linkLabel={item.linkLabel}
                 variant="vertical"
+                priority={idx < 4}
                 index={idx}
                 sortOrder={item.sortOrder}
                 itemType="product"
@@ -356,6 +357,7 @@ export function ProductsListingClient({
                 isAvailable={item.isAvailable}
                 linkLabel={item.linkLabel}
                 variant="horizontal"
+                priority={idx < 4}
                 index={idx}
                 sortOrder={item.sortOrder}
                 itemType="product"

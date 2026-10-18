@@ -174,7 +174,7 @@ export function SearchResultsClient({
 
               {/* Desktop & Tablet: Multi-column compact luxury grid */}
               <div className="hidden sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5 lg:gap-6">
-                {products.map((item) => (
+                {products.map((item, idx) => (
                   <ContentCard
                     key={item.id}
                     title={item.title}
@@ -189,6 +189,7 @@ export function SearchResultsClient({
                     isAvailable={item.isAvailable}
                     linkLabel={item.linkLabel}
                     variant="vertical"
+                    priority={idx < 4}
                     focalPoint={(item as any).focalPoint}
                   />
                 ))}
@@ -196,7 +197,7 @@ export function SearchResultsClient({
 
               {/* Mobile: 1 item per row (horizontal) */}
               <div className="sm:hidden space-y-3.5">
-                {products.map((item) => (
+                {products.map((item, idx) => (
                   <ContentCard
                     key={item.id}
                     title={item.title}
@@ -211,6 +212,7 @@ export function SearchResultsClient({
                     isAvailable={item.isAvailable}
                     linkLabel={item.linkLabel}
                     variant="horizontal"
+                    priority={idx < 4}
                     focalPoint={(item as any).focalPoint}
                   />
                 ))}
@@ -253,7 +255,7 @@ export function SearchResultsClient({
 
               {/* Desktop & Tablet: Multi-column compact luxury grid */}
               <div className="hidden sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5 lg:gap-6">
-                {recipes.map((item) => (
+                {recipes.map((item, idx) => (
                   <ContentCard
                     key={item.id}
                     title={item.title}
@@ -267,6 +269,7 @@ export function SearchResultsClient({
                     sortOrder={item.sortOrder}
                     linkLabel={item.linkLabel}
                     variant="vertical"
+                    priority={idx < 4}
                     focalPoint={(item as any).focalPoint}
                   />
                 ))}
@@ -274,7 +277,7 @@ export function SearchResultsClient({
 
               {/* Mobile: 1 item per row (horizontal) */}
               <div className="sm:hidden space-y-3.5">
-                {recipes.map((item) => (
+                {recipes.map((item, idx) => (
                   <ContentCard
                     key={item.id}
                     title={item.title}
@@ -286,6 +289,7 @@ export function SearchResultsClient({
                     sortOrder={item.sortOrder}
                     linkLabel={item.linkLabel}
                     variant="horizontal"
+                    priority={idx < 4}
                     focalPoint={(item as any).focalPoint}
                   />
                 ))}
