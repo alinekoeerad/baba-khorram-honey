@@ -150,7 +150,7 @@ export function Footer({ settings, channels }: FooterProps) {
                   className="hover:text-white transition-colors font-mono font-bold text-white"
                   dir="ltr"
                 >
-                  ۰۹۳۸-۹۱۹-۶۰۱۰
+                  ۰۹۳۸ ۹۱۹ ۶۰۱۰
                 </a>
               </li>
               {channels && channels.length > 0 ? (

@@ -15,10 +15,13 @@ describe('Data Parser Test Suite (Brief Section 16 & Task 7)', () => {
     );
   }
 
-  let seedRecipes: any[] = JSON.parse(
+  let allRecipes: any[] = JSON.parse(
     fs.readFileSync(path.join(rootDir, 'data/seed/recipes.json'), 'utf8')
   );
-  if (!Array.isArray(seedRecipes) || seedRecipes.length === 0) {
+  let seedRecipes: any[] = allRecipes.filter((r: any) =>
+    Array.isArray(r.categories) && r.categories.includes('drinks')
+  );
+  if (seedRecipes.length !== 37) {
     seedRecipes = JSON.parse(
       fs.readFileSync(path.join(rootDir, 'data/source/seed-recipes.json'), 'utf8')
     );

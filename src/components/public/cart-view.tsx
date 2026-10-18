@@ -576,7 +576,7 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
                 <div className="flex items-center gap-2 text-[#5C5248] font-medium">
                   <Phone className="w-4 h-4 text-[#D97706]" />
                   <span>شماره مستقیم واحد سفارشات و پشتیبانی:</span>
-                  <strong className="text-[#2B2017] font-mono text-sm">۰۹۳۸۹۱۹۶۰۱۰</strong>
+                  <strong className="text-[#2B2017] font-mono text-sm">۰۹۳۸ ۹۱۹ ۶۰۱۰</strong>
                 </div>
 
                 <div className="flex items-center gap-2 w-full sm:w-auto">

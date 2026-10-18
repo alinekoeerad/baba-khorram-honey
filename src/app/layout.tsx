@@ -19,8 +19,31 @@ const vazirmatn = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://babakhorram.com'),
   title: `${uiStringsFa.brand.name} | ${uiStringsFa.brand.tagline}`,
   description: uiStringsFa.brand.description,
+  openGraph: {
+    title: `${uiStringsFa.brand.name} | ${uiStringsFa.brand.tagline}`,
+    description: uiStringsFa.brand.description,
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://babakhorram.com',
+    siteName: uiStringsFa.brand.name,
+    images: [
+      {
+        url: '/images/logo-square.webp',
+        width: 512,
+        height: 512,
+        alt: uiStringsFa.brand.name,
+      },
+    ],
+    locale: 'fa_IR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${uiStringsFa.brand.name} | ${uiStringsFa.brand.tagline}`,
+    description: uiStringsFa.brand.description,
+    images: ['/images/logo-square.webp'],
+  },
   icons: {
     icon: [
       { url: '/favicon.ico' },

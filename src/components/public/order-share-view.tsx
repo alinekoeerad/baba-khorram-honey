@@ -228,7 +228,7 @@ export function OrderShareView({
         <div className="flex items-center justify-between gap-3 p-3.5 bg-white border border-[#EFE9E0] text-xs shadow-sm rounded-none text-right">
           <div className="text-[#5C5248]">
             <span>پشتیبانی و هماهنگی تلفنی: </span>
-            <strong className="text-[#2B2017] font-mono text-sm">۰۹۳۸۹۱۹۶۰۱۰</strong>
+            <strong className="text-[#2B2017] font-mono text-sm">۰۹۳۸ ۹۱۹ ۶۰۱۰</strong>
           </div>
           <a
             href="tel:09389196010"

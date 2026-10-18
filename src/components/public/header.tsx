@@ -97,7 +97,7 @@ export function Header({
       >
         <span>تماس تلفنی</span>
         <span className="font-mono text-[11px] text-[#FBBF24]" dir="ltr">
-          ۰۹۳۸-۹۱۹-۶۰۱۰
+          ۰۹۳۸ ۹۱۹ ۶۰۱۰
         </span>
       </a>
 
@@ -253,7 +253,7 @@ export function Header({
           className="flex items-center gap-1.5 text-[11px] font-black text-white/90 hover:text-[#FBBF24] transition-colors"
           dir="ltr"
         >
-          <span className="font-mono">۰۹۳۸-۹۱۹-۶۰۱۰</span>
+          <span className="font-mono">۰۹۳۸ ۹۱۹ ۶۰۱۰</span>
           <PhoneCall className="w-3 h-3 text-[#FBBF24]" />
         </a>
       </div>

@@ -22,7 +22,7 @@ export const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
 export const MAX_DIMENSION_PX = 6000;
 export const BREAKPOINTS = [480, 768, 1200, 1920];
 
-export type SupportedImageMime = 'image/jpeg' | 'image/png' | 'image/webp';
+export type SupportedImageMime = 'image/jpeg' | 'image/png' | 'image/webp' | 'image/avif';
 
 export interface ImageValidationResult {
   isValid: boolean;
@@ -82,6 +82,14 @@ export function validateImageMagicBytes(buffer: Buffer): ImageValidationResult {
     return { isValid: true, mime: 'image/webp' };
   }
 
+  // 4. AVIF: bytes 4-7 are 'ftyp' and followed by 'avif' or 'avis'
+  if (buffer.length >= 12 && buffer.slice(4, 8).toString('ascii') === 'ftyp') {
+    const brand = buffer.slice(8, 12).toString('ascii');
+    if (brand === 'avif' || brand === 'avis') {
+      return { isValid: true, mime: 'image/avif' };
+    }
+  }
+
   // Non-matching (spoofed file or disallowed format e.g. SVG, EXE, TXT)
   return { isValid: false, error: uiStringsFa.adminMedia.fileSpoofed };
 }
@@ -128,10 +136,20 @@ export async function processImage(
       const variantBuffer = await sharp(buffer)
         .rotate()
         .resize(w, null, { withoutEnlargement: true })
-        .webp({ quality: 82 })
+        .webp({ quality: 84, effort: 4, alphaQuality: 90 })
         .toBuffer();
 
       await fs.promises.writeFile(outPath, variantBuffer);
+
+      // Also ensure mirrors in public/uploads for direct Next.js static asset resolution
+      const publicUploadPath = path.join(process.cwd(), 'public', 'uploads', outFilename);
+      try {
+        const publicUploadDir = path.dirname(publicUploadPath);
+        if (!fs.existsSync(publicUploadDir)) {
+          fs.mkdirSync(publicUploadDir, { recursive: true });
+        }
+        await fs.promises.writeFile(publicUploadPath, variantBuffer);
+      } catch {}
 
       const variantMeta = await sharp(variantBuffer).metadata();
 
@@ -148,7 +166,7 @@ export async function processImage(
     const blurBuffer = await sharp(buffer)
       .rotate()
       .resize(16, null, { withoutEnlargement: true })
-      .webp({ quality: 30 })
+      .webp({ quality: 30, effort: 4, alphaQuality: 90 })
       .toBuffer();
 
     const blurDataUrl = `data:image/webp;base64,${blurBuffer.toString('base64')}`;

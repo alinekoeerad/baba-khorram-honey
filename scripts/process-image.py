@@ -56,7 +56,7 @@ def process_image(input_path, output_dir, file_prefix, breakpoints=[480, 768, 12
         out_filename = f"{file_prefix}-{w}.webp"
         out_filepath = os.path.join(output_dir, out_filename)
         # Strip metadata by not passing exif/icc_profile
-        resized.save(out_filepath, "WEBP", quality=82, method=6)
+        resized.save(out_filepath, "WEBP", quality=84, method=4)
         file_bytes = os.path.getsize(out_filepath)
         variants[str(w)] = {
             "key": out_filename,

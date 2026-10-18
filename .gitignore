@@ -56,3 +56,4 @@ reference/
 /data/seed/audit-logs.json
 /data/seed/orders.json
 
+scripts/seed.mjs

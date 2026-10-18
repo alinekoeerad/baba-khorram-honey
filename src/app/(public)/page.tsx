@@ -28,6 +28,9 @@ import { getPublicRecipes } from '@/server/queries/recipes';
 export const revalidate = 3600;
 
 function isSectionVisible(section: any, products: any[], recipes: any[]): boolean {
+  if (section.type === 'VIDEO') {
+    return false;
+  }
   if (section.type === 'CARD_CAROUSEL') {
     const source = section.content?.source || 'RECIPES';
     if (source === 'PRODUCTS') {
@@ -230,7 +233,7 @@ export default async function HomePage() {
                   height={420}
                 />
                 <img
-                  src="/images/figure-image-right@2x.png"
+                  src="/images/figure-image-right@2x.webp"
                   alt=""
                   aria-hidden="true"
                   className="absolute -bottom-4 left-0 sm:-left-6 w-24 sm:w-36 h-auto opacity-90 z-20 pointer-events-none"

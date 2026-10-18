@@ -89,5 +89,68 @@
     "oldSlug": "agua-fresca-de-citricoc",
     "targetId": "rcp_agua-fresca-de-citricos",
     "createdAt": "2026-10-17T20:42:19.012Z"
+  },
+  {
+    "id": "red_1792274927539_lrmuf",
+    "entityType": "PRODUCT",
+    "oldSlug": "berberrise",
+    "targetId": "prd_berberis",
+    "createdAt": "2026-10-17T22:08:47.539Z"
+  },
+  {
+    "id": "red_1792274927539_7p79l",
+    "entityType": "PRODUCT",
+    "oldSlug": "catton",
+    "targetId": "prd_cotton",
+    "createdAt": "2026-10-17T22:08:47.539Z"
+  },
+  {
+    "id": "red_1792274927539_6lu0y",
+    "entityType": "PRODUCT",
+    "oldSlug": "enchinops",
+    "targetId": "prd_echinops",
+    "createdAt": "2026-10-17T22:08:47.539Z"
+  },
+  {
+    "id": "red_1792274927539_jiwgd",
+    "entityType": "PRODUCT",
+    "oldSlug": "ergngium",
+    "targetId": "prd_eryngium",
+    "createdAt": "2026-10-17T22:08:47.539Z"
+  },
+  {
+    "id": "red_1792274927539_j1p9j",
+    "entityType": "PRODUCT",
+    "oldSlug": "astragalus-2",
+    "targetId": "prd_astragalus-yellow",
+    "createdAt": "2026-10-17T22:08:47.539Z"
+  },
+  {
+    "id": "red_1792274927539_1h1zy",
+    "entityType": "PRODUCT",
+    "oldSlug": "astragalus-yellow",
+    "targetId": "prd_astragalus-yellow",
+    "createdAt": "2026-10-17T22:08:47.539Z"
+  },
+  {
+    "id": "red_1792274927539_hnf0z",
+    "entityType": "PRODUCT",
+    "oldSlug": "astagalus",
+    "targetId": "prd_astragalus",
+    "createdAt": "2026-10-17T22:08:47.539Z"
+  },
+  {
+    "id": "red_1792274927539_3fwls",
+    "entityType": "PRODUCT",
+    "oldSlug": "astragalus-gaz",
+    "targetId": "prd_astragalus",
+    "createdAt": "2026-10-17T22:08:47.539Z"
+  },
+  {
+    "id": "red_1792274927539_prmlw",
+    "entityType": "PRODUCT",
+    "oldSlug": "royal-gelly",
+    "targetId": "prd_royal-jelly",
+    "createdAt": "2026-10-17T22:08:47.539Z"
   }
 ]

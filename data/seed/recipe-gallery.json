@@ -22,5 +22,11 @@
     "recipeId": "rcp_recipe-gallery-test-1792257442101",
     "assetId": "ast_step_2",
     "sortOrder": 1
+  },
+  {
+    "id": "rgi_1792311661522_u72ui",
+    "recipeId": "rcp_fengmi-youzi-cha",
+    "assetId": "ast_1792311658660_lq0gs",
+    "sortOrder": 0
   }
 ]

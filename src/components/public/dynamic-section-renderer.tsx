@@ -35,6 +35,11 @@ export function DynamicSectionRenderer({
   const { type, template, background, content } = section;
   const isWood = background === 'WOOD';
 
+  // Client Request: Cancel/remove video section from homepage
+  if (type === 'VIDEO') {
+    return null;
+  }
+
   // 1. HERO Section
   if (type === 'HERO') {
     const images = Array.isArray(content.images) && content.images.length > 0

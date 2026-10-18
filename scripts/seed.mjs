@@ -68,7 +68,7 @@ const defaultCategories = [
   {
     "id": "cat_pastries",
     "name": "کیک و شیرینی",
-    "slug": "pastries",
+    "slug": "cakes-pastries",
     "type": "RECIPE",
     "status": "ACTIVE",
     "sortOrder": 3,
