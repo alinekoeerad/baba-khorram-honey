@@ -122,7 +122,11 @@ export function ProductsList({ initialProducts, categories, totalCount }: Produc
     startTransition(async () => {
       const res = await duplicateProductAction(prod.id);
       if (res.success && res.data) {
-        setProducts((prev) => [res.data, ...prev]);
+        const duplicatedItem: ProductListItem = {
+          ...res.data,
+          optionCount: (res.data as any).optionCount ?? (res.data as any).options?.length ?? 0,
+        };
+        setProducts((prev) => [duplicatedItem, ...prev]);
         toast.success(uiStringsFa.adminProducts.duplicatedSuccess);
         router.refresh();
       } else {

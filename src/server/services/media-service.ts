@@ -357,7 +357,7 @@ export async function uploadAndProcessMedia(params: {
       width: processed.width,
       height: processed.height,
       blurDataUrl: processed.blurDataUrl,
-      variants: processed.variants,
+      variants: processed.variants as any,
       alt: alt?.trim() || null,
       createdById: createdById || null,
     },

@@ -49,7 +49,7 @@ export default async function EditRecipePage({
     const m = recipe.mainImage;
     plainRecipe.mainImage = {
       id: m.id || '',
-      url: m.url || (m.storageKey ? `/uploads/${m.storageKey}` : ''),
+      url: (m as any).url || (m.storageKey ? `/uploads/${m.storageKey}` : ''),
       alt: m.alt || '',
       storageKey: m.storageKey || null,
       width: m.width ?? null,

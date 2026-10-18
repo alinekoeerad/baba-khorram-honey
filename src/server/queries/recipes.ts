@@ -325,12 +325,14 @@ export async function getPublicRecipeBySlug(slug: string) {
 
   if (recipe && recipe.status === 'PUBLISHED') {
     const isDessert =
-      (recipe.categories && (
-        recipe.categories.includes('desserts') ||
-        recipe.categories.includes('cat_desserts') ||
-        recipe.categories.some?.((c: any) => (c.category?.slug || c.slug || c) === 'desserts' || (c.category?.slug || c.slug || c) === 'dessert')
-      )) ||
-      (recipe.categoryIds && recipe.categoryIds.includes('cat_desserts'));
+      Boolean(
+        (recipe as any).categories?.some?.(
+          (c: any) =>
+            (c.category?.slug || c.slug || c) === 'desserts' ||
+            (c.category?.slug || c.slug || c) === 'dessert'
+        ) ||
+        (recipe as any).categoryIds?.includes('cat_desserts')
+      );
 
     const slugFallback = recipe.slug ? (isDessert ? `/uploads/recipes/dessert-${recipe.slug}.webp` : `/uploads/recipes/drink-${recipe.slug}.webp`) : null;
 
@@ -338,7 +340,7 @@ export async function getPublicRecipeBySlug(slug: string) {
       (recipe as any).imageUrl ||
       (typeof (recipe as any).mainImage === 'string' ? (recipe as any).mainImage : null) ||
       (typeof (recipe as any).image === 'string' ? (recipe as any).image : null) ||
-      (recipe.mainImage?.url ? recipe.mainImage.url : null) ||
+      ((recipe.mainImage as any)?.url ? (recipe.mainImage as any).url : null) ||
       (recipe.mainImage?.storageKey
         ? (recipe.mainImage.storageKey.startsWith('/')
             ? recipe.mainImage.storageKey

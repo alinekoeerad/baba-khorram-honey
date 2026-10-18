@@ -19,6 +19,11 @@ export default async function AdminFeedbacksPage() {
     orderBy: { createdAt: 'desc' },
   });
 
+  const formattedFeedbacks = feedbacks.map((f) => ({
+    ...f,
+    createdAt: f.createdAt.toISOString(),
+  }));
+
   const totalCount = feedbacks.length;
   const unreadCount = feedbacks.filter((f: any) => f.status === 'UNREAD').length;
   const reviewedCount = feedbacks.filter((f: any) => f.status === 'REVIEWED').length;
@@ -71,7 +76,7 @@ export default async function AdminFeedbacksPage() {
       </div>
 
       {/* Interactive Feedbacks Table & Manager */}
-      <FeedbacksManagerClient initialFeedbacks={feedbacks} />
+      <FeedbacksManagerClient initialFeedbacks={formattedFeedbacks} />
     </div>
   );
 }

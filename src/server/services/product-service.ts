@@ -216,7 +216,7 @@ export class ProductService {
         mainImageId: validated.mainImageId || null,
         focalPoint: validated.focalPoint || 'center',
         searchText,
-      },
+      } as any,
       include: { categories: true, mainImage: true },
     });
 
@@ -261,7 +261,7 @@ export class ProductService {
   ) {
     const existing = await db.product.findUniqueOrThrow({
       where: { id },
-      include: { categories: true },
+      include: { categories: true, benefits: true, options: true },
     });
 
     // Optimistic Concurrency Control
@@ -305,7 +305,7 @@ export class ProductService {
       });
     }
 
-    const categoryIds = rawInput.categoryIds ?? existing.categoryIds ?? [];
+    const categoryIds = rawInput.categoryIds ?? existing.categories.map((c) => c.categoryId);
     const categories = await this.validateProductCategories(categoryIds);
     const categoryNames = categories.map((c) => c.name);
 
@@ -317,8 +317,8 @@ export class ProductService {
     const harvestPlace = rawInput.harvestPlace !== undefined ? rawInput.harvestPlace : existing.harvestPlace;
     const color = rawInput.color !== undefined ? rawInput.color : existing.color;
     const usageWarning = rawInput.usageWarning !== undefined ? rawInput.usageWarning : existing.usageWarning;
-    const benefits = rawInput.benefits ?? existing.benefits ?? [];
-    const options = rawInput.options ?? existing.options ?? [];
+    const benefits = rawInput.benefits ?? ((existing as any).benefits || []).map((b: any) => typeof b === 'string' ? b : b.text);
+    const options = rawInput.options ?? ((existing as any).options || []);
 
     const searchText = buildProductSearchText({
       nameFa,
@@ -388,11 +388,11 @@ export class ProductService {
         benefits,
         options,
         categoryIds,
-        categorySlug: categories[0]?.id?.replace('cat_', '') || existing.categorySlug,
+        categorySlug: categories[0]?.id?.replace('cat_', '') || (existing as any).categorySlug || 'honey-types',
         mainImageId: rawInput.mainImageId !== undefined ? rawInput.mainImageId : existing.mainImageId,
         focalPoint: rawInput.focalPoint !== undefined ? rawInput.focalPoint : ((existing as any).focalPoint || 'center'),
         searchText,
-      },
+      } as any,
       include: { categories: true, mainImage: true },
     });
 
@@ -456,11 +456,14 @@ export class ProductService {
    * Duplicates an existing product, copying order options and benefits in DRAFT mode.
    */
   static async duplicateProduct(id: string, userId?: string) {
-    const source = await db.product.findUniqueOrThrow({ where: { id } });
+    const source = await db.product.findUniqueOrThrow({
+      where: { id },
+      include: { options: true, benefits: true },
+    });
 
     const allProducts = await db.product.findMany();
     const existingSlugs = allProducts.map((p: any) => p.slug);
-    const newSlug = resolveSlugCollision(`${source.slug}-copy`, existingSlugs);
+    const newSlug = resolveSlugCollision(`${source.slug}-copy`, new Set(existingSlugs));
 
     const duplicated = await db.product.create({
       data: {
@@ -470,13 +473,13 @@ export class ProductService {
         slug: newSlug,
         status: 'DRAFT',
         isFeatured: false,
-        options: (source.options || []).map((o: any, idx: number) => ({
+        options: ((source as any).options || []).map((o: any, idx: number) => ({
           ...o,
           id: `opt_${Date.now()}_${idx}`,
         })),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-      },
+      } as any,
     });
 
     ProductService.revalidateAllProductPaths(duplicated.slug, duplicated.id);

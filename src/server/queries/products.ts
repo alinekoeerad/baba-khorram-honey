@@ -307,7 +307,7 @@ export async function getPublicProductBySlug(slug: string) {
   if (product && product.status === 'PUBLISHED') {
     const resolvedProductImageUrl =
       (product as any).imageUrl ||
-      (product.mainImage?.url ? product.mainImage.url : null) ||
+      ((product.mainImage as any)?.url ? (product.mainImage as any).url : null) ||
       (product.mainImage?.storageKey
         ? (product.mainImage.storageKey.startsWith('/')
             ? product.mainImage.storageKey

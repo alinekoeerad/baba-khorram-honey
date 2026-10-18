@@ -14,7 +14,7 @@ describe('Media Reference Tracker Database Tests', () => {
         categoryIds: [],
         benefits: [],
         options: [],
-      },
+      } as any,
     });
 
     const isRef = await isMediaAssetReferenced(testAssetId);

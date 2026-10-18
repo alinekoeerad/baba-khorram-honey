@@ -67,17 +67,17 @@ describe('Global Search Unit Tests (Phase 10 Task 1/6)', () => {
     let capturedWhereEn: any = null;
     let capturedWhereFa: any = null;
 
-    vi.spyOn(db.product, 'findMany').mockImplementation(async (args: any) => {
+    vi.spyOn(db.product, 'findMany').mockImplementation((async (args: any) => {
       if (!capturedWhereEn) {
         capturedWhereEn = args.where;
       } else {
         capturedWhereFa = args.where;
       }
       return [];
-    });
-    vi.spyOn(db.product, 'count').mockResolvedValue(0);
-    vi.spyOn(db.recipe, 'findMany').mockResolvedValue([]);
-    vi.spyOn(db.recipe, 'count').mockResolvedValue(0);
+    }) as any);
+    vi.spyOn(db.product, 'count').mockResolvedValue(0 as any);
+    vi.spyOn(db.recipe, 'findMany').mockResolvedValue([] as any);
+    vi.spyOn(db.recipe, 'count').mockResolvedValue(0 as any);
 
     await searchGlobal({ q: '500' });
     await searchGlobal({ q: '۵۰۰' });

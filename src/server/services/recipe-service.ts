@@ -190,7 +190,7 @@ export class RecipeService {
         mainImageId: validated.mainImageId || null,
         focalPoint: validated.focalPoint || 'center',
         searchText,
-      },
+      } as any,
       include: { categories: true, mainImage: true },
     });
 
@@ -235,7 +235,7 @@ export class RecipeService {
   ) {
     const existing = await db.recipe.findUniqueOrThrow({
       where: { id },
-      include: { categories: true },
+      include: { categories: true, ingredients: true, steps: true },
     });
 
     // Optimistic Concurrency Control
@@ -278,7 +278,7 @@ export class RecipeService {
       });
     }
 
-    const categoryIds = rawInput.categoryIds ?? existing.categoryIds ?? [];
+    const categoryIds = rawInput.categoryIds ?? (existing as any).categoryIds ?? existing.categories.map((c) => c.categoryId);
     const categories = await this.validateRecipeCategories(categoryIds);
     const categoryNames = categories.map((c) => c.name);
 
@@ -359,7 +359,7 @@ export class RecipeService {
         mainImageId: rawInput.mainImageId !== undefined ? rawInput.mainImageId : existing.mainImageId,
         focalPoint: rawInput.focalPoint !== undefined ? rawInput.focalPoint : ((existing as any).focalPoint || 'center'),
         searchText,
-      },
+      } as any,
       include: { categories: true, mainImage: true },
     });
 
@@ -403,7 +403,7 @@ export class RecipeService {
 
     const allRecipes = await db.recipe.findMany();
     const existingSlugs = allRecipes.map((r: any) => r.slug);
-    const newSlug = resolveSlugCollision(`${source.slug}-copy`, existingSlugs);
+    const newSlug = resolveSlugCollision(`${source.slug}-copy`, new Set(existingSlugs));
 
     const duplicated = await db.recipe.create({
       data: {
@@ -415,7 +415,7 @@ export class RecipeService {
         isFeatured: false,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-      },
+      } as any,
     });
 
     RecipeService.revalidateAllRecipePaths(duplicated.slug, duplicated.id);

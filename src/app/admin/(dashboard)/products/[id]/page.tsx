@@ -45,7 +45,7 @@ export default async function EditProductPage({
     const m = product.mainImage;
     plainProduct.mainImage = {
       id: m.id || '',
-      url: m.url || (m.storageKey ? `/uploads/${m.storageKey}` : ''),
+      url: (m as any).url || (m.storageKey ? `/uploads/${m.storageKey}` : ''),
       alt: m.alt || '',
       storageKey: m.storageKey || null,
       width: m.width ?? null,

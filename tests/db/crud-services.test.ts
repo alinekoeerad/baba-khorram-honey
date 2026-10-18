@@ -25,7 +25,7 @@ describe('Verbatim Text Preservation on Edit-Save (Acceptance Criteria)', () => 
         harvestPlace: prod.harvestPlace,
         color: prod.color,
         usageWarning: prod.usageWarning,
-        benefits: prod.benefits,
+        benefits: (prod as any).benefits,
       });
 
       expect(updated.nameFa).toBe(prod.nameFa);
@@ -50,16 +50,16 @@ describe('Verbatim Text Preservation on Edit-Save (Acceptance Criteria)', () => 
         country: rec.country,
         yieldText: rec.yieldText,
         servingTypes: rec.servingTypes,
-        ingredients: rec.ingredients,
-        steps: rec.steps,
+        ingredients: (rec as any).ingredients,
+        steps: (rec as any).steps,
       });
 
       expect(updated.nameFa).toBe(rec.nameFa);
       expect(updated.nameOriginal).toBe(rec.nameOriginal);
       expect(updated.country).toBe(rec.country);
       expect(updated.yieldText).toBe(rec.yieldText);
-      expect(updated.ingredients.length).toBe(rec.ingredients.length);
-      expect(updated.steps.length).toBe(rec.steps.length);
+      expect((updated as any).ingredients?.length).toBe((rec as any).ingredients?.length);
+      expect((updated as any).steps?.length).toBe((rec as any).steps?.length);
     }
   });
 });
@@ -67,7 +67,7 @@ describe('Verbatim Text Preservation on Edit-Save (Acceptance Criteria)', () => 
 describe('Category Service & Safe Deletion Guard (Phase 4, Task 1)', () => {
   it('strictly forbids deletion of a category currently in use by products or recipes', async () => {
     // Honey-types category is used by 29 products
-    const cat = await db.category.findUnique({ where: { slug: 'honey-types' } });
+    const cat = await db.category.findUnique({ where: { type_slug: { type: 'PRODUCT', slug: 'honey-types' } } });
     expect(cat).toBeDefined();
 
     await expect(CategoryService.deleteCategory(cat!.id)).rejects.toThrow(

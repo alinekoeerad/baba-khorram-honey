@@ -55,7 +55,7 @@ export async function findMediaAssetReferences(assetId: string): Promise<Referen
   const storageKey = asset?.storageKey;
 
   // 1. Check Products (main image and gallery)
-  const products = await db.product.findMany();
+  const products = await db.product.findMany({ include: { gallery: true } });
   for (const p of products) {
     if (p.mainImageId === assetId) {
       references.push({ entityType: 'Product', entityId: p.id, field: 'mainImageId' });
@@ -69,7 +69,7 @@ export async function findMediaAssetReferences(assetId: string): Promise<Referen
   }
 
   // 2. Check Recipes (main image and gallery)
-  const recipes = await db.recipe.findMany();
+  const recipes = await db.recipe.findMany({ include: { gallery: true } });
   for (const r of recipes) {
     if (r.mainImageId === assetId) {
       references.push({ entityType: 'Recipe', entityId: r.id, field: 'mainImageId' });
