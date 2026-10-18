@@ -418,106 +418,133 @@
         "name": "ساقه علف لیمو",
         "quantityText": "۳",
         "unit": "عدد",
-        "equivalentText": null,
+        "equivalentText": "",
         "isOptional": false,
         "note": "متوسط",
-        "isLowConfidence": false,
-        "raw": "ساقه علف لیمو: ۳ عدد متوسط"
+        "sortOrder": 0
       },
       {
         "name": "زنجبیل تازه",
         "quantityText": "۱۵",
         "unit": "گرم",
-        "equivalentText": null,
+        "equivalentText": "",
         "isOptional": false,
-        "note": null,
-        "isLowConfidence": false,
-        "raw": "زنجبیل تازه: ۱۵ گرم"
+        "note": "",
+        "sortOrder": 1
       },
       {
         "name": "آب",
         "quantityText": "۹۰۰",
         "unit": "میلی لیتر",
-        "equivalentText": null,
+        "equivalentText": "",
         "isOptional": false,
-        "note": null,
-        "isLowConfidence": false,
-        "raw": "آب: ۹۰۰ میلی لیتر"
+        "note": "",
+        "sortOrder": 2
       },
       {
         "name": "کامکوات یا لیمو ترش",
         "quantityText": "۴ تا ۶",
         "unit": "عدد",
-        "equivalentText": null,
+        "equivalentText": "",
         "isOptional": false,
         "note": "کامکوات یا ۲ عدد لیمو ترش",
-        "isLowConfidence": false,
-        "raw": "کامکوات یا لیمو ترش: ۴ تا ۶ عدد کامکوات یا ۲ عدد لیمو ترش"
+        "sortOrder": 3
       },
       {
         "name": "عسل",
         "quantityText": "۵۰ تا ۷۰",
         "unit": "گرم",
-        "equivalentText": null,
+        "equivalentText": "",
         "isOptional": false,
-        "note": null,
-        "isLowConfidence": false,
-        "raw": "عسل: ۵۰ تا ۷۰ گرم"
+        "note": "",
+        "sortOrder": 4
       },
       {
         "name": "گل بابونه خشک",
         "quantityText": "۱",
         "unit": "قاشق غذا خوری",
-        "equivalentText": null,
+        "equivalentText": "",
         "isOptional": true,
-        "note": null,
-        "isLowConfidence": false,
-        "raw": "گل بابونه خشک: ۱ قاشق غذا خوری (اختیاری)"
+        "note": "",
+        "sortOrder": 5
       },
       {
         "name": "چوب دارچین",
         "quantityText": "۱",
         "unit": "تکه",
-        "equivalentText": null,
+        "equivalentText": "",
         "isOptional": true,
         "note": "کوچک",
-        "isLowConfidence": false,
-        "raw": "چوب دارچین: ۱ تکه کوچک (اختیاری)"
+        "sortOrder": 6
       },
       {
         "name": "یخ",
         "quantityText": "به مقدار لازم",
-        "unit": null,
-        "equivalentText": null,
+        "unit": "",
+        "equivalentText": "",
         "isOptional": false,
-        "note": null,
-        "isLowConfidence": false,
-        "raw": "یخ: به مقدار لازم"
+        "note": "",
+        "sortOrder": 7
       },
       {
         "name": "گلبرگ نیلوفر خوراکی",
         "quantityText": "برای تزئین",
-        "unit": null,
-        "equivalentText": null,
+        "unit": "",
+        "equivalentText": "",
         "isOptional": true,
-        "note": null,
-        "isLowConfidence": false,
-        "raw": "گلبرگ نیلوفر خوراکی: اختیاری برای تزئین"
+        "note": "",
+        "sortOrder": 8
       }
     ],
     "steps": [
-      "ساقه های علف لیمو را بشویید و قسمت پایینی و معطر آن ها را به قطعات ۵ تا ۷ سانتی متری تقسیم کنید",
-      "با پشت چاقو ساقه ها را کمی بکوبید تا عطر آن ها آزاد شود",
-      "زنجبیل را به برش های نازک تقسیم کنید",
-      "علف لیمو، زنجبیل، آب و در صورت تمایل چوب دارچین را در قابلمه بریزید",
-      "مخلوط را به جوش برسانید، سپس حرارت را کم کنید و حدود ۱۰ دقیقه آرام بجوشانید",
-      "حرارت را خاموش کنید و در صورت استفاده از بابونه آن را اضافه کنید و اجازه دهید حدود ۵ تا ۱۰ دقیقه دم بکشد",
-      "نوشیدنی را صاف کنید",
-      "اجازه دهید دما به حدی برسد که دیگر داغ نباشد",
-      "عسل را اضافه کنید و کامل هم بزنید",
-      "آب کامکوات یا لیمو ترش را اضافه کنید",
-      "نوشیدنی را در یخچال خنک کنید",
-      "هنگام سرو آن را روی یخ بریزید و در صورت تمایل با برگ نعناع یا گلبرگ خوراکی تزئین کنید"
+      {
+        "text": "ساقه های علف لیمو را بشویید و قسمت پایینی و معطر آن ها را به قطعات ۵ تا ۷ سانتی متری تقسیم کنید",
+        "sortOrder": 0
+      },
+      {
+        "text": "با پشت چاقو ساقه ها را کمی بکوبید تا عطر آن ها آزاد شود",
+        "sortOrder": 1
+      },
+      {
+        "text": "زنجبیل را به برش های نازک تقسیم کنید",
+        "sortOrder": 2
+      },
+      {
+        "text": "علف لیمو، زنجبیل، آب و در صورت تمایل چوب دارچین را در قابلمه بریزید",
+        "sortOrder": 3
+      },
+      {
+        "text": "مخلوط را به جوش برسانید، سپس حرارت را کم کنید و حدود ۱۰ دقیقه آرام بجوشانید",
+        "sortOrder": 4
+      },
+      {
+        "text": "حرارت را خاموش کنید و در صورت استفاده از بابونه آن را اضافه کنید و اجازه دهید حدود ۵ تا ۱۰ دقیقه دم بکشد",
+        "sortOrder": 5
+      },
+      {
+        "text": "نوشیدنی را صاف کنید",
+        "sortOrder": 6
+      },
+      {
+        "text": "اجازه دهید دما به حدی برسد که دیگر داغ نباشد",
+        "sortOrder": 7
+      },
+      {
+        "text": "عسل را اضافه کنید و کامل هم بزنید",
+        "sortOrder": 8
+      },
+      {
+        "text": "آب کامکوات یا لیمو ترش را اضافه کنید",
+        "sortOrder": 9
+      },
+      {
+        "text": "نوشیدنی را در یخچال خنک کنید",
+        "sortOrder": 10
+      },
+      {
+        "text": "هنگام سرو آن را روی یخ بریزید و در صورت تمایل با برگ نعناع یا گلبرگ خوراکی تزئین کنید",
+        "sortOrder": 11
+      }
     ],
     "categories": [
       "drinks"
@@ -526,12 +553,15 @@
       "cat_drinks"
     ],
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-10-18T08:44:47.486Z",
+    "updatedAt": "2026-10-18T12:18:37.417Z",
     "searchText": "موت هوی ان nuoc mot ویتنام (استان کوانگ نام) برای تهیه 4 لیوان ساقه علف لیمو زنجبیل تازه اب کامکوات یا لیمو ترش عسل گل بابونه خشک چوب دارچین یخ گلبرگ نیلوفر خوراکی متوسط کامکوات یا 2 عدد لیمو ترش کوچک نوشیدنی",
     "imageUrl": "/uploads/recipes/drink-nuoc-mot.webp",
-    "mainImageId": "ast_recipe_drink_nuoc-mot",
+    "mainImageId": "ast_1792325911386_r5qrf",
     "mainImage": "/uploads/recipes/drink-nuoc-mot.webp",
-    "image": "/uploads/recipes/drink-nuoc-mot.webp"
+    "image": "/uploads/recipes/drink-nuoc-mot.webp",
+    "shortDescription": null,
+    "longDescription": null,
+    "focalPoint": "center"
   },
   {
     "id": "rcp_greek-homemade-lemonad-with-honey",

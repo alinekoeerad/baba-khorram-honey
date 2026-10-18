@@ -2426,5 +2426,34 @@
     "createdById": "usr_1791465544331_so4k7",
     "createdAt": "2026-10-18T09:47:40.016Z",
     "updatedAt": "2026-10-18T10:29:03.811Z"
+  },
+  {
+    "id": "ast_1792325911386_r5qrf",
+    "storageKey": "img_1792325911154_8d007d75d30121cc-576.webp",
+    "mime": "image/webp",
+    "bytes": 27712,
+    "width": 576,
+    "height": 1024,
+    "blurDataUrl": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAACQAwCdASoQABwAPxFysFAsJqSisAgBgCIJbAABHgjS339KuvpgAP6pfAAzFwzGdiLVxFBUrqmeI3MKiGu26E/JWktu4Sx1v5RZWTmPgK56mHAKyyp3yMBZelbla+ukUksPu183S5UHbYIF2B5n6YTihAK6Y/957++YSGAA",
+    "variants": {
+      "480": {
+        "key": "img_1792325911154_8d007d75d30121cc-480.webp",
+        "url": "/uploads/img_1792325911154_8d007d75d30121cc-480.webp",
+        "width": 480,
+        "height": 853,
+        "bytes": 21994
+      },
+      "576": {
+        "key": "img_1792325911154_8d007d75d30121cc-576.webp",
+        "url": "/uploads/img_1792325911154_8d007d75d30121cc-576.webp",
+        "width": 576,
+        "height": 1024,
+        "bytes": 27712
+      }
+    },
+    "alt": null,
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-18T12:18:31.386Z",
+    "updatedAt": "2026-10-18T12:18:31.386Z"
   }
 ]
