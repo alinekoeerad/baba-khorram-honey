@@ -23,6 +23,29 @@ export interface RecipeListFilters {
 
 export class RecipeService {
   /**
+   * Forcefully purges Next.js caches across homepage, listings, layouts, and dynamic detail pages.
+   */
+  static revalidateAllRecipePaths(slug?: string, id?: string) {
+    try {
+      revalidateTag('recipes', 'max');
+      if (id) {
+        revalidateTag(`recipe-${id}`, 'max');
+      }
+      revalidatePath('/', 'layout');
+      revalidatePath('/recipes', 'layout');
+      revalidatePath('/products', 'layout');
+      revalidatePath('/admin/recipes', 'layout');
+      revalidatePath('/');
+      revalidatePath('/products');
+      revalidatePath('/recipes');
+      revalidatePath('/admin/recipes');
+      if (slug) {
+        revalidatePath(`/recipes/${slug}`);
+      }
+    } catch {}
+  }
+
+  /**
    * Validates that all categoryIds belong strictly to RECIPE categories.
    */
   static async validateRecipeCategories(categoryIds: string[], requireActive = false): Promise<{ id: string; name: string }[]> {
@@ -179,13 +202,7 @@ export class RecipeService {
       }
     }
 
-    try {
-      revalidateTag('recipes', 'max');
-      revalidatePath('/');
-      revalidatePath('/products');
-      revalidatePath('/recipes');
-      revalidatePath('/admin/recipes');
-    } catch {}
+    RecipeService.revalidateAllRecipePaths(created.slug, created.id);
 
     await recordAuditLog({
       userId,
@@ -334,15 +351,7 @@ export class RecipeService {
       }
     }
 
-    try {
-      revalidateTag('recipes', 'max');
-      revalidateTag(`recipe-${id}`, 'max');
-      revalidatePath('/');
-      revalidatePath('/products');
-      revalidatePath('/recipes');
-      revalidatePath(`/recipes/${newSlug}`);
-      revalidatePath('/admin/recipes');
-    } catch {}
+    RecipeService.revalidateAllRecipePaths(newSlug, id);
 
     await recordAuditLog({
       userId,
@@ -378,13 +387,7 @@ export class RecipeService {
       },
     });
 
-    try {
-      revalidateTag('recipes', 'max');
-      revalidatePath('/');
-      revalidatePath('/products');
-      revalidatePath('/recipes');
-      revalidatePath('/admin/recipes');
-    } catch {}
+    RecipeService.revalidateAllRecipePaths(duplicated.slug, duplicated.id);
 
     await recordAuditLog({
       userId,
@@ -405,13 +408,7 @@ export class RecipeService {
 
     const deleted = await db.recipe.delete({ where: { id } });
 
-    try {
-      revalidateTag('recipes', 'max');
-      revalidatePath('/');
-      revalidatePath('/products');
-      revalidatePath('/recipes');
-      revalidatePath('/admin/recipes');
-    } catch {}
+    RecipeService.revalidateAllRecipePaths(existing.slug, id);
 
     await recordAuditLog({
       userId,
@@ -434,13 +431,7 @@ export class RecipeService {
     });
     const deletedCount = res?.count ?? 0;
 
-    try {
-      revalidateTag('recipes', 'max');
-      revalidatePath('/');
-      revalidatePath('/products');
-      revalidatePath('/recipes');
-      revalidatePath('/admin/recipes');
-    } catch {}
+    RecipeService.revalidateAllRecipePaths();
 
     await recordAuditLog({
       userId,
@@ -468,13 +459,7 @@ export class RecipeService {
     });
     const updatedCount = res?.count ?? 0;
 
-    try {
-      revalidateTag('recipes', 'max');
-      revalidatePath('/');
-      revalidatePath('/products');
-      revalidatePath('/recipes');
-      revalidatePath('/admin/recipes');
-    } catch {}
+    RecipeService.revalidateAllRecipePaths();
 
     await recordAuditLog({
       userId,

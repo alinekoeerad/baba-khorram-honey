@@ -30,6 +30,29 @@ export interface ProductListFilters {
 
 export class ProductService {
   /**
+   * Forcefully purges Next.js caches across homepage, listings, layouts, and dynamic detail pages.
+   */
+  static revalidateAllProductPaths(slug?: string, id?: string) {
+    try {
+      revalidateTag('products', 'max');
+      if (id) {
+        revalidateTag(`product-${id}`, 'max');
+      }
+      revalidatePath('/', 'layout');
+      revalidatePath('/products', 'layout');
+      revalidatePath('/recipes', 'layout');
+      revalidatePath('/admin/products', 'layout');
+      revalidatePath('/');
+      revalidatePath('/products');
+      revalidatePath('/recipes');
+      revalidatePath('/admin/products');
+      if (slug) {
+        revalidatePath(`/products/${slug}`);
+      }
+    } catch {}
+  }
+
+  /**
    * Validates that all categoryIds belong strictly to PRODUCT categories.
    */
   static async validateProductCategories(categoryIds: string[], requireActive = false): Promise<{ id: string; name: string }[]> {
@@ -196,13 +219,7 @@ export class ProductService {
       }
     }
 
-    try {
-      revalidateTag('products', 'max');
-      revalidatePath('/');
-      revalidatePath('/products');
-      revalidatePath('/recipes');
-      revalidatePath('/admin/products');
-    } catch {}
+    ProductService.revalidateAllProductPaths(created.slug, created.id);
 
     await recordAuditLog({
       userId,
@@ -358,15 +375,7 @@ export class ProductService {
       }
     }
 
-    try {
-      revalidateTag('products', 'max');
-      revalidateTag(`product-${id}`, 'max');
-      revalidatePath('/');
-      revalidatePath('/products');
-      revalidatePath(`/products/${newSlug}`);
-      revalidatePath('/recipes');
-      revalidatePath('/admin/products');
-    } catch {}
+    ProductService.revalidateAllProductPaths(newSlug, id);
 
     await recordAuditLog({
       userId,
@@ -390,14 +399,7 @@ export class ProductService {
       data: { isAvailable },
     });
 
-    try {
-      revalidateTag('products', 'max');
-      revalidateTag(`product-${id}`, 'max');
-      revalidatePath('/');
-      revalidatePath('/products');
-      revalidatePath('/recipes');
-      revalidatePath('/admin/products');
-    } catch {}
+    ProductService.revalidateAllProductPaths(existing.slug, id);
 
     await recordAuditLog({
       userId,
@@ -437,13 +439,7 @@ export class ProductService {
       },
     });
 
-    try {
-      revalidateTag('products', 'max');
-      revalidatePath('/');
-      revalidatePath('/products');
-      revalidatePath('/recipes');
-      revalidatePath('/admin/products');
-    } catch {}
+    ProductService.revalidateAllProductPaths(duplicated.slug, duplicated.id);
 
     await recordAuditLog({
       userId,
@@ -464,13 +460,7 @@ export class ProductService {
 
     const deleted = await db.product.delete({ where: { id } });
 
-    try {
-      revalidateTag('products', 'max');
-      revalidatePath('/');
-      revalidatePath('/products');
-      revalidatePath('/recipes');
-      revalidatePath('/admin/products');
-    } catch {}
+    ProductService.revalidateAllProductPaths(existing.slug, id);
 
     await recordAuditLog({
       userId,
@@ -493,13 +483,7 @@ export class ProductService {
     });
     const deletedCount = res?.count ?? 0;
 
-    try {
-      revalidateTag('products', 'max');
-      revalidatePath('/');
-      revalidatePath('/products');
-      revalidatePath('/recipes');
-      revalidatePath('/admin/products');
-    } catch {}
+    ProductService.revalidateAllProductPaths();
 
     await recordAuditLog({
       userId,
@@ -523,13 +507,7 @@ export class ProductService {
     });
     const updatedCount = res?.count ?? 0;
 
-    try {
-      revalidateTag('products', 'max');
-      revalidatePath('/');
-      revalidatePath('/products');
-      revalidatePath('/recipes');
-      revalidatePath('/admin/products');
-    } catch {}
+    ProductService.revalidateAllProductPaths();
 
     await recordAuditLog({
       userId,

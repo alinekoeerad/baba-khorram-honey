@@ -12,6 +12,10 @@ import { ProductInput } from '@/server/validation';
 
 function revalidateProductPaths(slug?: string) {
   try {
+    revalidatePath('/', 'layout');
+    revalidatePath('/products', 'layout');
+    revalidatePath('/recipes', 'layout');
+    revalidatePath('/admin/products', 'layout');
     revalidatePath('/');
     revalidatePath('/products');
     revalidatePath('/recipes');

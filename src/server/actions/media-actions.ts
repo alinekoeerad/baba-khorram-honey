@@ -5,6 +5,7 @@
  * Admin-protected, rate-limited server actions for uploading and managing media assets.
  */
 
+import { revalidatePath } from 'next/cache';
 import { requireAdmin } from '@/server/auth/require-admin';
 import { uploadAndProcessMedia, deleteMediaAsset } from '@/server/services/media-service';
 import { recordAuditLog } from '@/server/services/audit-log-service';
@@ -120,6 +121,10 @@ export async function updateMediaAltAction(params: {
       summary: `Updated alt text for asset ${asset.storageKey}`,
     });
 
+    try {
+      revalidatePath('/', 'layout');
+    } catch {}
+
     return { success: true };
   } catch (err: any) {
     return { success: false, error: err.message };
@@ -166,6 +171,10 @@ export async function updateMediaFocalPointAction(params: {
       summary: `Updated focal point for asset ${asset.storageKey} to ${focalPoint}`,
     });
 
+    try {
+      revalidatePath('/', 'layout');
+    } catch {}
+
     return { success: true };
   } catch (err: any) {
     return { success: false, error: err.message };
@@ -202,6 +211,10 @@ export async function deleteMediaAssetAction(assetId: string): Promise<{ success
       entityId: assetId,
       summary: `Deleted media asset ${asset.storageKey}`,
     });
+
+    try {
+      revalidatePath('/', 'layout');
+    } catch {}
 
     return { success: true };
   } catch (err: any) {
