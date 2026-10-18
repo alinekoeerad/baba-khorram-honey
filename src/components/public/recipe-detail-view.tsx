@@ -140,7 +140,7 @@ export function RecipeDetailView({
               gallery={recipe.gallery}
               fallbackImageUrl={(recipe as any).imageUrl || '/images/recipe-1.jpg'}
               title={recipe.nameFa}
-              aspectRatio="aspect-[4/3]"
+              aspectRatio="dynamic"
             />
           </div>
 

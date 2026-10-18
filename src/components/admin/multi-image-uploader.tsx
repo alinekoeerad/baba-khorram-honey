@@ -158,6 +158,15 @@ export function MultiImageUploader({
         )}
       </div>
 
+      {/* 3:4 Aspect Ratio Advisory Note */}
+      <div className="flex items-start gap-2.5 p-3 bg-[#FFFBEB] border border-[#FDE68A] text-[#92400E] text-xs leading-relaxed rounded-none">
+        <span className="text-base shrink-0 leading-none">💡</span>
+        <div>
+          <span className="font-bold text-[#78350F]">راهنمای گالری تصاویر:</span>{' '}
+          نسبت ابعاد ایده‌آل برای تصاویر محصولات و گالری، <strong className="font-black text-[#78350F]">۳:۴ عمودی</strong> یا ابعاد طبیعی با کیفیت بالا است تا در کارت‌ها و صفحات جزئیات، بدون کراپ ناخواسته نمایش یابند.
+        </div>
+      </div>
+
       <input
         ref={fileInputRef}
         type="file"

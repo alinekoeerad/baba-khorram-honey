@@ -189,6 +189,7 @@ export function SearchResultsClient({
                     isAvailable={item.isAvailable}
                     linkLabel={item.linkLabel}
                     variant="vertical"
+                    focalPoint={(item as any).focalPoint}
                   />
                 ))}
               </div>
@@ -210,6 +211,7 @@ export function SearchResultsClient({
                     isAvailable={item.isAvailable}
                     linkLabel={item.linkLabel}
                     variant="horizontal"
+                    focalPoint={(item as any).focalPoint}
                   />
                 ))}
               </div>
@@ -265,6 +267,7 @@ export function SearchResultsClient({
                     sortOrder={item.sortOrder}
                     linkLabel={item.linkLabel}
                     variant="vertical"
+                    focalPoint={(item as any).focalPoint}
                   />
                 ))}
               </div>
@@ -283,6 +286,7 @@ export function SearchResultsClient({
                     sortOrder={item.sortOrder}
                     linkLabel={item.linkLabel}
                     variant="horizontal"
+                    focalPoint={(item as any).focalPoint}
                   />
                 ))}
               </div>

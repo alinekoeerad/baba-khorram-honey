@@ -72,6 +72,7 @@ export interface ProductCardViewModel {
   linkLabel: string;
   categories: any[];
   options: any[];
+  focalPoint?: string;
 }
 
 export async function getPublicProducts(filters: PublicProductFilters = {}) {
@@ -242,6 +243,7 @@ export async function getPublicProducts(filters: PublicProductFilters = {}) {
       linkLabel: 'مشاهده محصول',
       categories: p.categories.map((c: any) => c.category),
       options: p.options,
+      focalPoint: p.focalPoint ?? 'center',
     };
   });
 
@@ -421,6 +423,7 @@ export async function getPublicProductBySlug(slug: string) {
           linkLabel: 'مشاهده محصول',
           categories: p.categories.map((c: any) => c.category),
           options: p.options,
+          focalPoint: p.focalPoint ?? 'center',
         };
       });
     }

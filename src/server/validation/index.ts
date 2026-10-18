@@ -97,6 +97,7 @@ export const productInputSchema = z.object({
   options: z.array(productOptionInputSchema).default([]),
   categoryIds: z.array(z.string()).default([]),
   mainImageId: z.string().trim().optional().nullable(),
+  focalPoint: z.string().trim().default('center').optional(),
   galleryAssetIds: z.array(z.string()).optional(),
 });
 
@@ -154,6 +155,7 @@ export const recipeInputSchema = z.object({
   categoryIds: z.array(z.string()).default([]),
   recommendedProductIds: z.array(z.string()).optional().default([]),
   mainImageId: z.string().trim().optional().nullable(),
+  focalPoint: z.string().trim().default('center').optional(),
   galleryAssetIds: z.array(z.string()).optional(),
 });
 

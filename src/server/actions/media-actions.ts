@@ -127,6 +127,52 @@ export async function updateMediaAltAction(params: {
 }
 
 /**
+ * Updates the framing/focal point for a MediaAsset (e.g. 'center top', '50% 20%', 'center center').
+ */
+export async function updateMediaFocalPointAction(params: {
+  assetId: string;
+  focalPoint: string;
+}): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { user } = await requireAdmin({ allowRedirect: false });
+    const { assetId, focalPoint } = params;
+
+    const asset = await db.mediaAsset.findUnique({ where: { id: assetId } });
+    if (!asset) {
+      return { success: false, error: 'تصویر مورد نظر یافت نشد.' };
+    }
+
+    let currentVariants: Record<string, any> = {};
+    if (typeof asset.variants === 'string') {
+      try {
+        currentVariants = JSON.parse(asset.variants);
+      } catch {}
+    } else if (asset.variants && typeof asset.variants === 'object') {
+      currentVariants = { ...asset.variants };
+    }
+
+    currentVariants.focalPoint = focalPoint.trim();
+
+    await db.mediaAsset.update({
+      where: { id: assetId },
+      data: { variants: currentVariants },
+    });
+
+    await recordAuditLog({
+      userId: user.id,
+      action: 'MEDIA_UPDATE_FOCAL_POINT',
+      entityType: 'MediaAsset',
+      entityId: assetId,
+      summary: `Updated focal point for asset ${asset.storageKey} to ${focalPoint}`,
+    });
+
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+/**
  * Safely deletes a media asset ONLY if it is not referenced anywhere.
  */
 export async function deleteMediaAssetAction(assetId: string): Promise<{ success: boolean; error?: string }> {

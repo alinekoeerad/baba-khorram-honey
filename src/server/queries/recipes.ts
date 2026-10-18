@@ -73,6 +73,7 @@ export interface RecipeCardViewModel {
   imageAlt: string;
   linkLabel: string;
   categories: any[];
+  focalPoint?: string;
 }
 
 export async function getPublicRecipes(filters: PublicRecipeFilters = {}) {
@@ -262,6 +263,7 @@ export async function getPublicRecipes(filters: PublicRecipeFilters = {}) {
       imageAlt: r.nameFa,
       linkLabel: 'مشاهده دستور',
       categories: r.categories.map((c: any) => c.category),
+      focalPoint: r.focalPoint ?? 'center',
     };
   });
 
@@ -453,6 +455,7 @@ export async function getPublicRecipeBySlug(slug: string) {
           imageAlt: r.nameFa,
           linkLabel: 'مشاهده دستور',
           categories: r.categories.map((c: any) => c.category),
+          focalPoint: r.focalPoint ?? 'center',
         };
       });
     }

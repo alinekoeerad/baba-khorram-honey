@@ -2332,5 +2332,99 @@
     "createdById": "usr_system",
     "createdAt": "2026-10-18T08:44:51.732Z",
     "updatedAt": "2026-10-18T08:44:51.732Z"
+  },
+  {
+    "id": "ast_1792316825847_gm78r",
+    "storageKey": "img_1792316824967_7b875c65d690cba5-1280.webp",
+    "mime": "image/webp",
+    "bytes": 84350,
+    "width": 1280,
+    "height": 1280,
+    "blurDataUrl": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAABQAgCdASoQABAABABoJbACdAYwTvNOycfWgfAA9mw1nqQYqHcR2Xwj1bUfmQjZQoS7IOlfZte1Z0ENMYzbqHTMu3S9Bi5ymT4PvstcR8LnLTS4AP+IWRdBflfG9HxE7mfCBEcViFPzPa833x2tIAAA",
+    "variants": {
+      "480": {
+        "key": "img_1792316824967_7b875c65d690cba5-480.webp",
+        "url": "/uploads/img_1792316824967_7b875c65d690cba5-480.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 32264
+      },
+      "768": {
+        "key": "img_1792316824967_7b875c65d690cba5-768.webp",
+        "url": "/uploads/img_1792316824967_7b875c65d690cba5-768.webp",
+        "width": 768,
+        "height": 768,
+        "bytes": 58342
+      },
+      "1200": {
+        "key": "img_1792316824967_7b875c65d690cba5-1200.webp",
+        "url": "/uploads/img_1792316824967_7b875c65d690cba5-1200.webp",
+        "width": 1200,
+        "height": 1200,
+        "bytes": 88922
+      },
+      "1280": {
+        "key": "img_1792316824967_7b875c65d690cba5-1280.webp",
+        "url": "/uploads/img_1792316824967_7b875c65d690cba5-1280.webp",
+        "width": 1280,
+        "height": 1280,
+        "bytes": 84350
+      }
+    },
+    "alt": "عسل زعفران",
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-18T09:47:05.847Z",
+    "updatedAt": "2026-10-18T09:47:05.847Z"
+  },
+  {
+    "id": "ast_1792316860016_ho4iu",
+    "storageKey": "img_1792316858279_71f964da4a8b6342-2048.webp",
+    "mime": "image/webp",
+    "bytes": 337432,
+    "width": 2048,
+    "height": 2048,
+    "blurDataUrl": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAwAgCdASoQABAABABoJbACdAEPdqcFlQ63AAD9PMkle9ggNghAiCYDO1oFtiGjOmptZnWfp3KgvcoxJasm6pFxfv1z4kS3SpihnaGcPyvl3iW3YZ8hANoETXhsreAA",
+    "variants": {
+      "480": {
+        "key": "img_1792316858279_71f964da4a8b6342-480.webp",
+        "url": "/uploads/img_1792316858279_71f964da4a8b6342-480.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 32294
+      },
+      "768": {
+        "key": "img_1792316858279_71f964da4a8b6342-768.webp",
+        "url": "/uploads/img_1792316858279_71f964da4a8b6342-768.webp",
+        "width": 768,
+        "height": 768,
+        "bytes": 73402
+      },
+      "1200": {
+        "key": "img_1792316858279_71f964da4a8b6342-1200.webp",
+        "url": "/uploads/img_1792316858279_71f964da4a8b6342-1200.webp",
+        "width": 1200,
+        "height": 1200,
+        "bytes": 183416
+      },
+      "1920": {
+        "key": "img_1792316858279_71f964da4a8b6342-1920.webp",
+        "url": "/uploads/img_1792316858279_71f964da4a8b6342-1920.webp",
+        "width": 1920,
+        "height": 1920,
+        "bytes": 359346
+      },
+      "2048": {
+        "key": "img_1792316858279_71f964da4a8b6342-2048.webp",
+        "url": "/uploads/img_1792316858279_71f964da4a8b6342-2048.webp",
+        "width": 2048,
+        "height": 2048,
+        "bytes": 337432
+      },
+      "focalPoint": "center center"
+    },
+    "alt": null,
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-18T09:47:40.016Z",
+    "updatedAt": "2026-10-18T10:29:03.811Z"
   }
 ]

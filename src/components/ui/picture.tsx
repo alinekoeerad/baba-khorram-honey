@@ -36,6 +36,7 @@ export interface PictureProps {
   fallbackText?: string;
   width?: number;
   height?: number;
+  style?: React.CSSProperties;
 }
 
 export function Picture({
@@ -48,6 +49,7 @@ export function Picture({
   fallbackText = 'تصویر در دسترس نیست',
   width: customWidth,
   height: customHeight,
+  style,
 }: PictureProps) {
   let variantsObj = asset?.variants;
   if (typeof variantsObj === 'string') {
@@ -123,9 +125,17 @@ export function Picture({
       }
     : {};
 
-  const baseImgClass = imgClassName.includes('h-')
-    ? 'w-full object-cover transition-opacity duration-300'
-    : 'w-full h-auto object-cover transition-opacity duration-300';
+  const hasHeight = imgClassName.includes('h-');
+  const hasObjectFit = imgClassName.includes('object-');
+  const hasTransition = imgClassName.includes('transition');
+  const baseImgClass = [
+    'w-full',
+    hasHeight ? '' : 'h-auto',
+    hasObjectFit ? '' : 'object-cover',
+    hasTransition ? '' : 'transition-opacity duration-300',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <picture className={`block relative overflow-hidden rounded-none ${className}`}>
@@ -144,7 +154,7 @@ export function Picture({
         loading={priority ? 'eager' : 'lazy'}
         decoding={priority ? 'sync' : 'async'}
         fetchPriority={priority ? 'high' : 'auto'}
-        style={blurStyle}
+        style={{ ...blurStyle, ...style }}
         className={`${baseImgClass} ${imgClassName}`}
       />
     </picture>

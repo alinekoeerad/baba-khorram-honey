@@ -139,7 +139,7 @@ export function ProductDetailView({
               gallery={product.gallery}
               fallbackImageUrl={(product as any).imageUrl || (product.slug ? `/images/products/${product.slug}.webp` : `/images/products/${product.slug}.jpg`)}
               title={product.nameFa}
-              aspectRatio="aspect-[4/3]"
+              aspectRatio="dynamic"
               featuredBadge={product.isFeatured ? 'منتخب باباخُرم' : null}
             />
 

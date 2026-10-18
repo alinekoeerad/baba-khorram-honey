@@ -77,6 +77,7 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
   const [newOptionLabel, setNewOptionLabel] = useState('');
 
   const [mainImage, setMainImage] = useState<MediaAssetRecord | null>(initialData?.mainImage || null);
+  const [focalPoint, setFocalPoint] = useState<string>((initialData as any)?.focalPoint || 'center');
   const currentImageUrl = (initialData as any)?.imageUrl || (initialData?.mainImage ? (initialData.mainImage.url || `/uploads/${initialData.mainImage.storageKey}`) : null);
   const [galleryImages, setGalleryImages] = useState<MediaAssetRecord[]>(() => {
     if (!initialData?.gallery || !Array.isArray(initialData.gallery)) return [];
@@ -216,6 +217,7 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
       options: options.map((o, idx) => ({ id: o.id, label: o.label, isAvailable: o.isAvailable, sortOrder: o.sortOrder ?? idx })),
       categoryIds: selectedCategoryIds,
       mainImageId: mainImage?.id || null,
+      focalPoint,
       galleryAssetIds: galleryImages.map((img) => img.id).filter(Boolean),
     };
 
@@ -852,19 +854,51 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
 
       {/* Section 7: Media Uploaders */}
       <div className="bg-white border border-[#EFE9E0] p-6 shadow-xs space-y-6">
-        <h2 className="text-sm font-bold text-[#332115] border-b border-[#EFE9E0] pb-2">
-          تصاویر و رسانه محصول
-        </h2>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#EFE9E0] pb-2">
+          <h2 className="text-sm font-bold text-[#332115]">
+            تصاویر و رسانه محصول
+          </h2>
+          <p className="text-sm text-amber-600 font-medium">
+            💡 توصیه میشود: برای نمایش بهتر، از تصاویر عمودی با نسبت ۳ به ۴ (مثلاً ۹۰۰ در ۱۲۰۰ پیکسل) استفاده کنید.
+          </p>
+        </div>
 
-        <ImageUploader
-          label={uiStringsFa.adminProducts.mainImage}
-          value={mainImage}
-          currentImageUrl={currentImageUrl}
-          onChange={(img) => {
-            setMainImage(img);
-            markDirty();
-          }}
-        />
+        <div className="space-y-4">
+          <ImageUploader
+            label={uiStringsFa.adminProducts.mainImage}
+            value={mainImage}
+            currentImageUrl={currentImageUrl}
+            onChange={(img) => {
+              setMainImage(img);
+              markDirty();
+            }}
+          />
+
+          {/* Focal Point Selector */}
+          <div className="p-4 bg-[#FAF8F5] border border-[#EFE9E0] space-y-2 rounded-none">
+            <label htmlFor="product-focal-point" className="block text-xs font-bold text-[#332115]">
+              نقطه تمرکز تصویر (هنگام برش در کارتها):
+            </label>
+            <select
+              id="product-focal-point"
+              value={focalPoint}
+              onChange={(e) => {
+                setFocalPoint(e.target.value);
+                markDirty();
+              }}
+              className="w-full sm:w-72 px-3 py-2 border border-[#D5C7B8] bg-white text-xs font-bold text-[#2B2017] rounded-none focus:outline-none focus:border-[#D97706]"
+            >
+              <option value="center">مرکز تصویر (پیشفرض)</option>
+              <option value="top">بالای تصویر</option>
+              <option value="bottom">پایین تصویر</option>
+              <option value="right">سمت راست</option>
+              <option value="left">سمت چپ</option>
+            </select>
+            <p className="text-[11px] text-[#786455] leading-relaxed">
+              این گزینه مشخص می‌کند هنگام نمایش تصویر در کادر عمودی ۳:۴ کارت‌ها، تمرکز روی کدام بخش باشد تا سوژه از کادر خارج نشود.
+            </p>
+          </div>
+        </div>
 
         <MultiImageUploader
           label={uiStringsFa.adminProducts.gallery}

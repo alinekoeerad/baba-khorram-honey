@@ -176,40 +176,56 @@ export function ProductCarousel({
               '/images/honey-jar.jpg';
             const secondaryImageSrc = (p as any).secondaryImageUrl || ((p as any).gallery && (p as any).gallery.length > 0 ? ((p as any).gallery[0]?.asset?.url || ((p as any).gallery[0]?.asset?.storageKey ? `/uploads/${(p as any).gallery[0]?.asset?.storageKey}` : null)) : null);
 
+            const rawFocal = (p as any).focalPoint || ((p as any).imageAsset?.variants as any)?.focalPoint || 'center';
+            const FOCAL_MAP: Record<string, string> = {
+              top: 'object-top',
+              bottom: 'object-bottom',
+              left: 'object-left',
+              right: 'object-right',
+              center: 'object-center',
+            };
+            const objectPositionClass = FOCAL_MAP[rawFocal] || (rawFocal.includes('top') ? 'object-top' : rawFocal.includes('bottom') ? 'object-bottom' : 'object-center');
+
             return (
               <article
                 key={p.key}
-                className="shrink-0 w-[270px] xs:w-[290px] sm:w-[320px] md:w-[340px] snap-center rounded-none overflow-hidden shadow-lg border border-black/10 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_36px_rgba(51,33,21,0.24)] group cursor-pointer bg-white flex flex-col"
+                className="shrink-0 w-[270px] xs:w-[290px] sm:w-[320px] md:w-[340px] snap-center rounded-none overflow-hidden shadow-lg border border-black/10 transition-shadow duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] hover:shadow-[0_16px_36px_rgba(51,33,21,0.28)] group cursor-pointer bg-white flex flex-col"
                 style={{
                   scrollSnapAlign: 'center',
                   scrollSnapStop: 'always',
                 }}
               >
                 <Link href={`/products/${p.slug}`} className="flex flex-col h-full">
-                  {/* Image Wrap - Edge-to-edge card presentation */}
-                  <div className="w-full aspect-[4/3] overflow-hidden shrink-0 relative bg-black/5">
+                  {/* Image Wrap - Aspect 3:4 portrait presentation with Glassy Magnifier Hover */}
+                  <div className="w-full aspect-[3/4] overflow-hidden shrink-0 relative bg-[#FAF8F5] rounded-none">
                     <img
                       src={imageSrc}
                       alt={titleText}
-                      className={`w-full h-full object-cover object-center transition-all duration-500 ease-out ${
-                        secondaryImageSrc ? 'group-hover:opacity-0' : 'group-hover:scale-105'
-                      }`}
+                      className={`w-full h-full object-cover ${objectPositionClass} transform-gpu transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110 will-change-transform rounded-none`}
                       loading="lazy"
                       width={360}
-                      height={270}
+                      height={480}
                     />
+
                     {secondaryImageSrc && (
-                      <div className="hidden sm:block absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out pointer-events-none">
+                      <div className="hidden sm:block absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none rounded-none overflow-hidden">
                         <img
                           src={secondaryImageSrc}
                           alt={titleText}
-                          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                          className={`w-full h-full object-cover ${objectPositionClass} transform-gpu transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110 will-change-transform rounded-none`}
                           loading="lazy"
                           width={360}
-                          height={270}
+                          height={480}
                         />
                       </div>
                     )}
+
+                    {/* Glassy Overlay on Hover */}
+                    <div
+                      className="absolute inset-0 bg-gradient-to-t from-[#1A130E]/80 via-[#1A130E]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none rounded-none"
+                      aria-hidden="true"
+                    />
+
                     {p.isAvailable === false && (
                       <div className="absolute top-3 right-3 bg-[#9E3556] text-white text-xs font-black px-2.5 py-1 z-10 shadow-xs">
                         ناموجود
@@ -227,7 +243,7 @@ export function ProductCarousel({
 
                     <div className="mt-4 sm:mt-6 pt-3 border-t border-black/10 flex items-center justify-between text-xs sm:text-sm font-black">
                       <span>مشاهده محصول</span>
-                      <DottedArrowIcon direction="left" className="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-2" />
+                      <DottedArrowIcon direction="left" className="w-4 h-4 transition-transform duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:-translate-x-1.5" />
                     </div>
                   </div>
                 </Link>

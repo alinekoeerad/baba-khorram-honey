@@ -182,25 +182,41 @@ export function RecipeCarousel({
               slugFallback ||
               `/images/recipe-${((idx % 6) + 1)}.jpg`;
 
+            const rawFocal = (r as any).focalPoint || ((r as any).imageAsset?.variants as any)?.focalPoint || 'center';
+            const FOCAL_MAP: Record<string, string> = {
+              top: 'object-top',
+              bottom: 'object-bottom',
+              left: 'object-left',
+              right: 'object-right',
+              center: 'object-center',
+            };
+            const objectPositionClass = FOCAL_MAP[rawFocal] || (rawFocal.includes('top') ? 'object-top' : rawFocal.includes('bottom') ? 'object-bottom' : 'object-center');
+
             return (
               <article
                 key={r.key}
-                className="shrink-0 w-[270px] xs:w-[290px] sm:w-[320px] md:w-[340px] snap-center rounded-none overflow-hidden shadow-lg border border-black/10 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_36px_rgba(51,33,21,0.24)] group cursor-pointer bg-white flex flex-col"
+                className="shrink-0 w-[270px] xs:w-[290px] sm:w-[320px] md:w-[340px] snap-center rounded-none overflow-hidden shadow-lg border border-black/10 transition-shadow duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] hover:shadow-[0_16px_36px_rgba(51,33,21,0.28)] group cursor-pointer bg-white flex flex-col"
                 style={{
                   scrollSnapAlign: 'center',
                   scrollSnapStop: 'always',
                 }}
               >
                 <Link href={`/recipes/${r.slug}`} className="flex flex-col h-full">
-                  {/* Image Wrap - Balanced aspect ratio with clean borders */}
-                  <div className="w-full aspect-[4/3] overflow-hidden shrink-0 relative bg-black/5">
+                  {/* Image Wrap - Aspect 3:4 portrait presentation with Glassy Magnifier Hover */}
+                  <div className="w-full aspect-[3/4] overflow-hidden shrink-0 relative bg-[#FAF8F5] rounded-none">
                     <img
                       src={imageSrc}
                       alt={r.title}
-                      className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
+                      className={`w-full h-full object-cover ${objectPositionClass} transform-gpu transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110 will-change-transform rounded-none`}
                       loading="lazy"
                       width={360}
-                      height={270}
+                      height={480}
+                    />
+
+                    {/* Glassy Overlay on Hover */}
+                    <div
+                      className="absolute inset-0 bg-gradient-to-t from-[#1A130E]/80 via-[#1A130E]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none rounded-none"
+                      aria-hidden="true"
                     />
                   </div>
 
@@ -214,7 +230,7 @@ export function RecipeCarousel({
 
                     <div className="mt-4 sm:mt-6 pt-3 border-t border-black/10 flex items-center justify-between text-xs sm:text-sm font-black">
                       <span>مشاهده دستور پخت</span>
-                      <DottedArrowIcon direction="left" className="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-2" />
+                      <DottedArrowIcon direction="left" className="w-4 h-4 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-x-1.5" />
                     </div>
                   </div>
                 </Link>

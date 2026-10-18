@@ -334,6 +334,7 @@ export function ProductsListingClient({
                 index={idx}
                 sortOrder={item.sortOrder}
                 itemType="product"
+                focalPoint={item.focalPoint}
               />
             ))}
           </div>
@@ -358,6 +359,7 @@ export function ProductsListingClient({
                 index={idx}
                 sortOrder={item.sortOrder}
                 itemType="product"
+                focalPoint={item.focalPoint}
               />
             ))}
           </div>

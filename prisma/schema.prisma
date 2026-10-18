@@ -235,6 +235,7 @@ model Product {
   color            String?     // رنگ
   usageWarning     String?     // منع مصرف
   mainImageId      String?
+  focalPoint       String      @default("center")
   searchText       String      @default("")
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
@@ -325,6 +326,7 @@ model Recipe {
   cardTheme        CardTheme     @default(AUTO)
   sortOrder        Int           @default(0)
   mainImageId      String?
+  focalPoint       String        @default("center")
   searchText       String        @default("")
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt

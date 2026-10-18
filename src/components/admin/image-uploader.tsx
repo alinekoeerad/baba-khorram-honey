@@ -13,14 +13,14 @@
  */
 
 import React, { useState, useRef, useTransition, useEffect } from 'react';
-import { uploadMediaAction, updateMediaAltAction } from '@/server/actions/media-actions';
+import { uploadMediaAction, updateMediaAltAction, updateMediaFocalPointAction } from '@/server/actions/media-actions';
 import type { MediaAssetRecord } from '@/server/db/client';
 import { uiStringsFa } from '@/content/ui-strings.fa';
 import { ImageLightboxModal } from './image-lightbox-modal';
-import { ZoomIn } from 'lucide-react';
+import { ZoomIn, Focus } from 'lucide-react';
 
 export interface ImageUploaderProps {
-  value?: MediaAssetRecord | { url?: string; storageKey?: string; alt?: string; id?: string; width?: number; height?: number; bytes?: number } | string | null;
+  value?: MediaAssetRecord | { url?: string; storageKey?: string; alt?: string; id?: string; width?: number; height?: number; bytes?: number; variants?: any; focalPoint?: string } | string | null;
   currentImageUrl?: string | null;
   onChange: (asset: MediaAssetRecord | null) => void;
   label?: string;
@@ -44,13 +44,34 @@ export function ImageUploader({
   const [isRemoved, setIsRemoved] = useState(false);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
+  // Extract initial focalPoint from value variants or direct property
+  const extractFocalPoint = (val: any): string => {
+    if (val && typeof val === 'object') {
+      let variants = val.variants;
+      if (typeof variants === 'string') {
+        try {
+          variants = JSON.parse(variants);
+        } catch {}
+      }
+      if (variants?.focalPoint) return variants.focalPoint;
+      if (val.focalPoint) return val.focalPoint;
+    }
+    return 'center center';
+  };
+
+  const [focalPoint, setFocalPoint] = useState<string>(() => extractFocalPoint(value));
+  const [isFocalSaved, setIsFocalSaved] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
 
-  // Sync alt text when value changes
+  // Sync alt text and focalPoint when value changes
   useEffect(() => {
-    if (value && typeof value === 'object' && 'alt' in value && value.alt) {
-      setAltText(value.alt);
+    if (value && typeof value === 'object') {
+      if ('alt' in value && value.alt) {
+        setAltText(value.alt);
+      }
+      setFocalPoint(extractFocalPoint(value));
     }
     if (value) {
       setIsRemoved(false);
@@ -157,6 +178,32 @@ export function ImageUploader({
     }
   };
 
+  const handleFocalPointChange = async (newFocal: string) => {
+    setFocalPoint(newFocal);
+    if (value && typeof value === 'object') {
+      let variants = (value as any).variants;
+      if (typeof variants === 'string') {
+        try {
+          variants = JSON.parse(variants);
+        } catch {}
+      }
+      const updatedVariants = { ...(variants || {}), focalPoint: newFocal };
+      onChange({ ...(value as MediaAssetRecord), variants: updatedVariants });
+
+      if ('id' in value && value.id) {
+        try {
+          const res = await updateMediaFocalPointAction({ assetId: value.id, focalPoint: newFocal });
+          if (res?.success) {
+            setIsFocalSaved(true);
+            setTimeout(() => setIsFocalSaved(false), 2000);
+          }
+        } catch (err) {
+          console.warn('Failed to update focal point:', err);
+        }
+      }
+    }
+  };
+
   const handleRemove = () => {
     setIsRemoved(true);
     onChange(null);
@@ -174,6 +221,15 @@ export function ImageUploader({
           {label}
         </label>
       )}
+
+      {/* 3:4 Aspect Ratio Advisory Note */}
+      <div className="flex items-start gap-2.5 p-3 bg-[#FFFBEB] border border-[#FDE68A] text-[#92400E] text-xs leading-relaxed rounded-none">
+        <span className="text-base shrink-0 leading-none">💡</span>
+        <div>
+          <span className="font-bold text-[#78350F]">راهنمای نسبت ابعاد بهینه:</span>{' '}
+          نسبت استاندارد کادربندی برای کارت‌های ویترین و محصولات <strong className="font-black text-[#78350F]">۳:۴ عمودی</strong> (مانند ۱۲۰۰×۱۶۰۰ پیکسل یا مضارب آن) است. تصاویری با این نسبت، بیشترین تقارن و وضوح را در کارت‌ها خواهند داشت.
+        </div>
+      </div>
 
       {/* Hidden File Input */}
       <input
@@ -220,13 +276,13 @@ export function ImageUploader({
           </span>
         </div>
       ) : (
-        /* Preview & Actions Card with Rigid Square Aspect Ratio */
+        /* Preview & Actions Card with 3:4 Aspect Ratio */
         <div className="bg-white border border-[#D5C7B8] p-4 shadow-xs space-y-4 rounded-none">
           <div className="flex flex-col sm:flex-row gap-4 items-start">
-            {/* Strict, rigid square preview container with click-to-zoom Lightbox */}
+            {/* Strict 3:4 portrait preview container with click-to-zoom Lightbox */}
             <div
               onClick={() => setIsLightboxOpen(true)}
-              className="w-28 h-28 sm:w-32 sm:h-32 shrink-0 border border-[#D5C7B8] bg-[#FAF8F5] p-1 flex items-center justify-center overflow-hidden rounded-none shadow-xs relative group cursor-zoom-in"
+              className="w-28 sm:w-32 aspect-[3/4] shrink-0 border border-[#D5C7B8] bg-[#FAF8F5] p-1 flex items-center justify-center overflow-hidden rounded-none shadow-xs relative group cursor-zoom-in"
               title="کلیک برای بزرگنمایی تصویر"
               role="button"
               tabIndex={0}
@@ -240,7 +296,8 @@ export function ImageUploader({
               <img
                 src={activeImageUrl}
                 alt={altText || (typeof value === 'object' && value?.alt ? value.alt : '') || label || 'تصویر فعال'}
-                className="w-full h-full object-cover rounded-none transition-transform duration-200 group-hover:scale-105"
+                className="w-full h-full object-cover rounded-none transition-all duration-300 group-hover:scale-105"
+                style={{ objectPosition: focalPoint }}
               />
               {/* Subtle hover overlay with magnifying glass */}
               <div className="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white gap-1 pointer-events-none">
@@ -248,11 +305,11 @@ export function ImageUploader({
                 <span className="text-[10px] font-bold drop-shadow-sm">بزرگنمایی</span>
               </div>
               <span className="absolute top-1.5 right-1.5 bg-[#2B1B10]/85 backdrop-blur-xs text-amber-300 font-mono text-[9px] font-bold px-1.5 py-0.5 border border-amber-500/30 pointer-events-none">
-                {value && typeof value === 'object' && 'storageKey' in value ? 'WebP' : 'فعال'}
+                کادر ۳:۴
               </span>
             </div>
 
-            <div className="flex-1 space-y-2 text-xs">
+            <div className="flex-1 space-y-3 text-xs">
               <div className="flex flex-wrap items-center gap-1.5 pb-1">
                 <span className="bg-emerald-50 text-emerald-800 border border-emerald-200 font-mono font-bold px-2 py-0.5 text-[10px] rounded-none">
                   {value && typeof value === 'object' && 'storageKey' in value ? 'فرمت WebP بهینه‌شده' : 'تصویر فعال شاخص'}
@@ -275,8 +332,50 @@ export function ImageUploader({
                 </div>
               )}
 
+              {/* Framing & Focal Point Selector */}
+              <div className="p-2.5 bg-[#FAF8F5] border border-[#EFE9E0] space-y-1.5 rounded-none">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-[#332115]">
+                    <Focus className="w-3.5 h-3.5 text-[#D97706]" />
+                    <span>تمرکز کادر در کارت ویترین (Focal Point):</span>
+                  </div>
+                  {isFocalSaved && (
+                    <span className="text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 font-bold">
+                      ذخیره شد ✓
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {[
+                    { label: 'بالای کادر (سر شیشه / درپوش)', value: 'center top' },
+                    { label: 'مرکز کادر (لیبل و بدنه)', value: 'center center' },
+                    { label: 'پایین کادر (پایه ظرف / دسر)', value: 'center bottom' },
+                  ].map((preset) => {
+                    const isSelected = focalPoint === preset.value;
+                    return (
+                      <button
+                        key={preset.value}
+                        type="button"
+                        onClick={() => handleFocalPointChange(preset.value)}
+                        className={`px-2.5 py-1 text-[11px] font-bold border transition-colors rounded-none cursor-pointer ${
+                          isSelected
+                            ? 'bg-[#FEF3C7] text-[#92400E] border-[#D97706] shadow-2xs'
+                            : 'bg-white text-[#5C5248] border-[#D5C7B8] hover:bg-[#FFFBEB] hover:border-[#D97706]'
+                        }`}
+                      >
+                        {preset.label}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="text-[10px] text-[#786455] pt-0.5 leading-normal">
+                  با کلیک روی گزینه‌ها، کادر پیش‌نمایش ۳:۴ سمت راست بلافاصله موقعیت تمرکز را نمایش می‌دهد.
+                </p>
+              </div>
+
               {/* Alt Text Input */}
-              <div className="pt-2">
+              <div>
                 <label className="block text-xs font-bold text-[#332115] mb-1">
                   {uiStringsFa.adminMedia.altTextLabel}
                 </label>

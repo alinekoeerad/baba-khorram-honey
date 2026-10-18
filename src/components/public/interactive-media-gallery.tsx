@@ -40,7 +40,7 @@ export interface InteractiveMediaGalleryProps {
   gallery?: Array<{ id?: string; asset?: any; sortOrder?: number }>;
   fallbackImageUrl?: string;
   title: string;
-  aspectRatio?: 'aspect-[4/3]' | 'aspect-4/3' | 'aspect-square' | 'aspect-[16/9]' | 'aspect-16/9';
+  aspectRatio?: 'dynamic' | 'aspect-[4/3]' | 'aspect-4/3' | 'aspect-square' | 'aspect-[16/9]' | 'aspect-16/9';
   featuredBadge?: string | null;
   className?: string;
 }
@@ -50,7 +50,7 @@ export function InteractiveMediaGallery({
   gallery = [],
   fallbackImageUrl,
   title,
-  aspectRatio = 'aspect-[4/3]',
+  aspectRatio = 'dynamic',
   featuredBadge,
   className = '',
 }: InteractiveMediaGalleryProps) {
@@ -68,8 +68,8 @@ export function InteractiveMediaGallery({
         list.push({
           url: asset,
           alt: title,
-          width: 900,
-          height: 675,
+          width: 800,
+          height: 800,
           blurDataUrl: null,
           caption: null,
         });
@@ -94,8 +94,8 @@ export function InteractiveMediaGallery({
         storageKey: asset.storageKey,
         url,
         alt: asset.alt || title,
-        width: asset.width ?? 900,
-        height: asset.height ?? 675,
+        width: asset.width ?? 800,
+        height: asset.height ?? 800,
         blurDataUrl: asset.blurDataUrl ?? null,
         caption: asset.alt || null,
       });
@@ -116,7 +116,7 @@ export function InteractiveMediaGallery({
         url: fallbackImageUrl || '/images/honey-jar.jpg',
         alt: title,
         width: 800,
-        height: 600,
+        height: 800,
       });
     }
 
@@ -163,6 +163,7 @@ export function InteractiveMediaGallery({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isLightboxOpen, handlePrev, handleNext]);
 
+  const isDynamic = aspectRatio === 'dynamic';
   const aspectClass =
     aspectRatio === 'aspect-square'
       ? 'aspect-square'
@@ -173,9 +174,9 @@ export function InteractiveMediaGallery({
   return (
     <div className={`space-y-4 ${className}`}>
       {/* Main Stage Polaroid Container */}
-      <div className="bg-white p-2.5 sm:p-3.5 border border-[#EFE9E0] shadow-md rounded-none">
+      <div className="bg-white p-4 shadow-sm border border-[#EFE9E0] rounded-none">
         <div
-          className={`w-full ${aspectClass} rounded-none overflow-hidden relative group cursor-zoom-in bg-[#FAF7F2]`}
+          className={`w-full ${isDynamic ? 'overflow-hidden flex items-center justify-center' : `${aspectClass} overflow-hidden`} rounded-none relative group cursor-zoom-in bg-[#FAF8F5]`}
           onClick={() => setIsLightboxOpen(true)}
           role="button"
           tabIndex={0}
@@ -192,19 +193,27 @@ export function InteractiveMediaGallery({
             <Picture
               key={currentSlide.id || currentSlide.storageKey || currentSlide.url}
               asset={currentSlide as any}
-              width={currentSlide.width ?? 900}
-              height={currentSlide.height ?? 675}
+              width={800}
+              height={800}
               blurDataUrl={currentSlide.blurDataUrl}
               alt={currentSlide.alt || title}
               priority={activeIndex === 0}
-              className="w-full h-full block rounded-none"
-              imgClassName="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105 rounded-none"
+              className={isDynamic ? "w-full h-auto block rounded-none" : "w-full h-full block rounded-none"}
+              imgClassName={isDynamic
+                ? "w-full h-auto object-contain object-center transition-transform duration-300 group-hover:scale-102 rounded-none"
+                : "w-full h-full object-contain object-center p-2 transition-transform duration-300 group-hover:scale-102 rounded-none"
+              }
             />
           ) : (
             <img
               src={fallbackImageUrl || '/images/honey-jar.jpg'}
               alt={currentSlide.alt || title}
-              className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105 rounded-none"
+              width={800}
+              height={800}
+              className={isDynamic
+                ? "w-full h-auto object-contain object-center transition-transform duration-300 group-hover:scale-102 rounded-none"
+                : "w-full h-full object-contain object-center p-2 transition-transform duration-300 group-hover:scale-102 rounded-none"
+              }
             />
           )}
 
@@ -271,7 +280,7 @@ export function InteractiveMediaGallery({
                 type="button"
                 onClick={() => setActiveIndex(idx)}
                 onMouseEnter={() => setActiveIndex(idx)}
-                className={`aspect-square bg-[#FAF7F2] p-1 flex items-center justify-center rounded-none overflow-hidden transition-all duration-200 cursor-pointer ${
+                className={`aspect-square bg-[#FAF8F5] p-1 flex items-center justify-center rounded-none overflow-hidden transition-all duration-200 cursor-pointer ${
                   isActive
                     ? 'border-2 border-[#F59E0B] ring-2 ring-[#F59E0B]/40 shadow-sm opacity-100 scale-100'
                     : 'border border-[#EFE9E0] opacity-70 hover:opacity-100 hover:border-[#D97706] scale-95 hover:scale-100'
@@ -285,13 +294,13 @@ export function InteractiveMediaGallery({
                     height={180}
                     alt={slide.alt || title}
                     className="w-full h-full block rounded-none"
-                    imgClassName="w-full h-full object-cover object-center rounded-none"
+                    imgClassName="w-full h-full object-contain object-center rounded-none p-1"
                   />
                 ) : (
                   <img
                     src={fallbackImageUrl || '/images/honey-jar.jpg'}
                     alt={slide.alt || title}
-                    className="w-full h-full object-cover object-center rounded-none"
+                    className="w-full h-full object-contain object-center rounded-none p-1"
                   />
                 )}
               </button>

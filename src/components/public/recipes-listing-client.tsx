@@ -363,6 +363,7 @@ export function RecipesListingClient({
                 index={idx}
                 sortOrder={item.sortOrder}
                 itemType="recipe"
+                focalPoint={item.focalPoint}
               />
             ))}
           </div>
@@ -386,6 +387,7 @@ export function RecipesListingClient({
                 index={idx}
                 sortOrder={item.sortOrder}
                 itemType="recipe"
+                focalPoint={item.focalPoint}
               />
             ))}
           </div>
