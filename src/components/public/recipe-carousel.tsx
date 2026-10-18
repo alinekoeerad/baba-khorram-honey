@@ -28,6 +28,9 @@ interface RecipeItem {
   title: string;
   slug: string;
   imageUrl?: string | null;
+  imageAsset?: any;
+  mainImage?: any;
+  categories?: any;
   theme?: string;
   cardTheme?: string;
   sortOrder?: number;
@@ -160,6 +163,25 @@ export function RecipeCarousel({
             const themeKey = resolveItemCardTheme({ ...r, index: idx });
             const theme = THEME_CLASSES[themeKey] || THEME_CLASSES.GREEN;
 
+            const isDessert =
+              ((r as any).categories && (
+                (r as any).categories.includes?.('desserts') ||
+                (r as any).categories.includes?.('cat_desserts') ||
+                (r as any).categories.some?.((c: any) => (c.category?.slug || c.slug || c) === 'desserts' || (c.category?.slug || c.slug || c) === 'dessert')
+              )) ||
+              ((r as any).categoryIds && (r as any).categoryIds.includes?.('cat_desserts'));
+
+            const slugFallback = r.slug ? (isDessert ? `/uploads/recipes/dessert-${r.slug}.webp` : `/uploads/recipes/drink-${r.slug}.webp`) : null;
+
+            const imageSrc =
+              r.imageUrl ||
+              (r as any).imageAsset?.url ||
+              ((r as any).imageAsset?.storageKey ? ((r as any).imageAsset.storageKey.startsWith('/') ? (r as any).imageAsset.storageKey : `/uploads/${(r as any).imageAsset.storageKey}`) : null) ||
+              (r as any).mainImage?.url ||
+              ((r as any).mainImage?.storageKey ? ((r as any).mainImage.storageKey.startsWith('/') ? (r as any).mainImage.storageKey : `/uploads/${(r as any).mainImage.storageKey}`) : null) ||
+              slugFallback ||
+              `/images/recipe-${((idx % 6) + 1)}.jpg`;
+
             return (
               <article
                 key={r.key}
@@ -171,9 +193,9 @@ export function RecipeCarousel({
               >
                 <Link href={`/recipes/${r.slug}`} className="flex flex-col h-full">
                   {/* Image Wrap - Balanced aspect ratio with clean borders */}
-                  <div className="w-full aspect-[4/3] overflow-hidden shrink-0 relative">
+                  <div className="w-full aspect-[4/3] overflow-hidden shrink-0 relative bg-black/5">
                     <img
-                      src={r.imageUrl || `/images/recipe-${((idx % 6) + 1)}.jpg`}
+                      src={imageSrc}
                       alt={r.title}
                       className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
                       loading="lazy"

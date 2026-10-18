@@ -134,13 +134,13 @@ export function RecipeDetailView({
         {/* 1. Editorial Hero Card (Warm Artisan Paper Showcase) */}
         <div className="max-w-3xl mx-auto bg-white border border-[#EFE9E0] p-6 sm:p-10 rounded-none shadow-md space-y-6 text-center">
           {/* Interactive Recipe Photography & Gallery */}
-          <div className="max-w-md mx-auto">
+          <div className="max-w-xl mx-auto w-full">
             <InteractiveMediaGallery
               mainImage={recipe.mainImage}
               gallery={recipe.gallery}
               fallbackImageUrl={(recipe as any).imageUrl || '/images/recipe-1.jpg'}
               title={recipe.nameFa}
-              aspectRatio="aspect-4/3"
+              aspectRatio="aspect-[4/3]"
             />
           </div>
 

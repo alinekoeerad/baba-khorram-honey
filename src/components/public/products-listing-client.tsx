@@ -323,7 +323,7 @@ export function ProductsListingClient({
                 subtitle={item.subtitle}
                 href={item.href}
                 imageAsset={item.imageAsset}
-                imageUrl={item.imageUrl || (item.slug ? `/images/products/${item.slug}.jpg` : (item.imageAsset ? null : '/images/honey-jar.jpg'))}
+                imageUrl={item.imageUrl}
                 secondaryImageAsset={item.secondaryImageAsset}
                 secondaryImageUrl={item.secondaryImageUrl}
                 theme={item.theme || item.cardTheme}
@@ -333,6 +333,7 @@ export function ProductsListingClient({
                 variant="vertical"
                 index={idx}
                 sortOrder={item.sortOrder}
+                itemType="product"
               />
             ))}
           </div>
@@ -346,7 +347,7 @@ export function ProductsListingClient({
                 subtitle={item.subtitle}
                 href={item.href}
                 imageAsset={item.imageAsset}
-                imageUrl={item.imageUrl || (item.slug ? `/images/products/${item.slug}.jpg` : (item.imageAsset ? null : '/images/honey-jar.jpg'))}
+                imageUrl={item.imageUrl}
                 secondaryImageAsset={item.secondaryImageAsset}
                 secondaryImageUrl={item.secondaryImageUrl}
                 theme={item.theme || item.cardTheme}
@@ -356,6 +357,7 @@ export function ProductsListingClient({
                 variant="horizontal"
                 index={idx}
                 sortOrder={item.sortOrder}
+                itemType="product"
               />
             ))}
           </div>

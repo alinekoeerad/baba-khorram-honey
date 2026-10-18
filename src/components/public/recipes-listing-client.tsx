@@ -353,7 +353,7 @@ export function RecipesListingClient({
                 subtitle={item.subtitle}
                 href={item.href}
                 imageAsset={item.imageAsset}
-                imageUrl={item.imageUrl || (item.imageAsset ? null : '/images/recipe-1.jpg')}
+                imageUrl={item.imageUrl}
                 secondaryImageAsset={item.secondaryImageAsset}
                 secondaryImageUrl={item.secondaryImageUrl}
                 theme={item.theme || item.cardTheme}
@@ -362,6 +362,7 @@ export function RecipesListingClient({
                 variant="vertical"
                 index={idx}
                 sortOrder={item.sortOrder}
+                itemType="recipe"
               />
             ))}
           </div>
@@ -375,7 +376,7 @@ export function RecipesListingClient({
                 subtitle={item.subtitle}
                 href={item.href}
                 imageAsset={item.imageAsset}
-                imageUrl={item.imageUrl || (item.imageAsset ? null : '/images/recipe-1.jpg')}
+                imageUrl={item.imageUrl}
                 secondaryImageAsset={item.secondaryImageAsset}
                 secondaryImageUrl={item.secondaryImageUrl}
                 theme={item.theme || item.cardTheme}
@@ -384,6 +385,7 @@ export function RecipesListingClient({
                 variant="horizontal"
                 index={idx}
                 sortOrder={item.sortOrder}
+                itemType="recipe"
               />
             ))}
           </div>

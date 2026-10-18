@@ -108,12 +108,42 @@ export async function searchGlobal({
   ]);
 
   const products: ProductCardViewModel[] = productsRaw.map((p: any) => {
+    const resolvedImageUrl =
+      (p as any).imageUrl ||
+      (p.mainImage?.url ? p.mainImage.url : null) ||
+      (p.mainImage?.storageKey
+        ? (p.mainImage.storageKey.startsWith('/')
+            ? p.mainImage.storageKey
+            : `/uploads/${p.mainImage.storageKey}`)
+        : null) ||
+      (p.slug ? `/images/products/${p.slug}.webp` : null) ||
+      (p.slug ? `/images/products/${p.slug}.jpg` : null) ||
+      null;
+
     const imageAsset = p.mainImage
       ? {
           id: p.mainImage.id,
+          storageKey: p.mainImage.storageKey,
+          url:
+            p.mainImage.url ||
+            (p.mainImage.storageKey
+              ? (p.mainImage.storageKey.startsWith('/')
+                  ? p.mainImage.storageKey
+                  : `/uploads/${p.mainImage.storageKey}`)
+              : resolvedImageUrl || undefined),
           width: p.mainImage.width ?? 800,
           height: p.mainImage.height ?? 600,
           blurDataUrl: p.mainImage.blurDataUrl ?? null,
+          variants: p.mainImage.variants ?? null,
+          alt: p.mainImage.alt ?? p.nameFa,
+        }
+      : resolvedImageUrl
+      ? {
+          url: resolvedImageUrl,
+          width: 800,
+          height: 600,
+          blurDataUrl: null,
+          alt: p.nameFa,
         }
       : null;
 
@@ -140,7 +170,7 @@ export async function searchGlobal({
       usageWarning: p.usageWarning,
       href: `/products/${p.slug}`,
       imageAsset,
-      imageUrl: (p as any).imageUrl || (p.slug ? `/images/products/${p.slug}.jpg` : null),
+      imageUrl: resolvedImageUrl,
       imageAlt: p.nameFa,
       linkLabel: 'مشاهده محصول',
       categories: p.categories.map((c: any) => c.category),
@@ -149,12 +179,53 @@ export async function searchGlobal({
   });
 
   const recipes: RecipeCardViewModel[] = recipesRaw.map((r: any) => {
-    const imageAsset = r.mainImage
+    const isDessert =
+      (r.categories && (
+        r.categories.includes('desserts') ||
+        r.categories.includes('cat_desserts') ||
+        r.categories.some?.((c: any) => (c.category?.slug || c.slug || c) === 'desserts' || (c.category?.slug || c.slug || c) === 'dessert')
+      )) ||
+      (r.categoryIds && r.categoryIds.includes('cat_desserts'));
+
+    const slugFallback = r.slug ? (isDessert ? `/uploads/recipes/dessert-${r.slug}.webp` : `/uploads/recipes/drink-${r.slug}.webp`) : null;
+
+    const resolvedImageUrl =
+      (r as any).imageUrl ||
+      (typeof (r as any).mainImage === 'string' ? (r as any).mainImage : null) ||
+      (typeof (r as any).image === 'string' ? (r as any).image : null) ||
+      (r.mainImage?.url ? r.mainImage.url : null) ||
+      (r.mainImage?.storageKey
+        ? (r.mainImage.storageKey.startsWith('/')
+            ? r.mainImage.storageKey
+            : `/uploads/${r.mainImage.storageKey}`)
+        : null) ||
+      slugFallback ||
+      null;
+
+    const imageAsset = r.mainImage && typeof r.mainImage === 'object'
       ? {
           id: r.mainImage.id,
+          storageKey: r.mainImage.storageKey,
+          url:
+            r.mainImage.url ||
+            (r.mainImage.storageKey
+              ? (r.mainImage.storageKey.startsWith('/')
+                  ? r.mainImage.storageKey
+                  : `/uploads/${r.mainImage.storageKey}`)
+              : resolvedImageUrl || undefined),
           width: r.mainImage.width ?? 800,
           height: r.mainImage.height ?? 600,
           blurDataUrl: r.mainImage.blurDataUrl ?? null,
+          variants: r.mainImage.variants ?? null,
+          alt: r.mainImage.alt ?? r.nameFa,
+        }
+      : resolvedImageUrl
+      ? {
+          url: resolvedImageUrl,
+          width: 800,
+          height: 600,
+          blurDataUrl: null,
+          alt: r.nameFa,
         }
       : null;
 
@@ -177,7 +248,7 @@ export async function searchGlobal({
       longDescription: r.longDescription,
       href: `/recipes/${r.slug}`,
       imageAsset,
-      imageUrl: null,
+      imageUrl: resolvedImageUrl,
       imageAlt: r.nameFa,
       linkLabel: 'مشاهده دستور',
       categories: r.categories.map((c: any) => c.category),

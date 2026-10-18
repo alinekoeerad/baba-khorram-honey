@@ -460,8 +460,27 @@ function createFallbackClient() {
             return { category: cat || null, categoryId: cId };
           });
         }
-        if (args.include?.mainImage && res.mainImageId) {
-          res.mainImage = mediaAssetsStore.find((m) => m.id === res.mainImageId) || null;
+        if (args.include?.mainImage) {
+          let asset = res.mainImageId ? mediaAssetsStore.find((m) => m.id === res.mainImageId) : null;
+          const fallbackUrl = (res as any).imageUrl || (typeof (res as any).mainImage === 'string' ? (res as any).mainImage : null) || (res as any).image || (res.slug ? `/images/products/${res.slug}.webp` : null);
+          if (!asset && fallbackUrl) {
+            asset = {
+              id: res.mainImageId || `ast_prd_${res.id}`,
+              storageKey: fallbackUrl.replace(/^\/uploads\//, ''),
+              mime: 'image/webp',
+              bytes: 50000,
+              width: 800,
+              height: 600,
+              blurDataUrl: null,
+              variants: null,
+              alt: res.nameFa,
+              url: fallbackUrl,
+              createdById: null,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            } as any;
+          }
+          res.mainImage = asset || null;
         }
         if (args.include?.options) {
           const allOpts = loadJson('product-options.json', productOptionsStore);
@@ -601,8 +620,27 @@ function createFallbackClient() {
               return { category: cat || null, categoryId: cId };
             });
           }
-          if (args?.include?.mainImage && item.mainImageId) {
-            item.mainImage = mediaAssetsStore.find((m) => m.id === item.mainImageId) || null;
+          if (args?.include?.mainImage) {
+            let asset = item.mainImageId ? mediaAssetsStore.find((m) => m.id === item.mainImageId) : null;
+            const fallbackUrl = (item as any).imageUrl || (typeof (item as any).mainImage === 'string' ? (item as any).mainImage : null) || (item as any).image || (item.slug ? `/images/products/${item.slug}.webp` : null);
+            if (!asset && fallbackUrl) {
+              asset = {
+                id: item.mainImageId || `ast_prd_${item.id}`,
+                storageKey: fallbackUrl.replace(/^\/uploads\//, ''),
+                mime: 'image/webp',
+                bytes: 50000,
+                width: 800,
+                height: 600,
+                blurDataUrl: null,
+                variants: null,
+                alt: item.nameFa,
+                url: fallbackUrl,
+                createdById: null,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+              } as any;
+            }
+            item.mainImage = asset || null;
           }
           if (args?.include?.options) {
             const allOpts = loadJson('product-options.json', productOptionsStore);
@@ -809,8 +847,29 @@ function createFallbackClient() {
             return { category: cat || null, categoryId: cId };
           });
         }
-        if (args.include?.mainImage && res.mainImageId) {
-          res.mainImage = mediaAssetsStore.find((m) => m.id === res.mainImageId) || null;
+        if (args.include?.mainImage) {
+          let asset = res.mainImageId ? mediaAssetsStore.find((m) => m.id === res.mainImageId) : null;
+          const isDessert = (res.categories && (res.categories.includes('desserts') || res.categories.includes('cat_desserts'))) || (res.categoryIds && res.categoryIds.includes('cat_desserts'));
+          const slugUrl = res.slug ? (isDessert ? `/uploads/recipes/dessert-${res.slug}.webp` : `/uploads/recipes/drink-${res.slug}.webp`) : null;
+          const fallbackUrl = (res as any).imageUrl || (typeof (res as any).mainImage === 'string' ? (res as any).mainImage : null) || (res as any).image || slugUrl;
+          if (!asset && fallbackUrl) {
+            asset = {
+              id: res.mainImageId || `ast_rcp_${res.id}`,
+              storageKey: fallbackUrl.replace(/^\/uploads\//, ''),
+              mime: 'image/webp',
+              bytes: 50000,
+              width: 800,
+              height: 600,
+              blurDataUrl: null,
+              variants: null,
+              alt: res.nameFa,
+              url: fallbackUrl,
+              createdById: null,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            } as any;
+          }
+          res.mainImage = asset || null;
         }
         if (args.include?.options) {
           const allOpts = loadJson('product-options.json', productOptionsStore);
@@ -962,8 +1021,29 @@ function createFallbackClient() {
               return { category: cat || null, categoryId: cId };
             });
           }
-          if (args?.include?.mainImage && item.mainImageId) {
-            item.mainImage = mediaAssetsStore.find((m) => m.id === item.mainImageId) || null;
+          if (args?.include?.mainImage) {
+            let asset = item.mainImageId ? mediaAssetsStore.find((m) => m.id === item.mainImageId) : null;
+            const isDessert = (item.categories && (item.categories.includes('desserts') || item.categories.includes('cat_desserts'))) || (item.categoryIds && item.categoryIds.includes('cat_desserts'));
+            const slugUrl = item.slug ? (isDessert ? `/uploads/recipes/dessert-${item.slug}.webp` : `/uploads/recipes/drink-${item.slug}.webp`) : null;
+            const fallbackUrl = (item as any).imageUrl || (typeof (item as any).mainImage === 'string' ? (item as any).mainImage : null) || (item as any).image || slugUrl;
+            if (!asset && fallbackUrl) {
+              asset = {
+                id: item.mainImageId || `ast_rcp_${item.id}`,
+                storageKey: fallbackUrl.replace(/^\/uploads\//, ''),
+                mime: 'image/webp',
+                bytes: 50000,
+                width: 800,
+                height: 600,
+                blurDataUrl: null,
+                variants: null,
+                alt: item.nameFa,
+                url: fallbackUrl,
+                createdById: null,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+              } as any;
+            }
+            item.mainImage = asset || null;
           }
           if (args?.include?.options) {
             const allOpts = loadJson('product-options.json', productOptionsStore);

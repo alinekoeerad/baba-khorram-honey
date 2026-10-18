@@ -63,13 +63,19 @@ export function Picture({
     .filter((v) => v && v.url && v.width)
     .sort((a, b) => a.width - b.width);
 
-  const directSrc = (asset as any)?.url || (asset?.storageKey ? `/uploads/${asset.storageKey}` : null);
+  const rawKey = asset?.storageKey;
+  const keyWithSlash = rawKey
+    ? (rawKey.startsWith('/')
+        ? rawKey
+        : (rawKey.startsWith('uploads/') ? `/${rawKey}` : `/uploads/${rawKey}`))
+    : null;
+  const directSrc = (asset as any)?.url || keyWithSlash || null;
 
   // Graceful fallback when asset is missing or has no source
   if (sortedVariants.length === 0 && !directSrc) {
     return (
       <div
-        className={`flex flex-col items-center justify-center bg-[#FFFBEB] border border-[#EFE9E0] text-[#5C5248] p-4 text-xs text-center select-none ${className}`}
+        className={`flex flex-col items-center justify-center bg-[#FFFBEB] border border-[#EFE9E0] text-[#5C5248] p-4 text-xs text-center select-none rounded-none ${className}`}
         style={{
           aspectRatio: customWidth && customHeight ? `${customWidth}/${customHeight}` : '4/3',
         }}
@@ -117,8 +123,12 @@ export function Picture({
       }
     : {};
 
+  const baseImgClass = imgClassName.includes('h-')
+    ? 'w-full object-cover transition-opacity duration-300'
+    : 'w-full h-auto object-cover transition-opacity duration-300';
+
   return (
-    <picture className={`block relative overflow-hidden ${className}`}>
+    <picture className={`block relative overflow-hidden rounded-none ${className}`}>
       {srcSet && (
         <source
           type="image/webp"
@@ -135,7 +145,7 @@ export function Picture({
         decoding={priority ? 'sync' : 'async'}
         fetchPriority={priority ? 'high' : 'auto'}
         style={blurStyle}
-        className={`w-full h-auto object-cover transition-opacity duration-300 ${imgClassName}`}
+        className={`${baseImgClass} ${imgClassName}`}
       />
     </picture>
   );

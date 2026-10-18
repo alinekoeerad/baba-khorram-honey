@@ -40,7 +40,7 @@ export interface InteractiveMediaGalleryProps {
   gallery?: Array<{ id?: string; asset?: any; sortOrder?: number }>;
   fallbackImageUrl?: string;
   title: string;
-  aspectRatio?: 'aspect-4/3' | 'aspect-square' | 'aspect-16/9';
+  aspectRatio?: 'aspect-[4/3]' | 'aspect-4/3' | 'aspect-square' | 'aspect-[16/9]' | 'aspect-16/9';
   featuredBadge?: string | null;
   className?: string;
 }
@@ -50,7 +50,7 @@ export function InteractiveMediaGallery({
   gallery = [],
   fallbackImageUrl,
   title,
-  aspectRatio = 'aspect-4/3',
+  aspectRatio = 'aspect-[4/3]',
   featuredBadge,
   className = '',
 }: InteractiveMediaGalleryProps) {
@@ -61,13 +61,33 @@ export function InteractiveMediaGallery({
 
     const addSlide = (asset: any) => {
       if (!asset) return;
+      if (typeof asset === 'string') {
+        const key = asset;
+        if (seenKeys.has(key)) return;
+        seenKeys.add(key);
+        list.push({
+          url: asset,
+          alt: title,
+          width: 900,
+          height: 675,
+          blurDataUrl: null,
+          caption: null,
+        });
+        return;
+      }
+
       const key = asset.id || asset.storageKey || asset.url;
       if (key && seenKeys.has(key)) return;
       if (key) seenKeys.add(key);
 
-      const url =
-        asset.url ||
-        (asset.storageKey ? `/uploads/${asset.storageKey}` : undefined);
+      const rawKey = asset.storageKey;
+      const keyWithSlash = rawKey
+        ? (rawKey.startsWith('/')
+            ? rawKey
+            : (rawKey.startsWith('uploads/') ? `/${rawKey}` : `/uploads/${rawKey}`))
+        : undefined;
+
+      const url = asset.url || keyWithSlash || undefined;
 
       list.push({
         id: asset.id,
@@ -143,91 +163,101 @@ export function InteractiveMediaGallery({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isLightboxOpen, handlePrev, handleNext]);
 
+  const aspectClass =
+    aspectRatio === 'aspect-square'
+      ? 'aspect-square'
+      : aspectRatio === 'aspect-[16/9]' || aspectRatio === 'aspect-16/9'
+      ? 'aspect-[16/9]'
+      : 'aspect-[4/3]';
+
   return (
     <div className={`space-y-4 ${className}`}>
-      {/* Main Stage Image */}
-      <div
-        className={`w-full ${aspectRatio} rounded-none overflow-hidden border border-[#EFE9E0] shadow-md bg-[#FAF7F2] p-6 flex items-center justify-center relative group cursor-zoom-in`}
-        onClick={() => setIsLightboxOpen(true)}
-        role="button"
-        tabIndex={0}
-        aria-label="بزرگنمایی تصویر در اندازه اصلی"
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            setIsLightboxOpen(true);
-          }
-        }}
-      >
-        {/* Active Slide Image */}
-        {currentSlide.storageKey ? (
-          <Picture
-            key={currentSlide.storageKey}
-            asset={currentSlide as any}
-            width={currentSlide.width ?? 900}
-            height={currentSlide.height ?? 675}
-            blurDataUrl={currentSlide.blurDataUrl}
-            alt={currentSlide.alt || title}
-            priority={activeIndex === 0}
-            className="w-full h-full max-h-full object-contain transition-transform duration-300 group-hover:scale-102"
-          />
-        ) : (
-          <img
-            src={currentSlide.url || fallbackImageUrl || '/images/honey-jar.jpg'}
-            alt={currentSlide.alt || title}
-            className="w-full h-full max-h-full object-contain transition-transform duration-300 group-hover:scale-102"
-          />
-        )}
+      {/* Main Stage Polaroid Container */}
+      <div className="bg-white p-2.5 sm:p-3.5 border border-[#EFE9E0] shadow-md rounded-none">
+        <div
+          className={`w-full ${aspectClass} rounded-none overflow-hidden relative group cursor-zoom-in bg-[#FAF7F2]`}
+          onClick={() => setIsLightboxOpen(true)}
+          role="button"
+          tabIndex={0}
+          aria-label="بزرگنمایی تصویر در اندازه اصلی"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setIsLightboxOpen(true);
+            }
+          }}
+        >
+          {/* Active Slide Image */}
+          {currentSlide.storageKey || currentSlide.url ? (
+            <Picture
+              key={currentSlide.id || currentSlide.storageKey || currentSlide.url}
+              asset={currentSlide as any}
+              width={currentSlide.width ?? 900}
+              height={currentSlide.height ?? 675}
+              blurDataUrl={currentSlide.blurDataUrl}
+              alt={currentSlide.alt || title}
+              priority={activeIndex === 0}
+              className="w-full h-full block rounded-none"
+              imgClassName="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105 rounded-none"
+            />
+          ) : (
+            <img
+              src={fallbackImageUrl || '/images/honey-jar.jpg'}
+              alt={currentSlide.alt || title}
+              className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105 rounded-none"
+            />
+          )}
 
-        {/* Featured Badge */}
-        {featuredBadge && (
-          <span className="absolute top-4 right-4 bg-[#F59E0B] text-[#2B2017] text-xs font-black px-3 py-1 rounded-none shadow-md pointer-events-none z-10">
-            {featuredBadge}
-          </span>
-        )}
+          {/* Featured Badge */}
+          {featuredBadge && (
+            <span className="absolute top-3 right-3 bg-[#F59E0B] text-[#2B2017] text-xs font-black px-3 py-1 rounded-none shadow-md pointer-events-none z-10">
+              {featuredBadge}
+            </span>
+          )}
 
-        {/* Slide Counter Badge (shown if multiple images) */}
-        {slides.length > 1 && (
-          <div className="absolute top-4 left-4 bg-[#2B2017]/85 backdrop-blur-xs text-[#FDE68A] text-[11px] font-mono font-bold px-2.5 py-1 rounded-none border border-[#F59E0B]/40 shadow-sm pointer-events-none z-10">
-            {toPersianDigits(activeIndex + 1)} از {toPersianDigits(slides.length)}
+          {/* Slide Counter Badge (shown if multiple images) */}
+          {slides.length > 1 && (
+            <div className="absolute top-3 left-3 bg-[#2B2017]/85 backdrop-blur-xs text-[#FDE68A] text-[11px] font-mono font-bold px-2.5 py-1 rounded-none border border-[#F59E0B]/40 shadow-sm pointer-events-none z-10">
+              {toPersianDigits(activeIndex + 1)} از {toPersianDigits(slides.length)}
+            </div>
+          )}
+
+          {/* Hover Zoom Badge */}
+          <div className="absolute bottom-3 left-3 bg-[#2B2017]/85 backdrop-blur-xs text-[#FDE68A] text-xs font-bold px-3 py-1.5 rounded-none flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 border border-[#F59E0B]/40 shadow-md pointer-events-none z-10">
+            <ZoomIn className="w-3.5 h-3.5 text-[#F59E0B]" />
+            <span>بزرگنمایی تصویر</span>
           </div>
-        )}
 
-        {/* Hover Zoom Badge */}
-        <div className="absolute bottom-4 left-4 bg-[#2B2017]/85 backdrop-blur-xs text-[#FDE68A] text-xs font-bold px-3 py-1.5 rounded-none flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 border border-[#F59E0B]/40 shadow-md pointer-events-none z-10">
-          <ZoomIn className="w-3.5 h-3.5 text-[#F59E0B]" />
-          <span>بزرگنمایی تصویر</span>
+          {/* In-Frame Next/Prev Arrows (if multiple slides) */}
+          {slides.length > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePrev();
+                }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-[#2B2017]/75 hover:bg-[#F59E0B] text-white hover:text-[#2B2017] flex items-center justify-center rounded-none shadow-md transition-colors opacity-0 group-hover:opacity-100 z-10 cursor-pointer"
+                aria-label="تصویر قبلی"
+                title="تصویر قبلی"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleNext();
+                }}
+                className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-[#2B2017]/75 hover:bg-[#F59E0B] text-white hover:text-[#2B2017] flex items-center justify-center rounded-none shadow-md transition-colors opacity-0 group-hover:opacity-100 z-10 cursor-pointer"
+                aria-label="تصویر بعدی"
+                title="تصویر بعدی"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+            </>
+          )}
         </div>
-
-        {/* In-Frame Next/Prev Arrows (if multiple slides) */}
-        {slides.length > 1 && (
-          <>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                handlePrev();
-              }}
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-[#2B2017]/75 hover:bg-[#F59E0B] text-white hover:text-[#2B2017] flex items-center justify-center rounded-none shadow-md transition-colors opacity-0 group-hover:opacity-100 z-10 cursor-pointer"
-              aria-label="تصویر قبلی"
-              title="تصویر قبلی"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleNext();
-              }}
-              className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-[#2B2017]/75 hover:bg-[#F59E0B] text-white hover:text-[#2B2017] flex items-center justify-center rounded-none shadow-md transition-colors opacity-0 group-hover:opacity-100 z-10 cursor-pointer"
-              aria-label="تصویر بعدی"
-              title="تصویر بعدی"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-          </>
-        )}
       </div>
 
       {/* Interactive Thumbnail Strip */}
@@ -241,26 +271,27 @@ export function InteractiveMediaGallery({
                 type="button"
                 onClick={() => setActiveIndex(idx)}
                 onMouseEnter={() => setActiveIndex(idx)}
-                className={`aspect-square bg-[#FAF7F2] p-1.5 flex items-center justify-center rounded-none overflow-hidden transition-all duration-200 cursor-pointer ${
+                className={`aspect-square bg-[#FAF7F2] p-1 flex items-center justify-center rounded-none overflow-hidden transition-all duration-200 cursor-pointer ${
                   isActive
                     ? 'border-2 border-[#F59E0B] ring-2 ring-[#F59E0B]/40 shadow-sm opacity-100 scale-100'
                     : 'border border-[#EFE9E0] opacity-70 hover:opacity-100 hover:border-[#D97706] scale-95 hover:scale-100'
                 }`}
                 aria-label={`نمایش تصویر ${toPersianDigits(idx + 1)}`}
               >
-                {slide.storageKey ? (
+                {slide.storageKey || slide.url ? (
                   <Picture
                     asset={slide as any}
                     width={180}
                     height={180}
                     alt={slide.alt || title}
-                    className="w-full h-full max-h-full object-contain"
+                    className="w-full h-full block rounded-none"
+                    imgClassName="w-full h-full object-cover object-center rounded-none"
                   />
                 ) : (
                   <img
-                    src={slide.url || fallbackImageUrl || '/images/honey-jar.jpg'}
+                    src={fallbackImageUrl || '/images/honey-jar.jpg'}
                     alt={slide.alt || title}
-                    className="w-full h-full max-h-full object-contain"
+                    className="w-full h-full object-cover object-center rounded-none"
                   />
                 )}
               </button>

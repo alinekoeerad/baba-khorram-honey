@@ -53,10 +53,14 @@ export interface RecipeCardViewModel {
   longDescription: string | null;
   href: string;
   imageAsset: {
-    id: string;
+    id?: string;
+    storageKey?: string;
+    url?: string;
     width: number;
     height: number;
     blurDataUrl?: string | null;
+    variants?: any;
+    alt?: string | null;
   } | null;
   imageUrl: string | null;
   secondaryImageAsset?: {
@@ -168,12 +172,53 @@ export async function getPublicRecipes(filters: PublicRecipeFilters = {}) {
   const items = hasMore ? rawItems.slice(0, takeLimit) : rawItems;
 
   const cardItems: RecipeCardViewModel[] = items.map((r: any) => {
-    const imageAsset = r.mainImage
+    const isDessert =
+      (r.categories && (
+        r.categories.includes('desserts') ||
+        r.categories.includes('cat_desserts') ||
+        r.categories.some?.((c: any) => (c.category?.slug || c.slug || c) === 'desserts' || (c.category?.slug || c.slug || c) === 'dessert')
+      )) ||
+      (r.categoryIds && r.categoryIds.includes('cat_desserts'));
+
+    const slugFallback = r.slug ? (isDessert ? `/uploads/recipes/dessert-${r.slug}.webp` : `/uploads/recipes/drink-${r.slug}.webp`) : null;
+
+    const resolvedImageUrl =
+      (r as any).imageUrl ||
+      (typeof (r as any).mainImage === 'string' ? (r as any).mainImage : null) ||
+      (typeof (r as any).image === 'string' ? (r as any).image : null) ||
+      (r.mainImage?.url ? r.mainImage.url : null) ||
+      (r.mainImage?.storageKey
+        ? (r.mainImage.storageKey.startsWith('/')
+            ? r.mainImage.storageKey
+            : `/uploads/${r.mainImage.storageKey}`)
+        : null) ||
+      slugFallback ||
+      null;
+
+    const imageAsset = r.mainImage && typeof r.mainImage === 'object'
       ? {
           id: r.mainImage.id,
+          storageKey: r.mainImage.storageKey,
+          url:
+            r.mainImage.url ||
+            (r.mainImage.storageKey
+              ? (r.mainImage.storageKey.startsWith('/')
+                  ? r.mainImage.storageKey
+                  : `/uploads/${r.mainImage.storageKey}`)
+              : resolvedImageUrl || undefined),
           width: r.mainImage.width ?? 800,
           height: r.mainImage.height ?? 600,
           blurDataUrl: r.mainImage.blurDataUrl ?? null,
+          variants: r.mainImage.variants ?? null,
+          alt: r.mainImage.alt ?? r.nameFa,
+        }
+      : resolvedImageUrl
+      ? {
+          url: resolvedImageUrl,
+          width: 800,
+          height: 600,
+          blurDataUrl: null,
+          alt: r.nameFa,
         }
       : null;
 
@@ -181,13 +226,15 @@ export async function getPublicRecipes(filters: PublicRecipeFilters = {}) {
     const secondaryImageAsset = firstGallery && firstGallery.id
       ? {
           id: firstGallery.id,
+          storageKey: firstGallery.storageKey,
+          url: firstGallery.url || (firstGallery.storageKey ? (firstGallery.storageKey.startsWith('/') ? firstGallery.storageKey : `/uploads/${firstGallery.storageKey}`) : undefined),
           width: firstGallery.width ?? 800,
           height: firstGallery.height ?? 600,
           blurDataUrl: firstGallery.blurDataUrl ?? null,
         }
       : null;
     const secondaryImageUrl = firstGallery
-      ? (firstGallery.url || (firstGallery.storageKey ? `/uploads/${firstGallery.storageKey}` : null))
+      ? (firstGallery.url || (firstGallery.storageKey ? (firstGallery.storageKey.startsWith('/') ? firstGallery.storageKey : `/uploads/${firstGallery.storageKey}`) : null))
       : null;
 
     return {
@@ -209,7 +256,7 @@ export async function getPublicRecipes(filters: PublicRecipeFilters = {}) {
       longDescription: r.longDescription,
       href: `/recipes/${r.slug}`,
       imageAsset,
-      imageUrl: null,
+      imageUrl: resolvedImageUrl,
       secondaryImageAsset,
       secondaryImageUrl,
       imageAlt: r.nameFa,
@@ -272,6 +319,40 @@ export async function getPublicRecipeBySlug(slug: string) {
   });
 
   if (recipe && recipe.status === 'PUBLISHED') {
+    const isDessert =
+      (recipe.categories && (
+        recipe.categories.includes('desserts') ||
+        recipe.categories.includes('cat_desserts') ||
+        recipe.categories.some?.((c: any) => (c.category?.slug || c.slug || c) === 'desserts' || (c.category?.slug || c.slug || c) === 'dessert')
+      )) ||
+      (recipe.categoryIds && recipe.categoryIds.includes('cat_desserts'));
+
+    const slugFallback = recipe.slug ? (isDessert ? `/uploads/recipes/dessert-${recipe.slug}.webp` : `/uploads/recipes/drink-${recipe.slug}.webp`) : null;
+
+    const resolvedRecipeImageUrl =
+      (recipe as any).imageUrl ||
+      (typeof (recipe as any).mainImage === 'string' ? (recipe as any).mainImage : null) ||
+      (typeof (recipe as any).image === 'string' ? (recipe as any).image : null) ||
+      (recipe.mainImage?.url ? recipe.mainImage.url : null) ||
+      (recipe.mainImage?.storageKey
+        ? (recipe.mainImage.storageKey.startsWith('/')
+            ? recipe.mainImage.storageKey
+            : `/uploads/${recipe.mainImage.storageKey}`)
+        : null) ||
+      slugFallback ||
+      null;
+
+    if (!recipe.mainImage && resolvedRecipeImageUrl) {
+      (recipe as any).mainImage = {
+        url: resolvedRecipeImageUrl,
+        width: 800,
+        height: 600,
+        blurDataUrl: null,
+        alt: recipe.nameFa,
+      };
+    }
+    (recipe as any).imageUrl = resolvedRecipeImageUrl;
+
     // 2. Fetch related items (up to 4 published items sharing a category, hidden if none)
     const categoryIds = recipe.categories.map((c: any) => c.categoryId);
     let relatedRecipes: RecipeCardViewModel[] = [];
@@ -298,37 +379,82 @@ export async function getPublicRecipeBySlug(slug: string) {
         },
       });
 
-      relatedRecipes = rawRelated.map((r: any) => ({
-        id: r.id,
-        slug: r.slug,
-        title: r.nameFa,
-        subtitle: r.nameOriginal ?? null,
-        nameFa: r.nameFa,
-        nameOriginal: r.nameOriginal,
-        status: r.status,
-        country: r.country,
-        servingTypes: r.servingTypes as ServingTypeValue[],
-        yieldText: r.yieldText,
-        isFeatured: r.isFeatured,
-        cardTheme: r.cardTheme,
-        theme: r.cardTheme,
-        sortOrder: r.sortOrder,
-        shortDescription: r.shortDescription,
-        longDescription: r.longDescription,
-        href: `/recipes/${r.slug}`,
-        imageAsset: r.mainImage
+      relatedRecipes = rawRelated.map((r: any) => {
+        const isRelDessert =
+          (r.categories && (
+            r.categories.includes('desserts') ||
+            r.categories.includes('cat_desserts') ||
+            r.categories.some?.((c: any) => (c.category?.slug || c.slug || c) === 'desserts' || (c.category?.slug || c.slug || c) === 'dessert')
+          )) ||
+          (r.categoryIds && r.categoryIds.includes('cat_desserts'));
+
+        const relSlugFallback = r.slug ? (isRelDessert ? `/uploads/recipes/dessert-${r.slug}.webp` : `/uploads/recipes/drink-${r.slug}.webp`) : null;
+
+        const resolvedRelUrl =
+          (r as any).imageUrl ||
+          (typeof (r as any).mainImage === 'string' ? (r as any).mainImage : null) ||
+          (typeof (r as any).image === 'string' ? (r as any).image : null) ||
+          (r.mainImage?.url ? r.mainImage.url : null) ||
+          (r.mainImage?.storageKey
+            ? (r.mainImage.storageKey.startsWith('/')
+                ? r.mainImage.storageKey
+                : `/uploads/${r.mainImage.storageKey}`)
+            : null) ||
+          relSlugFallback ||
+          null;
+
+        const relImageAsset = r.mainImage && typeof r.mainImage === 'object'
           ? {
               id: r.mainImage.id,
+              storageKey: r.mainImage.storageKey,
+              url:
+                r.mainImage.url ||
+                (r.mainImage.storageKey
+                  ? (r.mainImage.storageKey.startsWith('/')
+                      ? r.mainImage.storageKey
+                      : `/uploads/${r.mainImage.storageKey}`)
+                  : resolvedRelUrl || undefined),
               width: r.mainImage.width ?? 800,
               height: r.mainImage.height ?? 600,
               blurDataUrl: r.mainImage.blurDataUrl ?? null,
+              variants: r.mainImage.variants ?? null,
+              alt: r.mainImage.alt ?? r.nameFa,
             }
-          : null,
-        imageUrl: null,
-        imageAlt: r.nameFa,
-        linkLabel: 'مشاهده دستور',
-        categories: r.categories.map((c: any) => c.category),
-      }));
+          : resolvedRelUrl
+          ? {
+              url: resolvedRelUrl,
+              width: 800,
+              height: 600,
+              blurDataUrl: null,
+              alt: r.nameFa,
+            }
+          : null;
+
+        return {
+          id: r.id,
+          slug: r.slug,
+          title: r.nameFa,
+          subtitle: r.nameOriginal ?? null,
+          nameFa: r.nameFa,
+          nameOriginal: r.nameOriginal,
+          status: r.status,
+          country: r.country,
+          servingTypes: r.servingTypes as ServingTypeValue[],
+          yieldText: r.yieldText,
+          isFeatured: r.isFeatured,
+          cardTheme: r.cardTheme,
+          theme: r.cardTheme,
+          sortOrder: r.sortOrder,
+          shortDescription: r.shortDescription,
+          longDescription: r.longDescription,
+          href: `/recipes/${r.slug}`,
+          imageAsset: relImageAsset,
+          imageUrl: resolvedRelUrl,
+          imageAlt: r.nameFa,
+          linkLabel: 'مشاهده دستور',
+          categories: r.categories.map((c: any) => c.category),
+        };
+      });
     }
 
     return {

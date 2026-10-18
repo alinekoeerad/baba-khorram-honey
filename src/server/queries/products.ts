@@ -51,10 +51,14 @@ export interface ProductCardViewModel {
   usageWarning: string | null;
   href: string;
   imageAsset: {
-    id: string;
+    id?: string;
+    storageKey?: string;
+    url?: string;
     width: number;
     height: number;
     blurDataUrl?: string | null;
+    variants?: any;
+    alt?: string | null;
   } | null;
   imageUrl: string | null;
   secondaryImageAsset?: {
@@ -154,12 +158,42 @@ export async function getPublicProducts(filters: PublicProductFilters = {}) {
   const items = hasMore ? rawItems.slice(0, takeLimit) : rawItems;
 
   const cardItems: ProductCardViewModel[] = items.map((p: any) => {
+    const resolvedImageUrl =
+      (p as any).imageUrl ||
+      (p.mainImage?.url ? p.mainImage.url : null) ||
+      (p.mainImage?.storageKey
+        ? (p.mainImage.storageKey.startsWith('/')
+            ? p.mainImage.storageKey
+            : `/uploads/${p.mainImage.storageKey}`)
+        : null) ||
+      (p.slug ? `/images/products/${p.slug}.webp` : null) ||
+      (p.slug ? `/images/products/${p.slug}.jpg` : null) ||
+      null;
+
     const imageAsset = p.mainImage
       ? {
           id: p.mainImage.id,
+          storageKey: p.mainImage.storageKey,
+          url:
+            p.mainImage.url ||
+            (p.mainImage.storageKey
+              ? (p.mainImage.storageKey.startsWith('/')
+                  ? p.mainImage.storageKey
+                  : `/uploads/${p.mainImage.storageKey}`)
+              : resolvedImageUrl || undefined),
           width: p.mainImage.width ?? 800,
           height: p.mainImage.height ?? 600,
           blurDataUrl: p.mainImage.blurDataUrl ?? null,
+          variants: p.mainImage.variants ?? null,
+          alt: p.mainImage.alt ?? p.nameFa,
+        }
+      : resolvedImageUrl
+      ? {
+          url: resolvedImageUrl,
+          width: 800,
+          height: 600,
+          blurDataUrl: null,
+          alt: p.nameFa,
         }
       : null;
 
@@ -167,13 +201,15 @@ export async function getPublicProducts(filters: PublicProductFilters = {}) {
     const secondaryImageAsset = firstGallery && firstGallery.id
       ? {
           id: firstGallery.id,
+          storageKey: firstGallery.storageKey,
+          url: firstGallery.url || (firstGallery.storageKey ? (firstGallery.storageKey.startsWith('/') ? firstGallery.storageKey : `/uploads/${firstGallery.storageKey}`) : undefined),
           width: firstGallery.width ?? 800,
           height: firstGallery.height ?? 600,
           blurDataUrl: firstGallery.blurDataUrl ?? null,
         }
       : null;
     const secondaryImageUrl = firstGallery
-      ? (firstGallery.url || (firstGallery.storageKey ? `/uploads/${firstGallery.storageKey}` : null))
+      ? (firstGallery.url || (firstGallery.storageKey ? (firstGallery.storageKey.startsWith('/') ? firstGallery.storageKey : `/uploads/${firstGallery.storageKey}`) : null))
       : null;
 
     return {
@@ -199,7 +235,7 @@ export async function getPublicProducts(filters: PublicProductFilters = {}) {
       usageWarning: p.usageWarning,
       href: `/products/${p.slug}`,
       imageAsset,
-      imageUrl: (p as any).imageUrl || (p.slug ? `/images/products/${p.slug}.jpg` : null),
+      imageUrl: resolvedImageUrl,
       secondaryImageAsset,
       secondaryImageUrl,
       imageAlt: p.nameFa,
@@ -264,6 +300,29 @@ export async function getPublicProductBySlug(slug: string) {
   });
 
   if (product && product.status === 'PUBLISHED') {
+    const resolvedProductImageUrl =
+      (product as any).imageUrl ||
+      (product.mainImage?.url ? product.mainImage.url : null) ||
+      (product.mainImage?.storageKey
+        ? (product.mainImage.storageKey.startsWith('/')
+            ? product.mainImage.storageKey
+            : `/uploads/${product.mainImage.storageKey}`)
+        : null) ||
+      (product.slug ? `/images/products/${product.slug}.webp` : null) ||
+      (product.slug ? `/images/products/${product.slug}.jpg` : null) ||
+      null;
+
+    if (!product.mainImage && resolvedProductImageUrl) {
+      (product as any).mainImage = {
+        url: resolvedProductImageUrl,
+        width: 800,
+        height: 600,
+        blurDataUrl: null,
+        alt: product.nameFa,
+      };
+    }
+    (product as any).imageUrl = resolvedProductImageUrl;
+
     // 2. Fetch related items (up to 4 published items sharing a category, hidden if none)
     const categoryIds = product.categories.map((c: any) => c.categoryId);
     let relatedProducts: ProductCardViewModel[] = [];
@@ -294,42 +353,76 @@ export async function getPublicProductBySlug(slug: string) {
         },
       });
 
-      relatedProducts = rawRelated.map((p: any) => ({
-        id: p.id,
-        slug: p.slug,
-        title: p.nameFa,
-        subtitle: p.nameOriginal ?? null,
-        nameFa: p.nameFa,
-        nameOriginal: p.nameOriginal,
-        status: p.status,
-        isAvailable: p.isAvailable,
-        isFeatured: p.isFeatured,
-        cardTheme: p.cardTheme,
-        theme: p.cardTheme,
-        sortOrder: p.sortOrder,
-        shortDescription: p.shortDescription,
-        description: p.description,
-        foodNature: p.foodNature,
-        vitamins: p.vitamins,
-        harvestSeason: p.harvestSeason,
-        harvestPlace: p.harvestPlace,
-        color: p.color,
-        usageWarning: p.usageWarning,
-        href: `/products/${p.slug}`,
-        imageAsset: p.mainImage
+      relatedProducts = rawRelated.map((p: any) => {
+        const resolvedRelUrl =
+          (p as any).imageUrl ||
+          (p.mainImage?.url ? p.mainImage.url : null) ||
+          (p.mainImage?.storageKey
+            ? (p.mainImage.storageKey.startsWith('/')
+                ? p.mainImage.storageKey
+                : `/uploads/${p.mainImage.storageKey}`)
+            : null) ||
+          (p.slug ? `/images/products/${p.slug}.webp` : null) ||
+          (p.slug ? `/images/products/${p.slug}.jpg` : null) ||
+          null;
+
+        const relImageAsset = p.mainImage
           ? {
               id: p.mainImage.id,
+              storageKey: p.mainImage.storageKey,
+              url:
+                p.mainImage.url ||
+                (p.mainImage.storageKey
+                  ? (p.mainImage.storageKey.startsWith('/')
+                      ? p.mainImage.storageKey
+                      : `/uploads/${p.mainImage.storageKey}`)
+                  : resolvedRelUrl || undefined),
               width: p.mainImage.width ?? 800,
               height: p.mainImage.height ?? 600,
               blurDataUrl: p.mainImage.blurDataUrl ?? null,
+              variants: p.mainImage.variants ?? null,
+              alt: p.mainImage.alt ?? p.nameFa,
             }
-          : null,
-        imageUrl: (p as any).imageUrl || (p.slug ? `/images/products/${p.slug}.jpg` : null),
-        imageAlt: p.nameFa,
-        linkLabel: 'مشاهده محصول',
-        categories: p.categories.map((c: any) => c.category),
-        options: p.options,
-      }));
+          : resolvedRelUrl
+          ? {
+              url: resolvedRelUrl,
+              width: 800,
+              height: 600,
+              blurDataUrl: null,
+              alt: p.nameFa,
+            }
+          : null;
+
+        return {
+          id: p.id,
+          slug: p.slug,
+          title: p.nameFa,
+          subtitle: p.nameOriginal ?? null,
+          nameFa: p.nameFa,
+          nameOriginal: p.nameOriginal,
+          status: p.status,
+          isAvailable: p.isAvailable,
+          isFeatured: p.isFeatured,
+          cardTheme: p.cardTheme,
+          theme: p.cardTheme,
+          sortOrder: p.sortOrder,
+          shortDescription: p.shortDescription,
+          description: p.description,
+          foodNature: p.foodNature,
+          vitamins: p.vitamins,
+          harvestSeason: p.harvestSeason,
+          harvestPlace: p.harvestPlace,
+          color: p.color,
+          usageWarning: p.usageWarning,
+          href: `/products/${p.slug}`,
+          imageAsset: relImageAsset,
+          imageUrl: resolvedRelUrl,
+          imageAlt: p.nameFa,
+          linkLabel: 'مشاهده محصول',
+          categories: p.categories.map((c: any) => c.category),
+          options: p.options,
+        };
+      });
     }
 
     return {

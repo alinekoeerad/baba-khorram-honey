@@ -137,9 +137,9 @@ export function ProductDetailView({
             <InteractiveMediaGallery
               mainImage={product.mainImage}
               gallery={product.gallery}
-              fallbackImageUrl={(product as any).imageUrl || `/images/products/${product.slug}.jpg`}
+              fallbackImageUrl={(product as any).imageUrl || (product.slug ? `/images/products/${product.slug}.webp` : `/images/products/${product.slug}.jpg`)}
               title={product.nameFa}
-              aspectRatio="aspect-4/3"
+              aspectRatio="aspect-[4/3]"
               featuredBadge={product.isFeatured ? 'منتخب باباخُرم' : null}
             />
 

@@ -29,6 +29,9 @@ interface ProductItem {
   title?: string;
   slug: string;
   imageUrl?: string | null;
+  imageAsset?: any;
+  mainImage?: any;
+  gallery?: any;
   theme?: string;
   cardTheme?: string;
   sortOrder?: number;
@@ -162,7 +165,15 @@ export function ProductCarousel({
             const themeKey = resolveItemCardTheme({ ...p, index: idx });
             const theme = THEME_CLASSES[themeKey] || THEME_CLASSES.GREEN;
             const titleText = p.nameFa || p.title || 'عسل ممتاز باباخُرم';
-            const imageSrc = p.imageUrl || (p.slug ? `/images/products/${p.slug}.jpg` : '/images/honey-jar.jpg');
+            const imageSrc =
+              p.imageUrl ||
+              (p as any).imageAsset?.url ||
+              ((p as any).imageAsset?.storageKey ? ((p as any).imageAsset.storageKey.startsWith('/') ? (p as any).imageAsset.storageKey : `/uploads/${(p as any).imageAsset.storageKey}`) : null) ||
+              (p as any).mainImage?.url ||
+              ((p as any).mainImage?.storageKey ? ((p as any).mainImage.storageKey.startsWith('/') ? (p as any).mainImage.storageKey : `/uploads/${(p as any).mainImage.storageKey}`) : null) ||
+              (p.slug ? `/images/products/${p.slug}.webp` : null) ||
+              (p.slug ? `/images/products/${p.slug}.jpg` : null) ||
+              '/images/honey-jar.jpg';
             const secondaryImageSrc = (p as any).secondaryImageUrl || ((p as any).gallery && (p as any).gallery.length > 0 ? ((p as any).gallery[0]?.asset?.url || ((p as any).gallery[0]?.asset?.storageKey ? `/uploads/${(p as any).gallery[0]?.asset?.storageKey}` : null)) : null);
 
             return (
