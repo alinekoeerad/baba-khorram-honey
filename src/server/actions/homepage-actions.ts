@@ -104,6 +104,7 @@ export async function createHomepageSectionAction(
       summary: `سکشن جدید «${newSection.internalName}» با قالب ${newSection.template} ایجاد شد.`,
     });
 
+    revalidatePath('/', 'layout');
     revalidatePath('/');
     revalidatePath('/admin/homepage');
     revalidatePath('/admin/preview/homepage');
@@ -153,6 +154,7 @@ export async function updateHomepageSectionAction(
       summary: `سکشن «${updated.internalName}» به‌روزرسانی شد.`,
     });
 
+    revalidatePath('/', 'layout');
     revalidatePath('/');
     revalidatePath('/admin/homepage');
     revalidatePath('/admin/preview/homepage');
@@ -185,6 +187,7 @@ export async function deleteHomepageSectionAction(id: string): Promise<ActionRes
       summary: `سکشن «${existing.internalName}» حذف شد.`,
     });
 
+    revalidatePath('/', 'layout');
     revalidatePath('/');
     revalidatePath('/admin/homepage');
     revalidatePath('/admin/preview/homepage');
@@ -218,6 +221,7 @@ export async function toggleHomepageSectionStatusAction(
       summary: `وضعیت سکشن «${updated.internalName}» به ${newStatus} تغییر یافت.`,
     });
 
+    revalidatePath('/', 'layout');
     revalidatePath('/');
     revalidatePath('/admin/homepage');
     revalidatePath('/admin/preview/homepage');
@@ -275,6 +279,7 @@ export async function reorderHomepageSectionAction(
       summary: `ترتیب سکشن «${currentSection.internalName}» جابه‌جا شد (${direction}).`,
     });
 
+    revalidatePath('/', 'layout');
     revalidatePath('/');
     revalidatePath('/admin/homepage');
     revalidatePath('/admin/preview/homepage');
@@ -329,6 +334,7 @@ export async function switchHomepageSectionTemplateAction(
       summary: `قالب سکشن «${existing.internalName}» از ${existing.template} به ${newTemplateId} تغییر یافت.`,
     });
 
+    revalidatePath('/', 'layout');
     revalidatePath('/');
     revalidatePath('/admin/homepage');
     revalidatePath('/admin/preview/homepage');
@@ -375,6 +381,7 @@ export async function seedDefaultHomepageSectionsAction(): Promise<ActionRespons
       summary: `${created} سکشن پیش‌فرض صفحه اصلی بارگذاری شد.`,
     });
 
+    revalidatePath('/', 'layout');
     revalidatePath('/');
     revalidatePath('/admin/homepage');
     revalidatePath('/admin/preview/homepage');

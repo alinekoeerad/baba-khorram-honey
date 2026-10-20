@@ -8,43 +8,97 @@
     "background": "NONE",
     "internalName": "هیرو صفحه اصلی (معرفی برند)",
     "content": {
-      "type": "HERO",
-      "template": "hero-default",
       "schemaVersion": 1,
       "title": "عسل خالص و طبیعی باباخُرم",
       "subtitle": "برداشت مستقیم از بهترین مراتع ییلاقی ارسباران، با حفظ ۱۰۰٪ خواص زیستی و دارویی",
       "images": [
         {
-          "url": "/images/hero/photo_35.jpg",
-          "alt": "شهد زرین و کندوهای عسل طبیعی باباخُرم"
+          "desktopImageId": "ast_1792493943862_y0nfb",
+          "desktopImageUrl": "/uploads/photo_35-1792493943119-794c24-1280.webp",
+          "tabletImageId": null,
+          "tabletImageUrl": null,
+          "mobileImageId": "ast_1792493960829_pcxdc",
+          "mobileImageUrl": "/uploads/gemini_generated_image_x64k4wx64k4wx64k-1792493959117-da1a59-1536.webp",
+          "url": "/uploads/photo_35-1792493943119-794c24-1280.webp",
+          "alt": "شهد زرین و کندوهای عسل طبیعی باباخُرم",
+          "deviceTarget": "all",
+          "focalPoint": "center"
         },
         {
-          "url": "/images/hero/photo_32.jpg",
-          "alt": "مراتع سرسبز کوهستانی و زنبورداری سنتی"
+          "desktopImageId": "ast_1792493975085_8k49u",
+          "desktopImageUrl": "/uploads/gemini_generated_image_ozjepeozjepeozje-1792493973491-bb1551-2752.webp",
+          "tabletImageId": null,
+          "tabletImageUrl": null,
+          "mobileImageId": "ast_1792493980352_4zrrw",
+          "mobileImageUrl": "/uploads/photo_32-1792493979733-9e5435-852.webp",
+          "url": "/uploads/gemini_generated_image_ozjepeozjepeozje-1792493973491-bb1551-2752.webp",
+          "alt": "مراتع سرسبز کوهستانی و زنبورداری سنتی",
+          "deviceTarget": "all",
+          "focalPoint": "center"
         },
         {
-          "url": "/images/hero/photo_33.jpg",
-          "alt": "زنبورداران پرتلاش و متعهد باباخُرم"
+          "desktopImageId": "ast_1792493991880_r7ftt",
+          "desktopImageUrl": "/uploads/gemini_generated_image_wj83xlwj83xlwj83-1792493990229-81734b-2752.webp",
+          "tabletImageId": null,
+          "tabletImageUrl": null,
+          "mobileImageId": "ast_1792493997187_joqwn",
+          "mobileImageUrl": "/uploads/photo_33-1792493996568-88169a-852.webp",
+          "url": "/uploads/gemini_generated_image_wj83xlwj83xlwj83-1792493990229-81734b-2752.webp",
+          "alt": "زنبورداران پرتلاش و متعهد باباخُرم",
+          "deviceTarget": "all",
+          "focalPoint": "center"
         },
         {
-          "url": "/images/hero/photo_34.jpg",
-          "alt": "برداشت مستقیم عسل خالص از شان"
+          "desktopImageId": "ast_1792494006726_1xbgc",
+          "desktopImageUrl": "/uploads/gemini_generated_image_4icnaf4icnaf4icn-1792494005141-bb990f-2752.webp",
+          "tabletImageId": null,
+          "tabletImageUrl": null,
+          "mobileImageId": "ast_1792494011378_0gwrg",
+          "mobileImageUrl": "/uploads/photo_34-1792494010818-896d08-852.webp",
+          "url": "/uploads/gemini_generated_image_4icnaf4icnaf4icn-1792494005141-bb990f-2752.webp",
+          "alt": "برداشت مستقیم عسل خالص از شان",
+          "deviceTarget": "all",
+          "focalPoint": "center"
         },
         {
-          "url": "/images/hero/photo_36.jpg",
-          "alt": "کلونی‌های فعال زنبور عسل در طبیعت بکر"
+          "desktopImageId": "ast_1792494019704_75czt",
+          "desktopImageUrl": "/uploads/photo_36-1792494019333-5c939a-1024.webp",
+          "tabletImageId": null,
+          "tabletImageUrl": null,
+          "mobileImageId": "ast_1792494028753_77bgs",
+          "mobileImageUrl": "/uploads/gemini_generated_image_yvj030yvj030yvj0-1792494027174-db9a35-1536.webp",
+          "url": "/uploads/photo_36-1792494019333-5c939a-1024.webp",
+          "alt": "کلونی‌های فعال زنبور عسل در طبیعت بکر",
+          "deviceTarget": "all",
+          "focalPoint": "center"
         },
         {
+          "desktopImageId": null,
+          "desktopImageUrl": "/images/hero/photo_37.jpg",
+          "tabletImageId": null,
+          "tabletImageUrl": null,
+          "mobileImageId": null,
+          "mobileImageUrl": null,
           "url": "/images/hero/photo_37.jpg",
-          "alt": "عسل کوهستان با بالاترین درجه خلوص و اصالت"
+          "alt": "عسل کوهستان با بالاترین درجه خلوص و اصالت",
+          "deviceTarget": "all",
+          "focalPoint": "center"
         },
         {
-          "url": "/images/hero/photo_38.jpg",
-          "alt": "شهد ناب و طبیعی دامنه کوهستان"
+          "desktopImageId": "ast_1792494114852_rdqhm",
+          "desktopImageUrl": "/uploads/photo_38-1792494114207-8c4e95-1280.webp",
+          "tabletImageId": null,
+          "tabletImageUrl": null,
+          "mobileImageId": "ast_1792494123674_hdoob",
+          "mobileImageUrl": "/uploads/gemini_generated_image_tdwwntdwwntdwwnt-1792494122118-923132-1536.webp",
+          "url": "/uploads/photo_38-1792494114207-8c4e95-1280.webp",
+          "alt": "شهد ناب و طبیعی دامنه کوهستان",
+          "deviceTarget": "all",
+          "focalPoint": "center"
         }
       ]
     },
-    "updatedAt": "2026-10-12T14:42:49.664Z"
+    "updatedAt": "2026-10-20T11:02:05.063Z"
   },
   {
     "id": "sec_beekeeping_2",

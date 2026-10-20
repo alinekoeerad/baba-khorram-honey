@@ -31,7 +31,8 @@ function scanJsonForAsset(json: any, targetId: string, storageKey?: string): boo
   if (typeof json === 'object') {
     for (const [key, value] of Object.entries(json)) {
       if (
-        (key === 'id' || key === 'assetId' || key === 'mediaId' || key === 'imageId') &&
+        (key === 'id' || key === 'assetId' || key === 'mediaId' || key === 'imageId' ||
+         key === 'desktopImageId' || key === 'tabletImageId' || key === 'mobileImageId') &&
         value === targetId
       ) {
         return true;

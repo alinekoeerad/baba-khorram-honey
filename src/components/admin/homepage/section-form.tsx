@@ -6,11 +6,12 @@
  * Guarantees zero fields for CSS, custom fonts, or manual styling.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { ControlledLinkPicker } from './controlled-link-picker';
 import type { ControlledLink, SectionImage } from '@/server/validation/homepage-schemas';
 import { createHomepageSectionAction, updateHomepageSectionAction } from '@/server/actions/homepage-actions';
+import { uploadMediaAction } from '@/server/actions/media-actions';
 import type { SectionType, SectionStatus, SectionBackground } from '@prisma/client';
 import { parseLocalizedInt, toPersianDigits } from '@/lib/domain-utils';
 import {
@@ -23,9 +24,231 @@ import {
   Loader2,
   CheckCircle,
   ZoomIn,
+  Upload,
+  X,
+  Monitor,
+  Tablet,
+  Smartphone,
 } from 'lucide-react';
 import Link from 'next/link';
 import { ImageLightboxModal } from '@/components/admin/image-lightbox-modal';
+
+interface HeroArtDirectedSlotProps {
+  label: string;
+  guideline: string;
+  isRequired?: boolean;
+  imageUrl?: string | null;
+  imageId?: string | null;
+  aspectClass: string;
+  aspectBadge: string;
+  icon: React.ReactNode;
+  altText: string;
+  onChange: (url: string | null, id: string | null) => void;
+  onOpenLightbox: (url: string) => void;
+}
+
+function HeroArtDirectedSlot({
+  label,
+  guideline,
+  isRequired = false,
+  imageUrl,
+  imageId,
+  aspectClass,
+  aspectBadge,
+  icon,
+  altText,
+  onChange,
+  onOpenLightbox,
+}: HeroArtDirectedSlotProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleUploadFile = async (file: File) => {
+    if (!file) return;
+    setIsUploading(true);
+    setError(null);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('alt', altText || '');
+      const res = await uploadMediaAction(formData);
+      if (res.success && res.data) {
+        const url = res.data.url || (res.data.storageKey ? `/uploads/${res.data.storageKey}` : '');
+        onChange(url, res.data.id);
+      } else {
+        setError(res.error || 'خطا در بارگذاری تصویر');
+      }
+    } catch (err: any) {
+      setError(err?.message || 'خطا در بارگذاری تصویر');
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) handleUploadFile(file);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) handleUploadFile(file);
+  };
+
+  return (
+    <div className="p-3.5 bg-white border border-[#D5C7B8] rounded-none shadow-xs space-y-3 flex flex-col justify-between">
+      {/* Top Header */}
+      <div className="space-y-1.5">
+        <div className="flex items-center justify-between gap-1.5">
+          <div className="flex items-center gap-1.5">
+            {icon}
+            <span className="text-xs font-black text-stone-800">
+              {label}
+            </span>
+            {isRequired && <span className="text-amber-600 font-black">*</span>}
+          </div>
+          <span className="text-[10px] font-bold font-mono px-1.5 py-0.5 bg-stone-100 text-stone-700 border border-stone-200 rounded-none">
+            {aspectBadge}
+          </span>
+        </div>
+
+        {/* Dimension guideline banner */}
+        <div className="text-[11px] font-bold text-amber-950 bg-amber-50/90 border border-amber-200/90 p-2 leading-relaxed rounded-none">
+          {guideline}
+        </div>
+      </div>
+
+      {/* Hidden File Input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        onChange={handleFileChange}
+        className="hidden"
+      />
+
+      {/* Preview or Dropzone */}
+      <div className="space-y-2">
+        {imageUrl ? (
+          <div className="space-y-2">
+            {/* Aspect-ratio framed thumbnail */}
+            <div
+              onClick={() => onOpenLightbox(imageUrl)}
+              className={`w-full ${aspectClass} shrink-0 border border-[#D5C7B8] bg-[#FAF8F5] p-1 flex items-center justify-center overflow-hidden rounded-none shadow-xs relative group cursor-zoom-in`}
+              title="کلیک برای بزرگنمایی تصویر"
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onOpenLightbox(imageUrl);
+                }
+              }}
+            >
+              <img
+                src={imageUrl}
+                alt={altText || label}
+                className="w-full h-full object-cover rounded-none transition-transform duration-200 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white gap-1 pointer-events-none">
+                <ZoomIn className="w-4 h-4 text-amber-300 drop-shadow-sm" />
+                <span className="text-[10px] font-bold drop-shadow-sm">بزرگنمایی</span>
+              </div>
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploading}
+                className="flex-1 py-1 px-2 text-[11px] font-bold bg-[#FEF3C7] hover:bg-[#FDE68A] text-[#92400E] border border-amber-300 rounded-none transition-colors cursor-pointer text-center inline-flex items-center justify-center gap-1 disabled:opacity-50"
+              >
+                {isUploading ? (
+                  <>
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    <span>در حال بارگذاری...</span>
+                  </>
+                ) : (
+                  <>
+                    <Upload className="w-3 h-3" />
+                    <span>جایگزینی فایل</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onChange(null, null)}
+                className="py-1 px-2 text-[11px] font-bold text-rose-600 hover:bg-rose-50 border border-rose-200 rounded-none transition-colors cursor-pointer inline-flex items-center gap-1"
+                title="حذف این تصویر"
+              >
+                <X className="w-3 h-3" />
+                <span>حذف</span>
+              </button>
+            </div>
+          </div>
+        ) : (
+          /* Empty State Dropzone */
+          <div
+            onDragOver={(e) => {
+              e.preventDefault();
+              setIsDragging(true);
+            }}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
+            className={`w-full ${aspectClass} min-h-[100px] border-2 border-dashed rounded-none transition-all cursor-pointer flex flex-col items-center justify-center p-3 text-center ${
+              isDragging
+                ? 'border-[#D97706] bg-[#FEF3C7]/40'
+                : 'border-stone-300 bg-stone-50 hover:border-[#D97706] hover:bg-[#FFFBEB]/40'
+            }`}
+          >
+            {isUploading ? (
+              <div className="flex flex-col items-center gap-1.5 text-[#92400E]">
+                <Loader2 className="w-5 h-5 animate-spin text-[#D97706]" />
+                <span className="text-[11px] font-bold">در حال پردازش تصویر...</span>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center gap-1 text-stone-500">
+                <Upload className="w-4 h-4 text-stone-400" />
+                <span className="text-[11px] font-bold text-stone-700">کلیک یا رها کردن فایل</span>
+                <span className="text-[9px] text-stone-500">JPG, PNG, WebP</span>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Manual URL input */}
+        <div className="space-y-1 pt-1">
+          <label className="block text-[10px] font-bold text-stone-600">
+            یا آدرس مستقیم (URL):
+          </label>
+          <input
+            type="text"
+            required={isRequired}
+            value={imageUrl || ''}
+            onChange={(e) => onChange(e.target.value.trim() || null, imageId || null)}
+            placeholder={isRequired ? "مثلاً /images/hero/photo_35.jpg" : "اختیاری - یا خالی بگذارید"}
+            className="w-full h-8 px-2 text-[11px] font-mono font-bold bg-[#FDFBF8] border border-stone-300 rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B]"
+            dir="ltr"
+          />
+        </div>
+
+        {error && (
+          <div className="text-[10px] text-rose-700 font-bold bg-rose-50 p-1.5 border border-rose-200 rounded-none">
+            {error}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 interface SectionFormProps {
   initialData?: {
@@ -98,28 +321,72 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
   };
 
   // Helper for Hero & Gallery image management
-  const imagesList: SectionImage[] = Array.isArray(content.images) ? content.images : [];
+  const imagesList: any[] = Array.isArray(content.images) ? content.images : [];
 
   const handleAddImage = () => {
     const next = [
       ...imagesList,
       {
+        desktopImageUrl: '/images/hero/photo_35.jpg',
+        desktopImageId: null,
+        tabletImageUrl: null,
+        tabletImageId: null,
+        mobileImageUrl: null,
+        mobileImageId: null,
         url: '/images/hero/photo_35.jpg',
         alt: '',
-        deviceTarget: 'all' as const,
-        focalPoint: 'center' as const,
+        deviceTarget: 'all',
+        focalPoint: 'center',
       },
     ];
     updateContentField('images', next);
   };
 
+  const handleUpdateHeroSlot = (
+    index: number,
+    slot: 'desktop' | 'tablet' | 'mobile',
+    url: string | null,
+    id: string | null
+  ) => {
+    const next = imagesList.map((item: any, i: number) => {
+      if (i !== index) return item;
+      const updated = {
+        ...item,
+        desktopImageUrl: item.desktopImageUrl || item.url || '',
+      };
+      if (slot === 'desktop') {
+        updated.desktopImageUrl = url || '';
+        updated.desktopImageId = id || null;
+        updated.url = url || '';
+      } else if (slot === 'tablet') {
+        updated.tabletImageUrl = url || null;
+        updated.tabletImageId = id || null;
+      } else if (slot === 'mobile') {
+        updated.mobileImageUrl = url || null;
+        updated.mobileImageId = id || null;
+      }
+      return updated;
+    });
+    updateContentField('images', next);
+  };
+
   const handleUpdateImage = (
     index: number,
-    field: keyof SectionImage,
+    field: string,
     val: any
   ) => {
-    const next = [...imagesList];
-    next[index] = { ...next[index], [field]: val };
+    const next = imagesList.map((item: any, i: number) => {
+      if (i !== index) return item;
+      const updated = {
+        ...item,
+        desktopImageUrl: item.desktopImageUrl || item.url || '',
+        [field]: val,
+      };
+      if (field === 'desktopImageUrl') {
+        updated.url = val;
+      }
+      return updated;
+    });
     updateContentField('images', next);
   };
 
@@ -275,173 +542,164 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
               />
             </div>
 
-            {/* Images Manager (1 to 8 images) */}
+            {/* Images Manager (1 to 8 images with Responsive Art Direction) */}
             <div className="space-y-3 pt-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-black text-stone-800">
-                  تصاویر اسلایدر هیرو (بین ۱ تا ۸ تصویر)
-                </span>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-stone-200 pb-3">
+                <div>
+                  <span className="text-xs font-black text-stone-800">
+                    تصاویر اسلایدر هیرو (بین ۱ تا ۸ اسلاید با کارگردانی هنری ۳گانه)
+                  </span>
+                  <p className="text-[11px] text-stone-600 mt-0.5 leading-relaxed">
+                    برای هر اسلاید می‌توانید ۳ تصویر مستقل متناسب با کادر دسکتاپ، تبلت و موبایل تعیین کنید تا تصویر در هیچ دستگاهی بریده نشود.
+                  </p>
+                </div>
                 {imagesList.length < 8 && (
                   <button
                     type="button"
                     onClick={handleAddImage}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#FEF3C7] text-[#92400E] hover:bg-[#FDE68A] text-xs font-black rounded-none transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#FEF3C7] text-[#92400E] hover:bg-[#FDE68A] text-xs font-black rounded-none transition-colors cursor-pointer self-start sm:self-auto shrink-0 shadow-xs"
                   >
                     <Plus className="w-3.5 h-3.5" />
-                    <span>افزودن تصویر</span>
+                    <span>افزودن اسلاید جدید</span>
                   </button>
                 )}
               </div>
 
-              <div className="space-y-4">
-                {imagesList.map((img, idx) => (
-                  <div key={idx} className="p-4 bg-stone-50 border border-stone-200 rounded-none space-y-3 shadow-xs">
-                    {/* Slide Card Header with Badge, Reorder buttons, and Delete button */}
-                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-stone-200 pb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="px-2.5 py-1 bg-[#332115] text-[#FBBF24] font-black text-xs rounded-none border border-amber-600/30">
-                          اسلاید {toPersianDigits(idx + 1)}
-                        </span>
-                        {img.deviceTarget === 'mobile' && (
-                          <span className="text-[10px] font-bold bg-purple-100 text-purple-900 px-2 py-0.5 border border-purple-200 rounded-none">
-                            فقط موبایل
+              <div className="space-y-6">
+                {imagesList.map((img: any, idx: number) => {
+                  const desktopUrl = img.desktopImageUrl || img.url || '';
+                  const tabletUrl = img.tabletImageUrl || null;
+                  const mobileUrl = img.mobileImageUrl || null;
+
+                  return (
+                    <div key={idx} className="p-4 sm:p-5 bg-stone-50 border border-stone-200 rounded-none space-y-4 shadow-xs">
+                      {/* Slide Card Header with Badge, Reorder buttons, and Delete button */}
+                      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-stone-200 pb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="px-3 py-1 bg-[#332115] text-[#FBBF24] font-black text-xs rounded-none border border-amber-600/30">
+                            اسلاید {toPersianDigits(idx + 1)}
                           </span>
-                        )}
-                        {img.deviceTarget === 'desktop' && (
-                          <span className="text-[10px] font-bold bg-blue-100 text-blue-900 px-2 py-0.5 border border-blue-200 rounded-none">
-                            فقط دسکتاپ
+                          <span className="text-[11px] font-bold text-stone-600">
+                            (کارگردانی هنری ریسپانسیو)
                           </span>
-                        )}
-                      </div>
+                        </div>
 
-                      <div className="flex items-center gap-1.5">
-                        <button
-                          type="button"
-                          disabled={idx === 0}
-                          onClick={() => handleMoveImage(idx, 'up')}
-                          className="px-2.5 py-1 text-xs font-bold bg-white hover:bg-amber-50 text-[#332115] border border-stone-300 disabled:opacity-30 disabled:hover:bg-white rounded-none transition-colors cursor-pointer inline-flex items-center gap-1"
-                          title="▲ انتقال به بالا / قبلی"
-                        >
-                          <span>▲</span>
-                          <span>انتقال به بالا / قبلی</span>
-                        </button>
-
-                        <button
-                          type="button"
-                          disabled={idx === imagesList.length - 1}
-                          onClick={() => handleMoveImage(idx, 'down')}
-                          className="px-2.5 py-1 text-xs font-bold bg-white hover:bg-amber-50 text-[#332115] border border-stone-300 disabled:opacity-30 disabled:hover:bg-white rounded-none transition-colors cursor-pointer inline-flex items-center gap-1"
-                          title="▼ انتقال به پایین / بعدی"
-                        >
-                          <span>▼</span>
-                          <span>انتقال به پایین / بعدی</span>
-                        </button>
-
-                        {imagesList.length > 1 && (
+                        <div className="flex items-center gap-1.5">
                           <button
                             type="button"
-                            onClick={() => handleRemoveImage(idx)}
-                            className="p-1.5 text-rose-600 hover:bg-rose-50 border border-rose-200 rounded-none transition-colors cursor-pointer inline-flex items-center gap-1 text-xs font-bold"
-                            title="حذف این اسلاید"
+                            disabled={idx === 0}
+                            onClick={() => handleMoveImage(idx, 'up')}
+                            className="px-2.5 py-1 text-xs font-bold bg-white hover:bg-amber-50 text-[#332115] border border-stone-300 disabled:opacity-30 disabled:hover:bg-white rounded-none transition-colors cursor-pointer inline-flex items-center gap-1"
+                            title="▲ انتقال به بالا / قبلی"
                           >
-                            <Trash2 className="w-3.5 h-3.5" />
-                            <span className="hidden sm:inline">حذف</span>
+                            <span>▲</span>
+                            <span>انتقال به بالا</span>
                           </button>
-                        )}
-                      </div>
-                    </div>
 
-                    <div className="flex flex-col sm:flex-row gap-4 items-start">
-                      {/* Click-to-Zoom Thumbnail */}
-                      <div
-                        onClick={() => setLightboxUrl(img.url)}
-                        className="w-24 h-24 sm:w-28 sm:h-28 shrink-0 border border-[#D5C7B8] bg-[#FAF8F5] p-1 flex items-center justify-center overflow-hidden rounded-none shadow-xs relative group cursor-zoom-in"
-                        title="کلیک برای بزرگنمایی تصویر"
-                        role="button"
-                        tabIndex={0}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            setLightboxUrl(img.url);
-                          }
-                        }}
-                      >
-                        <img
-                          src={img.url}
-                          alt={img.alt || ''}
-                          className="w-full h-full object-cover rounded-none transition-transform duration-200 group-hover:scale-105"
+                          <button
+                            type="button"
+                            disabled={idx === imagesList.length - 1}
+                            onClick={() => handleMoveImage(idx, 'down')}
+                            className="px-2.5 py-1 text-xs font-bold bg-white hover:bg-amber-50 text-[#332115] border border-stone-300 disabled:opacity-30 disabled:hover:bg-white rounded-none transition-colors cursor-pointer inline-flex items-center gap-1"
+                            title="▼ انتقال به پایین / بعدی"
+                          >
+                            <span>▼</span>
+                            <span>انتقال به پایین</span>
+                          </button>
+
+                          {imagesList.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveImage(idx)}
+                              className="p-1.5 text-rose-600 hover:bg-rose-50 border border-rose-200 rounded-none transition-colors cursor-pointer inline-flex items-center gap-1 text-xs font-bold"
+                              title="حذف این اسلاید"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                              <span className="hidden sm:inline">حذف اسلاید</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Slide Metadata: Alt Text & Focal Point */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-white p-3 border border-stone-200 rounded-none">
+                        <div className="space-y-1">
+                          <label className="block text-[11px] font-bold text-stone-700">متن جایگزین (Alt) برای سئو و دسترس‌پذیری</label>
+                          <input
+                            type="text"
+                            value={img.alt || ''}
+                            onChange={(e) => handleUpdateImage(idx, 'alt', e.target.value)}
+                            placeholder="توضیح تصویر (مثلاً شهد زرین و کندوهای عسل باباخُرم)"
+                            className="w-full h-9 px-2.5 text-xs font-bold bg-[#FDFBF8] border border-stone-300 rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B]"
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="block text-[11px] font-bold text-stone-700">نقطه کانونی تصویر (focalPoint)</label>
+                          <select
+                            value={img.focalPoint || 'center'}
+                            onChange={(e) => handleUpdateImage(idx, 'focalPoint', e.target.value)}
+                            className="w-full h-9 px-2 text-xs font-bold bg-[#FDFBF8] border border-stone-300 rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B]"
+                          >
+                            <option value="center">مرکز تصویر (پیشفرض)</option>
+                            <option value="top">بالای تصویر</option>
+                            <option value="bottom">پایین تصویر</option>
+                            <option value="right">سمت راست تصویر</option>
+                            <option value="left">سمت چپ تصویر</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* 3 Clear Responsive Art Direction Slots */}
+                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3.5 pt-1">
+                        {/* 1. Desktop Slot (Primary / Required) */}
+                        <HeroArtDirectedSlot
+                          label="تصویر دسکتاپ و لپتاپ (اصلی)"
+                          guideline="💡 نسبت پیشنهادی: افقی عریض (مثلاً ۱۹۲۰ در ۸۰۰ پیکسل)"
+                          isRequired={true}
+                          imageUrl={desktopUrl}
+                          imageId={img.desktopImageId || null}
+                          aspectClass="aspect-[21/9]"
+                          aspectBadge="افقی عریض (۲۱:۹)"
+                          icon={<Monitor className="w-4 h-4 text-amber-700" />}
+                          altText={img.alt || ''}
+                          onChange={(url, id) => handleUpdateHeroSlot(idx, 'desktop', url, id)}
+                          onOpenLightbox={setLightboxUrl}
                         />
-                        <div className="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white gap-1 pointer-events-none">
-                          <ZoomIn className="w-4 h-4 text-amber-300 drop-shadow-sm" />
-                          <span className="text-[9px] font-bold drop-shadow-sm">بزرگنمایی</span>
-                        </div>
-                      </div>
 
-                      {/* Inputs Grid */}
-                      <div className="flex-1 space-y-2.5 w-full">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                          <div className="space-y-1">
-                            <label className="block text-[11px] font-bold text-stone-700">آدرس تصویر (URL) *</label>
-                            <input
-                              type="text"
-                              required
-                              value={img.url}
-                              onChange={(e) => handleUpdateImage(idx, 'url', e.target.value)}
-                              placeholder="مثلاً /images/hero/photo_35.jpg"
-                              className="w-full h-9 px-2.5 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B] font-mono"
-                              dir="ltr"
-                            />
-                          </div>
-                          <div className="space-y-1">
-                            <label className="block text-[11px] font-bold text-stone-700">متن جایگزین (Alt)</label>
-                            <input
-                              type="text"
-                              value={img.alt || ''}
-                              onChange={(e) => handleUpdateImage(idx, 'alt', e.target.value)}
-                              placeholder="توضیح تصویر برای دسترس‌پذیری"
-                              className="w-full h-9 px-2.5 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
-                            />
-                          </div>
-                        </div>
+                        {/* 2. Tablet Slot (Optional) */}
+                        <HeroArtDirectedSlot
+                          label="تصویر تبلت (اختیاری)"
+                          guideline="💡 نسبت پیشنهادی: ۴ به ۳ یا مربعی (مثلاً ۱۰۲۴ در ۷۶۸ پیکسل) - در صورت عدم انتخاب، تصویر دسکتاپ نمایش داده میشود."
+                          isRequired={false}
+                          imageUrl={tabletUrl}
+                          imageId={img.tabletImageId || null}
+                          aspectClass="aspect-[4/3]"
+                          aspectBadge="۴:۳ یا مربعی"
+                          icon={<Tablet className="w-4 h-4 text-blue-700" />}
+                          altText={img.alt || ''}
+                          onChange={(url, id) => handleUpdateHeroSlot(idx, 'tablet', url, id)}
+                          onOpenLightbox={setLightboxUrl}
+                        />
 
-                        {/* Device Target and Focal Point Selectors */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 border-t border-stone-200">
-                          <div className="space-y-1">
-                            <label className="block text-[11px] font-bold text-stone-700">
-                              نمایش در دستگاه (deviceTarget):
-                            </label>
-                            <select
-                              value={img.deviceTarget || 'all'}
-                              onChange={(e) => handleUpdateImage(idx, 'deviceTarget', e.target.value)}
-                              className="w-full h-9 px-2 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
-                            >
-                              <option value="all">همه دستگاهها (موبایل و دسکتاپ)</option>
-                              <option value="desktop">فقط دسکتاپ (مناسب تصاویر افقی/عریض)</option>
-                              <option value="mobile">فقط موبایل (مناسب تصاویر عمودی)</option>
-                            </select>
-                          </div>
-
-                          <div className="space-y-1">
-                            <label className="block text-[11px] font-bold text-stone-700">
-                              نقطه کانونی تصویر (focalPoint):
-                            </label>
-                            <select
-                              value={img.focalPoint || 'center'}
-                              onChange={(e) => handleUpdateImage(idx, 'focalPoint', e.target.value)}
-                              className="w-full h-9 px-2 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
-                            >
-                              <option value="center">مرکز تصویر (پیشفرض)</option>
-                              <option value="top">بالای تصویر</option>
-                              <option value="bottom">پایین تصویر</option>
-                              <option value="right">سمت راست تصویر</option>
-                              <option value="left">سمت چپ تصویر</option>
-                            </select>
-                          </div>
-                        </div>
+                        {/* 3. Mobile Slot (Optional) */}
+                        <HeroArtDirectedSlot
+                          label="تصویر موبایل (اختیاری)"
+                          guideline="💡 نسبت پیشنهادی: عمودی ۴ به ۵ یا ۹ به ۱۶ (مثلاً ۸۰۰ در ۱۰۰۰ پیکسل) - در صورت عدم انتخاب، تصویر دسکتاپ نمایش داده میشود."
+                          isRequired={false}
+                          imageUrl={mobileUrl}
+                          imageId={img.mobileImageId || null}
+                          aspectClass="aspect-[4/5]"
+                          aspectBadge="عمودی (۴:۵ یا ۹:۱۶)"
+                          icon={<Smartphone className="w-4 h-4 text-purple-700" />}
+                          altText={img.alt || ''}
+                          onChange={(url, id) => handleUpdateHeroSlot(idx, 'mobile', url, id)}
+                          onOpenLightbox={setLightboxUrl}
+                        />
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>

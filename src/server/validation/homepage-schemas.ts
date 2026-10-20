@@ -97,9 +97,58 @@ export const sectionImageSchema = z.object({
   alt: z.string().max(200, 'متن جایگزین حداکثر ۲۰۰ کاراکتر است').default(''),
   deviceTarget: deviceTargetEnum.optional().default('all'),
   focalPoint: focalPointEnum.optional().default('center'),
+  desktopImageId: z.string().optional().nullable(),
+  desktopImageUrl: z.string().optional().nullable(),
+  tabletImageId: z.string().optional().nullable(),
+  tabletImageUrl: z.string().optional().nullable(),
+  mobileImageId: z.string().optional().nullable(),
+  mobileImageUrl: z.string().optional().nullable(),
 });
 
 export type SectionImage = z.infer<typeof sectionImageSchema>;
+
+/**
+ * Hero Slide Schema supporting Art Direction:
+ * - desktopImageId / desktopImageUrl (Primary / Required)
+ * - tabletImageId / tabletImageUrl (Optional fallback to desktop)
+ * - mobileImageId / mobileImageUrl (Optional fallback to desktop)
+ * - Backward compatibility: auto-maps legacy `url` / `src` to `desktopImageUrl`
+ */
+export const heroSlideSchema = z.preprocess((val: any) => {
+  if (typeof val === 'object' && val !== null) {
+    const desktopUrl = (val.desktopImageUrl || val.url || val.src || '').trim();
+    const desktopId = val.desktopImageId || null;
+    const tabletUrl = val.tabletImageUrl ? String(val.tabletImageUrl).trim() : null;
+    const tabletId = val.tabletImageId || null;
+    const mobileUrl = val.mobileImageUrl ? String(val.mobileImageUrl).trim() : null;
+    const mobileId = val.mobileImageId || null;
+
+    return {
+      ...val,
+      desktopImageUrl: desktopUrl,
+      desktopImageId: desktopId,
+      tabletImageUrl: tabletUrl,
+      tabletImageId: tabletId,
+      mobileImageUrl: mobileUrl,
+      mobileImageId: mobileId,
+      url: desktopUrl,
+    };
+  }
+  return val;
+}, z.object({
+  desktopImageId: z.string().optional().nullable(),
+  desktopImageUrl: z.string().min(1, 'تصویر دسکتاپ (اصلی) الزامی است').trim(),
+  tabletImageId: z.string().optional().nullable(),
+  tabletImageUrl: z.string().optional().nullable(),
+  mobileImageId: z.string().optional().nullable(),
+  mobileImageUrl: z.string().optional().nullable(),
+  url: z.string().min(1, 'تصویر دسکتاپ (اصلی) الزامی است').trim(),
+  alt: z.string().max(200, 'متن جایگزین حداکثر ۲۰۰ کاراکتر است').default(''),
+  deviceTarget: deviceTargetEnum.optional().default('all'),
+  focalPoint: focalPointEnum.optional().default('center'),
+}));
+
+export type HeroSlide = z.infer<typeof heroSlideSchema>;
 
 // ---------------------------------------------------------------
 // Per-Type Content Schemas
@@ -110,7 +159,7 @@ export const heroContentSchema = z.object({
   schemaVersion: z.literal(1).default(1),
   title: z.string().min(1, 'عنوان هیرو الزامی است').max(120, 'عنوان حداکثر ۱۲۰ کاراکتر است').trim(),
   subtitle: z.string().max(250, 'زیرعنوان حداکثر ۲۵۰ کاراکتر است').optional().nullable(),
-  images: z.array(sectionImageSchema).min(1, 'حداقل ۱ تصویر الزامی است').max(8, 'حداکثر ۸ تصویر مجاز است'),
+  images: z.array(heroSlideSchema).min(1, 'حداقل ۱ تصویر الزامی است').max(8, 'حداکثر ۸ تصویر مجاز است'),
   preserved: z.record(z.string(), z.any()).optional(),
 });
 

@@ -2518,5 +2518,526 @@
     "createdById": "usr_1791465544331_so4k7",
     "createdAt": "2026-10-18T12:18:31.386Z",
     "updatedAt": "2026-10-18T12:18:31.386Z"
+  },
+  {
+    "id": "ast_1792493943862_y0nfb",
+    "storageKey": "photo_35-1792493943119-794c24-1280.webp",
+    "mime": "image/webp",
+    "bytes": 65424,
+    "width": 1280,
+    "height": 800,
+    "blurDataUrl": "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAADwAQCdASoQAAoABABoJbACdAEe1Jah8AAA/u7m60Vo9hueOzsqNo2UVBHwmObLkhAfKT4jj9AdOsLS2WijQAAA",
+    "variants": {
+      "480": {
+        "key": "photo_35-1792493943119-794c24-480.webp",
+        "url": "/uploads/photo_35-1792493943119-794c24-480.webp",
+        "width": 480,
+        "height": 300,
+        "bytes": 19980
+      },
+      "768": {
+        "key": "photo_35-1792493943119-794c24-768.webp",
+        "url": "/uploads/photo_35-1792493943119-794c24-768.webp",
+        "width": 768,
+        "height": 480,
+        "bytes": 35140
+      },
+      "1200": {
+        "key": "photo_35-1792493943119-794c24-1200.webp",
+        "url": "/uploads/photo_35-1792493943119-794c24-1200.webp",
+        "width": 1200,
+        "height": 750,
+        "bytes": 59962
+      },
+      "1280": {
+        "key": "photo_35-1792493943119-794c24-1280.webp",
+        "url": "/uploads/photo_35-1792493943119-794c24-1280.webp",
+        "width": 1280,
+        "height": 800,
+        "bytes": 65424
+      }
+    },
+    "alt": "شهد زرین و کندوهای عسل طبیعی باباخُرم",
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-20T10:59:03.862Z",
+    "updatedAt": "2026-10-20T10:59:03.862Z",
+    "url": "/uploads/photo_35-1792493943119-794c24-1280.webp"
+  },
+  {
+    "id": "ast_1792493960829_pcxdc",
+    "storageKey": "gemini_generated_image_x64k4wx64k4wx64k-1792493959117-da1a59-1536.webp",
+    "mime": "image/webp",
+    "bytes": 422020,
+    "width": 1536,
+    "height": 2752,
+    "blurDataUrl": "data:image/webp;base64,UklGRpYAAABXRUJQVlA4IIoAAACwBACdASoQAB0APxFwsFAsJiSisAgBgCIJaACdMoR2WCLTfeUvCJmA+M00j1MAAP67a9fRuLS6ESNaiW7Aqa0z36En1KS2aQlf3WBc172swR4RkRJzjFELPHwfM1nm4hx/agObIX0+pbKSYY8iAeEG8cpUtm9ATzzLKw4Xb1MfnRl5IRzIlaUgAAA=",
+    "variants": {
+      "480": {
+        "key": "gemini_generated_image_x64k4wx64k4wx64k-1792493959117-da1a59-480.webp",
+        "url": "/uploads/gemini_generated_image_x64k4wx64k4wx64k-1792493959117-da1a59-480.webp",
+        "width": 480,
+        "height": 860,
+        "bytes": 79216
+      },
+      "768": {
+        "key": "gemini_generated_image_x64k4wx64k4wx64k-1792493959117-da1a59-768.webp",
+        "url": "/uploads/gemini_generated_image_x64k4wx64k4wx64k-1792493959117-da1a59-768.webp",
+        "width": 768,
+        "height": 1376,
+        "bytes": 153648
+      },
+      "1200": {
+        "key": "gemini_generated_image_x64k4wx64k4wx64k-1792493959117-da1a59-1200.webp",
+        "url": "/uploads/gemini_generated_image_x64k4wx64k4wx64k-1792493959117-da1a59-1200.webp",
+        "width": 1200,
+        "height": 2150,
+        "bytes": 290220
+      },
+      "1536": {
+        "key": "gemini_generated_image_x64k4wx64k4wx64k-1792493959117-da1a59-1536.webp",
+        "url": "/uploads/gemini_generated_image_x64k4wx64k4wx64k-1792493959117-da1a59-1536.webp",
+        "width": 1536,
+        "height": 2752,
+        "bytes": 422020
+      }
+    },
+    "alt": "شهد زرین و کندوهای عسل طبیعی باباخُرم",
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-20T10:59:20.829Z",
+    "updatedAt": "2026-10-20T10:59:20.829Z",
+    "url": "/uploads/gemini_generated_image_x64k4wx64k4wx64k-1792493959117-da1a59-1536.webp"
+  },
+  {
+    "id": "ast_1792493975085_8k49u",
+    "storageKey": "gemini_generated_image_ozjepeozjepeozje-1792493973491-bb1551-2752.webp",
+    "mime": "image/webp",
+    "bytes": 432326,
+    "width": 2752,
+    "height": 1536,
+    "blurDataUrl": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADQAQCdASoQAAkABABoJZgCdAEPPrsmAAD+7P7BkUWpGxxGPV3gqLfWdj29AgH2Sgyp4jvdQw3n2KLx9jMgKxgpr65RjQI+QPIdBLCBAAA=",
+    "variants": {
+      "480": {
+        "key": "gemini_generated_image_ozjepeozjepeozje-1792493973491-bb1551-480.webp",
+        "url": "/uploads/gemini_generated_image_ozjepeozjepeozje-1792493973491-bb1551-480.webp",
+        "width": 480,
+        "height": 268,
+        "bytes": 34792
+      },
+      "768": {
+        "key": "gemini_generated_image_ozjepeozjepeozje-1792493973491-bb1551-768.webp",
+        "url": "/uploads/gemini_generated_image_ozjepeozjepeozje-1792493973491-bb1551-768.webp",
+        "width": 768,
+        "height": 429,
+        "bytes": 67532
+      },
+      "1200": {
+        "key": "gemini_generated_image_ozjepeozjepeozje-1792493973491-bb1551-1200.webp",
+        "url": "/uploads/gemini_generated_image_ozjepeozjepeozje-1792493973491-bb1551-1200.webp",
+        "width": 1200,
+        "height": 670,
+        "bytes": 126142
+      },
+      "1920": {
+        "key": "gemini_generated_image_ozjepeozjepeozje-1792493973491-bb1551-1920.webp",
+        "url": "/uploads/gemini_generated_image_ozjepeozjepeozje-1792493973491-bb1551-1920.webp",
+        "width": 1920,
+        "height": 1072,
+        "bytes": 247604
+      },
+      "2752": {
+        "key": "gemini_generated_image_ozjepeozjepeozje-1792493973491-bb1551-2752.webp",
+        "url": "/uploads/gemini_generated_image_ozjepeozjepeozje-1792493973491-bb1551-2752.webp",
+        "width": 2752,
+        "height": 1536,
+        "bytes": 432326
+      }
+    },
+    "alt": "مراتع سرسبز کوهستانی و زنبورداری سنتی",
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-20T10:59:35.085Z",
+    "updatedAt": "2026-10-20T10:59:35.085Z",
+    "url": "/uploads/gemini_generated_image_ozjepeozjepeozje-1792493973491-bb1551-2752.webp"
+  },
+  {
+    "id": "ast_1792493980352_4zrrw",
+    "storageKey": "photo_32-1792493979733-9e5435-852.webp",
+    "mime": "image/webp",
+    "bytes": 135108,
+    "width": 852,
+    "height": 1217,
+    "blurDataUrl": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAAAQBACdASoQABcAPxFysFAsJqSisAgBgCIJbACdMoR3ACiYZnXm1zf0AAD+22OvI/JWfCFc8vdM4mLGhq5Hy9foeowYZPfkF+XQIQVEVKSq9cgL43MCvroyya9iF3h3fno8aNeYKz+M1+/7X0RtR7y8Pvc0RIMIf2CMupXZIsyUT0e1sv3drYeVgSL3pnTPPGEjT/gA",
+    "variants": {
+      "480": {
+        "key": "photo_32-1792493979733-9e5435-480.webp",
+        "url": "/uploads/photo_32-1792493979733-9e5435-480.webp",
+        "width": 480,
+        "height": 686,
+        "bytes": 61630
+      },
+      "768": {
+        "key": "photo_32-1792493979733-9e5435-768.webp",
+        "url": "/uploads/photo_32-1792493979733-9e5435-768.webp",
+        "width": 768,
+        "height": 1097,
+        "bytes": 115650
+      },
+      "852": {
+        "key": "photo_32-1792493979733-9e5435-852.webp",
+        "url": "/uploads/photo_32-1792493979733-9e5435-852.webp",
+        "width": 852,
+        "height": 1217,
+        "bytes": 135108
+      }
+    },
+    "alt": "مراتع سرسبز کوهستانی و زنبورداری سنتی",
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-20T10:59:40.352Z",
+    "updatedAt": "2026-10-20T10:59:40.352Z",
+    "url": "/uploads/photo_32-1792493979733-9e5435-852.webp"
+  },
+  {
+    "id": "ast_1792493991880_r7ftt",
+    "storageKey": "gemini_generated_image_wj83xlwj83xlwj83-1792493990229-81734b-2752.webp",
+    "mime": "image/webp",
+    "bytes": 414936,
+    "width": 2752,
+    "height": 1536,
+    "blurDataUrl": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAAAQAgCdASoQAAkABABoJbACdAEW0/pOP6BAAP7p22QilEZDD8XwHEEOg8V6vWHZiORhC+mCl9aiW24d5AfV72mIRnbPEhgA",
+    "variants": {
+      "480": {
+        "key": "gemini_generated_image_wj83xlwj83xlwj83-1792493990229-81734b-480.webp",
+        "url": "/uploads/gemini_generated_image_wj83xlwj83xlwj83-1792493990229-81734b-480.webp",
+        "width": 480,
+        "height": 268,
+        "bytes": 41324
+      },
+      "768": {
+        "key": "gemini_generated_image_wj83xlwj83xlwj83-1792493990229-81734b-768.webp",
+        "url": "/uploads/gemini_generated_image_wj83xlwj83xlwj83-1792493990229-81734b-768.webp",
+        "width": 768,
+        "height": 429,
+        "bytes": 80652
+      },
+      "1200": {
+        "key": "gemini_generated_image_wj83xlwj83xlwj83-1792493990229-81734b-1200.webp",
+        "url": "/uploads/gemini_generated_image_wj83xlwj83xlwj83-1792493990229-81734b-1200.webp",
+        "width": 1200,
+        "height": 670,
+        "bytes": 150114
+      },
+      "1920": {
+        "key": "gemini_generated_image_wj83xlwj83xlwj83-1792493990229-81734b-1920.webp",
+        "url": "/uploads/gemini_generated_image_wj83xlwj83xlwj83-1792493990229-81734b-1920.webp",
+        "width": 1920,
+        "height": 1072,
+        "bytes": 266036
+      },
+      "2752": {
+        "key": "gemini_generated_image_wj83xlwj83xlwj83-1792493990229-81734b-2752.webp",
+        "url": "/uploads/gemini_generated_image_wj83xlwj83xlwj83-1792493990229-81734b-2752.webp",
+        "width": 2752,
+        "height": 1536,
+        "bytes": 414936
+      }
+    },
+    "alt": "زنبورداران پرتلاش و متعهد باباخُرم",
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-20T10:59:51.880Z",
+    "updatedAt": "2026-10-20T10:59:51.880Z",
+    "url": "/uploads/gemini_generated_image_wj83xlwj83xlwj83-1792493990229-81734b-2752.webp"
+  },
+  {
+    "id": "ast_1792493997187_joqwn",
+    "storageKey": "photo_33-1792493996568-88169a-852.webp",
+    "mime": "image/webp",
+    "bytes": 131482,
+    "width": 852,
+    "height": 1215,
+    "blurDataUrl": "data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAADQBACdASoQABcAPxFysFAsJqSisAgBgCIJbACdMoR3IszApJq1MB2wJbVg2bbTwAD+2Vdw8IozVT9HdvKUFCXyPe28Cc0NTxRWNVkuft+82rxe6ITqlkt7rF0GpfvFz8efT9vvmfp/0PER6MzcC8HMsWgk2hooJtdhfFANSRFyZNfWOtCaeb0Ez82YTN7Dxmcl25R33Q+AAA==",
+    "variants": {
+      "480": {
+        "key": "photo_33-1792493996568-88169a-480.webp",
+        "url": "/uploads/photo_33-1792493996568-88169a-480.webp",
+        "width": 480,
+        "height": 685,
+        "bytes": 60832
+      },
+      "768": {
+        "key": "photo_33-1792493996568-88169a-768.webp",
+        "url": "/uploads/photo_33-1792493996568-88169a-768.webp",
+        "width": 768,
+        "height": 1095,
+        "bytes": 116802
+      },
+      "852": {
+        "key": "photo_33-1792493996568-88169a-852.webp",
+        "url": "/uploads/photo_33-1792493996568-88169a-852.webp",
+        "width": 852,
+        "height": 1215,
+        "bytes": 131482
+      }
+    },
+    "alt": "زنبورداران پرتلاش و متعهد باباخُرم",
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-20T10:59:57.187Z",
+    "updatedAt": "2026-10-20T10:59:57.187Z",
+    "url": "/uploads/photo_33-1792493996568-88169a-852.webp"
+  },
+  {
+    "id": "ast_1792494006726_1xbgc",
+    "storageKey": "gemini_generated_image_4icnaf4icnaf4icn-1792494005141-bb990f-2752.webp",
+    "mime": "image/webp",
+    "bytes": 406488,
+    "width": 2752,
+    "height": 1536,
+    "blurDataUrl": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAACwAQCdASoQAAkABABoJZACdAC3NjIQAOFXrJD9xemIDmRW7gK8I3WiulRFHgDdC3jWR8HfjvOejkbMpKYu/lAN1GRuga4pS6lJ0dVgEB5YPVzm3/oAAA==",
+    "variants": {
+      "480": {
+        "key": "gemini_generated_image_4icnaf4icnaf4icn-1792494005141-bb990f-480.webp",
+        "url": "/uploads/gemini_generated_image_4icnaf4icnaf4icn-1792494005141-bb990f-480.webp",
+        "width": 480,
+        "height": 268,
+        "bytes": 24094
+      },
+      "768": {
+        "key": "gemini_generated_image_4icnaf4icnaf4icn-1792494005141-bb990f-768.webp",
+        "url": "/uploads/gemini_generated_image_4icnaf4icnaf4icn-1792494005141-bb990f-768.webp",
+        "width": 768,
+        "height": 429,
+        "bytes": 46142
+      },
+      "1200": {
+        "key": "gemini_generated_image_4icnaf4icnaf4icn-1792494005141-bb990f-1200.webp",
+        "url": "/uploads/gemini_generated_image_4icnaf4icnaf4icn-1792494005141-bb990f-1200.webp",
+        "width": 1200,
+        "height": 670,
+        "bytes": 86858
+      },
+      "1920": {
+        "key": "gemini_generated_image_4icnaf4icnaf4icn-1792494005141-bb990f-1920.webp",
+        "url": "/uploads/gemini_generated_image_4icnaf4icnaf4icn-1792494005141-bb990f-1920.webp",
+        "width": 1920,
+        "height": 1072,
+        "bytes": 176052
+      },
+      "2752": {
+        "key": "gemini_generated_image_4icnaf4icnaf4icn-1792494005141-bb990f-2752.webp",
+        "url": "/uploads/gemini_generated_image_4icnaf4icnaf4icn-1792494005141-bb990f-2752.webp",
+        "width": 2752,
+        "height": 1536,
+        "bytes": 406488
+      }
+    },
+    "alt": "برداشت مستقیم عسل خالص از شان",
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-20T11:00:06.726Z",
+    "updatedAt": "2026-10-20T11:00:06.726Z",
+    "url": "/uploads/gemini_generated_image_4icnaf4icnaf4icn-1792494005141-bb990f-2752.webp"
+  },
+  {
+    "id": "ast_1792494011378_0gwrg",
+    "storageKey": "photo_34-1792494010818-896d08-852.webp",
+    "mime": "image/webp",
+    "bytes": 128692,
+    "width": 852,
+    "height": 1216,
+    "blurDataUrl": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAACwBACdASoQABcAPxFysFAsJqSisAgBgCIJZgCdMoR4PoACrdmyTfwqUuLbodMAAP4+5gYBqatYRQAMI6uUV/63QR5IJdiYCmwI83tnhnjlewLkdVyGpPIzDXYIEBjxaD5haWHPvFTstyaqMKxg5orfrH/7WVMmrnzJUVblnidr+xp+NSlxpQhs3CIMwbNtucK8NHpeypdeGr3nRbgAAA==",
+    "variants": {
+      "480": {
+        "key": "photo_34-1792494010818-896d08-480.webp",
+        "url": "/uploads/photo_34-1792494010818-896d08-480.webp",
+        "width": 480,
+        "height": 685,
+        "bytes": 54906
+      },
+      "768": {
+        "key": "photo_34-1792494010818-896d08-768.webp",
+        "url": "/uploads/photo_34-1792494010818-896d08-768.webp",
+        "width": 768,
+        "height": 1096,
+        "bytes": 111568
+      },
+      "852": {
+        "key": "photo_34-1792494010818-896d08-852.webp",
+        "url": "/uploads/photo_34-1792494010818-896d08-852.webp",
+        "width": 852,
+        "height": 1216,
+        "bytes": 128692
+      }
+    },
+    "alt": "برداشت مستقیم عسل خالص از شان",
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-20T11:00:11.377Z",
+    "updatedAt": "2026-10-20T11:00:11.377Z",
+    "url": "/uploads/photo_34-1792494010818-896d08-852.webp"
+  },
+  {
+    "id": "ast_1792494019704_75czt",
+    "storageKey": "photo_36-1792494019333-5c939a-1024.webp",
+    "mime": "image/webp",
+    "bytes": 134246,
+    "width": 1024,
+    "height": 682,
+    "blurDataUrl": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAABQAgCdASoQAAsABABoJbACdAEREdZ+nYOVSwAA+FvaidEx3/6nxGo4wlrI5/tJEFliq+DjwW7x+5+BUIv029xsPIOD+WZE+8BCF0RN8hFS9LzQ2J7ImN7vNgM0KtKAAAA=",
+    "variants": {
+      "480": {
+        "key": "photo_36-1792494019333-5c939a-480.webp",
+        "url": "/uploads/photo_36-1792494019333-5c939a-480.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 48110
+      },
+      "768": {
+        "key": "photo_36-1792494019333-5c939a-768.webp",
+        "url": "/uploads/photo_36-1792494019333-5c939a-768.webp",
+        "width": 768,
+        "height": 512,
+        "bytes": 95632
+      },
+      "1024": {
+        "key": "photo_36-1792494019333-5c939a-1024.webp",
+        "url": "/uploads/photo_36-1792494019333-5c939a-1024.webp",
+        "width": 1024,
+        "height": 682,
+        "bytes": 134246
+      }
+    },
+    "alt": "کلونی‌های فعال زنبور عسل در طبیعت بکر",
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-20T11:00:19.704Z",
+    "updatedAt": "2026-10-20T11:00:19.704Z",
+    "url": "/uploads/photo_36-1792494019333-5c939a-1024.webp"
+  },
+  {
+    "id": "ast_1792494028753_77bgs",
+    "storageKey": "gemini_generated_image_yvj030yvj030yvj0-1792494027174-db9a35-1536.webp",
+    "mime": "image/webp",
+    "bytes": 471176,
+    "width": 1536,
+    "height": 2752,
+    "blurDataUrl": "data:image/webp;base64,UklGRqwAAABXRUJQVlA4IKAAAABQBACdASoQAB0APxFysFAsJqSisAgBgCIJbACdMoACIMLDn8hGLqzFYhQAAP4zzcfzlsFBnjuhNAdIYpjhpnwba+vijzsDte6RgY8C1yRBREii6zWbLr5scf5v/iLBWml7uOGQJJLO+ebrcsyaz1qgyGWKgmfNFiZNX8JNgRp3Fv0jxD7eeJ4KU41+21XmT83/X9pWpKJVJTWgJYWKL0AA",
+    "variants": {
+      "480": {
+        "key": "gemini_generated_image_yvj030yvj030yvj0-1792494027174-db9a35-480.webp",
+        "url": "/uploads/gemini_generated_image_yvj030yvj030yvj0-1792494027174-db9a35-480.webp",
+        "width": 480,
+        "height": 860,
+        "bytes": 103818
+      },
+      "768": {
+        "key": "gemini_generated_image_yvj030yvj030yvj0-1792494027174-db9a35-768.webp",
+        "url": "/uploads/gemini_generated_image_yvj030yvj030yvj0-1792494027174-db9a35-768.webp",
+        "width": 768,
+        "height": 1376,
+        "bytes": 194884
+      },
+      "1200": {
+        "key": "gemini_generated_image_yvj030yvj030yvj0-1792494027174-db9a35-1200.webp",
+        "url": "/uploads/gemini_generated_image_yvj030yvj030yvj0-1792494027174-db9a35-1200.webp",
+        "width": 1200,
+        "height": 2150,
+        "bytes": 341242
+      },
+      "1536": {
+        "key": "gemini_generated_image_yvj030yvj030yvj0-1792494027174-db9a35-1536.webp",
+        "url": "/uploads/gemini_generated_image_yvj030yvj030yvj0-1792494027174-db9a35-1536.webp",
+        "width": 1536,
+        "height": 2752,
+        "bytes": 471176
+      }
+    },
+    "alt": "کلونی‌های فعال زنبور عسل در طبیعت بکر",
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-20T11:00:28.753Z",
+    "updatedAt": "2026-10-20T11:00:28.753Z",
+    "url": "/uploads/gemini_generated_image_yvj030yvj030yvj0-1792494027174-db9a35-1536.webp"
+  },
+  {
+    "id": "ast_1792494114852_rdqhm",
+    "storageKey": "photo_38-1792494114207-8c4e95-1280.webp",
+    "mime": "image/webp",
+    "bytes": 61756,
+    "width": 1280,
+    "height": 784,
+    "blurDataUrl": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAwAgCdASoQAAoABABoJbACdAECjlcfLO2HAAD+1y0O+dWCNp6kZ7DZe+kpQQsblAg2Gv1A33CigGTDVsbWi7fyN/uA1+b9ofGygovAAAA=",
+    "variants": {
+      "480": {
+        "key": "photo_38-1792494114207-8c4e95-480.webp",
+        "url": "/uploads/photo_38-1792494114207-8c4e95-480.webp",
+        "width": 480,
+        "height": 294,
+        "bytes": 19614
+      },
+      "768": {
+        "key": "photo_38-1792494114207-8c4e95-768.webp",
+        "url": "/uploads/photo_38-1792494114207-8c4e95-768.webp",
+        "width": 768,
+        "height": 470,
+        "bytes": 33810
+      },
+      "1200": {
+        "key": "photo_38-1792494114207-8c4e95-1200.webp",
+        "url": "/uploads/photo_38-1792494114207-8c4e95-1200.webp",
+        "width": 1200,
+        "height": 735,
+        "bytes": 56176
+      },
+      "1280": {
+        "key": "photo_38-1792494114207-8c4e95-1280.webp",
+        "url": "/uploads/photo_38-1792494114207-8c4e95-1280.webp",
+        "width": 1280,
+        "height": 784,
+        "bytes": 61756
+      }
+    },
+    "alt": "شهد ناب و طبیعی دامنه کوهستان",
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-20T11:01:54.852Z",
+    "updatedAt": "2026-10-20T11:01:54.852Z",
+    "url": "/uploads/photo_38-1792494114207-8c4e95-1280.webp"
+  },
+  {
+    "id": "ast_1792494123674_hdoob",
+    "storageKey": "gemini_generated_image_tdwwntdwwntdwwnt-1792494122118-923132-1536.webp",
+    "mime": "image/webp",
+    "bytes": 378550,
+    "width": 1536,
+    "height": 2752,
+    "blurDataUrl": "data:image/webp;base64,UklGRrgAAABXRUJQVlA4IKwAAACQBACdASoQAB0APxFysFAsJqSisAgBgCIJbACdMoACf/B2pGBMxo64cZeIeAAA/jPlp4mdR1GM5cQ3IHW8am/YuxlyseI54QkJmBWG+1l5PGByn7QAikSkC39PGawwwbEIhi3BlcHpBaF/peGU5Vj3BBHZlLTAPVmI7ox5g9MwPZYw1CHF3UK8IEHguSk/3SqFDniM867/0E6EWNMMnQ9SmiAKPHRHbnqDsAAA",
+    "variants": {
+      "480": {
+        "key": "gemini_generated_image_tdwwntdwwntdwwnt-1792494122118-923132-480.webp",
+        "url": "/uploads/gemini_generated_image_tdwwntdwwntdwwnt-1792494122118-923132-480.webp",
+        "width": 480,
+        "height": 860,
+        "bytes": 90612
+      },
+      "768": {
+        "key": "gemini_generated_image_tdwwntdwwntdwwnt-1792494122118-923132-768.webp",
+        "url": "/uploads/gemini_generated_image_tdwwntdwwntdwwnt-1792494122118-923132-768.webp",
+        "width": 768,
+        "height": 1376,
+        "bytes": 163200
+      },
+      "1200": {
+        "key": "gemini_generated_image_tdwwntdwwntdwwnt-1792494122118-923132-1200.webp",
+        "url": "/uploads/gemini_generated_image_tdwwntdwwntdwwnt-1792494122118-923132-1200.webp",
+        "width": 1200,
+        "height": 2150,
+        "bytes": 277056
+      },
+      "1536": {
+        "key": "gemini_generated_image_tdwwntdwwntdwwnt-1792494122118-923132-1536.webp",
+        "url": "/uploads/gemini_generated_image_tdwwntdwwntdwwnt-1792494122118-923132-1536.webp",
+        "width": 1536,
+        "height": 2752,
+        "bytes": 378550
+      }
+    },
+    "alt": "شهد ناب و طبیعی دامنه کوهستان",
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-20T11:02:03.674Z",
+    "updatedAt": "2026-10-20T11:02:03.674Z",
+    "url": "/uploads/gemini_generated_image_tdwwntdwwntdwwnt-1792494122118-923132-1536.webp"
   }
 ]

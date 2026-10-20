@@ -18,42 +18,63 @@ import { PillButton } from '@/components/ui/pill-button';
 const DEFAULT_HERO_IMAGES = [
   {
     src: '/images/hero/photo_35.jpg',
+    desktopImageUrl: '/images/hero/photo_35.jpg',
+    tabletImageUrl: null,
+    mobileImageUrl: null,
     alt: 'شهد زرین و کندوهای عسل طبیعی باباخُرم',
     deviceTarget: 'all' as const,
     focalPoint: 'center' as const,
   },
   {
     src: '/images/hero/photo_32.jpg',
+    desktopImageUrl: '/images/hero/photo_32.jpg',
+    tabletImageUrl: null,
+    mobileImageUrl: null,
     alt: 'مراتع سرسبز کوهستانی و زنبورداری سنتی',
     deviceTarget: 'all' as const,
     focalPoint: 'center' as const,
   },
   {
     src: '/images/hero/photo_33.jpg',
+    desktopImageUrl: '/images/hero/photo_33.jpg',
+    tabletImageUrl: null,
+    mobileImageUrl: null,
     alt: 'زنبورداران پرتلاش و متعهد باباخُرم',
     deviceTarget: 'all' as const,
     focalPoint: 'center' as const,
   },
   {
     src: '/images/hero/photo_34.jpg',
+    desktopImageUrl: '/images/hero/photo_34.jpg',
+    tabletImageUrl: null,
+    mobileImageUrl: null,
     alt: 'برداشت مستقیم عسل خالص از شان',
     deviceTarget: 'all' as const,
     focalPoint: 'center' as const,
   },
   {
     src: '/images/hero/photo_36.jpg',
+    desktopImageUrl: '/images/hero/photo_36.jpg',
+    tabletImageUrl: null,
+    mobileImageUrl: null,
     alt: 'کلونی‌های فعال زنبور عسل در طبیعت بکر',
     deviceTarget: 'all' as const,
     focalPoint: 'center' as const,
   },
   {
     src: '/images/hero/photo_37.jpg',
+    desktopImageUrl: '/images/hero/photo_37.jpg',
+    tabletImageUrl: null,
+    mobileImageUrl: null,
     alt: 'عسل کوهستان با بالاترین درجه خلوص و اصالت',
     deviceTarget: 'all' as const,
     focalPoint: 'center' as const,
   },
   {
     src: '/images/hero/photo_38.jpg',
+    desktopImageUrl: '/images/hero/photo_38.jpg',
+    tabletImageUrl: null,
+    mobileImageUrl: null,
     alt: 'شهد ناب و طبیعی دامنه کوهستان',
     deviceTarget: 'all' as const,
     focalPoint: 'center' as const,
@@ -66,6 +87,12 @@ export interface HeroSliderImage {
   alt?: string;
   deviceTarget?: 'all' | 'desktop' | 'mobile';
   focalPoint?: 'center' | 'top' | 'bottom' | 'left' | 'right';
+  desktopImageId?: string | null;
+  desktopImageUrl?: string;
+  tabletImageId?: string | null;
+  tabletImageUrl?: string | null;
+  mobileImageId?: string | null;
+  mobileImageUrl?: string | null;
 }
 
 export interface HeroSliderProps {
@@ -117,15 +144,32 @@ export function HeroSlider({
 
   const allSlides =
     images && images.length > 0
-      ? images.map((img) => ({
-          src: img.url || img.src || '/images/hero/photo_35.jpg',
+      ? images.map((img) => {
+          const desktop = (img.desktopImageUrl || img.url || img.src || '/images/hero/photo_35.jpg').trim();
+          const tablet = img.tabletImageUrl ? String(img.tabletImageUrl).trim() : null;
+          const mobile = img.mobileImageUrl ? String(img.mobileImageUrl).trim() : null;
+
+          return {
+            desktopImageUrl: desktop,
+            tabletImageUrl: tablet,
+            mobileImageUrl: mobile,
+            src: desktop,
+            alt: img.alt || title,
+            deviceTarget: img.deviceTarget || 'all',
+            focalPoint: img.focalPoint || 'center',
+          };
+        })
+      : DEFAULT_HERO_IMAGES.map((img) => ({
+          desktopImageUrl: img.desktopImageUrl || img.src || '/images/hero/photo_35.jpg',
+          tabletImageUrl: img.tabletImageUrl || null,
+          mobileImageUrl: img.mobileImageUrl || null,
+          src: img.desktopImageUrl || img.src || '/images/hero/photo_35.jpg',
           alt: img.alt || title,
           deviceTarget: img.deviceTarget || 'all',
           focalPoint: img.focalPoint || 'center',
-        }))
-      : DEFAULT_HERO_IMAGES;
+        }));
 
-  // Filter slides based on viewport width, fallback to all slides so slider is never empty
+  // Filter slides based on viewport width if explicit deviceTarget is set, fallback to all slides so slider is never empty
   const slideImages = (() => {
     if (isMobile === null) {
       return allSlides;
@@ -157,34 +201,49 @@ export function HeroSlider({
 
   return (
     <section
-      className="relative min-h-[520px] sm:min-h-[580px] lg:min-h-[640px] overflow-hidden flex items-center justify-center text-center px-4 py-24 bg-[#2C1D11]"
+      className="relative w-full aspect-[4/5] min-h-[420px] sm:aspect-[16/10] sm:min-h-[480px] md:aspect-[16/10] lg:aspect-[21/9] lg:min-h-[550px] overflow-hidden flex items-center justify-center text-center px-4 py-16 sm:py-20 lg:py-24 bg-[#2C1D11]"
       aria-labelledby="hero-heading"
     >
-      {/* Background Images with Blur + Fade Out/In & Ken Burns Zoom */}
+      {/* Background Images with Responsive Art Direction (<picture>), Blur + Fade Out/In & Ken Burns Zoom */}
       <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
         {slideImages.map((img, idx) => {
           const isActive = idx === currentSlide;
           const focalClass = FOCAL_POINT_CLASS[img.focalPoint] || 'object-center';
           const focalStyle = FOCAL_POINT_STYLE[img.focalPoint] || 'center center';
 
+          const mobileSrc = img.mobileImageUrl || img.tabletImageUrl || img.desktopImageUrl;
+          const tabletSrc = img.tabletImageUrl || img.desktopImageUrl;
+          const desktopSrc = img.desktopImageUrl;
+
           return (
             <div
-              key={`${img.src}-${idx}`}
+              key={`${desktopSrc}-${idx}`}
               className={`absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out ${
                 isActive
                   ? 'opacity-100 blur-0 scale-100 z-1'
                   : 'opacity-0 blur-md scale-105 z-0'
               }`}
             >
-              <img
-                src={img.src}
-                alt={img.alt}
-                className={`hero-bg-image absolute inset-0 w-full h-full object-cover ${focalClass}`}
-                style={{ objectPosition: focalStyle }}
-                loading={idx === 0 ? 'eager' : 'lazy'}
-                width={1600}
-                height={700}
-              />
+              <picture className="w-full h-full block">
+                <source
+                  media="(max-width: 767px)"
+                  srcSet={mobileSrc}
+                />
+                <source
+                  media="(min-width: 768px) and (max-width: 1023px)"
+                  srcSet={tabletSrc}
+                />
+                <img
+                  src={desktopSrc}
+                  alt={img.alt}
+                  className={`hero-bg-image absolute inset-0 w-full h-full object-cover ${focalClass}`}
+                  style={{ objectPosition: focalStyle }}
+                  loading={idx === 0 ? 'eager' : 'lazy'}
+                  fetchPriority={idx === 0 ? 'high' : 'auto'}
+                  width={1920}
+                  height={800}
+                />
+              </picture>
             </div>
           );
         })}

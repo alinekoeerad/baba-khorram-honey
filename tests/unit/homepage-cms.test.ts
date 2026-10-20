@@ -3,6 +3,7 @@ import {
   controlledLinkSchema,
   resolveControlledLink,
   heroContentSchema,
+  heroSlideSchema,
   imageTextContentSchema,
 } from '@/server/validation/homepage-schemas';
 import {
@@ -170,6 +171,127 @@ describe('Template Switching & Preserved Bucket Roundtrip', () => {
         images: [{ url: '/img.jpg', focalPoint: 'diagonal' as any }],
       })
     ).toThrow();
+  });
+});
+
+describe('Hero Art Direction Validation & Backward Compatibility', () => {
+  it('parses dedicated images for desktop, tablet, and mobile with asset IDs', () => {
+    const slide = heroSlideSchema.parse({
+      desktopImageUrl: '/uploads/hero-desktop.webp',
+      desktopImageId: 'asset_desk_1',
+      tabletImageUrl: '/uploads/hero-tablet.webp',
+      tabletImageId: 'asset_tab_1',
+      mobileImageUrl: '/uploads/hero-mobile.webp',
+      mobileImageId: 'asset_mob_1',
+      alt: 'تصویر هیرو کوهستان',
+      focalPoint: 'top',
+    });
+
+    expect(slide.desktopImageUrl).toBe('/uploads/hero-desktop.webp');
+    expect(slide.desktopImageId).toBe('asset_desk_1');
+    expect(slide.tabletImageUrl).toBe('/uploads/hero-tablet.webp');
+    expect(slide.tabletImageId).toBe('asset_tab_1');
+    expect(slide.mobileImageUrl).toBe('/uploads/hero-mobile.webp');
+    expect(slide.mobileImageId).toBe('asset_mob_1');
+    // Backward compatibility: legacy url is synced to desktopImageUrl
+    expect(slide.url).toBe('/uploads/hero-desktop.webp');
+    expect(slide.alt).toBe('تصویر هیرو کوهستان');
+    expect(slide.focalPoint).toBe('top');
+  });
+
+  it('automatically maps legacy url to desktopImageUrl when desktopImageUrl is not explicitly provided', () => {
+    const slide = heroSlideSchema.parse({
+      url: '/images/hero/photo_35.jpg',
+      alt: 'عکس قدیمی',
+    });
+
+    expect(slide.desktopImageUrl).toBe('/images/hero/photo_35.jpg');
+    expect(slide.url).toBe('/images/hero/photo_35.jpg');
+    expect(slide.desktopImageId).toBeNull();
+    expect(slide.tabletImageUrl).toBeNull();
+    expect(slide.tabletImageId).toBeNull();
+    expect(slide.mobileImageUrl).toBeNull();
+    expect(slide.mobileImageId).toBeNull();
+    expect(slide.deviceTarget).toBe('all');
+  });
+
+  it('allows tablet and mobile images to be optional (null fallback)', () => {
+    const content = heroContentSchema.parse({
+      title: 'شاهکار طبیعت',
+      images: [
+        {
+          desktopImageUrl: '/images/hero/photo_35.jpg',
+          desktopImageId: 'asset_1',
+          alt: 'بدون تبلت و موبایل',
+        },
+      ],
+    });
+
+    expect(content.images[0].desktopImageUrl).toBe('/images/hero/photo_35.jpg');
+    expect(content.images[0].tabletImageUrl).toBeNull();
+    expect(content.images[0].mobileImageUrl).toBeNull();
+  });
+
+  it('rejects hero slides with neither desktopImageUrl nor legacy url', () => {
+    expect(() =>
+      heroSlideSchema.parse({
+        alt: 'بدون هیچ تصویری',
+      })
+    ).toThrow('تصویر دسکتاپ (اصلی) الزامی است');
+
+    expect(() =>
+      heroSlideSchema.parse({
+        desktopImageUrl: '   ',
+        alt: 'فاصله خالی',
+      })
+    ).toThrow('تصویر دسکتاپ (اصلی) الزامی است');
+  });
+
+  it('preserves all three art-direction image slots across template roundtrip switches', () => {
+    const originalHero = {
+      schemaVersion: 1,
+      title: 'عسل باباخرم',
+      subtitle: 'طبیعی و خالص',
+      images: [
+        {
+          desktopImageUrl: '/uploads/hero-desktop.webp',
+          desktopImageId: 'desk_id',
+          tabletImageUrl: '/uploads/hero-tablet.webp',
+          tabletImageId: 'tab_id',
+          mobileImageUrl: '/uploads/hero-mobile.webp',
+          mobileImageId: 'mob_id',
+          url: '/uploads/hero-desktop.webp',
+          alt: 'شاهکار ارسباران',
+        },
+      ],
+    };
+
+    // HERO -> IMAGE_TEXT
+    const imageText = switchSectionTemplate(
+      'hero-default',
+      'image-text-rect',
+      originalHero
+    );
+
+    expect(imageText.title).toBe('عسل باباخرم');
+    expect(imageText.image?.url).toBe('/uploads/hero-desktop.webp');
+
+    // IMAGE_TEXT -> HERO
+    const restoredHero = switchSectionTemplate(
+      'image-text-rect',
+      'hero-default',
+      imageText
+    );
+
+    const validated = heroContentSchema.parse(restoredHero);
+    expect(validated.title).toBe('عسل باباخرم');
+    expect(validated.subtitle).toBe('طبیعی و خالص');
+    expect(validated.images[0].desktopImageUrl).toBe('/uploads/hero-desktop.webp');
+    expect(validated.images[0].desktopImageId).toBe('desk_id');
+    expect(validated.images[0].tabletImageUrl).toBe('/uploads/hero-tablet.webp');
+    expect(validated.images[0].tabletImageId).toBe('tab_id');
+    expect(validated.images[0].mobileImageUrl).toBe('/uploads/hero-mobile.webp');
+    expect(validated.images[0].mobileImageId).toBe('mob_id');
   });
 });
 
