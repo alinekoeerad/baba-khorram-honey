@@ -3039,5 +3039,49 @@
     "createdAt": "2026-10-20T11:02:03.674Z",
     "updatedAt": "2026-10-20T11:02:03.674Z",
     "url": "/uploads/gemini_generated_image_tdwwntdwwntdwwnt-1792494122118-923132-1536.webp"
+  },
+  {
+    "id": "ast_1792682720771_7h5be",
+    "storageKey": "logo-square-1792682718600-49faca-1280.webp",
+    "mime": "image/webp",
+    "bytes": 96010,
+    "width": 1280,
+    "height": 1280,
+    "blurDataUrl": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAABQAgCdASoQABAABABoJbACdAYvrvNOycfb90AA9mw1ng4cFjuoaGgqW28avakOaKKJkHSvRrhsvSt+dPnR/1lU4epMopI4Ib4wxUB3VbWvz8ALXAVO1DBDtO4+9TrWlPBNg0W042N4h/Ma4P4IgYAA",
+    "variants": {
+      "480": {
+        "key": "logo-square-1792682718600-49faca-480.webp",
+        "url": "/uploads/logo-square-1792682718600-49faca-480.webp",
+        "width": 480,
+        "height": 480,
+        "bytes": 31832
+      },
+      "768": {
+        "key": "logo-square-1792682718600-49faca-768.webp",
+        "url": "/uploads/logo-square-1792682718600-49faca-768.webp",
+        "width": 768,
+        "height": 768,
+        "bytes": 55778
+      },
+      "1200": {
+        "key": "logo-square-1792682718600-49faca-1200.webp",
+        "url": "/uploads/logo-square-1792682718600-49faca-1200.webp",
+        "width": 1200,
+        "height": 1200,
+        "bytes": 90864
+      },
+      "1280": {
+        "key": "logo-square-1792682718600-49faca-1280.webp",
+        "url": "/uploads/logo-square-1792682718600-49faca-1280.webp",
+        "width": 1280,
+        "height": 1280,
+        "bytes": 96010
+      }
+    },
+    "alt": null,
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-10-22T15:25:20.771Z",
+    "updatedAt": "2026-10-22T15:25:20.771Z",
+    "url": "/uploads/logo-square-1792682718600-49faca-1280.webp"
   }
 ]
