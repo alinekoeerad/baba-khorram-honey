@@ -28,6 +28,7 @@ import { uiStringsFa } from '@/content/ui-strings.fa';
 
 import { getAdminFeedbacksAction } from '@/server/actions/feedback-actions';
 import { getAdminOrdersAction } from '@/server/actions/order-actions';
+import { adminLogoutAction } from '@/server/actions/auth-actions';
 
 interface NavItem {
   href: string;
@@ -53,6 +54,19 @@ export function AdminSidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
   const [unreadCount, setUnreadCount] = React.useState<number>(0);
   const [newOrdersCount, setNewOrdersCount] = React.useState<number>(0);
+  const [isLoggingOut, setIsLoggingOut] = React.useState(false);
+
+  const handleLogout = async () => {
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+    try {
+      await adminLogoutAction();
+    } catch (err) {
+      console.error('Logout error:', err);
+    } finally {
+      window.location.href = '/admin/login';
+    }
+  };
 
   React.useEffect(() => {
     let mounted = true;
@@ -158,6 +172,18 @@ export function AdminSidebar({ onClose }: { onClose?: () => void }) {
             <span>مشاهده وب‌سایت عمومی</span>
           </div>
         </Link>
+
+        <button
+          type="button"
+          onClick={handleLogout}
+          disabled={isLoggingOut}
+          className="w-full flex items-center justify-between px-3 py-2 rounded-none text-xs font-bold text-rose-400 hover:bg-rose-500/15 hover:text-rose-300 transition-colors cursor-pointer disabled:opacity-50 text-right"
+        >
+          <div className="flex items-center gap-2">
+            <LogOut className={`w-4 h-4 text-rose-400 ${isLoggingOut ? 'animate-spin' : ''}`} />
+            <span>خروج از حساب</span>
+          </div>
+        </button>
       </div>
     </aside>
   );

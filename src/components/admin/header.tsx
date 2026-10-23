@@ -11,6 +11,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { Menu, X, ExternalLink, LogOut, User as UserIcon, Search, ChevronLeft, Bell } from 'lucide-react';
 import { AdminSidebar } from './sidebar';
 import { getNewOrdersCountAction } from '@/server/actions/order-actions';
+import { adminLogoutAction } from '@/server/actions/auth-actions';
 import { toPersianDigits } from '@/lib/domain-utils';
 
 interface AdminHeaderProps {
@@ -69,13 +70,18 @@ export function AdminHeader({ user }: AdminHeaderProps) {
     return { href, title };
   });
 
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
   const handleLogout = async () => {
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
     try {
-      // Invalidate cookie / session
-      document.cookie = 'better-auth.session_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-      router.push('/admin/login');
-      router.refresh();
-    } catch {}
+      await adminLogoutAction();
+    } catch (err) {
+      console.error('Logout error:', err);
+    } finally {
+      window.location.href = '/admin/login';
+    }
   };
 
   const handleOpenSearch = () => {
@@ -179,10 +185,12 @@ export function AdminHeader({ user }: AdminHeaderProps) {
           <button
             type="button"
             onClick={handleLogout}
+            disabled={isLoggingOut}
             title="خروج از حساب کاربری"
-            className="p-2 text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-200 rounded-none transition-colors cursor-pointer"
+            aria-label="خروج از حساب کاربری"
+            className="p-2 text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-200 rounded-none transition-colors cursor-pointer disabled:opacity-50"
           >
-            <LogOut className="w-4 h-4" />
+            <LogOut className={`w-4 h-4 ${isLoggingOut ? 'animate-spin' : ''}`} />
           </button>
         </div>
       </header>

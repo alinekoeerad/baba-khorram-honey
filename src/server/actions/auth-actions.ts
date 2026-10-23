@@ -140,17 +140,33 @@ export async function adminLogoutAction() {
   try {
     const cookieStore = await cookies();
     const token =
+      cookieStore.get('honey.session_token')?.value ||
       cookieStore.get('better-auth.session_token')?.value ||
-      cookieStore.get('honey.session_token')?.value;
+      cookieStore.get('session_token')?.value;
 
-    if (token) {
+    if (token && db.session) {
       await db.session.delete({ where: { token } }).catch(() => {});
     }
 
-    cookieStore.delete('better-auth.session_token');
+    const cookieOptions = {
+      path: '/',
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax' as const,
+      maxAge: 0,
+    };
+
+    cookieStore.set('honey.session_token', '', cookieOptions);
+    cookieStore.set('better-auth.session_token', '', cookieOptions);
+    cookieStore.set('session_token', '', cookieOptions);
+
     cookieStore.delete('honey.session_token');
+    cookieStore.delete('better-auth.session_token');
+    cookieStore.delete('session_token');
+
     return { success: true };
-  } catch {
+  } catch (error) {
+    console.error('Logout error:', error);
     return { success: true };
   }
 }
