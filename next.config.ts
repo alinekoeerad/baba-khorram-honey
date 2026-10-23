@@ -30,6 +30,7 @@ const nextConfig: NextConfig = {
   compress: true,
   allowedDevOrigins: devOrigins,
   experimental: {
+    agentUpgrade: 'security',
     serverActions: {
       bodySizeLimit: '25mb',
       allowedOrigins: isDev
