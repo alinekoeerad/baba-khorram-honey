@@ -6,7 +6,7 @@ import type { NextRequest } from 'next/server';
  * Intercepts all requests matching /admin/:path*
  * Enforces session token presence and redirects unauthenticated users to /admin/login.
  */
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith('/admin')) {
