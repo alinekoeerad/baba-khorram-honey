@@ -388,7 +388,7 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
       )}
 
       {/* Section 1: Names and Slugs */}
-      <div className="bg-white border border-[#EFE9E0] p-6 shadow-xs space-y-4">
+      <div className="bg-white border border-[#EFE9E0] p-4 sm:p-6 shadow-xs space-y-4">
         <h2 className="text-sm font-bold text-[#332115] border-b border-[#EFE9E0] pb-2">
           اطلاعات هویتی و عناوین
         </h2>
@@ -485,7 +485,7 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
       </div>
 
       {/* Section 2: Status, Availability & Card Theme */}
-      <div className="bg-white border border-[#EFE9E0] p-6 shadow-xs space-y-4">
+      <div className="bg-white border border-[#EFE9E0] p-4 sm:p-6 shadow-xs space-y-4">
         <h2 className="text-sm font-bold text-[#332115] border-b border-[#EFE9E0] pb-2">
           وضعیت انتشار، تم و چیدمان
         </h2>
@@ -578,7 +578,7 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
       </div>
 
       {/* Section 3: Categories Selection (Active only) */}
-      <div className="bg-white border border-[#EFE9E0] p-6 shadow-xs space-y-4">
+      <div className="bg-white border border-[#EFE9E0] p-4 sm:p-6 shadow-xs space-y-4">
         <h2 className="text-sm font-bold text-[#332115] border-b border-[#EFE9E0] pb-2">
           {uiStringsFa.adminProducts.categories}
         </h2>
@@ -606,7 +606,7 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
       </div>
 
       {/* Section 4: Specifications & Verbatim Attributes */}
-      <div className="bg-white border border-[#EFE9E0] p-6 shadow-xs space-y-4">
+      <div className="bg-white border border-[#EFE9E0] p-4 sm:p-6 shadow-xs space-y-4">
         <h2 className="text-sm font-bold text-[#332115] border-b border-[#EFE9E0] pb-2">
           مشخصات زیستی و طبیعی محصول
         </h2>
@@ -699,7 +699,7 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
       </div>
 
       {/* Section 5: Benefits List Editor (Add, Edit, Delete, No reorder) */}
-      <div className="bg-white border border-[#EFE9E0] p-6 shadow-xs space-y-4">
+      <div className="bg-white border border-[#EFE9E0] p-4 sm:p-6 shadow-xs space-y-4">
         <h2 className="text-sm font-bold text-[#332115] border-b border-[#EFE9E0] pb-2">
           {uiStringsFa.adminProducts.benefits} ({benefits.length} مورد)
         </h2>
@@ -717,7 +717,7 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
               <button
                 type="button"
                 onClick={() => handleRemoveBenefit(idx)}
-                className="px-2 py-1 text-xs text-[#9E3556] hover:bg-[#FEF2F2] border border-[#FECACA]"
+                className="px-2.5 py-1.5 text-xs text-[#9E3556] hover:bg-[#FEF2F2] border border-[#FECACA] cursor-pointer shrink-0"
               >
                 حذف
               </button>
@@ -725,18 +725,18 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
           ))}
         </div>
 
-        <div className="flex gap-2 pt-2">
+        <div className="flex flex-col sm:flex-row gap-2 pt-2">
           <input
             type="text"
             value={newBenefitText}
             onChange={(e) => setNewBenefitText(e.target.value)}
             placeholder="عنوان خاصیت دارویی یا کاربرد..."
-            className="flex-1 px-3 py-1.5 border border-[#EFE9E0] text-xs"
+            className="w-full sm:flex-1 px-3 py-1.5 border border-[#EFE9E0] text-xs"
           />
           <button
             type="button"
             onClick={handleAddBenefit}
-            className="px-4 py-1.5 bg-[#FEF3C7] text-[#C86A00] font-bold text-xs hover:bg-[#FDE68A]"
+            className="w-full sm:w-auto px-4 py-2 sm:py-1.5 bg-[#FEF3C7] text-[#C86A00] font-bold text-xs hover:bg-[#FDE68A] text-center cursor-pointer"
           >
             + {uiStringsFa.adminProducts.addBenefit}
           </button>
@@ -744,15 +744,15 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
       </div>
 
       {/* Section 6: Order Options Editor (Addendum A2/A7) */}
-      <div className="bg-white border border-[#EFE9E0] p-6 shadow-xs space-y-4">
-        <div className="flex items-center justify-between border-b border-[#EFE9E0] pb-2">
+      <div className="bg-white border border-[#EFE9E0] p-4 sm:p-6 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#EFE9E0] pb-2 gap-1">
           <div>
             <h2 className="text-sm font-bold text-[#332115]">{uiStringsFa.adminProducts.orderOptions}</h2>
             <p className="text-xs text-[#5C5248] mt-0.5">
               گزینه‌های سفارش قابل انتخاب توسط مشتری در سبد خرید (مانند وزن یا نوع ظرف)
             </p>
           </div>
-          <span className="text-xs font-bold text-[#D97706]">{options.length} گزینه</span>
+          <span className="text-xs font-bold text-[#D97706] shrink-0">{options.length} گزینه</span>
         </div>
 
         {/* Quick Add Weight Presets [ADM-MOD-02] */}
@@ -771,11 +771,11 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
               });
               markDirty();
             }}
-            className="px-3 py-1 text-[11px] font-bold bg-[#F59E0B] text-white hover:bg-[#D97706] transition-colors rounded-none shadow-xs"
+            className="w-full sm:w-auto px-3 py-1.5 sm:py-1 text-[11px] font-bold bg-[#F59E0B] text-white hover:bg-[#D97706] transition-colors rounded-none shadow-xs text-center cursor-pointer"
           >
             + افزودن سریع وزن‌های استاندارد
           </button>
-          <span className="text-[11px] font-bold text-[#5C5248] mr-1">پیش‌فرض‌های سریع وزن:</span>
+          <span className="text-[11px] font-bold text-[#5C5248] mr-1 hidden sm:inline">پیش‌فرض‌های سریع وزن:</span>
           {[
             'ظرف ۱ کیلوگرمی',
             'شیشه ۵۰۰ گرمی',
@@ -789,7 +789,7 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
                 setOptions([...options, { label: preset, isAvailable: true, sortOrder: options.length }]);
                 markDirty();
               }}
-              className="px-2.5 py-1 text-[11px] font-bold bg-[#FEF3C7] text-[#92400E] border border-[#FDE68A] hover:bg-[#FDE68A] transition-colors rounded-none"
+              className="px-2.5 py-1 text-[11px] font-bold bg-[#FEF3C7] text-[#92400E] border border-[#FDE68A] hover:bg-[#FDE68A] transition-colors rounded-none cursor-pointer"
             >
               + {preset}
             </button>
@@ -798,7 +798,7 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
 
         <div className="space-y-2">
           {options.map((opt, idx) => (
-            <div key={opt.id || idx} className="flex items-center gap-3 p-2 bg-[#FDFBF8] border border-[#EFE9E0]">
+            <div key={opt.id || idx} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 p-2.5 sm:p-2 bg-[#FDFBF8] border border-[#EFE9E0]">
               <input
                 type="text"
                 value={opt.label}
@@ -808,44 +808,46 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
                   setOptions(updated);
                   markDirty();
                 }}
-                className="flex-1 px-3 py-1.5 border border-[#EFE9E0] text-xs bg-white"
+                className="w-full sm:flex-1 px-3 py-1.5 border border-[#EFE9E0] text-xs bg-white"
               />
 
-              <button
-                type="button"
-                onClick={() => handleToggleOptionAvailability(idx)}
-                className={`px-3 py-1 text-xs font-bold border transition-colors ${
-                  opt.isAvailable
-                    ? 'bg-[#DCFCE7] text-[#15803D] border-[#BBF7D0]'
-                    : 'bg-[#FEE2E2] text-[#B91C1C] border-[#FECACA]'
-                }`}
-              >
-                {opt.isAvailable ? uiStringsFa.adminProducts.optionAvailable : uiStringsFa.adminProducts.optionUnavailable}
-              </button>
+              <div className="flex items-center justify-end gap-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => handleToggleOptionAvailability(idx)}
+                  className={`flex-1 sm:flex-none px-3 py-1.5 sm:py-1 text-xs font-bold border transition-colors cursor-pointer text-center ${
+                    opt.isAvailable
+                      ? 'bg-[#DCFCE7] text-[#15803D] border-[#BBF7D0]'
+                      : 'bg-[#FEE2E2] text-[#B91C1C] border-[#FECACA]'
+                  }`}
+                >
+                  {opt.isAvailable ? uiStringsFa.adminProducts.optionAvailable : uiStringsFa.adminProducts.optionUnavailable}
+                </button>
 
-              <button
-                type="button"
-                onClick={() => handleRemoveOption(idx)}
-                className="px-2 py-1 text-xs text-[#9E3556] hover:bg-[#FEF2F2] border border-[#FECACA]"
-              >
-                حذف
-              </button>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveOption(idx)}
+                  className="px-3 py-1.5 sm:py-1 text-xs text-[#9E3556] hover:bg-[#FEF2F2] border border-[#FECACA] cursor-pointer"
+                >
+                  حذف
+                </button>
+              </div>
             </div>
           ))}
         </div>
 
-        <div className="flex gap-2 pt-2">
+        <div className="flex flex-col sm:flex-row gap-2 pt-2">
           <input
             type="text"
             value={newOptionLabel}
             onChange={(e) => setNewOptionLabel(e.target.value)}
             placeholder="عنوان گزینه جدید (مثال: شیشه ۵۰۰ گرمی)..."
-            className="flex-1 px-3 py-1.5 border border-[#EFE9E0] text-xs"
+            className="w-full sm:flex-1 px-3 py-1.5 border border-[#EFE9E0] text-xs"
           />
           <button
             type="button"
             onClick={handleAddOption}
-            className="px-4 py-1.5 bg-[#FEF3C7] text-[#C86A00] font-bold text-xs hover:bg-[#FDE68A]"
+            className="w-full sm:w-auto px-4 py-2 sm:py-1.5 bg-[#FEF3C7] text-[#C86A00] font-bold text-xs hover:bg-[#FDE68A] text-center cursor-pointer"
           >
             + {uiStringsFa.adminProducts.addOption}
           </button>
@@ -853,7 +855,7 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
       </div>
 
       {/* Section 7: Media Uploaders */}
-      <div className="bg-white border border-[#EFE9E0] p-6 shadow-xs space-y-6">
+      <div className="bg-white border border-[#EFE9E0] p-4 sm:p-6 shadow-xs space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#EFE9E0] pb-2">
           <h2 className="text-sm font-bold text-[#332115]">
             تصاویر و رسانه محصول
@@ -911,8 +913,8 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
       </div>
 
       {/* Sticky Action Footer [ADM-WORKFLOW-02] */}
-      <div className="sticky bottom-0 bg-white/95 backdrop-blur-xs border-t border-[#EFE9E0] p-4 shadow-lg flex justify-between items-center z-20">
-        <div className="flex items-center gap-2 text-xs">
+      <div className="sticky bottom-0 bg-white/95 backdrop-blur-xs border-t border-[#EFE9E0] p-3 sm:p-4 shadow-lg flex flex-col sm:flex-row justify-between items-center gap-2.5 sm:gap-0 z-20">
+        <div className="flex items-center gap-2 text-xs w-full sm:w-auto justify-between sm:justify-start">
           {isDirty ? (
             <span className="text-amber-700 font-bold flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-none bg-amber-500 animate-pulse"></span>
@@ -922,17 +924,17 @@ export function ProductForm({ initialData, categories, isEdit = false }: Product
             <span className="text-stone-500 text-xs">همه تغییرات ذخیره شده‌اند</span>
           )}
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 w-full sm:w-auto">
           <Link
             href="/admin/products"
-            className="px-4 py-2 text-xs font-bold text-[#5C5248] hover:bg-[#EFE9E0] border border-[#EFE9E0] transition-colors"
+            className="flex-1 sm:flex-none text-center px-4 py-2 text-xs font-bold text-[#5C5248] hover:bg-[#EFE9E0] border border-[#EFE9E0] transition-colors"
           >
             {uiStringsFa.adminForms.cancel}
           </Link>
           <button
             type="submit"
             disabled={isPending}
-            className="px-6 py-2 bg-[#FBBF24] hover:bg-[#F59E0B] text-[#332115] font-bold text-xs shadow-xs transition-colors cursor-pointer disabled:opacity-50"
+            className="flex-1 sm:flex-none px-6 py-2 bg-[#FBBF24] hover:bg-[#F59E0B] text-[#332115] font-bold text-xs shadow-xs transition-colors cursor-pointer disabled:opacity-50 text-center"
           >
             {isPending ? uiStringsFa.adminForms.saving : uiStringsFa.adminForms.save}
           </button>

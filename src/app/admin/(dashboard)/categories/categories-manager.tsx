@@ -166,7 +166,7 @@ export function CategoriesManager({ initialCategories }: { initialCategories: Ca
         <button
           type="button"
           onClick={openCreateModal}
-          className="flex items-center gap-2 px-4 py-2 bg-[#FBBF24] hover:bg-[#F59E0B] text-[#332115] font-bold text-xs transition-colors cursor-pointer shadow-xs"
+          className="flex items-center justify-center gap-2 px-4 py-2 bg-[#FBBF24] hover:bg-[#F59E0B] text-[#332115] font-bold text-xs transition-colors cursor-pointer shadow-xs w-full sm:w-auto"
         >
           <span>+</span>
           <span>{uiStringsFa.adminCategories.createCategory}</span>
@@ -212,8 +212,8 @@ export function CategoriesManager({ initialCategories }: { initialCategories: Ca
         </div>
       )}
 
-      {/* Categories Table */}
-      <div className="bg-white border border-[#EFE9E0] shadow-xs overflow-x-auto">
+      {/* Categories Table (Desktop: md and up) */}
+      <div className="hidden md:block bg-white border border-[#EFE9E0] shadow-xs overflow-x-auto">
         <table className="w-full text-start text-xs border-collapse">
           <thead>
             <tr className="border-b border-[#EFE9E0] text-[#5C5248] bg-[#FDFBF8]">
@@ -282,6 +282,70 @@ export function CategoriesManager({ initialCategories }: { initialCategories: Ca
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Categories Mobile Card View */}
+      <div className="block md:hidden space-y-3">
+        {filteredCategories.length === 0 ? (
+          <div className="bg-white border border-[#EFE9E0] p-8 text-center text-[#5C5248] text-xs">
+            هیچ دسته‌بندی در این بخش ثبت نشده است.
+          </div>
+        ) : (
+          filteredCategories.map((cat) => {
+            const count = activeTab === 'PRODUCT' ? cat.productCount || 0 : cat.recipeCount || 0;
+            const canDelete = count === 0;
+
+            return (
+              <div key={cat.id} className="bg-white border border-[#EFE9E0] p-3.5 shadow-xs space-y-2.5">
+                <div className="flex items-start justify-between gap-2 border-b border-[#EFE9E0] pb-2">
+                  <div>
+                    <h3 className="font-bold text-sm text-[#332115]">{cat.name}</h3>
+                    <p className="text-[11px] text-[#5C5248] font-mono mt-0.5" dir="ltr">
+                      {cat.slug}
+                    </p>
+                  </div>
+                  <AdminBadge status={cat.status} />
+                </div>
+
+                <div className="flex items-center justify-between text-xs text-[#5C5248]">
+                  <span>
+                    تعداد مرتبط: <strong className="text-[#332115]">{count}</strong> مورد
+                  </span>
+                  <span>ترتیب: {cat.sortOrder}</span>
+                </div>
+
+                <div className="pt-2 border-t border-[#EFE9E0] flex items-center justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => openEditModal(cat)}
+                    className="px-3 py-1.5 text-xs font-bold text-[#D97706] bg-[#FEF3C7]/70 hover:bg-[#FEF3C7] border border-[#FDE68A] transition-colors cursor-pointer"
+                  >
+                    {uiStringsFa.adminCategories.editCategory}
+                  </button>
+
+                  <button
+                    type="button"
+                    disabled={isPending}
+                    onClick={() => handleToggleStatus(cat)}
+                    className="px-2.5 py-1.5 text-xs font-bold text-[#5C5248] hover:bg-[#EFE9E0] border border-[#EFE9E0] transition-colors cursor-pointer"
+                  >
+                    {cat.status === 'ACTIVE' ? uiStringsFa.adminCategories.archive : uiStringsFa.adminCategories.restore}
+                  </button>
+
+                  <button
+                    type="button"
+                    disabled={isPending || !canDelete}
+                    onClick={() => handleDelete(cat)}
+                    title={!canDelete ? uiStringsFa.adminCategories.cannotDeleteInUse : undefined}
+                    className="px-2.5 py-1.5 text-xs font-bold text-[#9E3556] hover:bg-[#FEF2F2] border border-[#FECACA] transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    {uiStringsFa.adminCategories.delete}
+                  </button>
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
 
       {/* Modal: Create / Edit Category */}

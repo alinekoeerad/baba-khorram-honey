@@ -243,13 +243,13 @@ export function OrdersManagerClient({
         </div>
 
         {/* Status Filter Tabs */}
-        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-[#EFE9E0]">
-          <span className="text-xs font-bold text-[#5C5248] ms-1">وضعیت:</span>
+        <div className="flex items-center gap-2 pt-2 border-t border-[#EFE9E0] overflow-x-auto pb-1.5 sm:pb-0 sm:flex-wrap">
+          <span className="text-xs font-bold text-[#5C5248] ms-1 shrink-0">وضعیت:</span>
 
           <button
             type="button"
             onClick={() => setStatusFilter('ALL')}
-            className={`px-3 py-1.5 text-xs font-bold transition-all rounded-none cursor-pointer border ${
+            className={`px-3 py-1.5 text-xs font-bold transition-all rounded-none cursor-pointer border whitespace-nowrap shrink-0 ${
               statusFilter === 'ALL'
                 ? 'bg-[#332115] text-white border-[#332115] shadow-xs'
                 : 'bg-white text-[#5C5248] border-[#EFE9E0] hover:bg-stone-50'
@@ -261,7 +261,7 @@ export function OrdersManagerClient({
           <button
             type="button"
             onClick={() => setStatusFilter('NEW')}
-            className={`px-3 py-1.5 text-xs font-bold transition-all rounded-none cursor-pointer border ${
+            className={`px-3 py-1.5 text-xs font-bold transition-all rounded-none cursor-pointer border whitespace-nowrap shrink-0 ${
               statusFilter === 'NEW'
                 ? 'bg-rose-700 text-white border-rose-700 shadow-xs'
                 : 'bg-white text-rose-700 border-rose-200 hover:bg-rose-50'
@@ -273,7 +273,7 @@ export function OrdersManagerClient({
           <button
             type="button"
             onClick={() => setStatusFilter('CONTACTED')}
-            className={`px-3 py-1.5 text-xs font-bold transition-all rounded-none cursor-pointer border ${
+            className={`px-3 py-1.5 text-xs font-bold transition-all rounded-none cursor-pointer border whitespace-nowrap shrink-0 ${
               statusFilter === 'CONTACTED'
                 ? 'bg-amber-600 text-white border-amber-600 shadow-xs'
                 : 'bg-white text-amber-800 border-amber-200 hover:bg-amber-50'
@@ -285,7 +285,7 @@ export function OrdersManagerClient({
           <button
             type="button"
             onClick={() => setStatusFilter('SHIPPED')}
-            className={`px-3 py-1.5 text-xs font-bold transition-all rounded-none cursor-pointer border ${
+            className={`px-3 py-1.5 text-xs font-bold transition-all rounded-none cursor-pointer border whitespace-nowrap shrink-0 ${
               statusFilter === 'SHIPPED'
                 ? 'bg-emerald-700 text-white border-emerald-700 shadow-xs'
                 : 'bg-white text-emerald-800 border-emerald-200 hover:bg-emerald-50'
@@ -297,7 +297,7 @@ export function OrdersManagerClient({
           <button
             type="button"
             onClick={() => setStatusFilter('CANCELLED')}
-            className={`px-3 py-1.5 text-xs font-bold transition-all rounded-none cursor-pointer border ${
+            className={`px-3 py-1.5 text-xs font-bold transition-all rounded-none cursor-pointer border whitespace-nowrap shrink-0 ${
               statusFilter === 'CANCELLED'
                 ? 'bg-stone-600 text-white border-stone-600 shadow-xs'
                 : 'bg-white text-stone-600 border-stone-200 hover:bg-stone-50'
@@ -334,7 +334,7 @@ export function OrdersManagerClient({
                 className="bg-white border border-[#EFE9E0] shadow-xs rounded-none transition-shadow hover:shadow-md"
               >
                 {/* Order Summary Header */}
-                <div className="p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-[#EFE9E0]">
+                <div className="p-3.5 sm:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-[#EFE9E0]">
                   <div className="space-y-2">
                     <div className="flex flex-wrap items-center gap-3">
                       <span className="font-mono font-black text-base text-[#D97706] tracking-wider bg-[#FFFBEB] px-3 py-1 border border-[#FDE68A]">

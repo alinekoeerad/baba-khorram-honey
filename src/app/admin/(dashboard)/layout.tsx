@@ -17,7 +17,7 @@ export default async function AdminDashboardLayout({
 
   return (
     <ToastProvider>
-      <div className="flex min-h-screen h-screen overflow-hidden bg-[#FDFBF8]">
+      <div className="flex min-h-[100dvh] h-[100dvh] overflow-hidden bg-[#FDFBF8]">
         {/* Desktop Sidebar (Fixed on visual right in RTL) */}
         <div className="hidden md:flex md:w-64 md:flex-col md:shrink-0">
           <AdminSidebar />
@@ -32,7 +32,7 @@ export default async function AdminDashboardLayout({
               role: user.role,
             }}
           />
-          <main className="flex-1 p-4 md:p-8 max-w-7xl w-full mx-auto">
+          <main className="flex-1 p-3.5 sm:p-5 md:p-8 max-w-7xl w-full mx-auto pb-16 md:pb-8">
             {children}
           </main>
         </div>

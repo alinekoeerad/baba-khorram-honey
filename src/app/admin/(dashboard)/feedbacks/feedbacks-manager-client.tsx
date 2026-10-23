@@ -238,8 +238,8 @@ export function FeedbacksManagerClient({
       {/* Controls Bar */}
       <div className="bg-white border border-[#EFE9E0] p-4 shadow-xs space-y-4">
         {/* Status Filters */}
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-1.5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
             {[
               { key: 'ALL', label: 'همه وضعیت‌ها' },
               { key: 'UNREAD', label: 'خوانده‌نشده' },
@@ -250,7 +250,7 @@ export function FeedbacksManagerClient({
                 key={st.key}
                 type="button"
                 onClick={() => setStatusFilter(st.key)}
-                className={`px-3.5 py-1.5 text-xs font-bold transition-all cursor-pointer ${
+                className={`px-3.5 py-1.5 text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   statusFilter === st.key
                     ? 'bg-[#332115] text-white shadow-xs'
                     : 'bg-stone-50 text-[#5C5248] hover:bg-stone-100'
@@ -317,7 +317,7 @@ export function FeedbacksManagerClient({
             return (
               <div
                 key={item.id}
-                className={`bg-white border transition-all p-6 shadow-xs ${
+                className={`bg-white border transition-all p-3.5 sm:p-6 shadow-xs ${
                   item.status === 'UNREAD'
                     ? 'border-s-4 border-s-rose-600 border-[#EFE9E0]'
                     : 'border-[#EFE9E0]'

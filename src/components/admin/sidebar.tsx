@@ -94,7 +94,7 @@ export function AdminSidebar({ onClose }: { onClose?: () => void }) {
   return (
     <aside className="h-full flex flex-col bg-[#332115] text-[#E8E2D9] border-s border-black/20 select-none">
       {/* Brand Header */}
-      <Link href="/admin" onClick={onClose} className="h-20 flex items-center px-6 border-b border-white/10 gap-3 group">
+      <Link href="/admin" onClick={onClose} className="h-16 sm:h-20 flex items-center px-6 border-b border-white/10 gap-3 group">
         <img
           src="/images/header-logo.webp"
           alt="عسل باباخُرم"

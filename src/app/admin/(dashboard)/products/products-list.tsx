@@ -222,28 +222,28 @@ export function ProductsList({ initialProducts, categories, totalCount }: Produc
   return (
     <div className="space-y-6">
       {/* Header & Add / Export Buttons */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
         <div>
-          <h1 className="text-2xl font-black text-[#332115]">{uiStringsFa.adminProducts.title}</h1>
+          <h1 className="text-xl sm:text-2xl font-black text-[#332115]">{uiStringsFa.adminProducts.title}</h1>
           <p className="text-xs sm:text-sm text-[#5C5248] mt-1">{uiStringsFa.adminProducts.subtitle}</p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
           <button
             type="button"
             onClick={handleExportCsv}
-            className="flex items-center gap-2 px-3.5 py-2.5 bg-white border border-stone-300 hover:bg-stone-50 text-[#332115] font-bold text-xs rounded-none shadow-xs transition-colors cursor-pointer"
+            className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-3 sm:px-3.5 py-2 sm:py-2.5 bg-white border border-stone-300 hover:bg-stone-50 text-[#332115] font-bold text-xs rounded-none shadow-xs transition-colors cursor-pointer"
           >
             <Download className="w-4 h-4 text-stone-600" />
-            <span>خروجی اکسل (CSV)</span>
+            <span className="truncate">خروجی اکسل</span>
           </button>
 
           <Link
             href="/admin/products/new"
-            className="flex items-center gap-2 px-4 py-2.5 bg-[#FBBF24] hover:bg-[#F59E0B] text-[#332115] font-black text-xs rounded-none shadow-xs transition-colors"
+            className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-[#FBBF24] hover:bg-[#F59E0B] text-[#332115] font-black text-xs rounded-none shadow-xs transition-colors"
           >
             <Plus className="w-4 h-4" />
-            <span>{uiStringsFa.adminProducts.newProduct}</span>
+            <span className="truncate">{uiStringsFa.adminProducts.newProduct}</span>
           </Link>
         </div>
       </div>
@@ -354,8 +354,8 @@ export function ProductsList({ initialProducts, categories, totalCount }: Produc
         </div>
       )}
 
-      {/* Products Table */}
-      <div className="bg-white border border-[#EFE9E0] rounded-none shadow-xs overflow-x-auto">
+      {/* Products Table (Desktop: md and up) */}
+      <div className="hidden md:block bg-white border border-[#EFE9E0] rounded-none shadow-xs overflow-x-auto">
         <table className="w-full text-start text-xs border-collapse">
           <thead>
             <tr className="border-b border-[#EFE9E0] text-[#5C5248] bg-[#FDFBF8]">
@@ -510,6 +510,137 @@ export function ProductsList({ initialProducts, categories, totalCount }: Produc
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Products Card View (< 768px) */}
+      <div className="block md:hidden space-y-3">
+        {displayedItems.length === 0 ? (
+          <div className="bg-white border border-[#EFE9E0] p-8 text-center text-[#5C5248]">
+            هیچ محصولی با معیارهای جستجو یافت نشد.
+          </div>
+        ) : (
+          displayedItems.map((prod) => {
+            const isSelected = selectedIds.has(prod.id);
+            const assigned = categories.filter((c) =>
+              prod.categoryIds?.includes(c.id) ||
+              prod.categoryIds?.includes(c.slug) ||
+              prod.categoryIds?.includes(`cat_${c.slug}`) ||
+              prod.categorySlug === c.slug ||
+              prod.categories?.some((pc: any) => pc.id === c.id || pc.slug === c.slug || pc.category?.id === c.id || pc.category?.slug === c.slug)
+            );
+
+            return (
+              <div
+                key={prod.id}
+                className={`bg-white border p-3.5 shadow-xs transition-colors ${
+                  isSelected ? 'border-amber-400 bg-amber-50/40' : 'border-[#EFE9E0]'
+                }`}
+              >
+                {/* Top Row: Checkbox, Name, Status Badge */}
+                <div className="flex items-start justify-between gap-2.5 pb-2.5 border-b border-[#EFE9E0]">
+                  <div className="flex items-start gap-2.5 min-w-0">
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={() => toggleSelectOne(prod.id)}
+                      className="cursor-pointer w-4 h-4 mt-0.5 shrink-0"
+                      aria-label={`انتخاب ${prod.nameFa}`}
+                    />
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <Link href={`/admin/products/${prod.id}`} className="font-black text-sm text-[#332115] hover:text-[#D97706] truncate">
+                          {prod.nameFa}
+                        </Link>
+                        {prod.isFeatured && (
+                          <span className="px-1.5 py-0.5 text-[9px] bg-[#FEF3C7] text-[#C86A00] font-bold shrink-0">
+                            ویژه
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-[11px] text-[#5C5248] font-mono mt-0.5 truncate" dir="ltr">
+                        {prod.nameOriginal || prod.slug}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="shrink-0">
+                    <AdminBadge status={prod.status} />
+                  </div>
+                </div>
+
+                {/* Middle Info: Categories & Options Count & Availability Toggle */}
+                <div className="py-2.5 flex items-center justify-between text-xs text-[#5C5248] gap-2">
+                  <div className="flex flex-wrap items-center gap-1 min-w-0">
+                    {assigned.slice(0, 2).map((c) => (
+                      <span key={c.id} className="px-1.5 py-0.5 bg-stone-100 text-stone-600 text-[10px] border border-stone-200 truncate max-w-[100px]">
+                        {c.name}
+                      </span>
+                    ))}
+                    {assigned.length > 2 && (
+                      <span className="text-[10px] text-stone-400 shrink-0">+{assigned.length - 2}</span>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-2.5 shrink-0">
+                    <span className="text-[11px] text-stone-600">
+                      {prod.optionCount || 0} گزینه
+                    </span>
+                    <button
+                      type="button"
+                      disabled={isPending}
+                      onClick={() => handleToggleAvailability(prod)}
+                      className={`px-2.5 py-1 text-[10px] font-bold border transition-colors cursor-pointer rounded-none ${
+                        prod.isAvailable
+                          ? 'bg-[#DCFCE7] text-[#15803D] border-[#BBF7D0]'
+                          : 'bg-[#FEE2E2] text-[#B91C1C] border-[#FECACA]'
+                      }`}
+                    >
+                      {prod.isAvailable ? 'موجود' : 'ناموجود'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Bottom Row: Actions */}
+                <div className="pt-2.5 border-t border-[#EFE9E0] flex items-center justify-between gap-1.5">
+                  <div className="flex items-center gap-1.5">
+                    <Link
+                      href={`/admin/products/${prod.id}`}
+                      className="px-3 py-1.5 text-xs font-bold text-[#D97706] bg-[#FEF3C7]/70 hover:bg-[#FEF3C7] border border-[#FDE68A] transition-colors"
+                    >
+                      ویرایش
+                    </Link>
+                    <Link
+                      href={`/admin/preview/products/${prod.id}`}
+                      target="_blank"
+                      className="px-2.5 py-1.5 text-xs font-bold text-[#5C5248] hover:bg-stone-100 border border-stone-200 transition-colors"
+                    >
+                      پیش‌نمایش
+                    </Link>
+                  </div>
+
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      disabled={isPending}
+                      onClick={() => handleDuplicate(prod)}
+                      className="px-2.5 py-1.5 text-xs text-[#5C5248] hover:bg-stone-100 border border-stone-200 cursor-pointer transition-colors"
+                    >
+                      کپی
+                    </button>
+                    <button
+                      type="button"
+                      disabled={isPending}
+                      onClick={() => setConfirmDelete({ isOpen: true, prod })}
+                      className="px-2.5 py-1.5 text-xs font-bold text-rose-600 hover:bg-rose-50 border border-rose-200 cursor-pointer transition-colors"
+                    >
+                      حذف
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
 
       {/* Load More Button */}

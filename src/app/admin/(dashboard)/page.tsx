@@ -236,22 +236,22 @@ export default async function AdminDashboardPage() {
           <h1 className="text-2xl font-black text-[#2B2017]">{uiStringsFa.adminDashboard.title}</h1>
           <p className="text-sm text-[#5C5248] mt-1">{uiStringsFa.adminDashboard.subtitle}</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           <Link
             href="/admin/orders"
-            className="px-4 py-2 bg-[#D97706] hover:bg-[#B45309] text-white text-xs font-black transition-colors shadow-xs rounded-none"
+            className="flex-1 sm:flex-none justify-center flex items-center px-3.5 py-2 bg-[#D97706] hover:bg-[#B45309] text-white text-xs font-black transition-colors shadow-xs rounded-none text-center"
           >
             مدیریت سفارشات ({toPersianDigits(newOrders)})
           </Link>
           <Link
             href="/admin/products/new"
-            className="px-4 py-2 bg-[#FBBF24] hover:bg-[#F59E0B] text-[#332115] text-xs font-bold transition-colors shadow-xs rounded-none"
+            className="flex-1 sm:flex-none justify-center flex items-center px-3.5 py-2 bg-[#FBBF24] hover:bg-[#F59E0B] text-[#332115] text-xs font-bold transition-colors shadow-xs rounded-none text-center"
           >
             + محصول جدید
           </Link>
           <Link
             href="/admin/recipes/new"
-            className="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-[#2B2017] text-xs font-bold border border-[#EFE9E0] transition-colors rounded-none"
+            className="flex-1 sm:flex-none justify-center flex items-center px-3.5 py-2 bg-stone-100 hover:bg-stone-200 text-[#2B2017] text-xs font-bold border border-[#EFE9E0] transition-colors rounded-none text-center"
           >
             + دستور جدید
           </Link>
@@ -259,9 +259,9 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Primary Metrics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3.5 sm:gap-5">
         {/* Orders Card */}
-        <div className="bg-white border-2 border-[#FDE68A] p-6 shadow-xs relative overflow-hidden rounded-none">
+        <div className="bg-white border-2 border-[#FDE68A] p-4 sm:p-6 shadow-xs relative overflow-hidden rounded-none">
           {newOrders > 0 && (
             <div className="absolute top-0 end-0 bg-rose-500 text-white text-[10px] font-black px-2.5 py-0.5 rounded-none animate-pulse">
               {toPersianDigits(newOrders)} جدید
@@ -295,7 +295,7 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
         {/* Products Card */}
-        <div className="bg-white border border-[#EFE9E0] p-6 shadow-xs rounded-none">
+        <div className="bg-white border border-[#EFE9E0] p-4 sm:p-6 shadow-xs rounded-none">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-[#D97706] uppercase tracking-wide flex items-center gap-1.5">
               <Package className="w-4 h-4 text-[#D97706]" />
@@ -320,7 +320,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Recipes Card */}
-        <div className="bg-white border border-[#EFE9E0] p-6 shadow-xs rounded-none">
+        <div className="bg-white border border-[#EFE9E0] p-4 sm:p-6 shadow-xs rounded-none">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-[#3F8F3B] uppercase tracking-wide flex items-center gap-1.5">
               <BookOpen className="w-4 h-4 text-[#3F8F3B]" />
@@ -345,7 +345,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Catalog & Categories */}
-        <div className="bg-white border border-[#EFE9E0] p-6 shadow-xs rounded-none">
+        <div className="bg-white border border-[#EFE9E0] p-4 sm:p-6 shadow-xs rounded-none">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-[#C86A00] uppercase tracking-wide flex items-center gap-1.5">
               <Layers className="w-4 h-4 text-[#C86A00]" />
@@ -368,7 +368,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Feedback Alert Card */}
-        <div className="bg-white border border-[#EFE9E0] p-6 shadow-xs rounded-none">
+        <div className="bg-white border border-[#EFE9E0] p-4 sm:p-6 shadow-xs rounded-none">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-[#9E3556] uppercase tracking-wide flex items-center gap-1.5">
               <MessageSquare className="w-4 h-4 text-[#9E3556]" />

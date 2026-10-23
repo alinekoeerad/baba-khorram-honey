@@ -204,19 +204,19 @@ export function RecipesList({ initialRecipes, categories, totalCount }: RecipesL
           <p className="text-xs sm:text-sm text-[#5C5248] mt-1">{uiStringsFa.adminRecipes.subtitle}</p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
           <button
             type="button"
             onClick={handleExportCsv}
-            className="flex items-center gap-2 px-3.5 py-2.5 bg-white hover:bg-stone-50 text-[#332115] font-bold text-xs rounded-none border border-[#EFE9E0] shadow-2xs transition-colors cursor-pointer"
+            className="flex-1 sm:flex-none justify-center flex items-center gap-2 px-3.5 py-2.5 bg-white hover:bg-stone-50 text-[#332115] font-bold text-xs rounded-none border border-[#EFE9E0] shadow-2xs transition-colors cursor-pointer"
           >
             <Download className="w-4 h-4 text-[#C86A00]" />
-            <span>خروجی اکسل (CSV)</span>
+            <span>خروجی اکسل</span>
           </button>
 
           <Link
             href="/admin/recipes/new"
-            className="flex items-center gap-2 px-4 py-2.5 bg-[#FBBF24] hover:bg-[#F59E0B] text-[#332115] font-black text-xs rounded-none shadow-xs transition-colors"
+            className="flex-1 sm:flex-none justify-center flex items-center gap-2 px-4 py-2.5 bg-[#FBBF24] hover:bg-[#F59E0B] text-[#332115] font-black text-xs rounded-none shadow-xs transition-colors"
           >
             <Plus className="w-4 h-4" />
             <span>{uiStringsFa.adminRecipes.newRecipe}</span>
@@ -267,7 +267,7 @@ export function RecipesList({ initialRecipes, categories, totalCount }: RecipesL
 
       {/* Floating Bulk Actions Bar (ADM-WORKFLOW-03) */}
       {selectedIds.size > 0 && (
-        <div className="sticky top-20 z-20 bg-[#332115] text-white p-3.5 rounded-none shadow-xl flex flex-wrap items-center justify-between gap-4 animate-in slide-in-from-top-2">
+        <div className="sticky top-16 sm:top-20 z-20 bg-[#332115] text-white p-3 sm:p-3.5 rounded-none shadow-xl flex flex-wrap items-center justify-between gap-3 animate-in slide-in-from-top-2">
           <div className="flex items-center gap-2 text-xs font-bold">
             <span className="w-5 h-5 rounded-none bg-[#F59E0B] text-[#2B2017] flex items-center justify-center font-black text-[11px]">
               {selectedIds.size}
@@ -275,7 +275,7 @@ export function RecipesList({ initialRecipes, categories, totalCount }: RecipesL
             <span>دستور انتخاب شده است</span>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 flex-wrap">
             <button
               type="button"
               onClick={() => handleBulkStatusChange('PUBLISHED')}
@@ -314,8 +314,8 @@ export function RecipesList({ initialRecipes, categories, totalCount }: RecipesL
         </div>
       )}
 
-      {/* Recipes Table */}
-      <div className="bg-white border border-[#EFE9E0] rounded-none shadow-xs overflow-x-auto">
+      {/* Recipes Table (Desktop: md and up) */}
+      <div className="hidden md:block bg-white border border-[#EFE9E0] rounded-none shadow-xs overflow-x-auto">
         <table className="w-full text-start text-xs border-collapse">
           <thead>
             <tr className="border-b border-[#EFE9E0] text-[#5C5248] bg-[#FDFBF8]">
@@ -457,6 +457,133 @@ export function RecipesList({ initialRecipes, categories, totalCount }: RecipesL
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Recipes Mobile Card View */}
+      <div className="block md:hidden space-y-3">
+        {displayedItems.length === 0 ? (
+          <div className="bg-white border border-[#EFE9E0] p-8 text-center text-[#5C5248] text-xs">
+            هیچ دستوری با معیارهای جستجو یافت نشد.
+          </div>
+        ) : (
+          displayedItems.map((r) => {
+            const isSelected = selectedIds.has(r.id);
+            const assigned = categories.filter((c) =>
+              r.categoryIds?.includes(c.id) ||
+              r.categoryIds?.includes(c.slug) ||
+              r.categoryIds?.includes(`cat_${c.slug}`) ||
+              (r as any).categorySlug === c.slug ||
+              r.categories?.some((rc: any) => rc.id === c.id || rc.slug === c.slug || rc.category?.id === c.id || rc.category?.slug === c.slug)
+            );
+
+            return (
+              <div
+                key={r.id}
+                className={`bg-white border p-3.5 shadow-xs transition-colors ${
+                  isSelected ? 'border-amber-400 bg-amber-50/40' : 'border-[#EFE9E0]'
+                }`}
+              >
+                {/* Top Row: Checkbox, Name, Status Badge */}
+                <div className="flex items-start justify-between gap-2.5 pb-2.5 border-b border-[#EFE9E0]">
+                  <div className="flex items-start gap-2.5 min-w-0">
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={() => handleToggleSelect(r.id)}
+                      className="cursor-pointer w-4 h-4 mt-0.5 shrink-0"
+                      aria-label={`انتخاب ${r.nameFa}`}
+                    />
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <Link href={`/admin/recipes/${r.id}`} className="font-black text-sm text-[#332115] hover:text-[#D97706] truncate">
+                          {r.nameFa}
+                        </Link>
+                        {r.isFeatured && (
+                          <span className="px-1.5 py-0.5 text-[9px] bg-[#FEF3C7] text-[#C86A00] font-bold shrink-0">
+                            ویژه
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-[11px] text-[#5C5248] font-mono mt-0.5 truncate" dir="ltr">
+                        {r.nameOriginal || r.slug}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="shrink-0">
+                    <AdminBadge status={r.status} />
+                  </div>
+                </div>
+
+                {/* Middle Info: Categories & Ingredients/Steps */}
+                <div className="py-2.5 flex items-center justify-between text-xs text-[#5C5248] gap-2">
+                  <div className="flex flex-wrap items-center gap-1 min-w-0">
+                    {assigned.slice(0, 2).map((c) => (
+                      <span key={c.id} className="px-1.5 py-0.5 bg-stone-100 text-stone-600 text-[10px] border border-stone-200 truncate max-w-[100px]">
+                        {c.name}
+                      </span>
+                    ))}
+                    {assigned.length > 2 && (
+                      <span className="text-[10px] text-stone-400 shrink-0">+{assigned.length - 2}</span>
+                    )}
+                    {r.status === 'PUBLISHED' && assigned.length === 0 && (
+                      <span className="px-1.5 py-0.5 bg-amber-50 text-amber-800 text-[10px] border border-amber-300">
+                        بدون دسته‌بندی
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-3 shrink-0 text-[11px] text-[#332115]">
+                    <span>
+                      مواد: <strong>{toPersianDigits(r.ingredients?.length || 0)}</strong>
+                    </span>
+                    <span>
+                      مراحل: <strong>{toPersianDigits(r.steps?.length || 0)}</strong>
+                    </span>
+                  </div>
+                </div>
+
+                {/* Bottom Row: Actions */}
+                <div className="pt-2.5 border-t border-[#EFE9E0] flex items-center justify-between gap-1.5">
+                  <div className="flex items-center gap-1.5">
+                    <Link
+                      href={`/admin/recipes/${r.id}`}
+                      className="px-3 py-1.5 text-xs font-bold text-[#D97706] bg-[#FEF3C7]/70 hover:bg-[#FEF3C7] border border-[#FDE68A] transition-colors"
+                    >
+                      ویرایش
+                    </Link>
+                    <Link
+                      href={`/admin/preview/recipes/${r.id}`}
+                      target="_blank"
+                      className="px-2.5 py-1.5 text-xs font-bold text-[#5C5248] hover:bg-stone-100 border border-stone-200 transition-colors"
+                    >
+                      پیش‌نمایش
+                    </Link>
+                  </div>
+
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      disabled={isPending}
+                      onClick={() => handleDuplicate(r)}
+                      className="px-2.5 py-1.5 text-xs text-[#5C5248] hover:bg-stone-100 border border-stone-200 cursor-pointer transition-colors"
+                    >
+                      کپی
+                    </button>
+                    <button
+                      type="button"
+                      disabled={isPending}
+                      onClick={() => setConfirmDelete({ isOpen: true, recipe: r })}
+                      className="px-2.5 py-1.5 text-xs font-bold text-rose-600 hover:bg-rose-50 border border-rose-200 cursor-pointer transition-colors"
+                    >
+                      حذف
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
 
       {hasMore && (

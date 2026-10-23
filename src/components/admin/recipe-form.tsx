@@ -436,7 +436,7 @@ export function RecipeForm({ initialData, categories, products = [], isEdit = fa
       )}
 
       {/* Section 1: Identity & Serving Types */}
-      <div className="bg-white border border-[#EFE9E0] p-6 shadow-xs space-y-4">
+      <div className="bg-white border border-[#EFE9E0] p-4 sm:p-6 shadow-xs space-y-4">
         <h2 className="text-sm font-bold text-[#332115] border-b border-[#EFE9E0] pb-2">
           اطلاعات اصلی دستور و نوع سرو
         </h2>
@@ -569,7 +569,7 @@ export function RecipeForm({ initialData, categories, products = [], isEdit = fa
             <label className="block text-xs font-bold text-[#332115] mb-1.5">
               {uiStringsFa.adminRecipes.servingTypes} * (حداقل یک مورد)
             </label>
-            <div className="flex gap-4 pt-1">
+            <div className="flex flex-wrap gap-4 pt-1">
               <label className="inline-flex items-center gap-1.5 cursor-pointer text-xs">
                 <input
                   type="checkbox"
@@ -605,7 +605,7 @@ export function RecipeForm({ initialData, categories, products = [], isEdit = fa
       </div>
 
       {/* Section 2: Status & Display Settings */}
-      <div className="bg-white border border-[#EFE9E0] p-6 shadow-xs space-y-4">
+      <div className="bg-white border border-[#EFE9E0] p-4 sm:p-6 shadow-xs space-y-4">
         <h2 className="text-sm font-bold text-[#332115] border-b border-[#EFE9E0] pb-2">
           وضعیت انتشار و تم
         </h2>
@@ -661,7 +661,7 @@ export function RecipeForm({ initialData, categories, products = [], isEdit = fa
             />
           </div>
 
-          <div className="pt-4">
+          <div className="pt-2 sm:pt-4">
             <label className="inline-flex items-center gap-2 cursor-pointer text-xs font-bold text-[#332115]">
               <input
                 type="checkbox"
@@ -710,7 +710,7 @@ export function RecipeForm({ initialData, categories, products = [], isEdit = fa
       </div>
 
       {/* Section 3: Recipe Categories Selection */}
-      <div className="bg-white border border-[#EFE9E0] p-6 shadow-xs space-y-4">
+      <div className="bg-white border border-[#EFE9E0] p-4 sm:p-6 shadow-xs space-y-4">
         <h2 className="text-sm font-bold text-[#332115] border-b border-[#EFE9E0] pb-2">
           دسته‌بندی‌های دستور (RECIPE)
         </h2>
@@ -738,20 +738,31 @@ export function RecipeForm({ initialData, categories, products = [], isEdit = fa
       </div>
 
       {/* Section 4: Ingredients Editor (Add at end, edit, delete, NO reorder) */}
-      <div className="bg-white border border-[#EFE9E0] p-6 shadow-xs space-y-4">
-        <div className="flex items-center justify-between border-b border-[#EFE9E0] pb-2">
+      <div className="bg-white border border-[#EFE9E0] p-4 sm:p-6 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#EFE9E0] pb-2 gap-1">
           <div>
             <h2 className="text-sm font-bold text-[#332115]">{uiStringsFa.adminRecipes.ingredients}</h2>
             <p className="text-xs text-[#5C5248] mt-0.5">مواد اولیه با مقادیر دقیق و توضیحات (بدون جابجایی ترتیب)</p>
           </div>
-          <span className="text-xs font-bold text-[#D97706]">{ingredients.length} قلم ماده</span>
+          <span className="text-xs font-bold text-[#D97706] shrink-0">{ingredients.length} قلم ماده</span>
         </div>
 
         <div className="space-y-3">
           {ingredients.map((ing, idx) => (
             <div key={idx} className="p-3 bg-[#FDFBF8] border border-[#EFE9E0] space-y-2">
               <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center">
-                <span className="sm:col-span-1 text-xs font-bold text-[#5C5248]">{idx + 1}.</span>
+                <div className="flex items-center justify-between sm:hidden">
+                  <span className="text-xs font-bold text-[#5C5248]">ماده شماره {idx + 1}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveIngredient(idx)}
+                    className="text-xs font-bold text-[#9E3556] hover:bg-[#FEF2F2] px-2 py-1 border border-[#FECACA] cursor-pointer"
+                    aria-label={`حذف ماده ${idx + 1}`}
+                  >
+                    حذف ماده
+                  </button>
+                </div>
+                <span className="hidden sm:inline sm:col-span-1 text-xs font-bold text-[#5C5248]">{idx + 1}.</span>
 
                 <div className="sm:col-span-4">
                   <input
@@ -760,45 +771,47 @@ export function RecipeForm({ initialData, categories, products = [], isEdit = fa
                     placeholder="نام ماده (مثال: عسل طبیعی)..."
                     value={ing.name}
                     onChange={(e) => handleEditIngredient(idx, 'name', e.target.value)}
-                    className="w-full px-2.5 py-1 text-xs border border-[#EFE9E0] bg-white"
+                    className="w-full px-2.5 py-1.5 text-xs border border-[#EFE9E0] bg-white"
                   />
                 </div>
 
-                <div className="sm:col-span-2">
-                  <input
-                    type="text"
-                    placeholder="مقدار (۱۲۰)..."
-                    value={ing.quantityText}
-                    onChange={(e) => handleEditIngredient(idx, 'quantityText', e.target.value)}
-                    className="w-full px-2.5 py-1 text-xs border border-[#EFE9E0] bg-white"
-                  />
+                <div className="grid grid-cols-3 sm:contents gap-2">
+                  <div className="sm:col-span-2">
+                    <input
+                      type="text"
+                      placeholder="مقدار (۱۲۰)..."
+                      value={ing.quantityText}
+                      onChange={(e) => handleEditIngredient(idx, 'quantityText', e.target.value)}
+                      className="w-full px-2.5 py-1.5 text-xs border border-[#EFE9E0] bg-white"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <input
+                      type="text"
+                      placeholder="واحد (گرم)..."
+                      value={ing.unit}
+                      onChange={(e) => handleEditIngredient(idx, 'unit', e.target.value)}
+                      className="w-full px-2.5 py-1.5 text-xs border border-[#EFE9E0] bg-white"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <input
+                      type="text"
+                      placeholder="معادل..."
+                      value={ing.equivalentText}
+                      onChange={(e) => handleEditIngredient(idx, 'equivalentText', e.target.value)}
+                      className="w-full px-2.5 py-1.5 text-xs border border-[#EFE9E0] bg-white"
+                    />
+                  </div>
                 </div>
 
-                <div className="sm:col-span-2">
-                  <input
-                    type="text"
-                    placeholder="واحد (گرم/پیمانه)..."
-                    value={ing.unit}
-                    onChange={(e) => handleEditIngredient(idx, 'unit', e.target.value)}
-                    className="w-full px-2.5 py-1 text-xs border border-[#EFE9E0] bg-white"
-                  />
-                </div>
-
-                <div className="sm:col-span-2">
-                  <input
-                    type="text"
-                    placeholder="معادل (۱/۲ پیمانه)..."
-                    value={ing.equivalentText}
-                    onChange={(e) => handleEditIngredient(idx, 'equivalentText', e.target.value)}
-                    className="w-full px-2.5 py-1 text-xs border border-[#EFE9E0] bg-white"
-                  />
-                </div>
-
-                <div className="sm:col-span-1 text-end">
+                <div className="hidden sm:block sm:col-span-1 text-end">
                   <button
                     type="button"
                     onClick={() => handleRemoveIngredient(idx)}
-                    className="text-xs font-bold text-[#9E3556] hover:bg-[#FEF2F2] p-1 border border-[#FECACA]"
+                    className="text-xs font-bold text-[#9E3556] hover:bg-[#FEF2F2] p-1 border border-[#FECACA] cursor-pointer"
                     aria-label={`حذف ماده ${idx + 1}`}
                   >
                     ✕
@@ -806,7 +819,7 @@ export function RecipeForm({ initialData, categories, products = [], isEdit = fa
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
                 <label className="inline-flex items-center gap-1.5 cursor-pointer text-xs text-[#5C5248]">
                   <input
                     type="checkbox"
@@ -822,7 +835,7 @@ export function RecipeForm({ initialData, categories, products = [], isEdit = fa
                   placeholder="یادداشت تکمیلی (مثلاً جهت تزئین یا رنده‌شده)..."
                   value={ing.note}
                   onChange={(e) => handleEditIngredient(idx, 'note', e.target.value)}
-                  className="flex-1 px-2.5 py-1 text-xs border border-[#EFE9E0] bg-white"
+                  className="flex-1 px-2.5 py-1.5 text-xs border border-[#EFE9E0] bg-white"
                 />
               </div>
             </div>
@@ -832,27 +845,27 @@ export function RecipeForm({ initialData, categories, products = [], isEdit = fa
         <button
           type="button"
           onClick={handleAddIngredient}
-          className="px-4 py-2 bg-[#FEF3C7] text-[#C86A00] font-bold text-xs hover:bg-[#FDE68A] transition-colors"
+          className="w-full sm:w-auto px-4 py-2 bg-[#FEF3C7] text-[#C86A00] font-bold text-xs hover:bg-[#FDE68A] transition-colors cursor-pointer text-center"
         >
           + {uiStringsFa.adminRecipes.addIngredient}
         </button>
       </div>
 
-      {/* Section 5: Steps Editor (Textarea per step; add at end, edit, delete; NO reorder, NO insert in middle) */}
-      <div className="bg-white border border-[#EFE9E0] p-6 shadow-xs space-y-4">
-        <div className="flex items-center justify-between border-b border-[#EFE9E0] pb-2">
+      {/* Section 5: Steps Editor */}
+      <div className="bg-white border border-[#EFE9E0] p-4 sm:p-6 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#EFE9E0] pb-2 gap-1">
           <div>
             <h2 className="text-sm font-bold text-[#332115]">{uiStringsFa.adminRecipes.steps}</h2>
             <p className="text-xs text-[#5C5248] mt-0.5">
               مراحل تهیه با امکان جابجایی ترتیب و درج مرحله در بین خطوط
             </p>
           </div>
-          <span className="text-xs font-bold text-[#D97706]">{steps.length} مرحله</span>
+          <span className="text-xs font-bold text-[#D97706] shrink-0">{steps.length} مرحله</span>
         </div>
 
         <div className="space-y-3">
           {steps.map((st, idx) => (
-            <div key={idx} className="flex gap-2.5 items-start p-3 bg-[#FDFBF8] border border-[#EFE9E0]">
+            <div key={idx} className="flex gap-2 sm:gap-2.5 items-start p-2.5 sm:p-3 bg-[#FDFBF8] border border-[#EFE9E0]">
               {/* Reordering Controls */}
               <div className="flex flex-col gap-1 shrink-0 pt-0.5">
                 <button
@@ -915,14 +928,14 @@ export function RecipeForm({ initialData, categories, products = [], isEdit = fa
         <button
           type="button"
           onClick={handleAddStep}
-          className="px-4 py-2 bg-[#FEF3C7] text-[#C86A00] font-bold text-xs hover:bg-[#FDE68A] transition-colors"
+          className="w-full sm:w-auto px-4 py-2 bg-[#FEF3C7] text-[#C86A00] font-bold text-xs hover:bg-[#FDE68A] transition-colors cursor-pointer text-center"
         >
           + {uiStringsFa.adminRecipes.addStep}
         </button>
       </div>
 
       {/* Section 6: Media Uploaders */}
-      <div className="bg-white border border-[#EFE9E0] p-6 shadow-xs space-y-6">
+      <div className="bg-white border border-[#EFE9E0] p-4 sm:p-6 shadow-xs space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#EFE9E0] pb-2">
           <h2 className="text-sm font-bold text-[#332115]">
             تصاویر و رسانه دستور
@@ -980,8 +993,8 @@ export function RecipeForm({ initialData, categories, products = [], isEdit = fa
       </div>
 
       {/* Sticky Action Footer [ADM-WORKFLOW-02] */}
-      <div className="sticky bottom-0 bg-white/95 backdrop-blur-xs border-t border-[#EFE9E0] p-4 shadow-lg flex justify-between items-center z-20">
-        <div className="flex items-center gap-2 text-xs">
+      <div className="sticky bottom-0 bg-white/95 backdrop-blur-xs border-t border-[#EFE9E0] p-3 sm:p-4 shadow-lg flex flex-col sm:flex-row justify-between items-center gap-2.5 sm:gap-0 z-20">
+        <div className="flex items-center gap-2 text-xs w-full sm:w-auto justify-between sm:justify-start">
           {isDirty ? (
             <span className="text-amber-700 font-bold flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-none bg-amber-500 animate-pulse"></span>
@@ -991,17 +1004,17 @@ export function RecipeForm({ initialData, categories, products = [], isEdit = fa
             <span className="text-stone-500 text-xs">همه تغییرات ذخیره شده‌اند</span>
           )}
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 w-full sm:w-auto">
           <Link
             href="/admin/recipes"
-            className="px-4 py-2 text-xs font-bold text-[#5C5248] hover:bg-[#EFE9E0] border border-[#EFE9E0] transition-colors"
+            className="flex-1 sm:flex-none text-center px-4 py-2 text-xs font-bold text-[#5C5248] hover:bg-[#EFE9E0] border border-[#EFE9E0] transition-colors"
           >
             {uiStringsFa.adminForms.cancel}
           </Link>
           <button
             type="submit"
             disabled={isPending}
-            className="px-6 py-2 bg-[#FBBF24] hover:bg-[#F59E0B] text-[#332115] font-bold text-xs shadow-xs transition-colors cursor-pointer disabled:opacity-50"
+            className="flex-1 sm:flex-none px-6 py-2 bg-[#FBBF24] hover:bg-[#F59E0B] text-[#332115] font-bold text-xs shadow-xs transition-colors cursor-pointer disabled:opacity-50 text-center"
           >
             {isPending ? uiStringsFa.adminForms.saving : uiStringsFa.adminForms.save}
           </button>

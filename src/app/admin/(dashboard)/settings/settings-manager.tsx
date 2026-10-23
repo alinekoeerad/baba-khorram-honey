@@ -247,7 +247,7 @@ export function SettingsManager({
   const selectedMeta = CHANNEL_TYPES_META[channelForm.type];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-16 sm:pb-0">
       {/* Header & Save Action */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#D5C7B8]">
         <div>
@@ -259,7 +259,7 @@ export function SettingsManager({
         <button
           onClick={handleSaveSettings}
           disabled={isPending}
-          className="inline-flex items-center justify-center gap-2 bg-[#F59E0B] hover:bg-[#D97706] text-white px-6 py-2.5 rounded-none font-bold shadow-xs transition-colors disabled:opacity-50 whitespace-nowrap shrink-0 min-w-max cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 bg-[#F59E0B] hover:bg-[#D97706] text-white px-6 py-2.5 rounded-none font-bold shadow-xs transition-colors disabled:opacity-50 whitespace-nowrap shrink-0 cursor-pointer w-full sm:w-auto"
         >
           {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           <span>ذخیره تنظیمات</span>
@@ -1071,6 +1071,19 @@ export function SettingsManager({
         onConfirm={handleConfirmDeleteChannel}
         onCancel={() => setConfirmDeleteChannel({ isOpen: false })}
       />
+
+      {/* Mobile Sticky Save Bar */}
+      <div className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-xs border-t border-[#D5C7B8] p-3 shadow-lg flex sm:hidden items-center justify-between z-20">
+        <span className="text-xs text-[#5C5248]">تنظیمات سایت</span>
+        <button
+          onClick={handleSaveSettings}
+          disabled={isPending}
+          className="inline-flex items-center justify-center gap-2 bg-[#F59E0B] hover:bg-[#D97706] text-white px-5 py-2 rounded-none font-bold text-xs shadow-xs transition-colors disabled:opacity-50 cursor-pointer"
+        >
+          {isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+          <span>ذخیره تنظیمات</span>
+        </button>
+      </div>
     </div>
   );
 }
