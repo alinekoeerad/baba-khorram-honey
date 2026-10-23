@@ -1745,16 +1745,35 @@ function createFallbackClient() {
         if (args?.take) {
           list = list.slice(0, args.take);
         }
-        return list.map((f) => ({ ...f }));
+        return list.map((f) => ({
+          ...f,
+          createdAt: f.createdAt ? new Date(f.createdAt) : new Date(),
+          updatedAt: f.updatedAt ? new Date(f.updatedAt) : new Date(),
+        }));
       },
       async findUnique(args: { where: { id?: string; trackingCode?: string } }) {
         const item = feedbacksStore.find(
           (f) => (args.where.id && f.id === args.where.id) || (args.where.trackingCode && f.trackingCode === args.where.trackingCode)
         );
-        return item ? { ...item } : null;
+        return item
+          ? {
+              ...item,
+              createdAt: item.createdAt ? new Date(item.createdAt) : new Date(),
+              updatedAt: item.updatedAt ? new Date(item.updatedAt) : new Date(),
+            }
+          : null;
       },
       async findFirst(args?: { where?: any }) {
-        if (!args?.where) return feedbacksStore[0] ? { ...feedbacksStore[0] } : null;
+        if (!args?.where) {
+          const first = feedbacksStore[0];
+          return first
+            ? {
+                ...first,
+                createdAt: first.createdAt ? new Date(first.createdAt) : new Date(),
+                updatedAt: first.updatedAt ? new Date(first.updatedAt) : new Date(),
+              }
+            : null;
+        }
         const w = args.where;
         const item = feedbacksStore.find((f) => {
           if (w.id && f.id !== w.id) return false;
@@ -1763,7 +1782,13 @@ function createFallbackClient() {
           if (w.status && f.status !== w.status) return false;
           return true;
         });
-        return item ? { ...item } : null;
+        return item
+          ? {
+              ...item,
+              createdAt: item.createdAt ? new Date(item.createdAt) : new Date(),
+              updatedAt: item.updatedAt ? new Date(item.updatedAt) : new Date(),
+            }
+          : null;
       },
       async create(args: { data: any }) {
         const now = new Date();

@@ -19,9 +19,14 @@ export default async function AdminFeedbacksPage() {
     orderBy: { createdAt: 'desc' },
   });
 
-  const formattedFeedbacks = feedbacks.map((f) => ({
+  const formattedFeedbacks = feedbacks.map((f: any) => ({
     ...f,
-    createdAt: f.createdAt.toISOString(),
+    createdAt:
+      f.createdAt instanceof Date
+        ? f.createdAt.toISOString()
+        : typeof f.createdAt === 'string'
+          ? f.createdAt
+          : new Date(f.createdAt || Date.now()).toISOString(),
   }));
 
   const totalCount = feedbacks.length;

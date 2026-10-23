@@ -137,7 +137,13 @@ export default async function OrderSharePage({ params }: OrderSharePageProps) {
       channelType={link.channelType}
       channelValue={decrypted.channelValue}
       directUrl={decrypted.directUrl}
-      expiresAt={link.expiresAt.toISOString()}
+      expiresAt={
+        link.expiresAt instanceof Date
+          ? link.expiresAt.toISOString()
+          : typeof link.expiresAt === 'string'
+            ? link.expiresAt
+            : new Date(link.expiresAt).toISOString()
+      }
     />
   );
 }
