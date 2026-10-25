@@ -22,13 +22,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Search, Menu, Phone, ChevronDown, PhoneCall } from 'lucide-react';
 import { HeaderCartIcon } from './header-cart-icon';
-import { PublicChannelItem } from '@/server/queries/settings';
+import { PublicChannelItem, PublicMediaAssetInfo } from '@/server/queries/settings';
 import { ChannelIcon } from './channel-icon';
 
 interface HeaderProps {
   siteNameFa: string;
   cartEnabled: boolean;
-  logo?: any;
+  logo?: PublicMediaAssetInfo | null;
   channels?: PublicChannelItem[];
   onOpenSearch: () => void;
   onOpenHamburger: () => void;

@@ -4,6 +4,8 @@
  * Handles cache revalidation and mutation audit logging.
  */
 
+import 'server-only';
+
 import { db } from '../db/client';
 import { recordAuditLog } from './audit-log-service';
 import { revalidateTag, revalidatePath } from 'next/cache';

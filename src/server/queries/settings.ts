@@ -11,6 +11,35 @@ export interface PublicChannelItem extends ContactChannelData {
 }
 
 /**
+ * Minimal public media asset projection for public site chrome (logo, footerLogo, ogImage).
+ * Strictly exposes only presentation fields and eliminates `any`.
+ */
+export interface PublicMediaAssetInfo {
+  url?: string | null;
+  storageKey?: string | null;
+  alt?: string | null;
+  width?: number | null;
+  height?: number | null;
+}
+
+/**
+ * Helper to safely project a media asset into PublicMediaAssetInfo.
+ */
+export function toPublicMediaAsset(asset: any): PublicMediaAssetInfo | null {
+  if (!asset) return null;
+  if (typeof asset === 'string') {
+    return { url: asset };
+  }
+  return {
+    url: asset.url ?? (asset.storageKey ? `/uploads/${encodeURIComponent(asset.storageKey)}` : null),
+    storageKey: asset.storageKey ?? null,
+    alt: asset.alt ?? null,
+    width: typeof asset.width === 'number' ? asset.width : null,
+    height: typeof asset.height === 'number' ? asset.height : null,
+  };
+}
+
+/**
  * Standalone public-facing settings contract.
  * Strictly defines only the fields intended for public client consumption.
  * Any secret/internal field added to SiteSettingsData will NOT be included here.
@@ -21,11 +50,11 @@ export interface PublicSiteSettings {
   siteNameEn: string | null;
   tagline: string | null;
   logoId: string | null;
-  logo: any;
+  logo: PublicMediaAssetInfo | null;
   footerLogoId: string | null;
-  footerLogo: any;
+  footerLogo: PublicMediaAssetInfo | null;
   ogImageId: string | null;
-  ogImage: any;
+  ogImage: PublicMediaAssetInfo | null;
   address: string | null;
   workingHours: string | null;
   latitude: number | null;
@@ -52,11 +81,11 @@ export function toPublicSiteSettings(settings: SiteSettingsData): PublicSiteSett
     siteNameEn: settings.siteNameEn ?? null,
     tagline: settings.tagline ?? null,
     logoId: settings.logoId ?? null,
-    logo: settings.logo ?? null,
+    logo: toPublicMediaAsset(settings.logo),
     footerLogoId: settings.footerLogoId ?? null,
-    footerLogo: settings.footerLogo ?? null,
+    footerLogo: toPublicMediaAsset(settings.footerLogo),
     ogImageId: settings.ogImageId ?? null,
-    ogImage: settings.ogImage ?? null,
+    ogImage: toPublicMediaAsset(settings.ogImage),
     address: settings.address ?? null,
     workingHours: settings.workingHours ?? null,
     latitude: settings.latitude ?? null,
