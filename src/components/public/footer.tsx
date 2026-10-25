@@ -14,12 +14,11 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { SiteSettingsData } from '@/server/services/settings-service';
-import { PublicChannelItem } from '@/server/queries/settings';
+import { PublicChannelItem, PublicSiteSettings } from '@/server/queries/settings';
 import { ChannelIcon } from './channel-icon';
 
 interface FooterProps {
-  settings: SiteSettingsData;
+  settings: PublicSiteSettings;
   channels: PublicChannelItem[];
 }
 

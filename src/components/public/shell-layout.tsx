@@ -7,15 +7,14 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { SiteSettingsData } from '@/server/services/settings-service';
-import { PublicChannelItem } from '@/server/queries/settings';
+import { PublicChannelItem, PublicSiteSettings } from '@/server/queries/settings';
 import { CategoryNavItem, HamburgerDrawer } from './hamburger-drawer';
 import { Header } from './header';
 import { SearchDrawer } from './search-drawer';
 import { Footer } from './footer';
 
 interface ShellLayoutProps {
-  settings: SiteSettingsData;
+  settings: PublicSiteSettings;
   contactBarChannels: PublicChannelItem[];
   footerChannels: PublicChannelItem[];
   productCategories: CategoryNavItem[];
