@@ -1,0 +1,38 @@
+[
+  {
+    "id": "usr_1791465544331_so4k7",
+    "name": "مدیر کل",
+    "email": "admin@honey.ir",
+    "emailVerified": true,
+    "image": null,
+    "role": "ADMIN",
+    "isActive": true,
+    "lastLoginAt": null,
+    "createdAt": "2026-10-08T13:19:04.331Z",
+    "updatedAt": "2026-10-08T13:19:04.331Z"
+  },
+  {
+    "id": "usr_1791465708552_kptxj",
+    "name": "مدیر دوم",
+    "email": "manager@honey.ir",
+    "emailVerified": true,
+    "image": null,
+    "role": "ADMIN",
+    "isActive": true,
+    "lastLoginAt": null,
+    "createdAt": "2026-10-08T13:21:48.552Z",
+    "updatedAt": "2026-10-08T13:21:48.552Z"
+  },
+  {
+    "id": "usr_1791809477828_wg0ft",
+    "name": "مدیر تستی",
+    "email": "testadmin_1791809477828@honey.ir",
+    "emailVerified": false,
+    "image": null,
+    "role": "ADMIN",
+    "isActive": false,
+    "lastLoginAt": null,
+    "createdAt": "2026-10-12T12:51:17.828Z",
+    "updatedAt": "2026-10-13T09:47:40.587Z"
+  }
+]
