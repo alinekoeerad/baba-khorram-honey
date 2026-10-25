@@ -8,6 +8,8 @@
  * 4-second timeout so it never blocks or fails customer checkout.
  */
 
+import 'server-only';
+
 function createTimeoutSignal(timeoutMs: number): AbortSignal {
   if (typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout === 'function') {
     return AbortSignal.timeout(timeoutMs);

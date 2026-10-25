@@ -120,5 +120,60 @@ describe('SiteSettings Validation & Length Limits (Addendum A2)', () => {
     expect(fresh.eitaaBotToken).toBe('bot_eitaa_token_xyz');
     expect(fresh.eitaaChatId).toBe('eitaa_chat_admin');
   });
+
+  it('strictly excludes bot tokens and chat IDs from getPublicSiteSettings allowlist (F1)', async () => {
+    // 1. Ensure backend service has secret bot tokens configured
+    await SettingsService.updateSettings({
+      baleBotToken: 'secret_bale_token_test_123',
+      baleChatId: 'bale_admin_chat_id',
+      eitaaBotToken: 'secret_eitaa_token_test_456',
+      eitaaChatId: 'eitaa_admin_chat_id',
+    });
+
+    const { getPublicSiteSettings } = await import('@/server/queries/settings');
+    const publicSettings = await getPublicSiteSettings();
+
+    // 2. Assert that secret keys do NOT exist on the public object
+    expect(publicSettings).not.toHaveProperty('baleBotToken');
+    expect(publicSettings).not.toHaveProperty('baleChatId');
+    expect(publicSettings).not.toHaveProperty('eitaaBotToken');
+    expect(publicSettings).not.toHaveProperty('eitaaChatId');
+
+    expect((publicSettings as any).baleBotToken).toBeUndefined();
+    expect((publicSettings as any).baleChatId).toBeUndefined();
+    expect((publicSettings as any).eitaaBotToken).toBeUndefined();
+    expect((publicSettings as any).eitaaChatId).toBeUndefined();
+
+    // 3. Strict allowlist assertion: only public fields are present
+    const allowedKeys = new Set([
+      'id',
+      'siteNameFa',
+      'siteNameEn',
+      'tagline',
+      'logoId',
+      'logo',
+      'footerLogoId',
+      'footerLogo',
+      'ogImageId',
+      'ogImage',
+      'address',
+      'workingHours',
+      'latitude',
+      'longitude',
+      'mapZoom',
+      'copyrightText',
+      'seoTitle',
+      'seoDescription',
+      'cartEnabled',
+      'cartNotice',
+      'orderIntroText',
+      'orderOutroText',
+      'isPlaceholder',
+    ]);
+
+    for (const key of Object.keys(publicSettings)) {
+      expect(allowedKeys.has(key)).toBe(true);
+    }
+  });
 });
 
