@@ -16,6 +16,7 @@
 import { z } from 'zod';
 import crypto from 'crypto';
 import { headers } from 'next/headers';
+import { revalidatePath } from 'next/cache';
 import { db, OrderRecord } from '@/server/db/client';
 import { requireAdmin } from '@/server/auth/require-admin';
 import { recordAuditLog } from '@/server/services/audit-log-service';
@@ -347,6 +348,11 @@ export async function buildOrderAction(
           createdAt: new Date(),
         },
       });
+
+      try {
+        revalidatePath('/admin/orders');
+        revalidatePath('/admin');
+      } catch {}
     } catch (saveErr) {
       console.warn('Failed to persist order record in database:', saveErr);
     }
@@ -498,7 +504,14 @@ export async function updateOrderStatusAction(
     });
   } catch {}
 
-  return { success: true, order: updated };
+  try {
+    revalidatePath('/admin/orders');
+    revalidatePath('/admin');
+  } catch {}
+
+  const newOrdersCount = await db.order.count({ where: { status: 'NEW' } });
+
+  return { success: true, order: updated, newOrdersCount };
 }
 
 /**
@@ -524,7 +537,14 @@ export async function deleteOrderAction(id: string) {
     });
   } catch {}
 
-  return { success: true };
+  try {
+    revalidatePath('/admin/orders');
+    revalidatePath('/admin');
+  } catch {}
+
+  const newOrdersCount = await db.order.count({ where: { status: 'NEW' } });
+
+  return { success: true, newOrdersCount };
 }
 
 /**

@@ -6,12 +6,14 @@
  */
 
 import React, { useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   updateFeedbackStatusAction,
   deleteFeedbackAction,
 } from '@/server/actions/feedback-actions';
 import { copyTextToClipboard } from '@/lib/clipboard';
 import { normalizeDigits } from '@/lib/domain-utils';
+import { useAdminBadges, dispatchFeedbacksChanged } from '@/components/admin/admin-badge-context';
 import {
   Phone,
   Calendar,
@@ -49,6 +51,8 @@ export function FeedbacksManagerClient({
   initialFeedbacks: FeedbackItem[];
 }) {
   const toast = useToast();
+  const router = useRouter();
+  const { setUnreadFeedbacksCount } = useAdminBadges();
   const [feedbacks, setFeedbacks] = useState<FeedbackItem[]>(initialFeedbacks);
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [typeFilter, setTypeFilter] = useState<string>('ALL');
@@ -84,9 +88,19 @@ export function FeedbacksManagerClient({
         status: newStatus as any,
       });
       if (res.success && res.feedback) {
-        setFeedbacks((prev) =>
-          prev.map((item) => (item.id === id ? { ...item, status: newStatus } : item))
+        const updated = feedbacks.map((item) =>
+          item.id === id ? { ...item, status: newStatus } : item
         );
+        const unread = updated.filter((f) => f.status === 'UNREAD').length;
+
+        setFeedbacks(updated);
+        setUnreadFeedbacksCount(unread);
+        dispatchFeedbacksChanged(unread);
+
+        toast.success('وضعیت پیام با موفقیت تغییر کرد.', 'به‌روزرسانی وضعیت');
+        router.refresh();
+      } else {
+        toast.error(res.error || 'خطا در تغییر وضعیت پیام.', 'خطا');
       }
     });
   };
@@ -129,9 +143,16 @@ export function FeedbacksManagerClient({
     startTransition(async () => {
       const res = await deleteFeedbackAction(id);
       if (res.success) {
-        setFeedbacks((prev) => prev.filter((item) => item.id !== id));
+        const updated = feedbacks.filter((item) => item.id !== id);
+        const unread = updated.filter((f) => f.status === 'UNREAD').length;
+
+        setFeedbacks(updated);
+        setUnreadFeedbacksCount(unread);
+        dispatchFeedbacksChanged(unread);
+
         setConfirmDelete({ isOpen: false });
         toast.success('پیام با موفقیت حذف گردید.');
+        router.refresh();
       } else {
         toast.error(res.error || 'خطا در حذف پیام');
       }

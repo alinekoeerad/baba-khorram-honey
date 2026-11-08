@@ -6,12 +6,14 @@
  */
 
 import React, { useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   updateOrderStatusAction,
   deleteOrderAction,
 } from '@/server/actions/order-actions';
 import { copyTextSync, copyTextToClipboard } from '@/lib/clipboard';
 import { toPersianDigits, normalizeDigits } from '@/lib/domain-utils';
+import { useAdminBadges, dispatchOrdersChanged } from '@/components/admin/admin-badge-context';
 import {
   Phone,
   Calendar,
@@ -114,6 +116,8 @@ export function OrdersManagerClient({
   initialOrders: OrderItem[];
 }) {
   const toast = useToast();
+  const router = useRouter();
+  const { setNewOrdersCount } = useAdminBadges();
   const [orders, setOrders] = useState<OrderItem[]>(initialOrders);
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
@@ -163,13 +167,23 @@ export function OrdersManagerClient({
     startTransition(async () => {
       const res = await updateOrderStatusAction(id, newStatus);
       if (res.success && res.order) {
-        setOrders((prev) =>
-          prev.map((item) => (item.id === id ? { ...item, status: newStatus } : item))
+        const updated = orders.map((item) =>
+          item.id === id ? { ...item, status: newStatus } : item
         );
+        const newPendingCount =
+          typeof res.newOrdersCount === 'number'
+            ? res.newOrdersCount
+            : updated.filter((o) => o.status === 'NEW').length;
+
+        setOrders(updated);
+        setNewOrdersCount(newPendingCount);
+        dispatchOrdersChanged(newPendingCount);
+
         toast.success(
           `وضعیت سفارش به «${STATUS_METAS[newStatus]?.label || newStatus}» تغییر یافت.`,
           'وضعیت سفارش به‌روزرسانی شد'
         );
+        router.refresh();
       } else {
         toast.error(res.error || 'عملیات با خطا مواجه شد.', 'خطا در تغییر وضعیت');
       }
@@ -194,11 +208,21 @@ export function OrdersManagerClient({
     startTransition(async () => {
       const res = await deleteOrderAction(orderId);
       if (res.success) {
-        setOrders((prev) => prev.filter((x) => x.id !== orderId));
+        const updated = orders.filter((x) => x.id !== orderId);
+        const newPendingCount =
+          typeof res.newOrdersCount === 'number'
+            ? res.newOrdersCount
+            : updated.filter((o) => o.status === 'NEW').length;
+
+        setOrders(updated);
+        setNewOrdersCount(newPendingCount);
+        dispatchOrdersChanged(newPendingCount);
+
         toast.success(
           `سفارش ${confirmDelete.code || ''} از سامانه پاک شد.`,
           'سفارش حذف شد'
         );
+        router.refresh();
       } else {
         toast.error(res.error || 'خطا در حذف سفارش.', 'خطا در حذف');
       }
@@ -216,6 +240,37 @@ export function OrdersManagerClient({
 
   return (
     <div className="space-y-6">
+      {/* Live Stats Summary Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white border border-[#EFE9E0] p-5 shadow-xs">
+          <div className="text-xs font-bold text-[#5C5248]">کل سفارش‌ها</div>
+          <div className="text-2xl sm:text-3xl font-black text-[#332115] mt-2 font-mono">
+            {toPersianDigits(counts.all)}
+          </div>
+        </div>
+
+        <div className="bg-white border border-[#EFE9E0] p-5 shadow-xs">
+          <div className="text-xs font-bold text-rose-700">جدید (در انتظار هماهنگی)</div>
+          <div className="text-2xl sm:text-3xl font-black text-rose-700 mt-2 font-mono">
+            {toPersianDigits(counts.new)}
+          </div>
+        </div>
+
+        <div className="bg-white border border-[#EFE9E0] p-5 shadow-xs">
+          <div className="text-xs font-bold text-[#D97706]">هماهنگ شده</div>
+          <div className="text-2xl sm:text-3xl font-black text-[#D97706] mt-2 font-mono">
+            {toPersianDigits(counts.contacted)}
+          </div>
+        </div>
+
+        <div className="bg-white border border-[#EFE9E0] p-5 shadow-xs">
+          <div className="text-xs font-bold text-[#3F8F3B]">ارسال شده</div>
+          <div className="text-2xl sm:text-3xl font-black text-[#3F8F3B] mt-2 font-mono">
+            {toPersianDigits(counts.shipped)}
+          </div>
+        </div>
+      </div>
+
       {/* Search and Filters Bar */}
       <div className="bg-white border border-[#EFE9E0] p-4 shadow-xs space-y-4">
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
