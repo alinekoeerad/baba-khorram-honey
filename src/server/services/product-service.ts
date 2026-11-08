@@ -305,7 +305,7 @@ export class ProductService {
       });
     }
 
-    const categoryIds = rawInput.categoryIds ?? existing.categories.map((c) => c.categoryId);
+    const categoryIds = rawInput.categoryIds ?? existing.categories.map((c: any) => c.categoryId);
     const categories = await this.validateProductCategories(categoryIds);
     const categoryNames = categories.map((c) => c.name);
 

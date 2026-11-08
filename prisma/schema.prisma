@@ -465,6 +465,10 @@ model SiteSettings {
   cartNotice     String   @default("قیمت و هزینه‌ی ارسال پس از تأیید اعلام می‌شود.")
   orderIntroText String?
   orderOutroText String?
+  baleBotToken   String?
+  baleChatId     String?
+  eitaaBotToken  String?
+  eitaaChatId    String?
   isPlaceholder  Boolean  @default(true)
   updatedAt      DateTime @updatedAt
 

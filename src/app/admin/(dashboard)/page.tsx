@@ -968,7 +968,7 @@ export default async function AdminDashboardPage() {
                   </td>
                 </tr>
               ) : (
-                recentAuditLogs.map((log) => (
+                recentAuditLogs.map((log: any) => (
                   <tr key={log.id} className="hover:bg-[#FFFBEB]/40 transition-colors">
                     <td className="py-2.5 px-3 whitespace-nowrap text-[#5C5248]" dir="ltr">
                       {new Date(log.createdAt).toLocaleString('fa-IR')}

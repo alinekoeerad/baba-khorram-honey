@@ -1,0 +1,62 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: honey_postgres_prod
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-honey_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ChangeMeSecurePassword123!}
+      POSTGRES_DB: ${POSTGRES_DB:-honey_prod}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - honey_postgres_prod_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-honey_admin} -d ${POSTGRES_DB:-honey_prod}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - honey_internal_network
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: honey_web_prod
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: "production"
+      PORT: "3000"
+      SITE_URL: ${SITE_URL:-https://babakhorram.com}
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-honey_admin}:${POSTGRES_PASSWORD:-ChangeMeSecurePassword123!}@postgres:5432/${POSTGRES_DB:-honey_prod}?schema=public"
+      UPLOAD_DIR: "/app/uploads"
+      ORDER_LINK_SECRET: ${ORDER_LINK_SECRET}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      BALE_BOT_TOKEN: ${BALE_BOT_TOKEN}
+      BALE_CHAT_ID: ${BALE_CHAT_ID}
+      EITAA_BOT_TOKEN: ${EITAA_BOT_TOKEN}
+      EITAA_CHAT_ID: ${EITAA_CHAT_ID}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
+    volumes:
+      - honey_uploads_data:/app/uploads
+    networks:
+      - honey_internal_network
+
+volumes:
+  honey_postgres_prod_data:
+    name: honey_postgres_prod_data
+  honey_uploads_data:
+    name: honey_uploads_data
+
+networks:
+  honey_internal_network:
+    driver: bridge
+
