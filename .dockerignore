@@ -1,0 +1,29 @@
+# Node / Build artifacts
+node_modules
+.next
+.vscode
+.git
+.worktrees
+coverage
+test-results
+playwright-report
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+
+# Local uploads and seed dumps
+uploads/*
+!uploads/.gitkeep
+data/seed/sessions.json
+data/seed/order-share-links.json
+data/seed/audit-logs.json
+data/seed/orders.json
+
+# Temporary dumps
+full-code.txt
+folder-structure.txt
+import-report.md
+reference/
+

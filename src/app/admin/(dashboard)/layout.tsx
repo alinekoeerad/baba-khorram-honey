@@ -3,6 +3,7 @@ import { requireAdmin } from '@/server/auth/require-admin';
 import { AdminSidebar } from '@/components/admin/sidebar';
 import { AdminHeader } from '@/components/admin/header';
 import { ToastProvider } from '@/components/admin/toast-provider';
+import { AdminBadgeProvider } from '@/components/admin/admin-badge-context';
 import { CommandPalette } from '@/components/admin/command-palette';
 
 export const dynamic = 'force-dynamic';
@@ -17,27 +18,29 @@ export default async function AdminDashboardLayout({
 
   return (
     <ToastProvider>
-      <div className="flex min-h-[100dvh] h-[100dvh] overflow-hidden bg-[#FDFBF8]">
-        {/* Desktop Sidebar (Fixed on visual right in RTL) */}
-        <div className="hidden md:flex md:w-64 md:flex-col md:shrink-0">
-          <AdminSidebar />
-        </div>
+      <AdminBadgeProvider>
+        <div className="flex min-h-[100dvh] h-[100dvh] overflow-hidden bg-[#FDFBF8]">
+          {/* Desktop Sidebar (Fixed on visual right in RTL) */}
+          <div className="hidden md:flex md:w-64 md:flex-col md:shrink-0">
+            <AdminSidebar />
+          </div>
 
-        {/* Main Content Area */}
-        <div className="flex flex-col flex-1 min-w-0 overflow-y-auto [scrollbar-gutter:stable]">
-          <AdminHeader
-            user={{
-              name: user.name,
-              email: user.email,
-              role: user.role,
-            }}
-          />
-          <main className="flex-1 p-3.5 sm:p-5 md:p-8 max-w-7xl w-full mx-auto pb-16 md:pb-8">
-            {children}
-          </main>
+          {/* Main Content Area */}
+          <div className="flex flex-col flex-1 min-w-0 overflow-y-auto [scrollbar-gutter:stable]">
+            <AdminHeader
+              user={{
+                name: user.name,
+                email: user.email,
+                role: user.role,
+              }}
+            />
+            <main className="flex-1 p-3.5 sm:p-5 md:p-8 max-w-7xl w-full mx-auto pb-16 md:pb-8">
+              {children}
+            </main>
+          </div>
+          <CommandPalette />
         </div>
-        <CommandPalette />
-      </div>
+      </AdminBadgeProvider>
     </ToastProvider>
   );
 }

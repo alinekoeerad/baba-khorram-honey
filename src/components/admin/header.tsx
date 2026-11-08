@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { Menu, X, ExternalLink, LogOut, User as UserIcon, Search, ChevronLeft, Bell } from 'lucide-react';
 import { AdminSidebar } from './sidebar';
-import { getNewOrdersCountAction } from '@/server/actions/order-actions';
+import { useAdminBadges } from '@/components/admin/admin-badge-context';
 import { adminLogoutAction } from '@/server/actions/auth-actions';
 import { toPersianDigits } from '@/lib/domain-utils';
 
@@ -41,26 +41,7 @@ export function AdminHeader({ user }: AdminHeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [newOrdersCount, setNewOrdersCount] = useState<number>(0);
-
-  useEffect(() => {
-    let isMounted = true;
-    const fetchOrdersCount = async () => {
-      try {
-        const res = await getNewOrdersCountAction();
-        if (isMounted && res.success && typeof res.count === 'number') {
-          setNewOrdersCount(res.count);
-        }
-      } catch {}
-    };
-
-    fetchOrdersCount();
-    const timer = setInterval(fetchOrdersCount, 15000); // 15-second silent live polling
-    return () => {
-      isMounted = false;
-      clearInterval(timer);
-    };
-  }, [pathname]);
+  const { newOrdersCount } = useAdminBadges();
 
   // Generate dynamic breadcrumbs
   const pathSegments = pathname.split('/').filter(Boolean);

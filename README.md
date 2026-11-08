@@ -241,7 +241,7 @@ pnpm test
 
 ## 🌐 دستورالعمل استقرار در محیط پروداکشن
 
-جهت استقرار در سرورهای ابری ایران (مانند آروان، پارس‌پک، هاست‌ایران) یا پلتفرم‌های ابری (مانند لیارا - Liara):
+جهت استقرار در سرورهای ابری (آروان، پارس‌پک، هاست‌ایران) یا پلتفرم‌های ابری (لیارا - Liara):
 
 1. **مشخصات سرور پیشنهادی**:
    - پردازنده: ۲ الی ۴ هسته
@@ -249,16 +249,45 @@ pnpm test
    - فضای دیسک: حداقل ۲۰ گیگابایت NVMe SSD
    - سیستم‌عامل: Ubuntu 22.04 LTS / 24.04 LTS
 
-2. **استقرار سریع با Docker**:
+2. **گام اول: تولید کلیدهای امنیتی تصادفی**:
    ```bash
-   docker build -t honey-website:latest .
-   docker run -d -p 3000:3000 --env-file .env.production honey-website:latest
+   pnpm generate:secrets
    ```
 
-3. **تنظیم Nginx Reverse Proxy و گواهی رایگان SSL (Certbot)**:
+3. **گام دوم: تنظیم فایل `.env.production`**:
+   فایل `.env.production.example` را کپی کرده و متغیرهای آن را بر اساس دامنه و کلیدهای تولیدشده پر کنید:
+   ```bash
+   cp .env.production.example .env.production
+   nano .env.production
+   ```
+
+4. **گام سوم: استقرار کامل و آماده‌به‌کار با Docker Compose**:
+   پروژه دارای فایل ارکستراسیون تولیدی `docker-compose.prod.yml` است که وب‌سرور و پایگاه‌داده PostgreSQL را به همراه Volume پایدار برای تصاویر (`/app/uploads`) اجرا می‌کند:
+   ```bash
+   docker compose -f docker-compose.prod.yml --env-file .env.production up -d --build
+   ```
+
+5. **گام چهارم: اعمال مایگریشن‌های دیتابیس (یک‌بار پس از بالا آمدن دیتابیس)**:
+   ```bash
+   docker compose -f docker-compose.prod.yml exec web npx prisma migrate deploy
+   ```
+   *(اختیاری) جهت درون‌ریزی داده‌های پیش‌فرض و مدیر اصلی:*
+   ```bash
+   docker compose -f docker-compose.prod.yml exec web node scripts/seed.mjs
+   ```
+
+6. **تنظیم Nginx Reverse Proxy و گواهی رایگان SSL (Certbot)**:
    ```nginx
    server {
        server_name yourdomain.ir www.yourdomain.ir;
+
+       # پروکسی مستقیم تصاویر آپلودشده از ولوم سرور جهت حداکثر بازدهی
+       location /uploads/ {
+           alias /var/lib/docker/volumes/honey_uploads_data/_data/;
+           expires 1y;
+           add_header Cache-Control "public, max-age=31536000, immutable";
+           add_header X-Content-Type-Options "nosniff";
+       }
 
        location / {
            proxy_pass http://localhost:3000;

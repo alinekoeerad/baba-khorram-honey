@@ -2,16 +2,29 @@ import type { NextConfig } from 'next';
 
 const isDev = process.env.NODE_ENV !== 'production';
 
-// Extract production domain from NEXT_PUBLIC_SITE_URL for Server Actions
-const getProductionDomain = (): string => {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
-  if (!siteUrl) return 'babakhorram.com';
-  try {
-    const parsed = new URL(siteUrl.includes('://') ? siteUrl : `https://${siteUrl}`);
-    return parsed.host;
-  } catch {
-    return 'babakhorram.com';
+// Extract production domains from SITE_URL and NEXT_PUBLIC_SITE_URL for Server Actions
+const getAllowedOrigins = (): string[] => {
+  const origins = new Set<string>();
+  origins.add('babakhorram.com');
+  origins.add('www.babakhorram.com');
+
+  const envUrls = [process.env.SITE_URL, process.env.NEXT_PUBLIC_SITE_URL];
+  for (const urlStr of envUrls) {
+    if (!urlStr) continue;
+    try {
+      const parsed = new URL(urlStr.includes('://') ? urlStr : `https://${urlStr}`);
+      origins.add(parsed.host);
+      if (parsed.hostname.startsWith('www.')) {
+        origins.add(parsed.hostname.replace(/^www\./, ''));
+      } else if (!parsed.hostname.includes('localhost') && !parsed.hostname.startsWith('127.')) {
+        origins.add(`www.${parsed.hostname}`);
+      }
+    } catch {
+      // Ignore invalid URL
+    }
   }
+
+  return Array.from(origins);
 };
 
 const devOrigins = [
@@ -34,8 +47,8 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: '25mb',
       allowedOrigins: isDev
-        ? [...devOrigins, getProductionDomain()]
-        : [getProductionDomain()],
+        ? [...devOrigins, ...getAllowedOrigins()]
+        : getAllowedOrigins(),
     },
   },
   typescript: {

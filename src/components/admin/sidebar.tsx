@@ -25,9 +25,7 @@ import {
 } from 'lucide-react';
 import { toPersianDigits } from '@/lib/domain-utils';
 import { uiStringsFa } from '@/content/ui-strings.fa';
-
-import { getAdminFeedbacksAction } from '@/server/actions/feedback-actions';
-import { getAdminOrdersAction } from '@/server/actions/order-actions';
+import { useAdminBadges } from '@/components/admin/admin-badge-context';
 import { adminLogoutAction } from '@/server/actions/auth-actions';
 
 interface NavItem {
@@ -52,8 +50,7 @@ const BASE_NAV_ITEMS: NavItem[] = [
 
 export function AdminSidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
-  const [unreadCount, setUnreadCount] = React.useState<number>(0);
-  const [newOrdersCount, setNewOrdersCount] = React.useState<number>(0);
+  const { newOrdersCount, unreadFeedbacksCount: unreadCount } = useAdminBadges();
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
 
   const handleLogout = async () => {
@@ -67,29 +64,6 @@ export function AdminSidebar({ onClose }: { onClose?: () => void }) {
       window.location.href = '/admin/login';
     }
   };
-
-  React.useEffect(() => {
-    let mounted = true;
-    getAdminFeedbacksAction({ status: 'NEW' })
-      .then((res) => {
-        if (mounted && res.success && typeof res.unreadCount === 'number') {
-          setUnreadCount(res.unreadCount);
-        }
-      })
-      .catch(() => {});
-
-    getAdminOrdersAction({ status: 'NEW' })
-      .then((res) => {
-        if (mounted && res.success && res.counts?.new !== undefined) {
-          setNewOrdersCount(res.counts.new);
-        }
-      })
-      .catch(() => {});
-
-    return () => {
-      mounted = false;
-    };
-  }, [pathname]);
 
   return (
     <aside className="h-full flex flex-col bg-[#332115] text-[#E8E2D9] border-s border-black/20 select-none">

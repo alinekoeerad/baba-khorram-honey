@@ -16,6 +16,7 @@
 import { z } from 'zod';
 import crypto from 'crypto';
 import { headers } from 'next/headers';
+import { revalidatePath } from 'next/cache';
 import { db, OrderRecord } from '@/server/db/client';
 import { requireAdmin } from '@/server/auth/require-admin';
 import { recordAuditLog } from '@/server/services/audit-log-service';
@@ -298,10 +299,10 @@ export async function buildOrderAction(
     const isSms = channel.type === 'PHONE';
     const messageText = isSms
       ? buildCompactOrderMessage({
-          referenceCode: orderCode,
-          customer: sanitizedCustomer,
-          items: verifiedItems,
-        })
+        referenceCode: orderCode,
+        customer: sanitizedCustomer,
+        items: verifiedItems,
+      })
       : fullMessageText;
 
     // 9b. Instant non-blocking notification to business owner / admin via Eitaa, Bale, Telegram
@@ -347,6 +348,11 @@ export async function buildOrderAction(
           createdAt: new Date(),
         },
       });
+
+      try {
+        revalidatePath('/admin/orders');
+        revalidatePath('/admin');
+      } catch { }
     } catch (saveErr) {
       console.warn('Failed to persist order record in database:', saveErr);
     }
@@ -496,9 +502,16 @@ export async function updateOrderStatusAction(
       entityId: id,
       summary: `تغییر وضعیت سفارش ${existing.code} به ${status}`,
     });
-  } catch {}
+  } catch { }
 
-  return { success: true, order: updated };
+  try {
+    revalidatePath('/admin/orders');
+    revalidatePath('/admin');
+  } catch { }
+
+  const newOrdersCount = await db.order.count({ where: { status: 'NEW' } });
+
+  return { success: true, order: updated, newOrdersCount };
 }
 
 /**
@@ -522,9 +535,16 @@ export async function deleteOrderAction(id: string) {
       entityId: id,
       summary: `حذف سفارش ${existing.code}`,
     });
-  } catch {}
+  } catch { }
 
-  return { success: true };
+  try {
+    revalidatePath('/admin/orders');
+    revalidatePath('/admin');
+  } catch { }
+
+  const newOrdersCount = await db.order.count({ where: { status: 'NEW' } });
+
+  return { success: true, newOrdersCount };
 }
 
 /**

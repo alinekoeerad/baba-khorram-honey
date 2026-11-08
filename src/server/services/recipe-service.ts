@@ -278,7 +278,7 @@ export class RecipeService {
       });
     }
 
-    const categoryIds = rawInput.categoryIds ?? (existing as any).categoryIds ?? existing.categories.map((c) => c.categoryId);
+    const categoryIds = rawInput.categoryIds ?? (existing as any).categoryIds ?? existing.categories.map((c: any) => c.categoryId);
     const categories = await this.validateRecipeCategories(categoryIds);
     const categoryNames = categories.map((c) => c.name);
 
