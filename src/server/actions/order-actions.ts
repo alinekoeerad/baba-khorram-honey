@@ -299,10 +299,10 @@ export async function buildOrderAction(
     const isSms = channel.type === 'PHONE';
     const messageText = isSms
       ? buildCompactOrderMessage({
-          referenceCode: orderCode,
-          customer: sanitizedCustomer,
-          items: verifiedItems,
-        })
+        referenceCode: orderCode,
+        customer: sanitizedCustomer,
+        items: verifiedItems,
+      })
       : fullMessageText;
 
     // 9b. Instant non-blocking notification to business owner / admin via Eitaa, Bale, Telegram
@@ -352,7 +352,7 @@ export async function buildOrderAction(
       try {
         revalidatePath('/admin/orders');
         revalidatePath('/admin');
-      } catch {}
+      } catch { }
     } catch (saveErr) {
       console.warn('Failed to persist order record in database:', saveErr);
     }
@@ -502,12 +502,12 @@ export async function updateOrderStatusAction(
       entityId: id,
       summary: `تغییر وضعیت سفارش ${existing.code} به ${status}`,
     });
-  } catch {}
+  } catch { }
 
   try {
     revalidatePath('/admin/orders');
     revalidatePath('/admin');
-  } catch {}
+  } catch { }
 
   const newOrdersCount = await db.order.count({ where: { status: 'NEW' } });
 
@@ -535,12 +535,12 @@ export async function deleteOrderAction(id: string) {
       entityId: id,
       summary: `حذف سفارش ${existing.code}`,
     });
-  } catch {}
+  } catch { }
 
   try {
     revalidatePath('/admin/orders');
     revalidatePath('/admin');
-  } catch {}
+  } catch { }
 
   const newOrdersCount = await db.order.count({ where: { status: 'NEW' } });
 
