@@ -80,7 +80,7 @@ export function DynamicSectionRenderer({
             {kicker}
           </div>
         )}
-        <h2 className={`text-2xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight ${isWood ? 'text-[#2B2017]' : themeColors.title}`}>
+        <h2 className={`text-2xl sm:text-4xl lg:text-5xl font-black leading-snug sm:leading-normal ${isWood ? 'text-[#2B2017]' : themeColors.title}`}>
           {title}
         </h2>
         <p className={`text-sm sm:text-base lg:text-lg leading-loose text-justify font-medium ${isWood ? 'text-[#5C5248]' : 'text-[#4A423A]'}`}>
@@ -174,7 +174,7 @@ export function DynamicSectionRenderer({
               {kicker}
             </div>
           )}
-          <h2 className="text-3xl sm:text-5xl lg:text-7xl font-black text-[#FBBF24] drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)] leading-tight">
+          <h2 className="text-3xl sm:text-5xl lg:text-7xl font-black text-[#FBBF24] drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)] leading-snug sm:leading-normal">
             {heading}
           </h2>
           {body && (
@@ -226,7 +226,7 @@ export function DynamicSectionRenderer({
                   {kicker}
                 </div>
               )}
-              <h2 className="text-2xl sm:text-4xl lg:text-6xl font-black text-[#C86A00] leading-tight sm:leading-none">
+              <h2 className="text-2xl sm:text-4xl lg:text-6xl font-black text-[#C86A00] leading-snug sm:leading-normal">
                 {title}
               </h2>
               <p className="text-sm sm:text-base lg:text-lg text-[#332115] leading-loose text-justify font-bold">

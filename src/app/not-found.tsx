@@ -21,7 +21,7 @@ export default function NotFound() {
               <span>خطای ۴۰۴</span>
             </div>
 
-            <h1 className="text-2xl sm:text-4xl font-black text-[#3F2A1D] leading-tight tracking-tight">
+            <h1 className="text-2xl sm:text-4xl font-black text-[#3F2A1D] leading-snug sm:leading-normal">
               صفحه مورد نظر پیدا نشد
             </h1>
 

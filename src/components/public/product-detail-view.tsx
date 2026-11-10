@@ -129,11 +129,10 @@ export function ProductDetailView({
           </span>
         </nav>
 
-        {/* Two-Column Desktop Grid Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-          {/* RIGHT COLUMN (7 Cols): Gallery, Trust Seals, Specs & Description */}
-          <div className="lg:col-span-7 space-y-8 text-right">
-            {/* 1. Interactive Multi-Image Luxury Gallery with Fullscreen Lightbox */}
+        {/* Two-Column Balanced Hero Showcase: Gallery (Right) & Purchasing Card (Left) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+          {/* RIGHT COLUMN (6 Cols): Interactive Luxury Gallery */}
+          <div className="lg:col-span-6 w-full text-right order-1">
             <InteractiveMediaGallery
               mainImage={product.mainImage}
               gallery={product.gallery}
@@ -142,53 +141,97 @@ export function ProductDetailView({
               aspectRatio="dynamic"
               featuredBadge={product.isFeatured ? 'منتخب باباخُرم' : null}
             />
+          </div>
 
-            {/* Authentic Heritage Postal & Wax Seals */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 bg-[#FFFBEB] border border-[#FDE68A] rounded-none shadow-xs text-center">
-              <div className="flex items-center sm:flex-col justify-center gap-2 p-2 bg-white border border-[#EFE9E0]">
-                <ShieldCheck className="w-6 h-6 text-[#D97706]" />
-                <div>
-                  <div className="text-xs font-black text-[#2B2017]">۱۰۰٪ خام و گرما‌ندیده</div>
-                  <div className="text-[10px] text-[#786455] font-bold">حفظ کامل آنزیم‌های فعال</div>
+          {/* LEFT COLUMN (6 Cols): Sticky/Focused Purchasing Card */}
+          <div className="lg:col-span-6 w-full space-y-6 text-right order-2">
+            <div className="bg-white border-2 border-[#FDE68A] p-6 sm:p-8 rounded-none shadow-xl space-y-6">
+              {/* Product Title & Original Name */}
+              <div className="space-y-2 border-b border-[#EFE9E0] pb-5">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs font-bold text-[#D97706] uppercase tracking-wider">
+                    عسل ارگانیک کوهستان
+                  </span>
+                  <div>
+                    {!product.isAvailable ? (
+                      <span className="inline-block px-3 py-1 bg-rose-100 text-rose-800 border border-rose-300 text-xs font-black rounded-none shadow-2xs">
+                        ناموجود
+                      </span>
+                    ) : (
+                      <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-800 border border-emerald-300 text-xs font-black rounded-none shadow-2xs">
+                        موجود در انبار
+                      </span>
+                    )}
+                  </div>
                 </div>
+
+                <h1 className="text-2xl sm:text-4xl font-black text-[#2B2017] leading-snug sm:leading-normal">
+                  {product.nameFa}
+                </h1>
+
+                {product.nameOriginal && (
+                  <p className="text-xs sm:text-sm text-[#786455] font-mono tracking-wide" dir="ltr">
+                    {product.nameOriginal}
+                  </p>
+                )}
               </div>
-              <div className="flex items-center sm:flex-col justify-center gap-2 p-2 bg-white border border-[#EFE9E0]">
-                <Sparkles className="w-6 h-6 text-[#D97706]" />
-                <div>
-                  <div className="text-xs font-black text-[#2B2017]">پوشش گیاهی کوهستان</div>
-                  <div className="text-[10px] text-[#786455] font-bold">شهد گون، آویشن و سدر</div>
+
+              {/* Add To Cart Slot with Weight Variation Badges */}
+              <AddToCartSlot
+                productId={product.id}
+                isAvailable={product.isAvailable}
+                cartEnabled={cartEnabled}
+                options={product.options}
+              />
+
+              {/* Trust & Delivery Micro-Features */}
+              <div className="pt-4 border-t border-[#EFE9E0] space-y-3 text-xs sm:text-sm text-[#5C5248]">
+                <div className="flex items-center gap-2.5">
+                  <Truck className="w-4 h-4 text-[#D97706] shrink-0" />
+                  <span className="text-[#332115] font-medium">ارسال سریع و رایگان برای سفارش‌های بالای ۱ کیلوگرم</span>
                 </div>
-              </div>
-              <div className="flex items-center sm:flex-col justify-center gap-2 p-2 bg-white border border-[#EFE9E0]">
-                <CheckCircle2 className="w-6 h-6 text-emerald-600" />
-                <div>
-                  <div className="text-xs font-black text-[#2B2017]">ساکارز آزمایشگاهی &lt; ۳٪</div>
-                  <div className="text-[10px] text-[#786455] font-bold">تضمین بازگشت بی قید وجه</div>
+                <div className="flex items-center gap-2.5">
+                  <ShieldCheck className="w-4 h-4 text-[#D97706] shrink-0" />
+                  <span className="text-[#332115] font-medium">ضمانت ۱۰۰٪ اصالت و بازگشت بی‌قیدوشرط وجه</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <Sparkles className="w-4 h-4 text-[#D97706] shrink-0" />
+                  <span className="text-[#332115] font-medium">بسته‌بندی ایمن ضدنشت در ظروف شیشه‌ای استاندارد</span>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
 
-            {/* Nutritional Chips: Mountain Flora & Physical Characteristics */}
-            {metaChips.length > 0 && (
-              <div className="bg-white border border-[#EFE9E0] p-6 rounded-none shadow-sm space-y-4">
-                <h3 className="text-base font-black text-[#2B2017] flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[#D97706]" />
-                  <span>مشخصات فیزیکی و ویژگی‌های اقلیمی:</span>
-                </h3>
-                <div className="flex flex-wrap gap-2.5">
-                  {metaChips.map((chip, idx) => (
-                    <div
-                      key={idx}
-                      className="px-3.5 py-1.5 bg-[#FFFBEB] border border-[#FDE68A] text-[#2B2017] text-xs sm:text-sm rounded-none font-bold"
-                    >
-                      <span className="text-[#B45309] font-black ml-1.5">{chip.label}:</span>
-                      <span>{chip.value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+        {/* Authentic Heritage Postal & Wax Seals Banner */}
+        <div className="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 bg-[#FFFBEB] border border-[#FDE68A] rounded-none shadow-xs text-center">
+          <div className="flex items-center sm:flex-col justify-center gap-2 p-3 bg-white border border-[#EFE9E0]">
+            <ShieldCheck className="w-6 h-6 text-[#D97706]" />
+            <div>
+              <div className="text-xs font-black text-[#2B2017]">۱۰۰٪ خام و گرما‌ندیده</div>
+              <div className="text-[10px] text-[#786455] font-bold">حفظ کامل آنزیم‌های فعال</div>
+            </div>
+          </div>
+          <div className="flex items-center sm:flex-col justify-center gap-2 p-3 bg-white border border-[#EFE9E0]">
+            <Sparkles className="w-6 h-6 text-[#D97706]" />
+            <div>
+              <div className="text-xs font-black text-[#2B2017]">پوشش گیاهی کوهستان</div>
+              <div className="text-[10px] text-[#786455] font-bold">شهد گون، آویشن و سدر</div>
+            </div>
+          </div>
+          <div className="flex items-center sm:flex-col justify-center gap-2 p-3 bg-white border border-[#EFE9E0]">
+            <CheckCircle2 className="w-6 h-6 text-emerald-600" />
+            <div>
+              <div className="text-xs font-black text-[#2B2017]">شهد ۱۰۰٪ خالص و طبیعی</div>
+              <div className="text-[10px] text-[#786455] font-bold">تضمین بازگشت بی قید وجه</div>
+            </div>
+          </div>
+        </div>
 
+        {/* Detailed Information & Characteristics Grid */}
+        <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Description & Benefits (7 Cols on Desktop) */}
+          <div className="lg:col-span-7 space-y-6 text-right">
             {/* Description & Sensory Notes */}
             {(product.shortDescription || product.description) && (
               <div className="space-y-4 text-right bg-white p-6 sm:p-8 border border-[#EFE9E0] rounded-none shadow-sm">
@@ -228,6 +271,30 @@ export function ProductDetailView({
                 </ul>
               </div>
             )}
+          </div>
+
+          {/* Specs & Warnings (5 Cols on Desktop) */}
+          <div className="lg:col-span-5 space-y-6 text-right">
+            {/* Nutritional Chips: Mountain Flora & Physical Characteristics */}
+            {metaChips.length > 0 && (
+              <div className="bg-white border border-[#EFE9E0] p-6 rounded-none shadow-sm space-y-4">
+                <h3 className="text-base font-black text-[#2B2017] flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-[#D97706]" />
+                  <span>مشخصات فیزیکی و ویژگی‌های اقلیمی:</span>
+                </h3>
+                <div className="flex flex-wrap gap-2.5">
+                  {metaChips.map((chip, idx) => (
+                    <div
+                      key={idx}
+                      className="px-3.5 py-1.5 bg-[#FFFBEB] border border-[#FDE68A] text-[#2B2017] text-xs sm:text-sm rounded-none font-bold"
+                    >
+                      <span className="text-[#B45309] font-black ml-1.5">{chip.label}:</span>
+                      <span>{chip.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Usage Warning Box */}
             {product.usageWarning && product.usageWarning.trim().length > 0 && (
@@ -241,65 +308,6 @@ export function ProductDetailView({
                 </p>
               </div>
             )}
-          </div>
-
-          {/* LEFT COLUMN (5 Cols): Sticky Purchasing Card on Warm Parchment */}
-          <div className="lg:col-span-5 lg:sticky lg:top-28 space-y-6 text-right">
-            <div className="bg-white border-2 border-[#FDE68A] p-6 sm:p-8 rounded-none shadow-xl space-y-6">
-              {/* Product Title & Original Name */}
-              <div className="space-y-2 border-b border-[#EFE9E0] pb-5">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-bold text-[#D97706] uppercase tracking-wider">
-                    عسل ارگانیک کوهستان
-                  </span>
-                  <div>
-                    {!product.isAvailable ? (
-                      <span className="inline-block px-3 py-1 bg-rose-100 text-rose-800 border border-rose-300 text-xs font-black rounded-none shadow-2xs">
-                        ناموجود
-                      </span>
-                    ) : (
-                      <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-800 border border-emerald-300 text-xs font-black rounded-none shadow-2xs">
-                        موجود در انبار
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <h1 className="text-2xl sm:text-4xl font-black text-[#2B2017] leading-tight">
-                  {product.nameFa}
-                </h1>
-
-                {product.nameOriginal && (
-                  <p className="text-xs sm:text-sm text-[#786455] font-mono tracking-wide" dir="ltr">
-                    {product.nameOriginal}
-                  </p>
-                )}
-              </div>
-
-              {/* Add To Cart Slot with Weight Variation Badges */}
-              <AddToCartSlot
-                productId={product.id}
-                isAvailable={product.isAvailable}
-                cartEnabled={cartEnabled}
-                options={product.options}
-              />
-
-              {/* Trust & Delivery Micro-Features */}
-              <div className="pt-4 border-t border-[#EFE9E0] space-y-3 text-xs sm:text-sm text-[#5C5248]">
-                <div className="flex items-center gap-2.5">
-                  <Truck className="w-4 h-4 text-[#D97706] shrink-0" />
-                  <span className="text-[#332115] font-medium">ارسال سریع و رایگان برای سفارش‌های بالای ۱ کیلوگرم</span>
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <ShieldCheck className="w-4 h-4 text-[#D97706] shrink-0" />
-                  <span className="text-[#332115] font-medium">ضمانت ۱۰۰٪ اصالت و برگه آزمایش همراه بسته</span>
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <Sparkles className="w-4 h-4 text-[#D97706] shrink-0" />
-                  <span className="text-[#332115] font-medium">بسته‌بندی ایمن ضدنشت در ظروف شیشه‌ای استاندارد</span>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </Container>

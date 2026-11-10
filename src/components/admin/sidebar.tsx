@@ -78,7 +78,7 @@ export function AdminSidebar({ onClose }: { onClose?: () => void }) {
           className="w-9 h-9 object-contain shrink-0 group-hover:scale-105 transition-transform"
         />
         <div className="flex flex-col">
-          <span className="font-black text-base text-white tracking-tight group-hover:text-[#FBBF24] transition-colors">عسل باباخُرم</span>
+          <span className="font-black text-base text-white group-hover:text-[#FBBF24] transition-colors leading-snug">عسل باباخُرم</span>
           <span className="text-[10px] text-[#FBBF24] font-medium tracking-wide">پنل مدیریت یکپارچه</span>
         </div>
       </Link>

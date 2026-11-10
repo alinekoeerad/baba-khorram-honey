@@ -297,7 +297,7 @@ export function buildInvoicePrintHtml(data: InvoiceExportData): string {
       <tr>
         <td style="width: 60%; text-align: right; vertical-align: top; font-size: 8.5pt; color: #5C5248; background-color: #FAF7F2;">
           <strong style="color: #2B2017; font-size: 9.5pt;">ضمانت اصالت و بازگشت کالا:</strong><br/>
-          تمامی محصولات عسل باباخُرم دارای ضمانت اصالت ۱۰۰٪ آزمایشگاهی و طبیعی می‌باشند.<br/>
+          تمامی محصولات عسل باباخُرم دارای ضمانت اصالت ۱۰۰٪ طبیعی و برداشت سنتی می‌باشند.<br/>
           در صورت هرگونه نارضایتی، مرسوله تا ۷ روز کاری پس از تحویل قابل عودت کامل می‌باشد.<br/>
           تلفن پشتیبانی: ${toPersianDigits(senderPhone)} | وب‌سایت: عسل طبیعی باباخُرم
         </td>
@@ -534,7 +534,7 @@ export function buildInvoiceWordHtml(data: InvoiceExportData): string {
     <tr>
       <td style="width:60%; border: 1px solid #2B2017; font-family: Tahoma, Vazirmatn, Arial, sans-serif; direction: rtl; text-align: right; vertical-align: top; font-size: 9pt; color: #5C5248; background-color: #FAF7F2;">
         <strong style="color: #2B2017; font-size: 10pt;">تضمین اصالت و بازگشت کالا:</strong><br/>
-        تمامی محصولات عسل باباخُرم دارای ضمانت اصالت ۱۰۰٪ آزمایشگاهی و طبیعی می‌باشند.<br/>
+        تمامی محصولات عسل باباخُرم دارای ضمانت اصالت ۱۰۰٪ طبیعی و برداشت سنتی می‌باشند.<br/>
         در صورت هرگونه نارضایتی، مرسوله ظرف مدت ۷ روز کاری قابل عودت کامل می‌باشد.<br/>
         پشتیبانی و سفارشات: ${toPersianDigits(senderPhone)} | وب‌سایت: عسل طبیعی باباخُرم
       </td>

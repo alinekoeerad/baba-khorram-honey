@@ -87,7 +87,7 @@ export const TEMPLATE_REGISTRY: Record<string, TemplateDefinition> = {
     id: 'heritage-default',
     name: 'اصالت، میراث و فرآیند تولید عسل',
     sectionType: 'ARTISAN_HERITAGE',
-    description: 'معرفی اصالت زنبورداری سنتی، استانداردهای آزمایشگاهی و فرآیند برداشت طبیعی',
+    description: 'معرفی اصالت زنبورداری سنتی، فرآیند برداشت مستقیم و اصالت طبیعی',
     supportedFields: ['title', 'subtitle', 'features'],
     thumbnail: '/images/beekeeping.jpg',
     defaultBackground: 'NONE',

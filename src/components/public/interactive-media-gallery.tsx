@@ -14,6 +14,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { toPersianDigits } from '@/lib/domain-utils';
 import {
@@ -125,6 +126,23 @@ export function InteractiveMediaGallery({
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Lock body scroll when Lightbox is active
+  useEffect(() => {
+    if (isLightboxOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isLightboxOpen]);
 
   // Keep active index bounded if slides length changes
   useEffect(() => {
@@ -173,10 +191,14 @@ export function InteractiveMediaGallery({
 
   return (
     <div className={`space-y-4 ${className}`}>
-      {/* Main Stage Polaroid Container */}
-      <div className="bg-white p-4 shadow-sm border border-[#EFE9E0] rounded-none">
+      {/* Main Showcase Stage */}
+      <div className="w-full max-w-[500px] mx-auto bg-white border border-[#E8DFD3] shadow-sm p-2.5 sm:p-4 rounded-none">
         <div
-          className={`w-full ${isDynamic ? 'overflow-hidden flex items-center justify-center' : `${aspectClass} overflow-hidden`} rounded-none relative group cursor-zoom-in bg-[#FAF8F5]`}
+          className={`w-full ${
+            isDynamic
+              ? 'h-[280px] sm:h-[340px] md:h-[400px] lg:h-[440px]'
+              : `${aspectClass} max-h-[440px]`
+          } overflow-hidden flex items-center justify-center rounded-none relative group cursor-zoom-in bg-[#FAF8F5]`}
           onClick={() => setIsLightboxOpen(true)}
           role="button"
           tabIndex={0}
@@ -197,28 +219,25 @@ export function InteractiveMediaGallery({
             height={currentSlide.height ?? 800}
             unoptimized={true}
             priority={activeIndex === 0}
-            className={isDynamic
-              ? "w-full h-auto object-contain object-center transition-transform duration-300 group-hover:scale-102 rounded-none"
-              : "w-full h-full object-contain object-center p-2 transition-transform duration-300 group-hover:scale-102 rounded-none"
-            }
+            className="w-full h-full max-h-full max-w-full object-contain object-center p-2 sm:p-3 transition-transform duration-300 group-hover:scale-102 rounded-none select-none"
           />
 
           {/* Featured Badge */}
           {featuredBadge && (
-            <span className="absolute top-3 right-3 bg-[#F59E0B] text-[#2B2017] text-xs font-black px-3 py-1 rounded-none shadow-md pointer-events-none z-10">
+            <span className="absolute top-3.5 right-3.5 bg-[#D97706] text-white text-xs font-black px-3.5 py-1.5 rounded-none shadow-sm pointer-events-none z-10 border border-[#B45309]">
               {featuredBadge}
             </span>
           )}
 
           {/* Slide Counter Badge (shown if multiple images) */}
           {slides.length > 1 && (
-            <div className="absolute top-3 left-3 bg-[#2B2017]/85 backdrop-blur-xs text-[#FDE68A] text-[11px] font-mono font-bold px-2.5 py-1 rounded-none border border-[#F59E0B]/40 shadow-sm pointer-events-none z-10">
+            <div className="absolute top-3.5 left-3.5 bg-[#2B2017]/85 backdrop-blur-xs text-[#FDE68A] text-[11px] font-mono font-bold px-2.5 py-1 rounded-none border border-[#F59E0B]/40 shadow-sm pointer-events-none z-10">
               {toPersianDigits(activeIndex + 1)} از {toPersianDigits(slides.length)}
             </div>
           )}
 
           {/* Hover Zoom Badge */}
-          <div className="absolute bottom-3 left-3 bg-[#2B2017]/85 backdrop-blur-xs text-[#FDE68A] text-xs font-bold px-3 py-1.5 rounded-none flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 border border-[#F59E0B]/40 shadow-md pointer-events-none z-10">
+          <div className="absolute bottom-3 left-3 bg-[#2B2017]/80 hover:bg-[#2B2017] backdrop-blur-xs text-[#FDE68A] text-xs font-bold px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-none flex items-center gap-1.5 border border-[#F59E0B]/40 shadow-sm transition-all z-10 pointer-events-none">
             <ZoomIn className="w-3.5 h-3.5 text-[#F59E0B]" />
             <span>بزرگنمایی تصویر</span>
           </div>
@@ -232,7 +251,7 @@ export function InteractiveMediaGallery({
                   e.stopPropagation();
                   handlePrev();
                 }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-[#2B2017]/75 hover:bg-[#F59E0B] text-white hover:text-[#2B2017] flex items-center justify-center rounded-none shadow-md transition-colors opacity-0 group-hover:opacity-100 z-10 cursor-pointer"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/90 hover:bg-[#D97706] text-[#2B2017] hover:text-white border border-[#E8DFD3] shadow-md flex items-center justify-center rounded-none transition-all duration-200 z-10 cursor-pointer sm:opacity-0 group-hover:opacity-100"
                 aria-label="تصویر قبلی"
                 title="تصویر قبلی"
               >
@@ -244,7 +263,7 @@ export function InteractiveMediaGallery({
                   e.stopPropagation();
                   handleNext();
                 }}
-                className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-[#2B2017]/75 hover:bg-[#F59E0B] text-white hover:text-[#2B2017] flex items-center justify-center rounded-none shadow-md transition-colors opacity-0 group-hover:opacity-100 z-10 cursor-pointer"
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/90 hover:bg-[#D97706] text-[#2B2017] hover:text-white border border-[#E8DFD3] shadow-md flex items-center justify-center rounded-none transition-all duration-200 z-10 cursor-pointer sm:opacity-0 group-hover:opacity-100"
                 aria-label="تصویر بعدی"
                 title="تصویر بعدی"
               >
@@ -257,7 +276,7 @@ export function InteractiveMediaGallery({
 
       {/* Interactive Thumbnail Strip */}
       {slides.length > 1 && (
-        <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 sm:gap-3">
+        <div className="flex items-center justify-center flex-wrap gap-2 sm:gap-3 max-w-[500px] mx-auto pt-1">
           {slides.map((slide, idx) => {
             const isActive = idx === activeIndex;
             return (
@@ -266,20 +285,20 @@ export function InteractiveMediaGallery({
                 type="button"
                 onClick={() => setActiveIndex(idx)}
                 onMouseEnter={() => setActiveIndex(idx)}
-                className={`aspect-square bg-[#FAF8F5] p-1 flex items-center justify-center rounded-none overflow-hidden transition-all duration-200 cursor-pointer ${
+                className={`w-14 h-14 sm:w-16 sm:h-16 bg-white p-1 flex items-center justify-center rounded-none overflow-hidden transition-all duration-200 cursor-pointer ${
                   isActive
-                    ? 'border-2 border-[#F59E0B] ring-2 ring-[#F59E0B]/40 shadow-sm opacity-100 scale-100'
-                    : 'border border-[#EFE9E0] opacity-70 hover:opacity-100 hover:border-[#D97706] scale-95 hover:scale-100'
+                    ? 'border-2 border-[#D97706] ring-2 ring-[#F59E0B]/30 shadow-xs opacity-100'
+                    : 'border border-[#E8DFD3] opacity-70 hover:opacity-100 hover:border-[#D97706] bg-[#FAF8F5]'
                 }`}
                 aria-label={`نمایش تصویر ${toPersianDigits(idx + 1)}`}
               >
                 <Image
                   src={slide.url || fallbackImageUrl || '/images/honey-jar.jpg'}
                   alt={slide.alt || title}
-                  width={180}
-                  height={180}
+                  width={128}
+                  height={128}
                   unoptimized={true}
-                  className="w-full h-full object-contain object-center rounded-none p-1"
+                  className="w-full h-full object-contain object-center rounded-none"
                 />
               </button>
             );
@@ -287,24 +306,24 @@ export function InteractiveMediaGallery({
         </div>
       )}
 
-      {/* Fullscreen Lightbox Modal */}
-      {isLightboxOpen && (
+      {/* Fullscreen Lightbox Modal (Teleported to document.body to escape stacking contexts) */}
+      {isMounted && isLightboxOpen && createPortal(
         <div
-          className="fixed inset-0 z-[100] bg-black/92 backdrop-blur-md flex flex-col justify-between items-center p-4 sm:p-6 select-none animate-in fade-in duration-200"
+          className="fixed inset-0 z-[99999] bg-black/92 backdrop-blur-md flex flex-col justify-between items-center p-3 sm:p-6 select-none animate-in fade-in duration-200"
           onClick={() => setIsLightboxOpen(false)}
           role="dialog"
           aria-modal="true"
           aria-label="بزرگنمایی تصویر"
         >
-          {/* 1. Fixed Top-Left Floating Close Button (Never pushed off-screen) */}
+          {/* 1. Fixed Top-Left Floating Close Button (Safe on mobile landscape) */}
           <button
             type="button"
             onClick={() => setIsLightboxOpen(false)}
-            className="fixed top-5 left-5 z-[110] flex items-center gap-2 bg-[#2B2017] hover:bg-red-700 text-white border-2 border-[#F59E0B] px-4 py-2.5 text-sm font-bold shadow-2xl transition-colors cursor-pointer rounded-none"
+            className="fixed top-3 left-3 sm:top-5 sm:left-5 z-[100000] flex items-center gap-1.5 sm:gap-2 bg-[#2B2017] hover:bg-red-700 text-white border-2 border-[#F59E0B] px-3 py-1.5 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-bold shadow-2xl transition-colors cursor-pointer rounded-none"
             title="بستن (Esc)"
             aria-label="بستن پنجره بزرگنمایی"
           >
-            <X className="w-5 h-5 text-[#F59E0B]" strokeWidth={2.5} />
+            <X className="w-4 h-4 sm:w-5 sm:h-5 text-[#F59E0B]" strokeWidth={2.5} />
             <span>بستن (Esc)</span>
           </button>
 
@@ -434,7 +453,8 @@ export function InteractiveMediaGallery({
               </div>
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

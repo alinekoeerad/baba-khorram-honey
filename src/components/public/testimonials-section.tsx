@@ -23,7 +23,7 @@ const REVIEWS: Review[] = [
     date: '۲ هفته پیش',
     rating: 5,
     comment:
-      'به عنوان پزشک، قند و ساکارز عسل برایم بسیار اهمیت دارد. برگه آزمایش همراه محصول کاملاً با نتیجه آزمایشگاه مستقل مطابقت داشت (ساکارز زیر ۱.۸٪). عطر و طعم گیاهی آن بی‌نظیر است.',
+      'به عنوان فردی که روی اصالت و خام بودن تغذیه حساسیت دارم، کیفیت این عسل شگفت‌انگیز بود. عطر خالص گیاهان کوهی و طعم دست‌نخورده آن نشان‌دهنده برداشت مستقیم و بدون تغذیه مصنوعی است.',
   },
   {
     id: 'rev-2',
@@ -81,7 +81,7 @@ export function TestimonialsSection() {
 
           <h2
             id="testimonials-heading"
-            className="text-2xl sm:text-4xl font-black text-[#2B2017] leading-tight tracking-tight"
+            className="text-2xl sm:text-4xl font-black text-[#2B2017] leading-snug sm:leading-normal"
           >
             تجربه مشتریان از عسل طبیعی باباخُرم
           </h2>

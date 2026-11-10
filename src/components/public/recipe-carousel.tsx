@@ -224,15 +224,17 @@ export function RecipeCarousel({
 
                   {/* Content Wrap */}
                   <div
-                    className={`p-3.5 sm:p-4 flex-1 flex flex-col justify-between ${theme.bg} ${theme.text}`}
+                    className={`p-3.5 sm:p-4 flex-1 flex flex-col justify-between ${theme.bg}`}
                   >
-                    <h3 className="font-black text-sm sm:text-base leading-snug line-clamp-2">
+                    {/* Top text: Black */}
+                    <h3 className="font-black text-sm sm:text-base leading-normal line-clamp-2 text-[#2B2017]">
                       {r.title}
                     </h3>
 
-                    <div className="mt-3 pt-2.5 border-t border-black/10 flex items-center justify-between text-xs sm:text-sm font-black">
+                    {/* Bottom text: White */}
+                    <div className="mt-3 pt-2.5 border-t border-black/10 flex items-center justify-between text-xs sm:text-sm font-black text-white">
                       <span>مشاهده دستور پخت</span>
-                      <DottedArrowIcon direction="left" className="w-4 h-4 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-x-1.5" />
+                      <DottedArrowIcon direction="left" className="w-4 h-4 text-white transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-x-1.5" />
                     </div>
                   </div>
                 </Link>

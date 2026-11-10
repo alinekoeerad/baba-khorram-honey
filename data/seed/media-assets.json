@@ -3083,5 +3083,49 @@
     "createdAt": "2026-10-22T15:25:20.771Z",
     "updatedAt": "2026-10-22T15:25:20.771Z",
     "url": "/uploads/logo-square-1792682718600-49faca-1280.webp"
+  },
+  {
+    "id": "ast_1794316275323_uttj5",
+    "storageKey": "gemini_generated_image_o1u4pxo1u4pxo1u4-1794316273641-70c66e-1792.webp",
+    "mime": "image/webp",
+    "bytes": 366812,
+    "width": 1792,
+    "height": 2400,
+    "blurDataUrl": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAABwBACdASoQABUAPxFysFAsJqSisAgBgCIJbACdMoFWZgUWHu/0gqrOtP24AAD+M8MWJqo7eM1CgXebyao0V6+AObMiCDkARVLcBbSyZLuXK9TKMRfTEoem1oekfQAGnY2YFqXhZdjXTfi2P+BRVutuROHXyNN5Ek4a+ZCYoYAAAA==",
+    "variants": {
+      "480": {
+        "key": "gemini_generated_image_o1u4pxo1u4pxo1u4-1794316273641-70c66e-480.webp",
+        "url": "/uploads/gemini_generated_image_o1u4pxo1u4pxo1u4-1794316273641-70c66e-480.webp",
+        "width": 480,
+        "height": 643,
+        "bytes": 24430
+      },
+      "768": {
+        "key": "gemini_generated_image_o1u4pxo1u4pxo1u4-1794316273641-70c66e-768.webp",
+        "url": "/uploads/gemini_generated_image_o1u4pxo1u4pxo1u4-1794316273641-70c66e-768.webp",
+        "width": 768,
+        "height": 1029,
+        "bytes": 48846
+      },
+      "1200": {
+        "key": "gemini_generated_image_o1u4pxo1u4pxo1u4-1794316273641-70c66e-1200.webp",
+        "url": "/uploads/gemini_generated_image_o1u4pxo1u4pxo1u4-1794316273641-70c66e-1200.webp",
+        "width": 1200,
+        "height": 1607,
+        "bytes": 146270
+      },
+      "1792": {
+        "key": "gemini_generated_image_o1u4pxo1u4pxo1u4-1794316273641-70c66e-1792.webp",
+        "url": "/uploads/gemini_generated_image_o1u4pxo1u4pxo1u4-1794316273641-70c66e-1792.webp",
+        "width": 1792,
+        "height": 2400,
+        "bytes": 366812
+      }
+    },
+    "alt": null,
+    "createdById": "usr_1791465544331_so4k7",
+    "createdAt": "2026-11-10T13:11:15.323Z",
+    "updatedAt": "2026-11-10T13:11:15.323Z",
+    "url": "/uploads/gemini_generated_image_o1u4pxo1u4pxo1u4-1794316273641-70c66e-1792.webp"
   }
 ]
