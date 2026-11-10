@@ -73,18 +73,6 @@
           "focalPoint": "center"
         },
         {
-          "desktopImageId": null,
-          "desktopImageUrl": "/images/hero/photo_37.jpg",
-          "tabletImageId": null,
-          "tabletImageUrl": null,
-          "mobileImageId": null,
-          "mobileImageUrl": null,
-          "url": "/images/hero/photo_37.jpg",
-          "alt": "عسل کوهستان با بالاترین درجه خلوص و اصالت",
-          "deviceTarget": "all",
-          "focalPoint": "center"
-        },
-        {
           "desktopImageId": "ast_1792494114852_rdqhm",
           "desktopImageUrl": "/uploads/photo_38-1792494114207-8c4e95-1280.webp",
           "tabletImageId": null,
@@ -98,7 +86,7 @@
         }
       ]
     },
-    "updatedAt": "2026-10-20T11:02:05.063Z"
+    "updatedAt": "2026-11-10T13:09:23.145Z"
   },
   {
     "id": "sec_beekeeping_2",
