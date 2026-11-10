@@ -174,9 +174,13 @@ export function InteractiveMediaGallery({
   return (
     <div className={`space-y-4 ${className}`}>
       {/* Main Stage Polaroid Container */}
-      <div className="bg-white p-4 shadow-sm border border-[#EFE9E0] rounded-none">
+      <div className="bg-white p-3 sm:p-4 shadow-sm border border-[#EFE9E0] rounded-none">
         <div
-          className={`w-full ${isDynamic ? 'overflow-hidden flex items-center justify-center' : `${aspectClass} overflow-hidden`} rounded-none relative group cursor-zoom-in bg-[#FAF8F5]`}
+          className={`w-full ${
+            isDynamic
+              ? 'h-[280px] sm:h-[360px] md:h-[420px] lg:h-[460px] xl:h-[480px] max-h-[65vh]'
+              : `${aspectClass} max-h-[65vh] lg:max-h-[480px]`
+          } overflow-hidden flex items-center justify-center rounded-none relative group cursor-zoom-in bg-[#FAF8F5]`}
           onClick={() => setIsLightboxOpen(true)}
           role="button"
           tabIndex={0}
@@ -197,10 +201,7 @@ export function InteractiveMediaGallery({
             height={currentSlide.height ?? 800}
             unoptimized={true}
             priority={activeIndex === 0}
-            className={isDynamic
-              ? "w-full h-auto object-contain object-center transition-transform duration-300 group-hover:scale-102 rounded-none"
-              : "w-full h-full object-contain object-center p-2 transition-transform duration-300 group-hover:scale-102 rounded-none"
-            }
+            className="w-full h-full max-h-full max-w-full object-contain object-center p-2 sm:p-4 transition-transform duration-300 group-hover:scale-102 rounded-none select-none"
           />
 
           {/* Featured Badge */}
