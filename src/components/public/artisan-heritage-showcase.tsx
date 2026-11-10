@@ -45,7 +45,7 @@ export function ArtisanHeritageShowcase() {
 
           <h2
             id="heritage-heading"
-            className="text-3xl sm:text-5xl font-black text-[#FFFBEB] leading-tight tracking-tight drop-shadow-md"
+            className="text-3xl sm:text-5xl font-black text-[#FFFBEB] leading-snug sm:leading-normal drop-shadow-md"
           >
             هنر زنبورداری اصیل و پایدار باباخُرم
           </h2>

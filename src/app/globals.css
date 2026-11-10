@@ -104,6 +104,14 @@
   letter-spacing: normal !important;
 }
 
+/* Force tracking utilities in Tailwind to never collapse or distort cursive Persian letters */
+.tracking-tight,
+.tracking-tighter,
+.tracking-wide,
+.tracking-widest {
+  letter-spacing: normal !important;
+}
+
 html {
   direction: rtl;
   font-family: 'Vazirmatn', var(--font-vazirmatn), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -140,7 +148,7 @@ body {
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Vazirmatn', var(--font-vazirmatn), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-weight: 900;
-    line-height: 1.35;
+    line-height: 1.48; /* Standard Persian line-height for headings: prevents collisions */
     letter-spacing: normal !important;
     color: var(--text);
   }
@@ -154,6 +162,37 @@ body {
     font-weight: 500;
     color: #332115;
   }
+}
+
+/* ==========================================================================
+   Persian Typography Safety Guards (Prevents Line Collisions & Text Clipping)
+   ========================================================================== */
+
+/* 1. Prevent upper & lower line collision in Persian multi-line titles */
+h1.leading-tight, h2.leading-tight, h3.leading-tight,
+h4.leading-tight, h5.leading-tight, h6.leading-tight,
+.leading-tight {
+  line-height: 1.45 !important;
+}
+
+.leading-snug {
+  line-height: 1.55 !important;
+}
+
+h1.sm\:leading-none, h2.sm\:leading-none, h3.sm\:leading-none,
+h1.leading-none, h2.leading-none, h3.leading-none {
+  line-height: 1.42 !important;
+}
+
+.line-clamp-2,
+.line-clamp-3 {
+  line-height: 1.6 !important;
+}
+
+/* 2. Prevent Top/Bottom Clipping of Persian Diacritics (آ, ک, گ, dots) in truncated containers */
+.truncate {
+  padding-block: 0.12em;
+  margin-block: -0.12em;
 }
 
 /* Explicit Hero Text Styling */

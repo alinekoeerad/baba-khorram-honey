@@ -183,7 +183,7 @@ export default async function HomePage() {
             <div className="lg:col-span-7 space-y-5 sm:space-y-6 text-right">
               <h2
                 id="beekeeping-heading"
-                className="text-2xl sm:text-4xl lg:text-5xl font-black text-[#2E6930] leading-tight tracking-tight"
+                className="text-2xl sm:text-4xl lg:text-5xl font-black text-[#2E6930] leading-snug sm:leading-normal"
               >
                 تجلیل از صنعت زنبورداری
               </h2>
@@ -256,7 +256,7 @@ export default async function HomePage() {
               </div>
               <h2
                 id="versatility-heading"
-                className="text-2xl sm:text-4xl lg:text-6xl font-black text-[#C86A00] leading-tight sm:leading-none"
+                className="text-2xl sm:text-4xl lg:text-6xl font-black text-[#C86A00] leading-snug sm:leading-normal"
               >
                 هر کاری برمی‌آید
               </h2>
@@ -316,7 +316,7 @@ export default async function HomePage() {
                 </div>
                 <h2
                   id="blog-heading"
-                  className="text-2xl sm:text-4xl lg:text-5xl font-black text-[#2B2017] leading-tight drop-shadow-xs"
+                  className="text-2xl sm:text-4xl lg:text-5xl font-black text-[#2B2017] leading-snug sm:leading-normal drop-shadow-xs"
                 >
                   ماه ملی عسل (HONEY MONTH)
                 </h2>

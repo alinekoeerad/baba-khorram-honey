@@ -192,7 +192,7 @@ export function AddToCartSlot({
               {cleanOptionLabel(selectedOption?.label || '')}
             </span>
             {isBestValueSelected && (
-              <span className="text-[10px] font-black bg-[#FEF3C7] text-[#92400E] border border-[#FDE68A] px-2 py-0.5 rounded-none shrink-0 shadow-2xs">
+              <span className="text-[10px] sm:text-xs font-black bg-[#FEF3C7] text-[#92400E] border border-[#FDE68A] px-2.5 py-1 rounded-none shrink-0 shadow-2xs leading-normal">
                 پرفروش‌ترین
               </span>
             )}

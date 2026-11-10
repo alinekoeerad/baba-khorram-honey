@@ -271,7 +271,7 @@ export function Header({
             className="flex flex-col items-center justify-center p-1.5 sm:p-2 rounded-none hover:bg-black/20 text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer select-none shrink-0 group ml-1 sm:ml-2"
           >
             <Menu className="w-5 h-5 sm:w-6 sm:h-6 drop-shadow-sm group-hover:scale-105 transition-transform" />
-            <span className="text-[10px] sm:text-xs font-black text-white mt-0.5 tracking-tight whitespace-nowrap">
+            <span className="text-[10px] sm:text-xs font-black text-white mt-0.5 whitespace-nowrap">
               <span className="lg:hidden">منو</span>
               <span className="hidden lg:inline">دسته‌بندی‌ها</span>
             </span>
@@ -290,7 +290,7 @@ export function Header({
             />
 
             <div className="flex flex-col text-right shrink-0 whitespace-nowrap">
-              <span className="text-base sm:text-2xl font-black text-white tracking-tight drop-shadow-md group-hover:text-[#FFF6D6] transition-colors leading-tight whitespace-nowrap">
+              <span className="text-base sm:text-2xl font-black text-white drop-shadow-md group-hover:text-[#FFF6D6] transition-colors leading-snug whitespace-nowrap">
                 {siteNameFa}
               </span>
               <span className="text-[10px] sm:text-[11px] text-[#FEF3C7] tracking-wider font-bold drop-shadow-xs hidden xs:inline whitespace-nowrap">

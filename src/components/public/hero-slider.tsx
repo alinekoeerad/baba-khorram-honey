@@ -253,7 +253,7 @@ export function HeroSlider({
       <div className="relative z-20 max-w-4xl mx-auto text-white space-y-6 sm:space-y-8">
         <h1
           id="hero-heading"
-          className="hero-title-white text-3xl sm:text-5xl lg:text-7xl font-black !text-white leading-tight tracking-tight"
+          className="hero-title-white text-3xl sm:text-5xl lg:text-7xl font-black !text-white leading-snug sm:leading-normal"
           style={{
             color: '#ffffff',
             textShadow: '2px 2px 4px rgba(0,0,0,0.9), 0 0 16px rgba(0,0,0,0.8)',

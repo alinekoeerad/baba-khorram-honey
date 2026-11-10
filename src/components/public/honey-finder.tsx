@@ -130,7 +130,7 @@ export function HoneyFinder({ products = [] }: { products?: any[] }) {
 
           <h2
             id="finder-heading"
-            className="text-2xl sm:text-4xl font-black text-[#2B2017] leading-tight tracking-tight"
+            className="text-2xl sm:text-4xl font-black text-[#2B2017] leading-snug sm:leading-normal"
           >
             کدام عسل برای سلامتی شما مناسب‌تر است؟
           </h2>

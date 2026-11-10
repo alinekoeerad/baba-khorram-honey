@@ -165,7 +165,7 @@ export function ProductDetailView({
                   </div>
                 </div>
 
-                <h1 className="text-2xl sm:text-4xl font-black text-[#2B2017] leading-tight">
+                <h1 className="text-2xl sm:text-4xl font-black text-[#2B2017] leading-snug sm:leading-normal">
                   {product.nameFa}
                 </h1>
 

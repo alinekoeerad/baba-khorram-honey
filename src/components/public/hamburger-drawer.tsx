@@ -229,10 +229,10 @@ export function HamburgerDrawer({
                     <Icon className="w-5 h-5" />
                   </div>
                   <div className="flex flex-col min-w-0">
-                    <span className="font-black text-base sm:text-lg tracking-tight">
+                    <span className="font-black text-base sm:text-lg leading-snug">
                       {item.label}
                     </span>
-                    <span className="text-xs text-[#5C5248] group-hover:text-[#2B2017] truncate font-bold mt-0.5">
+                    <span className="text-xs text-[#5C5248] group-hover:text-[#2B2017] truncate font-bold mt-0.5 leading-normal">
                       {item.description}
                     </span>
                   </div>
@@ -259,7 +259,7 @@ export function HamburgerDrawer({
                   <Search className="w-5 h-5" />
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <span className="font-black text-base sm:text-lg tracking-tight">
+                  <span className="font-black text-base sm:text-lg leading-snug">
                     جستجو در سایت
                   </span>
                   <span className="text-xs text-[#5C5248] font-bold mt-0.5">

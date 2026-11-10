@@ -50,7 +50,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       <Container>
         {/* Page Title */}
         <div className="text-center space-y-3 mb-10 sm:mb-14">
-          <h1 className="text-3xl sm:text-5xl font-black text-[#2B2017] leading-tight">
+          <h1 className="text-3xl sm:text-5xl font-black text-[#2B2017] leading-snug sm:leading-normal">
             {q ? `نتایج جستجو برای: «${q}»` : 'جستجوی محصولات و دستورها'}
           </h1>
           <p className="text-sm sm:text-base text-[#5C5248] max-w-xl mx-auto font-medium">

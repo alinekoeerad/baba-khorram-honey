@@ -26,7 +26,7 @@ export function SectionHeading({
     <div className={cn('flex flex-col mb-8 sm:mb-12', alignClass, className)}>
       <h2
         className={cn(
-          'text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight',
+          'text-2xl sm:text-3xl lg:text-4xl font-black leading-snug sm:leading-normal',
           inverted ? 'text-white' : 'text-[#2B2017]'
         )}
       >

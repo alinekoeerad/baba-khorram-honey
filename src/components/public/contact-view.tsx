@@ -49,7 +49,7 @@ export function ContactView({
             <span>دفتر مرکزی و کارگاه عسل طبیعی</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-black text-[#3F2A1D] leading-tight tracking-tight">
+          <h1 className="text-3xl sm:text-5xl font-black text-[#3F2A1D] leading-snug sm:leading-normal">
             تماس با ما
           </h1>
 

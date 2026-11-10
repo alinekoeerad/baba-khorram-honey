@@ -304,7 +304,7 @@ export function ContentCard({
             />
 
             {!isAvailable && (
-              <div className="absolute top-2 right-2 bg-black/75 text-white text-[10px] font-bold px-2 py-0.5 rounded-none z-10 shadow-xs">
+              <div className="absolute top-2 right-2 bg-black/80 text-white text-[11px] font-bold px-2.5 py-1 rounded-none z-10 shadow-xs leading-normal">
                 ناموجود
               </div>
             )}
@@ -313,11 +313,11 @@ export function ContentCard({
           {/* Content Area - Visual Left in RTL */}
           <div className="flex-1 p-3 sm:p-4 flex flex-col justify-between h-full min-w-0 text-right">
             <div>
-              <h3 className={`font-black text-xs sm:text-sm leading-snug line-clamp-2 ${currentTheme.text}`}>
+              <h3 className={`font-black text-xs sm:text-sm leading-normal line-clamp-2 ${currentTheme.text}`}>
                 {title}
               </h3>
               {subtitle && (
-                <p className={`text-[11px] sm:text-xs mt-1 truncate font-bold ${currentTheme.subtext}`}>
+                <p className={`text-[11px] sm:text-xs mt-1.5 line-clamp-1 font-bold leading-normal ${currentTheme.subtext}`}>
                   {subtitle}
                 </p>
               )}
@@ -392,11 +392,11 @@ export function ContentCard({
       {/* Card Body - Balanced for compact elegant card presentation */}
       <div className="p-3.5 sm:p-4 flex-1 flex flex-col justify-between text-right">
         <div>
-          <h3 className={`font-black text-sm sm:text-base leading-snug line-clamp-2 ${currentTheme.text}`}>
+          <h3 className={`font-black text-sm sm:text-base leading-normal line-clamp-2 ${currentTheme.text}`}>
             {title}
           </h3>
           {subtitle && (
-            <p className={`text-[11px] sm:text-xs mt-1 line-clamp-1 font-bold ${currentTheme.subtext}`}>
+            <p className={`text-[11px] sm:text-xs mt-1.5 line-clamp-1 font-bold leading-normal ${currentTheme.subtext}`}>
               {subtitle}
             </p>
           )}

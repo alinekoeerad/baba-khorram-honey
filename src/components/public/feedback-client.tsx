@@ -151,7 +151,7 @@ export function FeedbackClient() {
             <span>صدای شما، سرمایه ماست</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-black text-[#3F2A1D] tracking-tight leading-tight">
+          <h1 className="text-3xl sm:text-5xl font-black text-[#3F2A1D] leading-snug sm:leading-normal">
             انتقادات، پیشنهادات و پیگیری
           </h1>
 

@@ -239,7 +239,7 @@ export function ProductCarousel({
                   <div
                     className={`p-3.5 sm:p-4 flex-1 flex flex-col justify-between ${theme.bg} ${theme.text}`}
                   >
-                    <h3 className="font-black text-sm sm:text-base leading-snug line-clamp-2">
+                    <h3 className="font-black text-sm sm:text-base leading-normal line-clamp-2">
                       {titleText}
                     </h3>
 

@@ -146,7 +146,7 @@ export function RecipeDetailView({
 
           {/* Titles */}
           <div className="space-y-2">
-            <h1 className="text-3xl sm:text-4xl font-black text-[#2B2017] leading-tight">
+            <h1 className="text-3xl sm:text-4xl font-black text-[#2B2017] leading-snug sm:leading-normal">
               {recipe.nameFa}
             </h1>
             {recipe.nameOriginal && (

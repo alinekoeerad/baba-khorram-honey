@@ -55,7 +55,7 @@ export function FaqSection() {
 
           <h2
             id="faq-heading"
-            className="text-2xl sm:text-4xl font-black text-[#2B2017] leading-tight tracking-tight"
+            className="text-2xl sm:text-4xl font-black text-[#2B2017] leading-snug sm:leading-normal"
           >
             پرسش‌های متداول درباره عسل طبیعی
           </h2>

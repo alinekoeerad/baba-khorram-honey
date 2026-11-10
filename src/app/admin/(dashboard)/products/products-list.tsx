@@ -572,7 +572,7 @@ export function ProductsList({ initialProducts, categories, totalCount }: Produc
                 <div className="py-2.5 flex items-center justify-between text-xs text-[#5C5248] gap-2">
                   <div className="flex flex-wrap items-center gap-1 min-w-0">
                     {assigned.slice(0, 2).map((c) => (
-                      <span key={c.id} className="px-1.5 py-0.5 bg-stone-100 text-stone-600 text-[10px] border border-stone-200 truncate max-w-[100px]">
+                      <span key={c.id} className="px-2 py-1 bg-stone-100 text-stone-600 text-[11px] border border-stone-200 truncate max-w-[120px] leading-normal">
                         {c.name}
                       </span>
                     ))}

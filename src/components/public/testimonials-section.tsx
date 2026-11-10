@@ -81,7 +81,7 @@ export function TestimonialsSection() {
 
           <h2
             id="testimonials-heading"
-            className="text-2xl sm:text-4xl font-black text-[#2B2017] leading-tight tracking-tight"
+            className="text-2xl sm:text-4xl font-black text-[#2B2017] leading-snug sm:leading-normal"
           >
             تجربه مشتریان از عسل طبیعی باباخُرم
           </h2>

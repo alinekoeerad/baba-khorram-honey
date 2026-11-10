@@ -101,7 +101,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
             <span>عسل خالص و طبیعی ارسباران</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-[#3F2A1D] tracking-tight leading-tight">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-[#3F2A1D] leading-snug sm:leading-normal">
             {pageTitle}
           </h1>
 

@@ -204,7 +204,7 @@ export function Footer({ settings, channels }: FooterProps) {
               className="w-20 h-20 sm:w-24 sm:h-24 object-contain shadow-md"
             />
             <div className="flex flex-col text-right">
-              <span className="text-lg font-black text-white tracking-tight group-hover:text-[#FBBF24] transition-colors">
+              <span className="text-lg font-black text-white group-hover:text-[#FBBF24] transition-colors leading-snug">
                 {settings.siteNameFa}
               </span>
               <span className="text-[10px] text-[#FEF3C7] font-semibold tracking-wider uppercase">

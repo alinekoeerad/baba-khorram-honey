@@ -28,7 +28,7 @@ export default function GlobalError({
           <span className="text-sm sm:text-base font-black text-[#B45309] tracking-widest uppercase">
             خطای غیرمنتظره
           </span>
-          <h1 className="text-2xl sm:text-4xl font-black text-[#2B2017] drop-shadow-xs leading-tight">
+          <h1 className="text-2xl sm:text-4xl font-black text-[#2B2017] drop-shadow-xs leading-snug sm:leading-normal">
             مشکلی در پردازش درخواست رخ داد
           </h1>
           <p className="text-sm sm:text-base text-[#5C5248] max-w-md mx-auto leading-relaxed font-medium">
