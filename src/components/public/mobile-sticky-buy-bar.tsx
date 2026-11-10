@@ -63,7 +63,7 @@ export function MobileStickyBuyBar({
           {productName}
         </div>
         <div className="text-[11px] text-[#D97706] font-bold">
-          {added ? '✓ به سبد اضافه شد' : '۱۰۰٪ طبیعی و دارای برگه آزمایش'}
+          {added ? '✓ به سبد اضافه شد' : '۱۰۰٪ طبیعی، خام و بدون واسطه'}
         </div>
       </div>
 

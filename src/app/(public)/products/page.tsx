@@ -45,7 +45,7 @@ export async function generateMetadata({
   }
 
   const description =
-    'خرید مستقیم انواع عسل طبیعی و خالص باباخُرم از مراتع ارسباران با برگه آزمایش ساکارز';
+    'خرید مستقیم انواع عسل طبیعی و خالص باباخُرم از مراتع ارسباران با تضمین اصالت';
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://babakhorram.com';
   const canonicalUrl = `${siteUrl}/products${category ? `?category=${category}` : ''}`;

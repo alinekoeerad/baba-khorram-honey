@@ -90,7 +90,7 @@ export default async function HomePage() {
         name: 'عسل باباخُرم',
         url: siteUrl,
         logo: `${siteUrl}/images/footer-logo.webp`,
-        description: 'تولید و عرضه مستقیم انواع عسل طبیعی و ارگانیک با برگه آزمایش ساکارز',
+        description: 'تولید و عرضه مستقیم انواع عسل طبیعی، خام و ارگانیک از دل کوهستان',
         address: {
           '@type': 'PostalAddress',
           addressCountry: 'IR',

@@ -192,7 +192,7 @@ export function ProductDetailView({
                 </div>
                 <div className="flex items-center gap-2.5">
                   <ShieldCheck className="w-4 h-4 text-[#D97706] shrink-0" />
-                  <span className="text-[#332115] font-medium">ضمانت ۱۰۰٪ اصالت و برگه آزمایش همراه بسته</span>
+                  <span className="text-[#332115] font-medium">ضمانت ۱۰۰٪ اصالت و بازگشت بی‌قیدوشرط وجه</span>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <Sparkles className="w-4 h-4 text-[#D97706] shrink-0" />
@@ -222,7 +222,7 @@ export function ProductDetailView({
           <div className="flex items-center sm:flex-col justify-center gap-2 p-3 bg-white border border-[#EFE9E0]">
             <CheckCircle2 className="w-6 h-6 text-emerald-600" />
             <div>
-              <div className="text-xs font-black text-[#2B2017]">ساکارز آزمایشگاهی &lt; ۳٪</div>
+              <div className="text-xs font-black text-[#2B2017]">شهد ۱۰۰٪ خالص و طبیعی</div>
               <div className="text-[10px] text-[#786455] font-bold">تضمین بازگشت بی قید وجه</div>
             </div>
           </div>

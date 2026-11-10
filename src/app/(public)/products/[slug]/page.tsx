@@ -61,7 +61,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   const description =
     product.shortDescription ||
     product.description ||
-    `خرید مستقیم و بررسی خواص ${product.nameFa} با تضمین اصالت و برگه آزمایشگاهی`;
+    `خرید مستقیم و بررسی خواص ${product.nameFa} با تضمین اصالت و خلوص ۱۰۰٪ طبیعی`;
 
   const mainImageUrl = product.mainImage
     ? `${siteUrl}/uploads/${product.mainImage.storageKey}`

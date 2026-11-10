@@ -86,7 +86,7 @@
         }
       ]
     },
-    "updatedAt": "2026-11-10T13:09:23.145Z"
+    "updatedAt": "2026-11-10T14:19:26.484Z"
   },
   {
     "id": "sec_beekeeping_2",
@@ -114,7 +114,7 @@
       "imagePosition": "LEFT",
       "theme": "GREEN"
     },
-    "updatedAt": "2026-10-12T14:42:49.665Z"
+    "updatedAt": "2026-11-10T14:19:26.485Z"
   },
   {
     "id": "sec_overlay_3",
@@ -123,25 +123,25 @@
     "status": "ACTIVE",
     "sortOrder": 3,
     "background": "NONE",
-    "internalName": "بنر برگه آزمایشگاهی خلوص",
+    "internalName": "بنر اصالت و برداشت طبیعی کوهستان",
     "content": {
       "type": "FULL_IMAGE_OVERLAY",
       "template": "overlay-center",
       "schemaVersion": 1,
       "image": {
         "url": "/images/bees-banner.jpg",
-        "alt": "تضمین آزمایشگاهی خلوص عسل"
+        "alt": "برداشت خالص و طبیعی عسل باباخُرم"
       },
-      "kicker": "ضمانت آزمایشگاهی خلوص",
-      "heading": "عسل واقعی، با برگه آزمایش معتبر و ساکارز زیر ۲ درصد",
-      "body": "تمامی محصولات ما پیش از بسته‌بندی در آزمایشگاه‌های معتبر سنجش مواد غذایی از نظر قندهای احیاکننده و پرولین بررسی می‌شوند.",
+      "kicker": "اصالت شهد کوهستان",
+      "heading": "عسل واقعی، برداشت مستقیم از کندوهای دامنه‌های سبلان و سهند",
+      "body": "تمامی محصولات ما بدون واسطه، به صورت کاملاً خام و دست‌نخورده از دل مراتع بکر کوهستانی بسته‌بندی شده و عطر و خواص طبیعی گیاهان را حفظ می‌کنند.",
       "cta": {
         "type": "CONTACT_PAGE",
         "label": "ارتباط و مشاوره خرید"
       },
       "theme": "GOLD"
     },
-    "updatedAt": "2026-10-12T14:42:49.666Z"
+    "updatedAt": "2026-11-10T14:19:26.486Z"
   },
   {
     "id": "sec_gallery_4",
@@ -177,14 +177,14 @@
         }
       ]
     },
-    "updatedAt": "2026-10-12T14:42:49.666Z"
+    "updatedAt": "2026-11-10T14:19:26.486Z"
   },
   {
     "id": "sec_carousel_5",
     "type": "CARD_CAROUSEL",
     "template": "carousel-cards",
     "status": "ACTIVE",
-    "sortOrder": 5,
+    "sortOrder": 6,
     "background": "WOOD",
     "internalName": "گردونه دسرهای عسل (روی بافت چوب)",
     "content": {
@@ -199,14 +199,14 @@
         "label": "مشاهده تمام دستورها"
       }
     },
-    "updatedAt": "2026-10-12T14:42:49.667Z"
+    "updatedAt": "2026-11-10T14:19:26.487Z"
   },
   {
     "id": "sec_carousel_products",
     "type": "CARD_CAROUSEL",
     "template": "carousel-cards",
     "status": "ACTIVE",
-    "sortOrder": 6,
+    "sortOrder": 5,
     "background": "WOOD",
     "internalName": "گردونه محصولات ممتاز عسل (روی بافت چوب)",
     "content": {
@@ -221,7 +221,7 @@
         "label": "مشاهده همه محصولات"
       }
     },
-    "updatedAt": "2026-10-12T14:42:49.667Z"
+    "updatedAt": "2026-11-10T14:19:26.487Z"
   },
   {
     "id": "sec_blog_6",
@@ -249,6 +249,6 @@
       "imagePosition": "RIGHT",
       "theme": "ORANGE"
     },
-    "updatedAt": "2026-10-12T14:42:49.668Z"
+    "updatedAt": "2026-11-10T14:19:26.488Z"
   }
 ]

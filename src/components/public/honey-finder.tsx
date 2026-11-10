@@ -184,7 +184,7 @@ export function HoneyFinder({ products = [] }: { products?: any[] }) {
                 </h3>
               </div>
               <span className="text-xs font-bold bg-[#FEF3C7] text-[#92400E] px-3 py-1 rounded-full">
-                برگه آزمایش تاییدشده
+                خلوص طبیعی تضمین‌شده
               </span>
             </div>
 

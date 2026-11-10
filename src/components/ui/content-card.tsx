@@ -74,8 +74,8 @@ const THEME_STYLES: Record<
   // Uppercase keys
   GREEN: {
     bg: 'bg-[#4CA849]',
-    text: 'text-white',
-    subtext: 'text-white/90',
+    text: 'text-[#2B2017]',
+    subtext: 'text-[#2B2017]/85',
     badgeBg: 'bg-black/50 text-white',
     arrowColor: 'text-white',
     borderColor: 'border-[#3D8B3A]',
@@ -83,8 +83,8 @@ const THEME_STYLES: Record<
   },
   ORANGE: {
     bg: 'bg-[#E08B38]',
-    text: 'text-white',
-    subtext: 'text-white/90',
+    text: 'text-[#2B2017]',
+    subtext: 'text-[#2B2017]/85',
     badgeBg: 'bg-black/50 text-white',
     arrowColor: 'text-white',
     borderColor: 'border-[#C67325]',
@@ -95,14 +95,14 @@ const THEME_STYLES: Record<
     text: 'text-[#2B2017]',
     subtext: 'text-[#2B2017]/85',
     badgeBg: 'bg-black/40 text-white',
-    arrowColor: 'text-[#2B2017]',
+    arrowColor: 'text-white',
     borderColor: 'border-[#D98E16]',
     hex: '#F5A623',
   },
   BURGUNDY: {
     bg: 'bg-[#9E3556]',
-    text: 'text-white',
-    subtext: 'text-white/90',
+    text: 'text-[#2B2017]',
+    subtext: 'text-[#2B2017]/85',
     badgeBg: 'bg-black/50 text-white',
     arrowColor: 'text-white',
     borderColor: 'border-[#822944]',
@@ -111,8 +111,8 @@ const THEME_STYLES: Record<
   // Lowercase keys
   green: {
     bg: 'bg-[#4CA849]',
-    text: 'text-white',
-    subtext: 'text-white/90',
+    text: 'text-[#2B2017]',
+    subtext: 'text-[#2B2017]/85',
     badgeBg: 'bg-black/50 text-white',
     arrowColor: 'text-white',
     borderColor: 'border-[#3D8B3A]',
@@ -120,8 +120,8 @@ const THEME_STYLES: Record<
   },
   orange: {
     bg: 'bg-[#E08B38]',
-    text: 'text-white',
-    subtext: 'text-white/90',
+    text: 'text-[#2B2017]',
+    subtext: 'text-[#2B2017]/85',
     badgeBg: 'bg-black/50 text-white',
     arrowColor: 'text-white',
     borderColor: 'border-[#C67325]',
@@ -132,14 +132,14 @@ const THEME_STYLES: Record<
     text: 'text-[#2B2017]',
     subtext: 'text-[#2B2017]/85',
     badgeBg: 'bg-black/40 text-white',
-    arrowColor: 'text-[#2B2017]',
+    arrowColor: 'text-white',
     borderColor: 'border-[#D98E16]',
     hex: '#F5A623',
   },
   burgundy: {
     bg: 'bg-[#9E3556]',
-    text: 'text-white',
-    subtext: 'text-white/90',
+    text: 'text-[#2B2017]',
+    subtext: 'text-[#2B2017]/85',
     badgeBg: 'bg-black/50 text-white',
     arrowColor: 'text-white',
     borderColor: 'border-[#822944]',
@@ -324,11 +324,11 @@ export function ContentCard({
             </div>
 
             {/* Link Label with Dotted Arrow */}
-            <div className={`text-xs font-black flex items-center justify-between pt-1 border-t border-black/15 mt-1 ${currentTheme.text}`}>
+            <div className="text-xs font-black flex items-center justify-between pt-1 border-t border-black/15 mt-1 text-white">
               <span>{linkLabel}</span>
               <DottedArrowIcon
                 direction="left"
-                className={`w-4 h-4 transition-transform duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:-translate-x-1.5 ${currentTheme.arrowColor}`}
+                className="w-4 h-4 transition-transform duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:-translate-x-1.5 text-white"
               />
             </div>
           </div>
@@ -403,11 +403,11 @@ export function ContentCard({
         </div>
 
         {/* Card Footer Link Label with signature Dotted Arrow */}
-        <div className={`mt-3 pt-2.5 border-t border-black/15 flex items-center justify-between text-xs sm:text-sm font-black ${currentTheme.text}`}>
+        <div className="mt-3 pt-2.5 border-t border-black/15 flex items-center justify-between text-xs sm:text-sm font-black text-white">
           <span>{linkLabel}</span>
           <DottedArrowIcon
             direction="left"
-            className={`w-4 h-4 transition-transform duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:-translate-x-1.5 ${currentTheme.arrowColor}`}
+            className="w-4 h-4 transition-transform duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:-translate-x-1.5 text-white"
           />
         </div>
       </div>

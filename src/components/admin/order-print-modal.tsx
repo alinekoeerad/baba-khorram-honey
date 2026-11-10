@@ -902,7 +902,7 @@ export function OrderPrintModal({ order, isOpen, onClose }: OrderPrintModalProps
                             تضمین و شرایط عودت:
                           </div>
                           <p className="text-[11px] leading-relaxed">
-                            تمامی عسل‌های باباخُرم دارای ضمانت اصالت ۱۰۰٪ آزمایشگاهی و طبیعی می‌باشند.
+                            تمامی عسل‌های باباخُرم دارای ضمانت اصالت ۱۰۰٪ طبیعی و برداشت سنتی می‌باشند.
                             در صورت هرگونه نارضایتی، مرسوله ظرف مدت ۷ روز کاری قابل عودت کامل می‌باشد.
                           </p>
                           <div className="text-[10px] text-stone-500 pt-1">

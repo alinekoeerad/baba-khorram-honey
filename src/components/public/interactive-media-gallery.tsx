@@ -14,6 +14,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { toPersianDigits } from '@/lib/domain-utils';
 import {
@@ -125,6 +126,23 @@ export function InteractiveMediaGallery({
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Lock body scroll when Lightbox is active
+  useEffect(() => {
+    if (isLightboxOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isLightboxOpen]);
 
   // Keep active index bounded if slides length changes
   useEffect(() => {
@@ -288,24 +306,24 @@ export function InteractiveMediaGallery({
         </div>
       )}
 
-      {/* Fullscreen Lightbox Modal */}
-      {isLightboxOpen && (
+      {/* Fullscreen Lightbox Modal (Teleported to document.body to escape stacking contexts) */}
+      {isMounted && isLightboxOpen && createPortal(
         <div
-          className="fixed inset-0 z-[100] bg-black/92 backdrop-blur-md flex flex-col justify-between items-center p-4 sm:p-6 select-none animate-in fade-in duration-200"
+          className="fixed inset-0 z-[99999] bg-black/92 backdrop-blur-md flex flex-col justify-between items-center p-3 sm:p-6 select-none animate-in fade-in duration-200"
           onClick={() => setIsLightboxOpen(false)}
           role="dialog"
           aria-modal="true"
           aria-label="بزرگنمایی تصویر"
         >
-          {/* 1. Fixed Top-Left Floating Close Button (Never pushed off-screen) */}
+          {/* 1. Fixed Top-Left Floating Close Button (Safe on mobile landscape) */}
           <button
             type="button"
             onClick={() => setIsLightboxOpen(false)}
-            className="fixed top-5 left-5 z-[110] flex items-center gap-2 bg-[#2B2017] hover:bg-red-700 text-white border-2 border-[#F59E0B] px-4 py-2.5 text-sm font-bold shadow-2xl transition-colors cursor-pointer rounded-none"
+            className="fixed top-3 left-3 sm:top-5 sm:left-5 z-[100000] flex items-center gap-1.5 sm:gap-2 bg-[#2B2017] hover:bg-red-700 text-white border-2 border-[#F59E0B] px-3 py-1.5 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-bold shadow-2xl transition-colors cursor-pointer rounded-none"
             title="بستن (Esc)"
             aria-label="بستن پنجره بزرگنمایی"
           >
-            <X className="w-5 h-5 text-[#F59E0B]" strokeWidth={2.5} />
+            <X className="w-4 h-4 sm:w-5 sm:h-5 text-[#F59E0B]" strokeWidth={2.5} />
             <span>بستن (Esc)</span>
           </button>
 
@@ -435,7 +453,8 @@ export function InteractiveMediaGallery({
               </div>
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

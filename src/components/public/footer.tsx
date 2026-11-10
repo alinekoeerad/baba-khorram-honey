@@ -116,7 +116,7 @@ export function Footer({ settings, channels }: FooterProps) {
             </h4>
             <ul className="space-y-2.5 text-xs sm:text-sm font-black flex flex-col text-white/95">
               <li>
-                <span className="text-white/90">برگه آزمایش ساکارز زیر ۲٪</span>
+                <span className="text-white/90">تضمین ۱۰۰٪ خلوص و اصالت طبیعی</span>
               </li>
               <li>
                 <span className="text-white/90">برداشت مستقیم از مراتع ییلاقی</span>
