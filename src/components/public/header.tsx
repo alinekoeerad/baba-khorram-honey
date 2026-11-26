@@ -24,6 +24,7 @@ import { Search, Menu, Phone, ChevronDown, PhoneCall } from 'lucide-react';
 import { HeaderCartIcon } from './header-cart-icon';
 import { PublicChannelItem, PublicMediaAssetInfo } from '@/server/queries/settings';
 import { ChannelIcon } from './channel-icon';
+import { HeaderNavDropdowns } from './header-nav-dropdowns';
 
 interface HeaderProps {
   siteNameFa: string;
@@ -78,14 +79,6 @@ export function Header({
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isContactOpen]);
-
-  const navLinks = [
-    { href: '/', label: 'صفحه اصلی' },
-    { href: '/products', label: 'محصولات' },
-    { href: '/recipes', label: 'دستورها و دسرها' },
-    { href: '/contact', label: 'تماس با ما' },
-    { href: '/feedback', label: 'انتقادات و پیشنهادات' },
-  ];
 
   const contactListContent = (
     <div className="pt-1 pb-3 px-3 space-y-1 animate-in fade-in duration-150 border-t border-white/10">
@@ -290,41 +283,22 @@ export function Header({
             />
 
             <div className="flex flex-col text-right shrink-0 whitespace-nowrap">
-              <span className="text-base sm:text-2xl font-black text-white drop-shadow-md group-hover:text-[#FFF6D6] transition-colors leading-snug whitespace-nowrap">
+              <span className="text-base sm:text-xl 2xl:text-2xl font-black text-white drop-shadow-md group-hover:text-[#FFF6D6] transition-colors leading-snug whitespace-nowrap">
                 {siteNameFa}
               </span>
-              <span className="text-[10px] sm:text-[11px] text-[#FEF3C7] tracking-wider font-bold drop-shadow-xs hidden xs:inline whitespace-nowrap">
+              <span className="text-[10px] sm:text-[11px] text-[#FEF3C7] tracking-wider font-bold drop-shadow-xs hidden xs:inline lg:hidden 2xl:inline whitespace-nowrap">
                 طعم اصیل و طبیعی کوهستان
               </span>
             </div>
           </Link>
         </div>
 
-        {/* Center Section: Desktop Main Navigation with "|" Dividers and Search */}
+        {/* Center Section: Desktop Main Navigation with Dropdowns, "|" Dividers and Search */}
         <nav className="hidden lg:flex items-center text-sm xl:text-base font-black shrink min-w-0" aria-label="ناوبری اصلی">
-          {navLinks.map((link, idx) => {
-            const isActive = pathname === link.href;
-            return (
-              <React.Fragment key={link.href}>
-                {idx > 0 && (
-                  <span className="mx-2 sm:mx-2.5 text-white/90 font-black text-base select-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]" aria-hidden="true">|</span>
-                )}
-                <Link
-                  href={link.href}
-                  className={`transition-colors py-1 text-xs xl:text-sm whitespace-nowrap ${
-                    isActive
-                      ? "font-black text-white underline underline-offset-8 decoration-[3px] decoration-[#FFF6D6] drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]"
-                      : "font-black text-white hover:text-[#FFF6D6] drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              </React.Fragment>
-            );
-          })}
+          <HeaderNavDropdowns pathname={pathname} />
 
           {/* Thick bold | divider before Search Button */}
-          <span className="mx-2 sm:mx-2.5 text-white/90 font-black text-base select-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]" aria-hidden="true">|</span>
+          <span className="mx-1 xl:mx-1.5 2xl:mx-2.5 text-white/90 font-black text-sm xl:text-base select-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]" aria-hidden="true">|</span>
 
           {/* Search Trigger Button inside nav (Desktop) */}
           <button

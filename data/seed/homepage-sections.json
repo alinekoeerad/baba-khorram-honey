@@ -243,12 +243,28 @@
       "title": "چرا عسل حرارت‌ندیده برای بدن حیاتی است؟",
       "body": "حرارت‌دادن عسل برای شفاف‌سازی تجاری، آنزیم دیاستاز و اینورتاز را به طور کامل از بین می‌برد. عسل خام باباخُرم مستقیماً از صافی توری عبور کرده و تمام آنزیم‌ها و گرده‌های مغذی آن حفظ شده است.",
       "cta": {
-        "type": "RECIPES_PAGE",
-        "label": "بیشتر بدانید"
+        "type": "INTERNAL_PATH",
+        "path": "/magazine",
+        "label": "مطالعه در مجله علمی"
       },
       "imagePosition": "RIGHT",
       "theme": "ORANGE"
     },
-    "updatedAt": "2026-11-10T14:19:26.488Z"
+    "updatedAt": "2026-11-26T12:00:00.000Z"
+  },
+  {
+    "id": "sec_faq_8",
+    "type": "FAQ_SECTION",
+    "template": "faq-default",
+    "status": "ACTIVE",
+    "sortOrder": 8,
+    "background": "NONE",
+    "internalName": "سوالات متداول مشتریان",
+    "content": {
+      "type": "FAQ_SECTION",
+      "template": "faq-default",
+      "schemaVersion": 1
+    },
+    "updatedAt": "2026-11-26T12:00:00.000Z"
   }
 ]

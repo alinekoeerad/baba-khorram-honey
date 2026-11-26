@@ -23,6 +23,8 @@ import { usePathname } from 'next/navigation';
 import {
   X,
   Home,
+  BookOpen,
+  HelpCircle,
   ShoppingBag,
   UtensilsCrossed,
   Phone,
@@ -134,7 +136,19 @@ export function HamburgerDrawer({
       href: '/recipes',
       label: 'دستورها و دسرها',
       icon: UtensilsCrossed,
-      description: 'ترکیبات، نوشیدنی‌ها و دسرهای خوش‌طعم',
+      description: 'ترکیبات، نوشیدنی‌ها، صبحانه‌ها و دسرهای عسلی',
+    },
+    {
+      href: '/magazine',
+      label: 'مجله علمی',
+      icon: BookOpen,
+      description: 'رویال ژل، گرده گل، بره‌موم، رس بستن و طبع‌شناسی',
+    },
+    {
+      href: '/faq',
+      label: 'سوالات متداول',
+      icon: HelpCircle,
+      description: 'تشخیص عسل اصل، طبع عسل و علت تفاوت طعم و غلظت',
     },
     {
       href: '/contact',

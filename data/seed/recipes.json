@@ -7009,5 +7009,3179 @@
     "mainImageId": "ast_recipe_dessert_anoush-abour",
     "mainImage": "/uploads/recipes/dessert-anoush-abour-1792331673966.webp",
     "image": "/uploads/recipes/dessert-anoush-abour-1792331673966.webp"
+  },
+  {
+    "id": "rcp_khameh-asal",
+    "index": 65,
+    "slug": "khameh-asal",
+    "nameFa": "خامه عسل",
+    "nameOriginal": "Khameh Asal",
+    "country": "ایران",
+    "servingTypes": [
+      "COLD",
+      "WARM"
+    ],
+    "yieldText": "برای ۲ نفر",
+    "status": "PUBLISHED",
+    "isFeatured": false,
+    "cardTheme": "AUTO",
+    "sortOrder": 64,
+    "ingredients": [
+      {
+        "name": "عسل",
+        "quantityText": "۴",
+        "unit": "قاشق غذاخوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل: ۴ قاشق غذاخوری"
+      },
+      {
+        "name": "سرشیر یا خامه غلیظ",
+        "quantityText": "⅓",
+        "unit": "پیمانه",
+        "equivalentText": "حدود ۸۰ میلی‌لیتر",
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "سرشیر یا خامه غلیظ: ⅓ پیمانه (حدود ۸۰ میلی‌لیتر)"
+      },
+      {
+        "name": "نان ساده",
+        "quantityText": "۲",
+        "unit": "عدد",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "نان ساده: ۲ عدد"
+      }
+    ],
+    "steps": [
+      {
+        "text": "سرشیر یا خامه غلیظ را در ظرفی کوچک بریزید.",
+        "sortOrder": 0
+      },
+      {
+        "text": "عسل را در ظرف جداگانه قرار دهید.",
+        "sortOrder": 1
+      },
+      {
+        "text": "نان‌ها را به آرامی گرم کنید (نیازی به برشته کردن یا خشک شدن آن‌ها نیست).",
+        "sortOrder": 2
+      },
+      {
+        "text": "سرشیر و عسل را با یکدیگر مخلوط کنید تا ترکیبی یکنواخت به دست آید.",
+        "sortOrder": 3
+      },
+      {
+        "text": "مخلوط را روی نان گرم بمالید و بلافاصله سرو کنید.",
+        "sortOrder": 4
+      }
+    ],
+    "categories": [
+      "breakfast"
+    ],
+    "categoryIds": [
+      "cat_breakfast"
+    ],
+    "createdAt": "2026-11-26T12:00:00.000Z",
+    "updatedAt": "2026-11-26T12:00:00.000Z",
+    "searchText": "خامه عسل khameh asal ایران برای 2 نفر صبحانه اصیل و مقوی ایرانی با ترکیب خامه یا سرشیر تازه عسل طبیعی و نان گرم صبحانه عسل سرشیر یا خامه غلیظ نان ساده",
+    "imageUrl": "/uploads/recipes/breakfast-khameh-asal-1794320000000.webp",
+    "shortDescription": "صبحانه اصیل و مقوی ایرانی با ترکیب خامه یا سرشیر تازه، عسل طبیعی و نان گرم.",
+    "longDescription": null,
+    "mainImageId": "ast_recipe_breakfast_khameh-asal",
+    "mainImage": "/uploads/recipes/breakfast-khameh-asal-1794320000000.webp",
+    "image": "/uploads/recipes/breakfast-khameh-asal-1794320000000.webp"
+  },
+  {
+    "id": "rcp_creamy-honey-oats",
+    "index": 66,
+    "slug": "creamy-honey-oats",
+    "nameFa": "اوتمیل عسلی خامه‌ای",
+    "nameOriginal": "Creamy Honey Oats",
+    "country": "بنگلادش",
+    "servingTypes": [
+      "HOT",
+      "WARM"
+    ],
+    "yieldText": "برای ۲ نفر",
+    "status": "PUBLISHED",
+    "isFeatured": false,
+    "cardTheme": "AUTO",
+    "sortOrder": 65,
+    "ingredients": [
+      {
+        "name": "جو دو سر پرک درشت",
+        "quantityText": "¾",
+        "unit": "پیمانه",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "جو دو سر پرک درشت: ¾ پیمانه"
+      },
+      {
+        "name": "آب",
+        "quantityText": "۱/۵",
+        "unit": "پیمانه",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آب: ۱/۵ پیمانه"
+      },
+      {
+        "name": "شیر",
+        "quantityText": "نصف",
+        "unit": "پیمانه",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "شیر: نصف پیمانه"
+      },
+      {
+        "name": "عسل",
+        "quantityText": "۲",
+        "unit": "قاشق غذاخوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل: ۲ قاشق غذاخوری"
+      },
+      {
+        "name": "نمک",
+        "quantityText": "به مقدار بسیار کم",
+        "unit": "",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "نمک: به مقدار بسیار کم"
+      },
+      {
+        "name": "دارچین",
+        "quantityText": "مقدار کم",
+        "unit": "",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "دارچین: مقدار کم"
+      }
+    ],
+    "steps": [
+      {
+        "text": "جو دوسر پرک، آب، نمک و دارچین را در قابلمه بریزید.",
+        "sortOrder": 0
+      },
+      {
+        "text": "مخلوط را روی حرارت ملایم قرار دهید و حدود ۳ تا ۵ دقیقه بپزید تا بیشتر آب جذب جو دوسر پرک شود.",
+        "sortOrder": 1
+      },
+      {
+        "text": "شیر را اضافه کنید و هم بزنید.",
+        "sortOrder": 2
+      },
+      {
+        "text": "عسل را اضافه کرده و ۳ تا ۵ دقیقه دیگر روی حرارت ملایم بپزید.",
+        "sortOrder": 3
+      },
+      {
+        "text": "قابلمه را از روی حرارت بردارید و اجازه دهید حدود ۵ دقیقه استراحت کند تا غلظت مناسبی پیدا کند.",
+        "sortOrder": 4
+      },
+      {
+        "text": "در ظرف مناسب سرو کنید.",
+        "sortOrder": 5
+      }
+    ],
+    "categories": [
+      "breakfast"
+    ],
+    "categoryIds": [
+      "cat_breakfast"
+    ],
+    "createdAt": "2026-11-26T12:00:00.000Z",
+    "updatedAt": "2026-11-26T12:00:00.000Z",
+    "searchText": "اوتمیل عسلی خامه ای creamy honey oats بنگلادش برای 2 نفر اوتمیل گرم و مغذی با جو دوسر پرک شیر دارچین و عسل طبیعی صبحانه جو دو سر پرک درشت اب شیر عسل نمک دارچین",
+    "imageUrl": "/uploads/recipes/breakfast-creamy-honey-oats-1794320000001.webp",
+    "shortDescription": "اوتمیل گرم و مغذی با جو دوسر پرک، شیر، دارچین و عسل طبیعی.",
+    "longDescription": null,
+    "mainImageId": "ast_recipe_breakfast_creamy-honey-oats",
+    "mainImage": "/uploads/recipes/breakfast-creamy-honey-oats-1794320000001.webp",
+    "image": "/uploads/recipes/breakfast-creamy-honey-oats-1794320000001.webp"
+  },
+  {
+    "id": "rcp_bal-kaymak",
+    "index": 67,
+    "slug": "bal-kaymak",
+    "nameFa": "بال کایماک (عسل و سرشیر)",
+    "nameOriginal": "Bal Kaymak",
+    "country": "ترکیه (با سابقه در آشپزی دربار عثمانی)",
+    "servingTypes": [
+      "COLD",
+      "WARM"
+    ],
+    "yieldText": "برای ۲ نفر",
+    "status": "PUBLISHED",
+    "isFeatured": false,
+    "cardTheme": "AUTO",
+    "sortOrder": 66,
+    "ingredients": [
+      {
+        "name": "کایماک (سرشیر غلیظ)",
+        "quantityText": "۴",
+        "unit": "قاشق غذاخوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "کایماک (سرشیر غلیظ): ۴ قاشق غذاخوری"
+      },
+      {
+        "name": "عسل",
+        "quantityText": "۲",
+        "unit": "قاشق غذاخوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل: ۲ قاشق غذاخوری"
+      },
+      {
+        "name": "نان تازه یا سیمیت ترکی",
+        "quantityText": "۲",
+        "unit": "عدد کوچک",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "نان تازه یا سیمیت ترکی: ۲ عدد کوچک"
+      }
+    ],
+    "steps": [
+      {
+        "text": "کایماک را مستقیماً از یخچال خارج کنید و در دو بشقاب کوچک قرار دهید.",
+        "sortOrder": 0
+      },
+      {
+        "text": "عسل را به آرامی روی کایماک بریزید.",
+        "sortOrder": 1
+      },
+      {
+        "text": "در صورت تمایل مقداری عسل را در ظرف جداگانه کنار صبحانه قرار دهید.",
+        "sortOrder": 2
+      },
+      {
+        "text": "همراه نان تازه یا سیمیت سرو کنید.",
+        "sortOrder": 3
+      }
+    ],
+    "categories": [
+      "breakfast"
+    ],
+    "categoryIds": [
+      "cat_breakfast"
+    ],
+    "createdAt": "2026-11-26T12:00:00.000Z",
+    "updatedAt": "2026-11-26T12:00:00.000Z",
+    "searchText": "بال کایماک عسل و سرشیر bal kaymak ترکیه با سابقه در اشپزی دربار عثمانی برای 2 نفر صبحانه کلاسیک و پرطرفدار ترکیه ای با سرشیر خنک عسل طبیعی و نان سیمیت تازه صبحانه کایماک سرشیر غلیظ عسل نان تازه یا سیمیت ترکی",
+    "imageUrl": "/uploads/recipes/breakfast-bal-kaymak-1794320000002.webp",
+    "shortDescription": "صبحانه کلاسیک و پرطرفدار ترکیه‌ای با سرشیر خنک، عسل طبیعی و نان سیمیت تازه.",
+    "longDescription": null,
+    "mainImageId": "ast_recipe_breakfast_bal-kaymak",
+    "mainImage": "/uploads/recipes/breakfast-bal-kaymak-1794320000002.webp",
+    "image": "/uploads/recipes/breakfast-bal-kaymak-1794320000002.webp"
+  },
+  {
+    "id": "rcp_feteer-meshaltet",
+    "index": 68,
+    "slug": "feteer-meshaltet",
+    "nameFa": "فتیر مِشَلتِت",
+    "nameOriginal": "Feteer Meshaltet",
+    "country": "مصر",
+    "servingTypes": [
+      "HOT",
+      "WARM"
+    ],
+    "yieldText": "برای ۶ نفر",
+    "status": "PUBLISHED",
+    "isFeatured": false,
+    "cardTheme": "AUTO",
+    "sortOrder": 67,
+    "ingredients": [
+      {
+        "name": "آرد سفید گندم",
+        "quantityText": "۵۰۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آرد سفید گندم: ۵۰۰ گرم"
+      },
+      {
+        "name": "آرد اضافه برای سطح کار",
+        "quantityText": "به میزان لازم",
+        "unit": "",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آرد اضافه برای سطح کار: به میزان لازم"
+      },
+      {
+        "name": "آب ولرم",
+        "quantityText": "۳۲۰",
+        "unit": "میلی‌لیتر",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آب ولرم: ۳۲۰ میلی‌لیتر"
+      },
+      {
+        "name": "نمک",
+        "quantityText": "۱",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "نمک: ۱ قاشق چای‌خوری"
+      },
+      {
+        "name": "کره حیوانی یا روغن حیوانی صاف‌شده",
+        "quantityText": "۱۸۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "کره حیوانی یا روغن حیوانی صاف‌شده: ۱۸۰ گرم"
+      },
+      {
+        "name": "روغن مایع",
+        "quantityText": "۲",
+        "unit": "قاشق غذاخوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "روغن مایع: ۲ قاشق غذاخوری"
+      },
+      {
+        "name": "عسل",
+        "quantityText": "به مقدار لازم",
+        "unit": "",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل: به مقدار لازم"
+      }
+    ],
+    "steps": [
+      {
+        "text": "آرد، نمک و آب ولرم را مخلوط کنید و ۸ تا ۱۰ دقیقه ورز دهید تا خمیر نرم و یکدستی حاصل شود.",
+        "sortOrder": 0
+      },
+      {
+        "text": "خمیر را به ۶ قسمت تقسیم کنید، سطح آن‌ها را کمی چرب کنید و ۳۰ دقیقه استراحت دهید.",
+        "sortOrder": 1
+      },
+      {
+        "text": "هر قسمت را روی سطح چرب‌شده بسیار نازک باز کنید.",
+        "sortOrder": 2
+      },
+      {
+        "text": "سطح خمیر را با کره یا روغن حیوانی چرب کنید و لبه‌ها را به سمت مرکز تا بزنید تا شکل مربعی پیدا کند.",
+        "sortOrder": 3
+      },
+      {
+        "text": "۲ خمیر تا خورده را روی هم قرار دهید تا لایه‌های فتیر شکل بگیرند.",
+        "sortOrder": 4
+      },
+      {
+        "text": "۲۰ تا ۳۰ دقیقه دیگر استراحت دهید.",
+        "sortOrder": 5
+      },
+      {
+        "text": "فر را روی ۲۳۰ درجه سانتی‌گراد گرم کنید.",
+        "sortOrder": 6
+      },
+      {
+        "text": "فتیرها را در سینی داغ قرار دهید و حدود ۲۰ تا ۲۵ دقیقه بپزید تا طلایی شوند.",
+        "sortOrder": 7
+      },
+      {
+        "text": "پس از پخت، ۵ دقیقه استراحت دهید و همراه عسل سرو کنید.",
+        "sortOrder": 8
+      }
+    ],
+    "categories": [
+      "breakfast",
+      "cakes-pastries"
+    ],
+    "categoryIds": [
+      "cat_breakfast",
+      "cat_pastries"
+    ],
+    "createdAt": "2026-11-26T12:00:00.000Z",
+    "updatedAt": "2026-11-26T12:00:00.000Z",
+    "searchText": "فتیر مشلتت feteer meshaltet مصر برای 6 نفر نان سنتی هزارلای مصری پخته شده با کره حیوانی و سرو شده همراه عسل طبیعی صبحانه کیک و شیرینی نان پنکیک ارد سفید گندم ارد اضافه برای سطح کار اب ولرم نمک کره حیوانی یا روغن حیوانی صاف شده روغن مایع عسل",
+    "imageUrl": "/uploads/recipes/breakfast-feteer-meshaltet-1794320000003.webp",
+    "shortDescription": "نان سنتی هزارلای مصری پخته‌شده با کره حیوانی و سرو شده همراه عسل طبیعی.",
+    "longDescription": null,
+    "mainImageId": "ast_recipe_breakfast_feteer-meshaltet",
+    "mainImage": "/uploads/recipes/breakfast-feteer-meshaltet-1794320000003.webp",
+    "image": "/uploads/recipes/breakfast-feteer-meshaltet-1794320000003.webp"
+  },
+  {
+    "id": "rcp_msemen",
+    "index": 69,
+    "slug": "msemen",
+    "nameFa": "نان مسمن",
+    "nameOriginal": "Msemen",
+    "country": "مراکش",
+    "servingTypes": [
+      "HOT",
+      "WARM"
+    ],
+    "yieldText": "برای ۶ نفر",
+    "status": "PUBLISHED",
+    "isFeatured": false,
+    "cardTheme": "AUTO",
+    "sortOrder": 68,
+    "ingredients": [
+      {
+        "name": "آرد گندم",
+        "quantityText": "۲۵۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آرد گندم: ۲۵۰ گرم"
+      },
+      {
+        "name": "آرد سمولینا",
+        "quantityText": "۲۵۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آرد سمولینا: ۲۵۰ گرم"
+      },
+      {
+        "name": "آب ولرم",
+        "quantityText": "۲۵۰",
+        "unit": "میلی‌لیتر",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آب ولرم: ۲۵۰ میلی‌لیتر"
+      },
+      {
+        "name": "نمک",
+        "quantityText": "۱",
+        "unit": "پنس",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "نمک: ۱ پنس"
+      },
+      {
+        "name": "کره",
+        "quantityText": "۱۵۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "کره: ۱۵۰ گرم"
+      },
+      {
+        "name": "روغن زیتون",
+        "quantityText": "نصف",
+        "unit": "پیمانه",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "روغن زیتون: نصف پیمانه"
+      },
+      {
+        "name": "عسل",
+        "quantityText": "به میزان لازم",
+        "unit": "",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل: به میزان لازم"
+      }
+    ],
+    "steps": [
+      {
+        "text": "آرد گندم، آرد سمولینا و نمک را مخلوط کنید.",
+        "sortOrder": 0
+      },
+      {
+        "text": "آب ولرم را به تدریج اضافه کنید و ورز دهید تا خمیر یکدست و لطیفی حاصل شود.",
+        "sortOrder": 1
+      },
+      {
+        "text": "خمیر را به ۶ قسمت تقسیم کنید و روی آن‌ها روغن بمالید.",
+        "sortOrder": 2
+      },
+      {
+        "text": "۱۵ دقیقه استراحت دهید.",
+        "sortOrder": 3
+      },
+      {
+        "text": "هر قسمت را روی سطح چرب‌شده بسیار نازک باز کنید.",
+        "sortOrder": 4
+      },
+      {
+        "text": "سطح خمیر را با مخلوط کره ذوب‌شده و روغن زیتون چرب کنید و به شکل مربع تا بزنید.",
+        "sortOrder": 5
+      },
+      {
+        "text": "در تابه چرب‌شده، هر طرف را بپزید تا طلایی شود.",
+        "sortOrder": 6
+      },
+      {
+        "text": "همراه عسل سرو کنید.",
+        "sortOrder": 7
+      }
+    ],
+    "categories": [
+      "breakfast",
+      "cakes-pastries"
+    ],
+    "categoryIds": [
+      "cat_breakfast",
+      "cat_pastries"
+    ],
+    "createdAt": "2026-11-26T12:00:00.000Z",
+    "updatedAt": "2026-11-26T12:00:00.000Z",
+    "searchText": "نان مسمن msemen مراکش برای 6 نفر نان تابه ای لایه دار مراکشی با ارد سمولینا و کره که با عسل طبیعی سرو می شود صبحانه کیک و شیرینی نان پنکیک ارد گندم ارد سمولینا اب ولرم نمک کره روغن زیتون عسل",
+    "imageUrl": "/uploads/recipes/breakfast-msemen-1794320000004.webp",
+    "shortDescription": "نان تابه‌ای لایه‌دار مراکشی با آرد سمولینا و کره که با عسل طبیعی سرو می‌شود.",
+    "longDescription": null,
+    "mainImageId": "ast_recipe_breakfast_msemen",
+    "mainImage": "/uploads/recipes/breakfast-msemen-1794320000004.webp",
+    "image": "/uploads/recipes/breakfast-msemen-1794320000004.webp"
+  },
+  {
+    "id": "rcp_moroccan-baghrir",
+    "index": 70,
+    "slug": "moroccan-baghrir",
+    "nameFa": "بغریر مراکشی",
+    "nameOriginal": "Moroccan Baghrir",
+    "country": "مراکش",
+    "servingTypes": [
+      "HOT",
+      "WARM"
+    ],
+    "yieldText": "برای حدود ۱۲ عدد",
+    "status": "PUBLISHED",
+    "isFeatured": false,
+    "cardTheme": "AUTO",
+    "sortOrder": 69,
+    "ingredients": [
+      {
+        "name": "آرد سمولینا نرم",
+        "quantityText": "۲۵۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آرد سمولینا نرم: ۲۵۰ گرم"
+      },
+      {
+        "name": "آرد سفید گندم",
+        "quantityText": "۱۰۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آرد سفید گندم: ۱۰۰ گرم"
+      },
+      {
+        "name": "خمیرمایه خشک فعال",
+        "quantityText": "۱",
+        "unit": "قاشق غذاخوری",
+        "equivalentText": "حدود ۱۵ گرم",
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "خمیرمایه خشک فعال: ۱ قاشق غذاخوری (حدود ۱۵ گرم)"
+      },
+      {
+        "name": "بیکینگ پودر",
+        "quantityText": "۱",
+        "unit": "قاشق غذاخوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "بیکینگ پودر: ۱ قاشق غذاخوری"
+      },
+      {
+        "name": "شکر",
+        "quantityText": "۱",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "شکر: ۱ قاشق چای‌خوری"
+      },
+      {
+        "name": "نمک",
+        "quantityText": "نصف",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "نمک: نصف قاشق چای‌خوری"
+      },
+      {
+        "name": "آب ولرم",
+        "quantityText": "۵۰۰",
+        "unit": "میلی‌لیتر",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آب ولرم: ۵۰۰ میلی‌لیتر"
+      },
+      {
+        "name": "کره بدون نمک",
+        "quantityText": "۸۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "کره بدون نمک: ۸۰ گرم"
+      },
+      {
+        "name": "عسل",
+        "quantityText": "۸۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل: ۸۰ گرم"
+      },
+      {
+        "name": "عرق بهارنارنج",
+        "quantityText": "۱",
+        "unit": "قاشق غذاخوری",
+        "equivalentText": null,
+        "isOptional": true,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عرق بهارنارنج: ۱ قاشق غذاخوری"
+      }
+    ],
+    "steps": [
+      {
+        "text": "سمولینا، آرد سفید، خمیرمایه، شکر و نمک را داخل مخلوط‌کن بریزید.",
+        "sortOrder": 0
+      },
+      {
+        "text": "آب ولرم را اضافه کنید و حدود ۲ دقیقه مخلوط کنید تا مایه‌ای صاف و نسبتاً رقیق به دست آید.",
+        "sortOrder": 1
+      },
+      {
+        "text": "بیکینگ پودر را اضافه کنید و حدود ۳۰ ثانیه دیگر مخلوط کنید.",
+        "sortOrder": 2
+      },
+      {
+        "text": "مایه را در ظرفی بریزید، روی آن را بپوشانید و در محیط نسبتاً گرم به مدت ۱۵ تا ۲۰ دقیقه استراحت دهید تا حباب‌هایی روی سطح آن ظاهر شود.",
+        "sortOrder": 3
+      },
+      {
+        "text": "تابه نچسب را روی حرارت متوسط قرار دهید. تابه باید بدون روغن باشد.",
+        "sortOrder": 4
+      },
+      {
+        "text": "۱ ملاقه از مایه را وسط تابه بریزید و اجازه دهید خودش در سطح تابه پخش شود.",
+        "sortOrder": 5
+      },
+      {
+        "text": "پنکیک را فقط از یک طرف بپزید. با ظاهر شدن سوراخ‌های متعدد روی سطح و خشک شدن قسمت بالایی، بغریر آماده است؛ آن را برنگردانید.",
+        "sortOrder": 6
+      },
+      {
+        "text": "کره را روی حرارت ملایم ذوب کنید و عسل را به آن اضافه کنید؛ در صورت تمایل عرق بهارنارنج را نیز بیفزایید.",
+        "sortOrder": 7
+      },
+      {
+        "text": "مخلوط کره و عسل را روی بغریرهای گرم بریزید و سرو کنید.",
+        "sortOrder": 8
+      }
+    ],
+    "categories": [
+      "breakfast",
+      "cakes-pastries"
+    ],
+    "categoryIds": [
+      "cat_breakfast",
+      "cat_pastries"
+    ],
+    "createdAt": "2026-11-26T12:00:00.000Z",
+    "updatedAt": "2026-11-26T12:00:00.000Z",
+    "searchText": "بغریر مراکشی moroccan baghrir مراکش برای حدود 12 عدد پنکیک سنتی هزارسوراخ مراکشی با سس گرم کره عسل طبیعی و عطر بهارنارنج صبحانه کیک و شیرینی نان پنکیک ارد سمولینا نرم ارد سفید گندم خمیرمایه خشک فعال بیکینگ پودر شکر نمک اب ولرم کره بدون نمک عسل عرق بهارنارنج",
+    "imageUrl": "/uploads/recipes/breakfast-moroccan-baghrir-1794320000005.webp",
+    "shortDescription": "پنکیک سنتی هزارسوراخ مراکشی با سس گرم کره، عسل طبیعی و عطر بهارنارنج.",
+    "longDescription": null,
+    "mainImageId": "ast_recipe_breakfast_moroccan-baghrir",
+    "mainImage": "/uploads/recipes/breakfast-moroccan-baghrir-1794320000005.webp",
+    "image": "/uploads/recipes/breakfast-moroccan-baghrir-1794320000005.webp"
+  },
+  {
+    "id": "rcp_bsissa-breakfast",
+    "index": 71,
+    "slug": "bsissa-breakfast",
+    "nameFa": "بسیسه با ماست و خرما",
+    "nameOriginal": "Bsissa",
+    "country": "تونس",
+    "servingTypes": [
+      "COLD",
+      "WARM"
+    ],
+    "yieldText": "برای ۲ نفر",
+    "status": "PUBLISHED",
+    "isFeatured": false,
+    "cardTheme": "AUTO",
+    "sortOrder": 70,
+    "ingredients": [
+      {
+        "name": "پودر بسیسه آماده (ترکیب غلات و نخود برشته و آسیاب‌شده)",
+        "quantityText": "۱۰۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "پودر بسیسه آماده (ترکیب غلات و نخود برشته و آسیاب‌شده): ۱۰۰ گرم"
+      },
+      {
+        "name": "روغن زیتون فرابکر",
+        "quantityText": "۴۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "روغن زیتون فرابکر: ۴۰ گرم"
+      },
+      {
+        "name": "عسل",
+        "quantityText": "۲۵",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل: ۲۵ گرم"
+      },
+      {
+        "name": "نمک نرم",
+        "quantityText": "۰/۳",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "نمک نرم: ۰/۳ گرم"
+      },
+      {
+        "name": "ماست ساده کم‌چرب",
+        "quantityText": "۳۰۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "ماست ساده کم‌چرب: ۳۰۰ گرم"
+      },
+      {
+        "name": "خرمای بدون هسته",
+        "quantityText": "۸۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "خرمای بدون هسته: ۸۰ گرم"
+      },
+      {
+        "name": "بادام خام با پوست",
+        "quantityText": "۲۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "بادام خام با پوست: ۲۰ گرم"
+      }
+    ],
+    "steps": [
+      {
+        "text": "بادام‌ها را در تابه خشک روی حرارت متوسط حدود ۳ تا ۴ دقیقه تفت دهید تا عطر آن‌ها آزاد شود، سپس کنار بگذارید تا خنک شوند.",
+        "sortOrder": 0
+      },
+      {
+        "text": "پودر بسیسه را همراه نمک در یک کاسه بریزید.",
+        "sortOrder": 1
+      },
+      {
+        "text": "¾ روغن زیتون را اضافه کنید و با پشت قاشق یا نوک انگشتان مخلوط کنید تا پودر حالت شن مرطوب پیدا کند.",
+        "sortOrder": 2
+      },
+      {
+        "text": "عسل را با حرارت باقی‌مانده تابه کمی روان کنید (نیازی به جوشاندن نیست).",
+        "sortOrder": 3
+      },
+      {
+        "text": "عسل را به مخلوط بسیسه اضافه کنید و ۱ تا ۲ دقیقه ورز دهید تا خمیر نسبتاً منسجمی به دست آید.",
+        "sortOrder": 4
+      },
+      {
+        "text": "اگر مخلوط هنوز خشک و پودری بود، مقدار باقی‌مانده روغن زیتون را به تدریج اضافه کنید.",
+        "sortOrder": 5
+      },
+      {
+        "text": "خرماها را بدون هسته و به قطعات کوچک خرد کنید. بادام‌های خنک‌شده را نیز درشت خرد کنید.",
+        "sortOrder": 6
+      },
+      {
+        "text": "ماست را بین ۲ کاسه تقسیم کنید.",
+        "sortOrder": 7
+      },
+      {
+        "text": "خمیر بسیسه را به ۲ قسمت تقسیم کرده و روی ماست قرار دهید.",
+        "sortOrder": 8
+      },
+      {
+        "text": "خرما و بادام خردشده را روی آن بریزید و باقی‌مانده روغن زیتون را به صورت قطره‌ای اضافه کنید.",
+        "sortOrder": 9
+      },
+      {
+        "text": "بلافاصله سرو کنید.",
+        "sortOrder": 10
+      }
+    ],
+    "categories": [
+      "breakfast"
+    ],
+    "categoryIds": [
+      "cat_breakfast"
+    ],
+    "createdAt": "2026-11-26T12:00:00.000Z",
+    "updatedAt": "2026-11-26T12:00:00.000Z",
+    "searchText": "بسیسه با ماست و خرما bsissa تونس برای 2 نفر صبحانه سنتی تونسی با ارد غلات برشته بسیسه عسل روغن زیتون ماست خرما و بادام بوداده صبحانه پودر بسیسه اماده ترکیب غلات و نخود برشته و اسیاب شده روغن زیتون فرابکر عسل نمک نرم ماست ساده کم چرب خرمای بدون هسته بادام خام با پوست",
+    "imageUrl": "/uploads/recipes/breakfast-bsissa-breakfast-1794320000006.webp",
+    "shortDescription": "صبحانه سنتی تونسی با آرد غلات برشته بسیسه، عسل، روغن زیتون، ماست، خرما و بادام بوداده.",
+    "longDescription": null,
+    "mainImageId": "ast_recipe_breakfast_bsissa-breakfast",
+    "mainImage": "/uploads/recipes/breakfast-bsissa-breakfast-1794320000006.webp",
+    "image": "/uploads/recipes/breakfast-bsissa-breakfast-1794320000006.webp"
+  },
+  {
+    "id": "rcp_algerian-baghrir",
+    "index": 72,
+    "slug": "algerian-baghrir",
+    "nameFa": "بغریر الجزایری",
+    "nameOriginal": "Algerian Baghrir",
+    "country": "الجزایر",
+    "servingTypes": [
+      "HOT",
+      "WARM"
+    ],
+    "yieldText": "برای ۱۵ عدد",
+    "status": "PUBLISHED",
+    "isFeatured": false,
+    "cardTheme": "AUTO",
+    "sortOrder": 71,
+    "ingredients": [
+      {
+        "name": "آرد سمولینای نرم",
+        "quantityText": "۴۰۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آرد سمولینای نرم: ۴۰۰ گرم"
+      },
+      {
+        "name": "خمیرمایه خشک",
+        "quantityText": "۷",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "خمیرمایه خشک: ۷ گرم"
+      },
+      {
+        "name": "بیکینگ پودر",
+        "quantityText": "۱",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "بیکینگ پودر: ۱ قاشق چای‌خوری"
+      },
+      {
+        "name": "شکر دانه‌ریز",
+        "quantityText": "۲",
+        "unit": "قاشق غذاخوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "شکر دانه‌ریز: ۲ قاشق غذاخوری"
+      },
+      {
+        "name": "آرد سفید گندم",
+        "quantityText": "۲",
+        "unit": "قاشق غذاخوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آرد سفید گندم: ۲ قاشق غذاخوری"
+      },
+      {
+        "name": "آب ولرم",
+        "quantityText": "۷۵۰",
+        "unit": "میلی‌لیتر",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آب ولرم: ۷۵۰ میلی‌لیتر"
+      },
+      {
+        "name": "کره بدون نمک",
+        "quantityText": "۱۰۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "کره بدون نمک: ۱۰۰ گرم"
+      },
+      {
+        "name": "عسل",
+        "quantityText": "۹۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل: ۹۰ گرم"
+      },
+      {
+        "name": "روغن مایع برای چرب کردن سطح تابه",
+        "quantityText": "به میزان لازم",
+        "unit": "",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "روغن مایع برای چرب کردن سطح تابه: به میزان لازم"
+      }
+    ],
+    "steps": [
+      {
+        "text": "آرد سمولینا، خمیرمایه خشک، بیکینگ پودر، شکر و آرد سفید را در غذاساز بریزید.",
+        "sortOrder": 0
+      },
+      {
+        "text": "آب ولرم را اضافه کنید و مواد را مخلوط کنید تا مایه‌ای کاملاً صاف و یکدست حاصل شود.",
+        "sortOrder": 1
+      },
+      {
+        "text": "مایه را به ظرف بزرگی منتقل کنید و روی آن را با پارچه تمیز بپوشانید.",
+        "sortOrder": 2
+      },
+      {
+        "text": "ظرف را به مدت ۴۵ دقیقه در محیط گرم و دور از جریان هوا قرار دهید تا حجم مایه تقریباً دو برابر شود و سطح آن پر از حباب شود.",
+        "sortOrder": 3
+      },
+      {
+        "text": "کره نرم‌شده و عسل را در غذاساز یا همزن مخلوط کنید تا ترکیبی یکنواخت و کرمی به دست آید.",
+        "sortOrder": 4
+      },
+      {
+        "text": "تابه را روی حرارت متوسط قرار دهید و با قلم‌مو لایه بسیار نازکی از روغن روی آن بمالید.",
+        "sortOrder": 5
+      },
+      {
+        "text": "نصف پیمانه از مایه را داخل تابه بریزید و اجازه دهید حدود ۲ دقیقه بپزد تا حباب‌های روی سطح آن ظاهر شود.",
+        "sortOrder": 6
+      },
+      {
+        "text": "پنکیک را برگردانید و طرف دیگر را نیز حدود ۲ دقیقه بپزید تا طلایی شود.",
+        "sortOrder": 7
+      },
+      {
+        "text": "سایر پنکیک‌ها را به همین روش آماده کنید.",
+        "sortOrder": 8
+      },
+      {
+        "text": "بغریرهای گرم را با کره و عسل آماده شده سرو کنید.",
+        "sortOrder": 9
+      }
+    ],
+    "categories": [
+      "breakfast",
+      "cakes-pastries"
+    ],
+    "categoryIds": [
+      "cat_breakfast",
+      "cat_pastries"
+    ],
+    "createdAt": "2026-11-26T12:00:00.000Z",
+    "updatedAt": "2026-11-26T12:00:00.000Z",
+    "searchText": "بغریر الجزایری algerian baghrir الجزایر برای 15 عدد پنکیک اسفنجی الجزایری با ارد سمولینا و کرم نرم کره و عسل صبحانه کیک و شیرینی نان پنکیک ارد سمولینای نرم خمیرمایه خشک بیکینگ پودر شکر دانه ریز ارد سفید گندم اب ولرم کره بدون نمک عسل روغن مایع برای چرب کردن سطح تابه",
+    "imageUrl": "/uploads/recipes/breakfast-algerian-baghrir-1794320000007.webp",
+    "shortDescription": "پنکیک اسفنجی الجزایری با آرد سمولینا و کرم نرم کره و عسل.",
+    "longDescription": null,
+    "mainImageId": "ast_recipe_breakfast_algerian-baghrir",
+    "mainImage": "/uploads/recipes/breakfast-algerian-baghrir-1794320000007.webp",
+    "image": "/uploads/recipes/breakfast-algerian-baghrir-1794320000007.webp"
+  },
+  {
+    "id": "rcp_libyan-asida",
+    "index": 73,
+    "slug": "libyan-asida",
+    "nameFa": "عصیده لیبیایی",
+    "nameOriginal": "Libyan Asida",
+    "country": "لیبی",
+    "servingTypes": [
+      "HOT",
+      "WARM"
+    ],
+    "yieldText": "برای ۶ نفر",
+    "status": "PUBLISHED",
+    "isFeatured": false,
+    "cardTheme": "AUTO",
+    "sortOrder": 72,
+    "ingredients": [
+      {
+        "name": "آرد سفید گندم",
+        "quantityText": "۴۰۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آرد سفید گندم: ۴۰۰ گرم"
+      },
+      {
+        "name": "آب",
+        "quantityText": "۹۰۰",
+        "unit": "میلی‌لیتر",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آب: ۹۰۰ میلی‌لیتر"
+      },
+      {
+        "name": "نمک نرم",
+        "quantityText": "نصف",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "نمک نرم: نصف قاشق چای‌خوری"
+      },
+      {
+        "name": "کره بدون نمک",
+        "quantityText": "۸۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "کره بدون نمک: ۸۰ گرم"
+      },
+      {
+        "name": "کره برای چرب کردن ظرف",
+        "quantityText": "۲۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "کره برای چرب کردن ظرف: ۲۰ گرم"
+      },
+      {
+        "name": "عسل",
+        "quantityText": "۱۸۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل: ۱۸۰ گرم"
+      },
+      {
+        "name": "عرق بهارنارنج",
+        "quantityText": "۱",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": true,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عرق بهارنارنج: ۱ قاشق چای‌خوری"
+      },
+      {
+        "name": "بادام خرد شده یا کنجد بوداده",
+        "quantityText": "۳۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": true,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "بادام خرد شده یا کنجد بوداده: ۳۰ گرم"
+      }
+    ],
+    "steps": [
+      {
+        "text": "ابتدا آرد را الک کنید و کنار بگذارید.",
+        "sortOrder": 0
+      },
+      {
+        "text": "حدود ۸۰۰ میلی‌لیتر آب را همراه نمک در قابلمه‌ای ضخیم بریزید و روی حرارت قرار دهید تا به جوش ملایم برسد. ۱۰۰ میلی‌لیتر آب باقی‌مانده را جداگانه گرم نگه دارید.",
+        "sortOrder": 1
+      },
+      {
+        "text": "آرد را به تدریج به آب اضافه کنید و همزمان با همزن دستی محکم هم بزنید تا گلوله نشود.",
+        "sortOrder": 2
+      },
+      {
+        "text": "هنگامی که مخلوط غلیظ شد، همزن را با قاشق چوبی محکم جایگزین کنید.",
+        "sortOrder": 3
+      },
+      {
+        "text": "خمیر را روی حرارت ملایم حدود ۱۸ تا ۲۲ دقیقه بپزید. در این مدت مرتب آن را به دیواره قابلمه فشار دهید و دوباره به مرکز برگردانید.",
+        "sortOrder": 4
+      },
+      {
+        "text": "اگر خمیر بیش از اندازه سفت شد یا ترک برداشت، از آب گرم ذخیره‌شده به تدریج اضافه کنید.",
+        "sortOrder": 5
+      },
+      {
+        "text": "حدود ۳۰ گرم از کره ذوب‌شده را به خمیر اضافه کنید و ۳ تا ۴ دقیقه دیگر هم بزنید تا خمیر یکدست، براق و منسجم شود.",
+        "sortOrder": 6
+      },
+      {
+        "text": "ظرف سرو را با کره چرب کنید و عصیده را داخل آن قرار دهید و سطح آن را با کاردک مرطوب صاف کنید.",
+        "sortOrder": 7
+      },
+      {
+        "text": "با پشت قاشق در مرکز عصیده یک گودی ایجاد کنید.",
+        "sortOrder": 8
+      },
+      {
+        "text": "عسل را روی حرارت بسیار ملایم کمی گرم کنید (نباید بجوشد). در صورت تمایل عرق بهارنارنج را اضافه کنید.",
+        "sortOrder": 9
+      },
+      {
+        "text": "باقی‌مانده کره ذوب‌شده و عسل گرم را داخل گودی بریزید.",
+        "sortOrder": 10
+      },
+      {
+        "text": "بادام خرد شده یا کنجد بوداده را روی آن بپاشید و بلافاصله به صورت گرم سرو کنید.",
+        "sortOrder": 11
+      }
+    ],
+    "categories": [
+      "breakfast"
+    ],
+    "categoryIds": [
+      "cat_breakfast"
+    ],
+    "createdAt": "2026-11-26T12:00:00.000Z",
+    "updatedAt": "2026-11-26T12:00:00.000Z",
+    "searchText": "عصیده لیبیایی libyan asida لیبی برای 6 نفر دسر و صبحانه گرم سنتی لیبی با خمیر پخته گندم کره ذوب شده و عسل طبیعی صبحانه ارد سفید گندم اب نمک نرم کره بدون نمک کره برای چرب کردن ظرف عسل عرق بهارنارنج بادام خرد شده یا کنجد بوداده",
+    "imageUrl": "/uploads/recipes/breakfast-libyan-asida-1794320000008.webp",
+    "shortDescription": "دسر و صبحانه گرم سنتی لیبی با خمیر پخته گندم، کره ذوب‌شده و عسل طبیعی.",
+    "longDescription": null,
+    "mainImageId": "ast_recipe_breakfast_libyan-asida",
+    "mainImage": "/uploads/recipes/breakfast-libyan-asida-1794320000008.webp",
+    "image": "/uploads/recipes/breakfast-libyan-asida-1794320000008.webp"
+  },
+  {
+    "id": "rcp_bint-al-sahn",
+    "index": 74,
+    "slug": "bint-al-sahn",
+    "nameFa": "بِنت الصَحن",
+    "nameOriginal": "Bint al-Sahn",
+    "country": "یمن",
+    "servingTypes": [
+      "HOT",
+      "WARM"
+    ],
+    "yieldText": "برای ۴ تا ۶ نفر",
+    "status": "PUBLISHED",
+    "isFeatured": false,
+    "cardTheme": "AUTO",
+    "sortOrder": 73,
+    "ingredients": [
+      {
+        "name": "آرد گندم",
+        "quantityText": "۴",
+        "unit": "پیمانه",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آرد گندم: ۴ پیمانه"
+      },
+      {
+        "name": "تخم‌مرغ",
+        "quantityText": "۳ عدد کامل و ۱ عدد زرده",
+        "unit": "",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "تخم‌مرغ: ۳ عدد کامل و ۱ عدد زرده"
+      },
+      {
+        "name": "آب",
+        "quantityText": "۱/۵",
+        "unit": "پیمانه",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آب: ۱/۵ پیمانه"
+      },
+      {
+        "name": "روغن حیوانی یا کره ذوب‌شده",
+        "quantityText": "¾",
+        "unit": "پیمانه",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "روغن حیوانی یا کره ذوب‌شده: ¾ پیمانه"
+      },
+      {
+        "name": "خمیرمایه",
+        "quantityText": "۱",
+        "unit": "قاشق غذاخوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "خمیرمایه: ۱ قاشق غذاخوری"
+      },
+      {
+        "name": "شکر",
+        "quantityText": "۱",
+        "unit": "قاشق غذاخوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "شکر: ۱ قاشق غذاخوری"
+      },
+      {
+        "name": "شیر خشک",
+        "quantityText": "۱",
+        "unit": "قاشق غذاخوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "شیر خشک: ۱ قاشق غذاخوری"
+      },
+      {
+        "name": "نمک",
+        "quantityText": "¼",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "نمک: ¼ قاشق چای‌خوری"
+      },
+      {
+        "name": "وانیل",
+        "quantityText": "¼",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "وانیل: ¼ قاشق چای‌خوری"
+      },
+      {
+        "name": "کنجد سیاه",
+        "quantityText": "به میزان لازم",
+        "unit": "برای تزئین",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "کنجد سیاه: به میزان لازم برای تزئین"
+      },
+      {
+        "name": "عسل",
+        "quantityText": "به میزان لازم",
+        "unit": "برای سرو",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل: به میزان لازم برای سرو"
+      }
+    ],
+    "steps": [
+      {
+        "text": "فر را روی ۲۰۰ درجه سانتی‌گراد تنظیم کنید.",
+        "sortOrder": 0
+      },
+      {
+        "text": "خمیرمایه را با ¼ پیمانه آب ولرم مخلوط کنید و چند دقیقه کنار بگذارید تا فعال شود.",
+        "sortOrder": 1
+      },
+      {
+        "text": "آرد و نمک را در ظرفی مخلوط کنید. در ظرفی دیگر تخم‌مرغ‌ها، شکر، شیر خشک، روغن حیوانی، ۱ پیمانه آب و خمیرمایه فعال‌شده را با هم ترکیب کنید.",
+        "sortOrder": 2
+      },
+      {
+        "text": "مواد مایع را به آرد اضافه کنید و حدود ۱۵ دقیقه ورز دهید تا خمیر نرم و یکدستی حاصل شود.",
+        "sortOrder": 3
+      },
+      {
+        "text": "خمیر را بپوشانید و حدود ۳۰ دقیقه استراحت دهید.",
+        "sortOrder": 4
+      },
+      {
+        "text": "خمیر را به ۱۲ تا ۱۵ قسمت تقسیم کنید و هر قسمت را به شکل گلوله درآورید. روی آن‌ها را بپوشانید و ۱۵ تا ۳۰ دقیقه دیگر استراحت دهید.",
+        "sortOrder": 5
+      },
+      {
+        "text": "هر گلوله را تا حد امکان نازک باز کنید. لایه نخست را در ظرف گرد چرب‌شده قرار دهید و روی آن روغن حیوانی بمالید. همین کار را برای لایه‌های بعدی تکرار کنید و آن‌ها را روی یکدیگر قرار دهید.",
+        "sortOrder": 6
+      },
+      {
+        "text": "روی آخرین لایه، زرده تخم‌مرغ و وانیل بمالید و کنجد سیاه بپاشید.",
+        "sortOrder": 7
+      },
+      {
+        "text": "ظرف را به مدت ۲۵ تا ۴۰ دقیقه در فر قرار دهید تا سطح نان طلایی شود.",
+        "sortOrder": 8
+      },
+      {
+        "text": "پس از خارج کردن از فر در حالی که هنوز گرم است عسل را روی آن بریزید و به شکل برش‌های مثلثی سرو کنید.",
+        "sortOrder": 9
+      }
+    ],
+    "categories": [
+      "breakfast",
+      "cakes-pastries"
+    ],
+    "categoryIds": [
+      "cat_breakfast",
+      "cat_pastries"
+    ],
+    "createdAt": "2026-11-26T12:00:00.000Z",
+    "updatedAt": "2026-11-26T12:00:00.000Z",
+    "searchText": "بنت الصحن bint al sahn یمن برای 4 تا 6 نفر کیک لایه لایه عسلی معروف یمن با لایه های نازک خمیر روغن حیوانی سیاه دانه و عسل فراوان صبحانه کیک و شیرینی نان پنکیک ارد گندم تخم مرغ اب روغن حیوانی یا کره ذوب شده خمیرمایه شکر شیر خشک نمک وانیل کنجد سیاه عسل",
+    "imageUrl": "/uploads/recipes/breakfast-bint-al-sahn-1794320000009.webp",
+    "shortDescription": "کیک لایه‌لایه عسلی معروف یمن با لایه‌های نازک خمیر، روغن حیوانی، سیاه‌دانه و عسل فراوان.",
+    "longDescription": null,
+    "mainImageId": "ast_recipe_breakfast_bint-al-sahn",
+    "mainImage": "/uploads/recipes/breakfast-bint-al-sahn-1794320000009.webp",
+    "image": "/uploads/recipes/breakfast-bint-al-sahn-1794320000009.webp"
+  },
+  {
+    "id": "rcp_southern-areeka",
+    "index": 75,
+    "slug": "southern-areeka",
+    "nameFa": "عریکه جنوبی",
+    "nameOriginal": "Southern Areeka",
+    "country": "عربستان سعودی (منطقه عسیر و جنوب عربستان)",
+    "servingTypes": [
+      "HOT",
+      "WARM"
+    ],
+    "yieldText": "برای ۴ نفر",
+    "status": "PUBLISHED",
+    "isFeatured": false,
+    "cardTheme": "AUTO",
+    "sortOrder": 74,
+    "ingredients": [
+      {
+        "name": "آرد گندم",
+        "quantityText": "۳۰۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آرد گندم: ۳۰۰ گرم"
+      },
+      {
+        "name": "آب ولرم",
+        "quantityText": "۲۰۰",
+        "unit": "میلی‌لیتر",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آب ولرم: ۲۰۰ میلی‌لیتر"
+      },
+      {
+        "name": "نمک",
+        "quantityText": "۳",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "نمک: ۳ گرم"
+      },
+      {
+        "name": "خمیرمایه فوری",
+        "quantityText": "۴",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "خمیرمایه فوری: ۴ گرم"
+      },
+      {
+        "name": "خرمای نرم و بدون هسته",
+        "quantityText": "۲۰۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "خرمای نرم و بدون هسته: ۲۰۰ گرم"
+      },
+      {
+        "name": "روغن حیوانی یا سمن محلی",
+        "quantityText": "۷۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "روغن حیوانی یا سمن محلی: ۷۰ گرم"
+      },
+      {
+        "name": "عسل",
+        "quantityText": "۴۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل: ۴۰ گرم"
+      },
+      {
+        "name": "هل آسیاب‌شده",
+        "quantityText": "۱",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "هل آسیاب‌شده: ۱ گرم"
+      },
+      {
+        "name": "خامه سرشیر یا کره برای تزئین",
+        "quantityText": "۳۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": true,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "خامه سرشیر یا کره برای تزئین: ۳۰ گرم"
+      }
+    ],
+    "steps": [
+      {
+        "text": "آرد، نمک و خمیرمایه را با آب ولرم مخلوط کنید و ورز دهید تا خمیر نرمی حاصل شود. خمیر را حدود ۳۰ دقیقه استراحت دهید.",
+        "sortOrder": 0
+      },
+      {
+        "text": "خمیر را به ۲ قسمت تقسیم کنید و هر قسمت را به شکل نان گرد باز کنید. نان‌ها را روی ساج یا در فر بپزید تا کاملاً پخته و روی سطح آن‌ها لکه‌های طلایی ایجاد شود.",
+        "sortOrder": 1
+      },
+      {
+        "text": "نان‌های داغ را خرد کنید و داخل ظرف گودی بریزید. خرماهای نرم و بدون هسته را به قطعات کوچک تقسیم کرده و به نان اضافه کنید.",
+        "sortOrder": 2
+      },
+      {
+        "text": "نان و خرما را با دست یا گوشت‌کوب چوبی به هم بفشارید و ورز دهید تا خرما در بافت نان پخش شود و مخلوطی یکدست به دست آید.",
+        "sortOrder": 3
+      },
+      {
+        "text": "نصف روغن حیوانی ذوب‌شده را همراه هل اضافه کنید و مواد را مخلوط کنید تا بافتی نرم و منسجم پیدا کند.",
+        "sortOrder": 4
+      },
+      {
+        "text": "مخلوط را در ظرف سرو به شکل تپه‌ای گرد درآورید و در مرکز آن حفره‌ای ایجاد کنید.",
+        "sortOrder": 5
+      },
+      {
+        "text": "باقی‌مانده روغن حیوانی و عسل را داخل حفره بریزید و در صورت تمایل با خامه سرشیر یا کره تزئین کنید.",
+        "sortOrder": 6
+      },
+      {
+        "text": "عریکه را گرم سرو کنید.",
+        "sortOrder": 7
+      }
+    ],
+    "categories": [
+      "breakfast"
+    ],
+    "categoryIds": [
+      "cat_breakfast"
+    ],
+    "createdAt": "2026-11-26T12:00:00.000Z",
+    "updatedAt": "2026-11-26T12:00:00.000Z",
+    "searchText": "عریکه جنوبی southern areeka عربستان سعودی منطقه عسیر و جنوب عربستان برای 4 نفر صبحانه پرانرژی عسیر با نان تنوری گندم خرما هل روغن حیوانی و عسل طبیعی صبحانه ارد گندم اب ولرم نمک خمیرمایه فوری خرمای نرم و بدون هسته روغن حیوانی یا سمن محلی عسل هل اسیاب شده خامه سرشیر یا کره برای تزئین",
+    "imageUrl": "/uploads/recipes/breakfast-southern-areeka-1794320000010.webp",
+    "shortDescription": "صبحانه پرانرژی عسیر با نان تنوری گندم، خرما، هل، روغن حیوانی و عسل طبیعی.",
+    "longDescription": null,
+    "mainImageId": "ast_recipe_breakfast_southern-areeka",
+    "mainImage": "/uploads/recipes/breakfast-southern-areeka-1794320000010.webp",
+    "image": "/uploads/recipes/breakfast-southern-areeka-1794320000010.webp"
+  },
+  {
+    "id": "rcp_rigag",
+    "index": 76,
+    "slug": "rigag",
+    "nameFa": "رِقاق",
+    "nameOriginal": "Rigag",
+    "country": "امارات متحده عربی",
+    "servingTypes": [
+      "HOT",
+      "WARM"
+    ],
+    "yieldText": "برای ۴ نفر",
+    "status": "PUBLISHED",
+    "isFeatured": false,
+    "cardTheme": "AUTO",
+    "sortOrder": 75,
+    "ingredients": [
+      {
+        "name": "آرد سفید",
+        "quantityText": "۱/۵",
+        "unit": "پیمانه",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آرد سفید: ۱/۵ پیمانه"
+      },
+      {
+        "name": "آب",
+        "quantityText": "۲",
+        "unit": "پیمانه",
+        "equivalentText": "حدود ۴۸۰ میلی‌لیتر",
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آب: ۲ پیمانه (حدود ۴۸۰ میلی‌لیتر)"
+      },
+      {
+        "name": "نمک",
+        "quantityText": "نصف",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "نمک: نصف قاشق چای‌خوری"
+      },
+      {
+        "name": "عسل",
+        "quantityText": "۴",
+        "unit": "قاشق غذاخوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل: ۴ قاشق غذاخوری"
+      },
+      {
+        "name": "روغن حیوانی یا روغن مایع برای چرب کردن صفحه",
+        "quantityText": "به میزان لازم",
+        "unit": "",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "روغن حیوانی یا روغن مایع برای چرب کردن صفحه: به میزان لازم"
+      },
+      {
+        "name": "روغن حیوانی ذوب‌شده برای روی نان",
+        "quantityText": "به میزان دلخواه",
+        "unit": "",
+        "equivalentText": null,
+        "isOptional": true,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "روغن حیوانی ذوب‌شده برای روی نان: به میزان دلخواه"
+      },
+      {
+        "name": "کنجد برشته",
+        "quantityText": "به میزان دلخواه",
+        "unit": "",
+        "equivalentText": null,
+        "isOptional": true,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "کنجد برشته: به میزان دلخواه"
+      }
+    ],
+    "steps": [
+      {
+        "text": "آرد و نمک را در ظرف مناسبی مخلوط کنید.",
+        "sortOrder": 0
+      },
+      {
+        "text": "آب را به تدریج اضافه کنید و همزمان هم بزنید تا مایه‌ای کاملاً یکدست و رقیق، شبیه خامه رقیق به دست آید.",
+        "sortOrder": 1
+      },
+      {
+        "text": "روی ظرف را بپوشانید و مایه را حدود ۳۰ دقیقه استراحت دهید.",
+        "sortOrder": 2
+      },
+      {
+        "text": "صفحه فلزی یا تابه تخت را روی حرارت متوسط رو به زیاد قرار دهید تا کاملاً داغ شود. سطح آن را با مقدار کمی روغن حیوانی چرب کنید.",
+        "sortOrder": 3
+      },
+      {
+        "text": "یک ملاقه کوچک از مایه را روی صفحه بریزید و سریع با پشت قاشق یا دست مرطوب به شکل دایره‌ای بسیار نازک پخش کنید.",
+        "sortOrder": 4
+      },
+      {
+        "text": "اجازه دهید حدود ۱ تا ۲ دقیقه بپزد تا سطح نان خشک و زیر آن کمی طلایی شود. این نان معمولاً بدون برگرداندن پخته می‌شود.",
+        "sortOrder": 5
+      },
+      {
+        "text": "نان را از صفحه جدا کنید و در صورت تمایل کمی روغن حیوانی ذوب‌شده روی آن بمالید.",
+        "sortOrder": 6
+      },
+      {
+        "text": "نان را در حالت گرم از وسط تا کنید و سپس دوباره تا بزنید تا به شکل ربع دایره در آید.",
+        "sortOrder": 7
+      },
+      {
+        "text": "عسل را روی نان بریزید و در صورت تمایل با کنجد برشته تزئین کنید.",
+        "sortOrder": 8
+      },
+      {
+        "text": "بلافاصله و به صورت گرم سرو کنید.",
+        "sortOrder": 9
+      }
+    ],
+    "categories": [
+      "breakfast",
+      "cakes-pastries"
+    ],
+    "categoryIds": [
+      "cat_breakfast",
+      "cat_pastries"
+    ],
+    "createdAt": "2026-11-26T12:00:00.000Z",
+    "updatedAt": "2026-11-26T12:00:00.000Z",
+    "searchText": "رقاق rigag امارات متحده عربی برای 4 نفر نان بسیار نازک و ترد اماراتی پخته شده روی تابه تخت همراه با روغن حیوانی عسل و کنجد صبحانه کیک و شیرینی نان پنکیک ارد سفید اب نمک عسل روغن حیوانی یا روغن مایع برای چرب کردن صفحه روغن حیوانی ذوب شده برای روی نان کنجد برشته",
+    "imageUrl": "/uploads/recipes/breakfast-rigag-1794320000011.webp",
+    "shortDescription": "نان بسیار نازک و ترد اماراتی پخته‌شده روی تابه تخت، همراه با روغن حیوانی، عسل و کنجد.",
+    "longDescription": null,
+    "mainImageId": "ast_recipe_breakfast_rigag",
+    "mainImage": "/uploads/recipes/breakfast-rigag-1794320000011.webp",
+    "image": "/uploads/recipes/breakfast-rigag-1794320000011.webp"
+  },
+  {
+    "id": "rcp_chebab",
+    "index": 77,
+    "slug": "chebab",
+    "nameFa": "چِباب کویتی",
+    "nameOriginal": "Chebab",
+    "country": "کویت (از نان‌های صبحانه سنتی کویت و کشورهای حوزه خلیج فارس)",
+    "servingTypes": [
+      "HOT",
+      "WARM"
+    ],
+    "yieldText": "برای ۴ نفر (حدود ۱۲ عدد)",
+    "status": "PUBLISHED",
+    "isFeatured": false,
+    "cardTheme": "AUTO",
+    "sortOrder": 76,
+    "ingredients": [
+      {
+        "name": "آرد سفید گندم",
+        "quantityText": "۲۵۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آرد سفید گندم: ۲۵۰ گرم"
+      },
+      {
+        "name": "تخم‌مرغ",
+        "quantityText": "۱",
+        "unit": "عدد",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "تخم‌مرغ: ۱ عدد"
+      },
+      {
+        "name": "شیر ولرم یا آب",
+        "quantityText": "۴۰۰",
+        "unit": "میلی‌لیتر",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "شیر ولرم یا آب: ۴۰۰ میلی‌لیتر"
+      },
+      {
+        "name": "شکر",
+        "quantityText": "۵۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "شکر: ۵۰ گرم"
+      },
+      {
+        "name": "خمیرمایه خشک",
+        "quantityText": "۱",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "خمیرمایه خشک: ۱ قاشق چای‌خوری"
+      },
+      {
+        "name": "نمک",
+        "quantityText": "نصف",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "نمک: نصف قاشق چای‌خوری"
+      },
+      {
+        "name": "پودر هل",
+        "quantityText": "۱",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "پودر هل: ۱ قاشق چای‌خوری"
+      },
+      {
+        "name": "زردچوبه",
+        "quantityText": "نصف",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "زردچوبه: نصف قاشق چای‌خوری"
+      },
+      {
+        "name": "زعفران",
+        "quantityText": "مقدار کمی",
+        "unit": "",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "زعفران: مقدار کمی"
+      },
+      {
+        "name": "گلاب",
+        "quantityText": "۲",
+        "unit": "قاشق غذاخوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "گلاب: ۲ قاشق غذاخوری"
+      },
+      {
+        "name": "روغن یا روغن حیوانی برای پخت",
+        "quantityText": "به مقدار لازم",
+        "unit": "",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "روغن یا روغن حیوانی برای پخت: به مقدار لازم"
+      },
+      {
+        "name": "عسل برای سرو",
+        "quantityText": "به مقدار لازم",
+        "unit": "",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل برای سرو: به مقدار لازم"
+      },
+      {
+        "name": "خامه محلی یا قیماق",
+        "quantityText": "به مقدار لازم",
+        "unit": "",
+        "equivalentText": null,
+        "isOptional": true,
+        "note": "برای سرو",
+        "isLowConfidence": false,
+        "raw": "خامه محلی یا قیماق: به مقدار لازم (برای سرو)"
+      },
+      {
+        "name": "کنجد",
+        "quantityText": "به مقدار لازم",
+        "unit": "",
+        "equivalentText": null,
+        "isOptional": true,
+        "note": "برای تزئین",
+        "isLowConfidence": false,
+        "raw": "کنجد: به مقدار لازم (برای تزئین)"
+      }
+    ],
+    "steps": [
+      {
+        "text": "زعفران را آسیاب کرده و با ۱ قاشق غذاخوری آب یا شیر گرم مخلوط کنید و ۱۰ دقیقه کنار بگذارید.",
+        "sortOrder": 0
+      },
+      {
+        "text": "شیر ولرم را با خمیرمایه و شکر مخلوط کنید و ۵ دقیقه منتظر بمانید تا خمیرمایه فعال شود.",
+        "sortOrder": 1
+      },
+      {
+        "text": "آرد، نمک، هل و زردچوبه را در ظرفی مخلوط کنید.",
+        "sortOrder": 2
+      },
+      {
+        "text": "مخلوط شیر و خمیرمایه را به مواد خشک اضافه کنید. تخم‌مرغ، زعفران و گلاب را نیز بیفزایید و هم بزنید تا مایه‌ای صاف و روان حاصل شود.",
+        "sortOrder": 3
+      },
+      {
+        "text": "روی ظرف را بپوشانید و ۱ ساعت در جای گرم قرار دهید تا مایه حباب‌دار شود.",
+        "sortOrder": 4
+      },
+      {
+        "text": "تابه تخت را روی حرارت متوسط گرم کنید و سطح آن را با مقدار کمی روغن چرب کنید.",
+        "sortOrder": 5
+      },
+      {
+        "text": "یک ملاقه از مایه را در مرکز تابه بریزید و سریع پخش کنید تا دایره‌ای نازک به قطر حدود ۲۰ سانتی‌متر تشکیل شود.",
+        "sortOrder": 6
+      },
+      {
+        "text": "پس از پخت، پنکیک را خارج کنید و بقیه مایه را به همین ترتیب بپزید.",
+        "sortOrder": 7
+      },
+      {
+        "text": "چِباب‌ها را گرم همراه عسل سرو کنید.",
+        "sortOrder": 8
+      }
+    ],
+    "categories": [
+      "breakfast",
+      "cakes-pastries"
+    ],
+    "categoryIds": [
+      "cat_breakfast",
+      "cat_pastries"
+    ],
+    "createdAt": "2026-11-26T12:00:00.000Z",
+    "updatedAt": "2026-11-26T12:00:00.000Z",
+    "searchText": "چباب کویتی chebab کویت از نان های صبحانه سنتی کویت و کشورهای حوزه خلیج فارس برای 4 نفر حدود 12 عدد پنکیک سنتی معطر با زعفران هل و گلاب که در صبحانه همراه عسل سرو می شود صبحانه کیک و شیرینی نان پنکیک ارد سفید گندم تخم مرغ شیر ولرم یا اب شکر خمیرمایه خشک نمک پودر هل زردچوبه زعفران گلاب روغن یا روغن حیوانی برای پخت عسل برای سرو خامه محلی یا قیماق برای سرو کنجد برای تزئین",
+    "imageUrl": "/uploads/recipes/breakfast-chebab-1794320000012.webp",
+    "shortDescription": "پنکیک سنتی معطر با زعفران، هل و گلاب که در صبحانه همراه عسل سرو می‌شود.",
+    "longDescription": null,
+    "mainImageId": "ast_recipe_breakfast_chebab",
+    "mainImage": "/uploads/recipes/breakfast-chebab-1794320000012.webp",
+    "image": "/uploads/recipes/breakfast-chebab-1794320000012.webp"
+  },
+  {
+    "id": "rcp_qaymaq-bal",
+    "index": 78,
+    "slug": "qaymaq-bal",
+    "nameFa": "قایماق عسل",
+    "nameOriginal": "Qaymaq & Bal",
+    "country": "جمهوری آذربایجان",
+    "servingTypes": [
+      "COLD",
+      "WARM"
+    ],
+    "yieldText": "برای ۴ نفر (تقریبی)",
+    "status": "PUBLISHED",
+    "isFeatured": false,
+    "cardTheme": "AUTO",
+    "sortOrder": 77,
+    "ingredients": [
+      {
+        "name": "قایماق یا خامه غلیظ لبنی",
+        "quantityText": "۲۵۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "قایماق یا خامه غلیظ لبنی: ۲۵۰ گرم"
+      },
+      {
+        "name": "عسل",
+        "quantityText": "۱۲۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل: ۱۲۰ گرم"
+      },
+      {
+        "name": "نان تنوری آذربایجانی",
+        "quantityText": "۴",
+        "unit": "عدد کوچک",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "نان تنوری آذربایجانی: ۴ عدد کوچک"
+      }
+    ],
+    "steps": [
+      {
+        "text": "قایماق را در ظرف سرو بریزید.",
+        "sortOrder": 0
+      },
+      {
+        "text": "عسل را به آرامی روی سطح قایماق اضافه کنید.",
+        "sortOrder": 1
+      },
+      {
+        "text": "نان تنوری را گرم کنید.",
+        "sortOrder": 2
+      },
+      {
+        "text": "هنگام صرف صبحانه، تکه‌های نان را به قایماق و عسل آغشته کنید.",
+        "sortOrder": 3
+      }
+    ],
+    "categories": [
+      "breakfast"
+    ],
+    "categoryIds": [
+      "cat_breakfast"
+    ],
+    "createdAt": "2026-11-26T12:00:00.000Z",
+    "updatedAt": "2026-11-26T12:00:00.000Z",
+    "searchText": "قایماق عسل qaymaq bal جمهوری اذربایجان برای 4 نفر تقریبی صبحانه کلاسیک اذربایجانی با قایماق یا خامه غلیظ لبنی عسل طبیعی و نان تنوری گرم صبحانه قایماق یا خامه غلیظ لبنی عسل نان تنوری اذربایجانی",
+    "imageUrl": "/uploads/recipes/breakfast-qaymaq-bal-1794320000013.webp",
+    "shortDescription": "صبحانه کلاسیک آذربایجانی با قایماق یا خامه غلیظ لبنی، عسل طبیعی و نان تنوری گرم.",
+    "longDescription": null,
+    "mainImageId": "ast_recipe_breakfast_qaymaq-bal",
+    "mainImage": "/uploads/recipes/breakfast-qaymaq-bal-1794320000013.webp",
+    "image": "/uploads/recipes/breakfast-qaymaq-bal-1794320000013.webp"
+  },
+  {
+    "id": "rcp_shirguruch",
+    "index": 79,
+    "slug": "shirguruch",
+    "nameFa": "شِیرگوروچ ازبکی",
+    "nameOriginal": "Shirguruch",
+    "country": "ازبکستان",
+    "servingTypes": [
+      "HOT",
+      "WARM"
+    ],
+    "yieldText": "برای ۴ نفر",
+    "status": "PUBLISHED",
+    "isFeatured": false,
+    "cardTheme": "AUTO",
+    "sortOrder": 78,
+    "ingredients": [
+      {
+        "name": "شیر پرچرب",
+        "quantityText": "۱",
+        "unit": "لیتر",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "شیر پرچرب: ۱ لیتر"
+      },
+      {
+        "name": "برنج سفید",
+        "quantityText": "۲۰۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "برنج سفید: ۲۰۰ گرم"
+      },
+      {
+        "name": "عسل",
+        "quantityText": "نصف قاشق غذاخوری یا به میزان ذائقه",
+        "unit": "",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل: نصف قاشق غذاخوری یا به میزان ذائقه"
+      },
+      {
+        "name": "کره",
+        "quantityText": "۴",
+        "unit": "قاشق غذاخوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "کره: ۴ قاشق غذاخوری"
+      },
+      {
+        "name": "نمک",
+        "quantityText": "مقدار کمی",
+        "unit": "",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "نمک: مقدار کمی"
+      }
+    ],
+    "steps": [
+      {
+        "text": "برنج را چند مرتبه با آب سرد بشویید تا آب نسبتاً شفاف شود.",
+        "sortOrder": 0
+      },
+      {
+        "text": "شیر را در قابلمه بریزید و روی حرارت قرار دهید تا به جوش برسد.",
+        "sortOrder": 1
+      },
+      {
+        "text": "برنج شسته را به شیر اضافه کنید و هم بزنید تا دانه‌های برنج به هم نچسبند.",
+        "sortOrder": 2
+      },
+      {
+        "text": "پس از به جوش آمدن مخلوط، حرارت را کم کنید و در قابلمه را بگذارید.",
+        "sortOrder": 3
+      },
+      {
+        "text": "اجازه دهید برنج به آرامی در شیر بپزد و هر چند دقیقه یک بار هم بزنید تا ته نگیرد.",
+        "sortOrder": 4
+      },
+      {
+        "text": "حدود ۲۵ تا ۳۰ دقیقه بپزید تا برنج کاملاً نرم شود و مخلوط به حالت فرنی غلیظ برسد.",
+        "sortOrder": 5
+      },
+      {
+        "text": "قابلمه را از روی حرارت بردارید و کمی نمک اضافه کنید.",
+        "sortOrder": 6
+      },
+      {
+        "text": "عسل و کره را به غذا اضافه کنید و هم بزنید تا کره ذوب شود و عسل در تمام مخلوط پخش شود.",
+        "sortOrder": 7
+      },
+      {
+        "text": "شِیرگوروچ را گرم در ظرف‌های جداگانه سرو کنید.",
+        "sortOrder": 8
+      }
+    ],
+    "categories": [
+      "breakfast"
+    ],
+    "categoryIds": [
+      "cat_breakfast"
+    ],
+    "createdAt": "2026-11-26T12:00:00.000Z",
+    "updatedAt": "2026-11-26T12:00:00.000Z",
+    "searchText": "شیرگوروچ ازبکی shirguruch ازبکستان برای 4 نفر شیربرنج گرم صبحانه در اشپزی ازبکستان پخته شده با شیر پرچرب کره و عسل طبیعی صبحانه شیر پرچرب برنج سفید عسل کره نمک",
+    "imageUrl": "/uploads/recipes/breakfast-shirguruch-1794320000014.webp",
+    "shortDescription": "شیربرنج گرم صبحانه در آشپزی ازبکستان پخته شده با شیر پرچرب، کره و عسل طبیعی.",
+    "longDescription": null,
+    "mainImageId": "ast_recipe_breakfast_shirguruch",
+    "mainImage": "/uploads/recipes/breakfast-shirguruch-1794320000014.webp",
+    "image": "/uploads/recipes/breakfast-shirguruch-1794320000014.webp"
+  },
+  {
+    "id": "rcp_petulla",
+    "index": 80,
+    "slug": "petulla",
+    "nameFa": "پتولا",
+    "nameOriginal": "Petulla",
+    "country": "آلبانی",
+    "servingTypes": [
+      "HOT",
+      "WARM"
+    ],
+    "yieldText": "برای ۵ نفر",
+    "status": "PUBLISHED",
+    "isFeatured": false,
+    "cardTheme": "AUTO",
+    "sortOrder": 79,
+    "ingredients": [
+      {
+        "name": "آرد سفید",
+        "quantityText": "۵۰۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آرد سفید: ۵۰۰ گرم"
+      },
+      {
+        "name": "خمیرمایه خشک فوری",
+        "quantityText": "۷",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "خمیرمایه خشک فوری: ۷ گرم"
+      },
+      {
+        "name": "شکر",
+        "quantityText": "۱",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "شکر: ۱ قاشق چای‌خوری"
+      },
+      {
+        "name": "نمک",
+        "quantityText": "۱/۵",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "نمک: ۱/۵ قاشق چای‌خوری"
+      },
+      {
+        "name": "آب ولرم",
+        "quantityText": "۳۵۰",
+        "unit": "میلی‌لیتر",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آب ولرم: ۳۵۰ میلی‌لیتر"
+      },
+      {
+        "name": "روغن آفتابگردان برای خمیر",
+        "quantityText": "۲",
+        "unit": "قاشق غذاخوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "روغن آفتابگردان برای خمیر: ۲ قاشق غذاخوری"
+      },
+      {
+        "name": "روغن سرخ‌کردنی",
+        "quantityText": "حدود ۱",
+        "unit": "لیتر",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "روغن سرخ‌کردنی: حدود ۱ لیتر"
+      },
+      {
+        "name": "عسل",
+        "quantityText": "به میزان دلخواه",
+        "unit": "",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل: به میزان دلخواه"
+      }
+    ],
+    "steps": [
+      {
+        "text": "خمیرمایه و شکر را در آب ولرم حل کنید و ۱۰ دقیقه کنار بگذارید.",
+        "sortOrder": 0
+      },
+      {
+        "text": "آرد و نمک را مخلوط کنید.",
+        "sortOrder": 1
+      },
+      {
+        "text": "مخلوط خمیرمایه و روغن را به آرد اضافه کنید و خمیر نرم و چسبناکی بسازید.",
+        "sortOrder": 2
+      },
+      {
+        "text": "روی خمیر را بپوشانید و حدود ۱ ساعت استراحت دهید تا حجم آن افزایش پیدا کند.",
+        "sortOrder": 3
+      },
+      {
+        "text": "روغن را در قابلمه عمیق گرم کنید.",
+        "sortOrder": 4
+      },
+      {
+        "text": "با قاشق از خمیر بردارید و داخل روغن بیندازید.",
+        "sortOrder": 5
+      },
+      {
+        "text": "هر قطعه را حدود ۲ تا ۳ دقیقه از هر طرف سرخ کنید تا طلایی شود.",
+        "sortOrder": 6
+      },
+      {
+        "text": "پس از خارج کردن، روغن اضافی را بگیرید و همراه عسل سرو کنید.",
+        "sortOrder": 7
+      }
+    ],
+    "categories": [
+      "breakfast",
+      "cakes-pastries"
+    ],
+    "categoryIds": [
+      "cat_breakfast",
+      "cat_pastries"
+    ],
+    "createdAt": "2026-11-26T12:00:00.000Z",
+    "updatedAt": "2026-11-26T12:00:00.000Z",
+    "searchText": "پتولا petulla البانی برای 5 نفر خمیرهای پفکی و طلایی البانیایی که داغ و ترد همراه عسل طبیعی برای صبحانه سرو می شوند صبحانه کیک و شیرینی نان پنکیک ارد سفید خمیرمایه خشک فوری شکر نمک اب ولرم روغن افتابگردان برای خمیر روغن سرخ کردنی عسل",
+    "imageUrl": "/uploads/recipes/breakfast-petulla-1794320000015.webp",
+    "shortDescription": "خمیرهای پفکی و طلایی آلبانیایی که داغ و ترد همراه عسل طبیعی برای صبحانه سرو می‌شوند.",
+    "longDescription": null,
+    "mainImageId": "ast_recipe_breakfast_petulla",
+    "mainImage": "/uploads/recipes/breakfast-petulla-1794320000015.webp",
+    "image": "/uploads/recipes/breakfast-petulla-1794320000015.webp"
+  },
+  {
+    "id": "rcp_chechebsa",
+    "index": 81,
+    "slug": "chechebsa",
+    "nameFa": "چِچِبسا",
+    "nameOriginal": "Chechebsa",
+    "country": "اتیوپی (به‌ویژه منطقه اورومیا)",
+    "servingTypes": [
+      "HOT",
+      "WARM"
+    ],
+    "yieldText": "برای ۳ نفر",
+    "status": "PUBLISHED",
+    "isFeatured": false,
+    "cardTheme": "AUTO",
+    "sortOrder": 80,
+    "ingredients": [
+      {
+        "name": "آرد گندم",
+        "quantityText": "۲",
+        "unit": "پیمانه",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آرد گندم: ۲ پیمانه"
+      },
+      {
+        "name": "آب",
+        "quantityText": "¾",
+        "unit": "پیمانه",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آب: ¾ پیمانه"
+      },
+      {
+        "name": "نمک",
+        "quantityText": "نصف",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "نمک: نصف قاشق چای‌خوری"
+      },
+      {
+        "name": "نیتر کیبه (کره ادویه‌دار اتیوپیایی)",
+        "quantityText": "۴",
+        "unit": "قاشق غذاخوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "نیتر کیبه (کره ادویه‌دار اتیوپیایی): ۴ قاشق غذاخوری"
+      },
+      {
+        "name": "ادویه بربره",
+        "quantityText": "۱ تا ۲",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "ادویه بربره: ۱ تا ۲ قاشق چای‌خوری"
+      },
+      {
+        "name": "عسل برای سرو",
+        "quantityText": "به میزان دلخواه",
+        "unit": "",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل برای سرو: به میزان دلخواه"
+      },
+      {
+        "name": "ماست برای سرو",
+        "quantityText": "به میزان دلخواه",
+        "unit": null,
+        "equivalentText": true,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "ماست برای سرو: به میزان دلخواه (true)"
+      }
+    ],
+    "steps": [
+      {
+        "text": "آرد، آب و نمک را مخلوط کنید و خمیر نرمی بسازید.",
+        "sortOrder": 0
+      },
+      {
+        "text": "خمیر را ۱۰ دقیقه استراحت دهید.",
+        "sortOrder": 1
+      },
+      {
+        "text": "آن را به ۲ قسمت تقسیم کنید و هر قسمت را به شکل نان نازک باز کنید.",
+        "sortOrder": 2
+      },
+      {
+        "text": "نان‌ها را در تابه خشک از هر دو طرف بپزید.",
+        "sortOrder": 3
+      },
+      {
+        "text": "نان‌های گرم را به قطعات کوچک تقسیم کنید.",
+        "sortOrder": 4
+      },
+      {
+        "text": "کره ادویه‌دار را در تابه ذوب کنید و بربره را اضافه کنید.",
+        "sortOrder": 5
+      },
+      {
+        "text": "قطعات نان را به تابه اضافه کنید و هم بزنید تا کره و ادویه به خورد نان بروند.",
+        "sortOrder": 6
+      },
+      {
+        "text": "چِچِبسا را گرم همراه عسل و در صورت تمایل ماست سرو کنید.",
+        "sortOrder": 7
+      }
+    ],
+    "categories": [
+      "breakfast"
+    ],
+    "categoryIds": [
+      "cat_breakfast"
+    ],
+    "createdAt": "2026-11-26T12:00:00.000Z",
+    "updatedAt": "2026-11-26T12:00:00.000Z",
+    "searchText": "چچبسا chechebsa اتیوپی به ویژه منطقه اورومیا برای 3 نفر صبحانه سنتی اتیوپی با تکه های نان تافته شده در کره ادویه دار نیتر کیبه ادویه بربره و عسل صبحانه ارد گندم اب نمک نیتر کیبه کره ادویه دار اتیوپیایی ادویه بربره عسل برای سرو ماست برای سرو",
+    "imageUrl": "/uploads/recipes/breakfast-chechebsa-1794320000016.webp",
+    "shortDescription": "صبحانه سنتی اتیوپی با تکه‌های نان تافته‌شده در کره ادویه‌دار نیتِر کیبه، ادویه بربره و عسل.",
+    "longDescription": null,
+    "mainImageId": "ast_recipe_breakfast_chechebsa",
+    "mainImage": "/uploads/recipes/breakfast-chechebsa-1794320000016.webp",
+    "image": "/uploads/recipes/breakfast-chechebsa-1794320000016.webp"
+  },
+  {
+    "id": "rcp_ontbijtkoek",
+    "index": 82,
+    "slug": "ontbijtkoek",
+    "nameFa": "نان عسلی ادویه‌ای (آنت‌بیت‌کوک)",
+    "nameOriginal": "Ontbijtkoek",
+    "country": "هلند",
+    "servingTypes": [
+      "COLD",
+      "WARM"
+    ],
+    "yieldText": "برای ۱۲ نفر",
+    "status": "PUBLISHED",
+    "isFeatured": false,
+    "cardTheme": "AUTO",
+    "sortOrder": 81,
+    "ingredients": [
+      {
+        "name": "آرد چاودار",
+        "quantityText": "۲۵۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آرد چاودار: ۲۵۰ گرم"
+      },
+      {
+        "name": "آرد گندم",
+        "quantityText": "۱۵۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آرد گندم: ۱۵۰ گرم"
+      },
+      {
+        "name": "عسل",
+        "quantityText": "۲۰۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل: ۲۰۰ گرم"
+      },
+      {
+        "name": "شکر قهوه‌ای تیره یا شیره چغندر",
+        "quantityText": "۱۰۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "شکر قهوه‌ای تیره یا شیره چغندر: ۱۰۰ گرم"
+      },
+      {
+        "name": "شیر",
+        "quantityText": "۲۵۰",
+        "unit": "میلی‌لیتر",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "شیر: ۲۵۰ میلی‌لیتر"
+      },
+      {
+        "name": "ادویه مخصوص نان",
+        "quantityText": "۳",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "ادویه مخصوص نان: ۳ قاشق چای‌خوری"
+      },
+      {
+        "name": "جوش شیرین",
+        "quantityText": "۲",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "جوش شیرین: ۲ قاشق چای‌خوری"
+      },
+      {
+        "name": "نمک",
+        "quantityText": "۱",
+        "unit": "پنس",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "نمک: ۱ پنس"
+      },
+      {
+        "name": "دارچین آسیاب‌شده",
+        "quantityText": "۲",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": "ترکیب ادویه نان",
+        "isLowConfidence": false,
+        "raw": "دارچین آسیاب‌شده: ۲ قاشق چای‌خوری (ترکیب ادویه نان)"
+      },
+      {
+        "name": "میخک آسیاب‌شده",
+        "quantityText": "۱",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": "ترکیب ادویه نان",
+        "isLowConfidence": false,
+        "raw": "میخک آسیاب‌شده: ۱ قاشق چای‌خوری (ترکیب ادویه نان)"
+      },
+      {
+        "name": "زنجبیل آسیاب‌شده",
+        "quantityText": "۱",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": "ترکیب ادویه نان",
+        "isLowConfidence": false,
+        "raw": "زنجبیل آسیاب‌شده: ۱ قاشق چای‌خوری (ترکیب ادویه نان)"
+      },
+      {
+        "name": "جوز هندی",
+        "quantityText": "نصف",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": "ترکیب ادویه نان",
+        "isLowConfidence": false,
+        "raw": "جوز هندی: نصف قاشق چای‌خوری (ترکیب ادویه نان)"
+      },
+      {
+        "name": "انیسون یا هل",
+        "quantityText": "نصف",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": "ترکیب ادویه نان",
+        "isLowConfidence": false,
+        "raw": "انیسون یا هل: نصف قاشق چای‌خوری (ترکیب ادویه نان)"
+      }
+    ],
+    "steps": [
+      {
+        "text": "شیر را همراه عسل و شکر قهوه‌ای روی حرارت ملایم گرم کنید تا مواد حل شوند. اجازه ندهید بجوشد.",
+        "sortOrder": 0
+      },
+      {
+        "text": "مخلوط را کنار بگذارید تا ولرم شود.",
+        "sortOrder": 1
+      },
+      {
+        "text": "آرد چاودار، آرد گندم، ادویه‌ها، جوش شیرین و نمک را در ظرفی مخلوط کنید.",
+        "sortOrder": 2
+      },
+      {
+        "text": "مواد مایع را به مواد خشک اضافه کرده و هم بزنید تا خمیر یکدستی حاصل شود.",
+        "sortOrder": 3
+      },
+      {
+        "text": "خمیر را در قالب مستطیلی پوشیده شده با کاغذ روغنی بریزید.",
+        "sortOrder": 4
+      },
+      {
+        "text": "در فر از پیش گرم‌شده با دمای ۱۶۰ درجه سانتی‌گراد حدود ۱ ساعت بپزید.",
+        "sortOrder": 5
+      },
+      {
+        "text": "پس از پخت، اجازه دهید کاملاً سرد شود و سپس آن را بسته‌بندی کنید. بهتر است ۱ شب استراحت کند و روز بعد به صورت ضخیم برش بخورد.",
+        "sortOrder": 6
+      },
+      {
+        "text": "همراه کره سرد یا بدون کره سرو کنید.",
+        "sortOrder": 7
+      }
+    ],
+    "categories": [
+      "breakfast",
+      "cakes-pastries"
+    ],
+    "categoryIds": [
+      "cat_breakfast",
+      "cat_pastries"
+    ],
+    "createdAt": "2026-11-26T12:00:00.000Z",
+    "updatedAt": "2026-11-26T12:00:00.000Z",
+    "searchText": "نان عسلی ادویه ای انت بیت کوک ontbijtkoek هلند برای 12 نفر کیک صبحانه معروف هلندی با ارد چاودار عسل طبیعی فراوان و ترکیب 5 ادویه گرم صبحانه کیک و شیرینی نان پنکیک ارد چاودار ارد گندم عسل شکر قهوه ای تیره یا شیره چغندر شیر ادویه مخصوص نان جوش شیرین نمک دارچین اسیاب شده ترکیب ادویه نان میخک اسیاب شده ترکیب ادویه نان زنجبیل اسیاب شده ترکیب ادویه نان جوز هندی ترکیب ادویه نان انیسون یا هل ترکیب ادویه نان",
+    "imageUrl": "/uploads/recipes/breakfast-ontbijtkoek-1794320000017.webp",
+    "shortDescription": "کیک صبحانه معروف هلندی با آرد چاودار، عسل طبیعی فراوان و ترکیب ۵ ادویه گرم.",
+    "longDescription": null,
+    "mainImageId": "ast_recipe_breakfast_ontbijtkoek",
+    "mainImage": "/uploads/recipes/breakfast-ontbijtkoek-1794320000017.webp",
+    "image": "/uploads/recipes/breakfast-ontbijtkoek-1794320000017.webp"
+  },
+  {
+    "id": "rcp_kitcha-with-honey",
+    "index": 83,
+    "slug": "kitcha-with-honey",
+    "nameFa": "نان کیچا و عسل",
+    "nameOriginal": "Kitcha with Honey",
+    "country": "اریتره",
+    "servingTypes": [
+      "HOT",
+      "WARM"
+    ],
+    "yieldText": "برای ۴ نفر",
+    "status": "PUBLISHED",
+    "isFeatured": false,
+    "cardTheme": "AUTO",
+    "sortOrder": 82,
+    "ingredients": [
+      {
+        "name": "آرد گندم",
+        "quantityText": "۳۵۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آرد گندم: ۳۵۰ گرم"
+      },
+      {
+        "name": "نمک",
+        "quantityText": "۱",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "نمک: ۱ قاشق چای‌خوری"
+      },
+      {
+        "name": "آب ولرم",
+        "quantityText": "۲۰۰",
+        "unit": "میلی‌لیتر",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آب ولرم: ۲۰۰ میلی‌لیتر"
+      },
+      {
+        "name": "روغن گیاهی",
+        "quantityText": "۲",
+        "unit": "قاشق غذاخوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "روغن گیاهی: ۲ قاشق غذاخوری"
+      },
+      {
+        "name": "کره ذوب‌شده برای روی نان",
+        "quantityText": "۲۵",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "کره ذوب‌شده برای روی نان: ۲۵ گرم"
+      },
+      {
+        "name": "عسل",
+        "quantityText": "۱۲۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل: ۱۲۰ گرم"
+      },
+      {
+        "name": "کنجد یا سیاه‌دانه",
+        "quantityText": "به میزان لازم",
+        "unit": "",
+        "equivalentText": null,
+        "isOptional": true,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "کنجد یا سیاه‌دانه: به میزان لازم"
+      }
+    ],
+    "steps": [
+      {
+        "text": "آرد و نمک را در ظرفی مخلوط کنید.",
+        "sortOrder": 0
+      },
+      {
+        "text": "آب ولرم و روغن را به تدریج اضافه کرده و خمیر را ۶ تا ۸ دقیقه ورز دهید.",
+        "sortOrder": 1
+      },
+      {
+        "text": "روی خمیر را بپوشانید و ۱۵ دقیقه استراحت دهید.",
+        "sortOrder": 2
+      },
+      {
+        "text": "خمیر را به ۴ قسمت مساوی تقسیم کنید.",
+        "sortOrder": 3
+      },
+      {
+        "text": "هر قسمت را به شکل ورقه‌ای نازک با قطر حدود ۲۰ تا ۲۵ سانتی‌متر باز کنید.",
+        "sortOrder": 4
+      },
+      {
+        "text": "سطح خمیر را کمی کره ذوب‌شده بمالید، آن را تا کنید و دوباره باز کنید تا لایه‌هایی ایجاد شود.",
+        "sortOrder": 5
+      },
+      {
+        "text": "نان‌ها را روی تابه سنگین یا صفحه مخصوص پخت، هر طرف ۲ تا ۴ دقیقه بپزید تا طلایی شوند.",
+        "sortOrder": 6
+      },
+      {
+        "text": "پس از خارج کردن نان از تابه، کمی کره ذوب‌شده روی آن بمالید.",
+        "sortOrder": 7
+      },
+      {
+        "text": "نان‌ها را برش دهید و همراه عسل در ظرف جداگانه سرو کنید.",
+        "sortOrder": 8
+      }
+    ],
+    "categories": [
+      "breakfast",
+      "cakes-pastries"
+    ],
+    "categoryIds": [
+      "cat_breakfast",
+      "cat_pastries"
+    ],
+    "createdAt": "2026-11-26T12:00:00.000Z",
+    "updatedAt": "2026-11-26T12:00:00.000Z",
+    "searchText": "نان کیچا و عسل kitcha with honey اریتره برای 4 نفر نان تخت لایه دار اریتره ای برشته شده با کره ذوب شده سیاه دانه و عسل طبیعی صبحانه کیک و شیرینی نان پنکیک ارد گندم نمک اب ولرم روغن گیاهی کره ذوب شده برای روی نان عسل کنجد یا سیاه دانه",
+    "imageUrl": "/uploads/recipes/breakfast-kitcha-with-honey-1794320000018.webp",
+    "shortDescription": "نان تخت لایه‌دار اریتره‌ای برشته شده با کره ذوب‌شده، سیاه‌دانه و عسل طبیعی.",
+    "longDescription": null,
+    "mainImageId": "ast_recipe_breakfast_kitcha-with-honey",
+    "mainImage": "/uploads/recipes/breakfast-kitcha-with-honey-1794320000018.webp",
+    "image": "/uploads/recipes/breakfast-kitcha-with-honey-1794320000018.webp"
+  },
+  {
+    "id": "rcp_greek-yogurt-honey-breakfast",
+    "index": 84,
+    "slug": "greek-yogurt-honey-breakfast",
+    "nameFa": "صبحانه ماست یونانی و عسل",
+    "nameOriginal": "Greek Yogurt and Honey Breakfast",
+    "country": "یونان و قبرس",
+    "servingTypes": [
+      "COLD",
+      "WARM"
+    ],
+    "yieldText": "برای ۱ نفر",
+    "status": "PUBLISHED",
+    "isFeatured": false,
+    "cardTheme": "AUTO",
+    "sortOrder": 83,
+    "ingredients": [
+      {
+        "name": "نان سبوس‌دار",
+        "quantityText": "۶۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "نان سبوس‌دار: ۶۰ گرم"
+      },
+      {
+        "name": "ماست یونانی",
+        "quantityText": "۱۵۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "ماست یونانی: ۱۵۰ گرم"
+      },
+      {
+        "name": "عسل",
+        "quantityText": "۲۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل: ۲۰ گرم"
+      },
+      {
+        "name": "میوه تازه فصل",
+        "quantityText": "۱۵۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "میوه تازه فصل: ۱۵۰ گرم"
+      },
+      {
+        "name": "قهوه",
+        "quantityText": "۱۲۵",
+        "unit": "میلی‌لیتر",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "قهوه: ۱۲۵ میلی‌لیتر"
+      }
+    ],
+    "steps": [
+      {
+        "text": "ماست یونانی را در ظرف صبحانه بریزید.",
+        "sortOrder": 0
+      },
+      {
+        "text": "عسل را روی ماست اضافه کنید.",
+        "sortOrder": 1
+      },
+      {
+        "text": "میوه تازه را شسته و خرد کنید و کنار ماست قرار دهید.",
+        "sortOrder": 2
+      },
+      {
+        "text": "نان سبوس‌دار را به صورت برش‌های مناسب آماده کنید.",
+        "sortOrder": 3
+      },
+      {
+        "text": "نان، ماست عسلی و میوه را همراه قهوه سرو کنید.",
+        "sortOrder": 4
+      }
+    ],
+    "categories": [
+      "breakfast"
+    ],
+    "categoryIds": [
+      "cat_breakfast"
+    ],
+    "createdAt": "2026-11-26T12:00:00.000Z",
+    "updatedAt": "2026-11-26T12:00:00.000Z",
+    "searchText": "صبحانه ماست یونانی و عسل greek yogurt and honey breakfast یونان و قبرس برای 1 نفر صبحانه سبک و سالم مدیترانه ای با ماست یونانی عسل میوه تازه فصل نان سبوس دار و قهوه صبحانه نان سبوس دار ماست یونانی عسل میوه تازه فصل قهوه",
+    "imageUrl": "/uploads/recipes/breakfast-greek-yogurt-honey-breakfast-1794320000019.webp",
+    "shortDescription": "صبحانه سبک و سالم مدیترانه‌ای با ماست یونانی، عسل، میوه تازه فصل، نان سبوس‌دار و قهوه.",
+    "longDescription": null,
+    "mainImageId": "ast_recipe_breakfast_greek-yogurt-honey-breakfast",
+    "mainImage": "/uploads/recipes/breakfast-greek-yogurt-honey-breakfast-1794320000019.webp",
+    "image": "/uploads/recipes/breakfast-greek-yogurt-honey-breakfast-1794320000019.webp"
+  },
+  {
+    "id": "rcp_morgengrod-med-aebler",
+    "index": 85,
+    "slug": "morgengrod-med-aebler",
+    "nameFa": "حریره جو دانمارکی (مورگن‌گرود)",
+    "nameOriginal": "Morgengrod med aebler",
+    "country": "دانمارک",
+    "servingTypes": [
+      "HOT",
+      "WARM"
+    ],
+    "yieldText": "برای ۴ نفر",
+    "status": "PUBLISHED",
+    "isFeatured": false,
+    "cardTheme": "AUTO",
+    "sortOrder": 84,
+    "ingredients": [
+      {
+        "name": "آب",
+        "quantityText": "۱",
+        "unit": "لیتر",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "آب: ۱ لیتر"
+      },
+      {
+        "name": "شیر",
+        "quantityText": "۲۰۰",
+        "unit": "میلی‌لیتر",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "شیر: ۲۰۰ میلی‌لیتر"
+      },
+      {
+        "name": "جو پوست‌کنده یا جو مرواریدی",
+        "quantityText": "۲۸۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "جو پوست‌کنده یا جو مرواریدی: ۲۸۰ گرم"
+      },
+      {
+        "name": "جو دوسر پرک",
+        "quantityText": "۷۰",
+        "unit": "گرم",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "جو دوسر پرک: ۷۰ گرم"
+      },
+      {
+        "name": "نمک",
+        "quantityText": "۱",
+        "unit": "قاشق چای‌خوری سرپر",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "نمک: ۱ قاشق چای‌خوری سرپر"
+      },
+      {
+        "name": "سیب ترش",
+        "quantityText": "۲",
+        "unit": "عدد",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "سیب ترش: ۲ عدد"
+      },
+      {
+        "name": "کرن‌بری خشک",
+        "quantityText": "۱",
+        "unit": "مشت",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "کرن‌بری خشک: ۱ مشت"
+      },
+      {
+        "name": "فندق بوداده خردشده",
+        "quantityText": "۱",
+        "unit": "مشت",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "فندق بوداده خردشده: ۱ مشت"
+      },
+      {
+        "name": "عسل برای سرو",
+        "quantityText": "به میزان لازم",
+        "unit": "",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل برای سرو: به میزان لازم"
+      }
+    ],
+    "steps": [
+      {
+        "text": "آب را داخل قابلمه بریزید و جو پوست‌کنده و جو دوسر را اضافه کنید.",
+        "sortOrder": 0
+      },
+      {
+        "text": "مخلوط را روی حرارت ملایم حدود ۳۰ تا ۴۵ دقیقه بپزید و مرتب هم بزنید تا دانه‌های جو نرم شوند.",
+        "sortOrder": 1
+      },
+      {
+        "text": "اگر حریره بیش از اندازه غلیظ شد کمی آب اضافه کنید.",
+        "sortOrder": 2
+      },
+      {
+        "text": "پس از نرم شدن غلات، شیر را اضافه کنید تا بافت حریره کرمی‌تر شود.",
+        "sortOrder": 3
+      },
+      {
+        "text": "نمک را اضافه کرده و مواد را مخلوط کنید.",
+        "sortOrder": 4
+      },
+      {
+        "text": "حریره را در ظرف‌های سرو بریزید.",
+        "sortOrder": 5
+      },
+      {
+        "text": "سیب خردشده، کرن‌بری خشک و فندق بوداده را روی آن قرار دهید.",
+        "sortOrder": 6
+      },
+      {
+        "text": "در پایان عسل را روی حریره بریزید.",
+        "sortOrder": 7
+      }
+    ],
+    "categories": [
+      "breakfast"
+    ],
+    "categoryIds": [
+      "cat_breakfast"
+    ],
+    "createdAt": "2026-11-26T12:00:00.000Z",
+    "updatedAt": "2026-11-26T12:00:00.000Z",
+    "searchText": "حریره جو دانمارکی مورگن گرود morgengrod med aebler دانمارک برای 4 نفر حریره گرم و سنتی دانمارک با جو مرواریدی جو دوسر سیب ترش کرن بری خشک فندق بوداده و عسل صبحانه اب شیر جو پوست کنده یا جو مرواریدی جو دوسر پرک نمک سیب ترش کرن بری خشک فندق بوداده خردشده عسل برای سرو",
+    "imageUrl": "/uploads/recipes/breakfast-morgengrod-med-aebler-1794320000020.webp",
+    "shortDescription": "حریره گرم و سنتی دانمارک با جو مرواریدی، جو دوسر، سیب ترش، کرن‌بری خشک، فندق بوداده و عسل.",
+    "longDescription": null,
+    "mainImageId": "ast_recipe_breakfast_morgengrod-med-aebler",
+    "mainImage": "/uploads/recipes/breakfast-morgengrod-med-aebler-1794320000020.webp",
+    "image": "/uploads/recipes/breakfast-morgengrod-med-aebler-1794320000020.webp"
+  },
+  {
+    "id": "rcp_wattle-seed-honey-porridge",
+    "index": 86,
+    "slug": "wattle-seed-honey-porridge",
+    "nameFa": "حریره دانه واتل و عسل کاراملی",
+    "nameOriginal": "Wattle Seed and Burnt Honey Porridge",
+    "country": "استرالیا",
+    "servingTypes": [
+      "HOT",
+      "WARM"
+    ],
+    "yieldText": "برای ۴ نفر",
+    "status": "PUBLISHED",
+    "isFeatured": false,
+    "cardTheme": "AUTO",
+    "sortOrder": 85,
+    "ingredients": [
+      {
+        "name": "دانه واتل آسیاب‌شده",
+        "quantityText": "۱",
+        "unit": "قاشق غذاخوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "دانه واتل آسیاب‌شده: ۱ قاشق غذاخوری"
+      },
+      {
+        "name": "کره",
+        "quantityText": "۱",
+        "unit": "قاشق غذاخوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "کره: ۱ قاشق غذاخوری"
+      },
+      {
+        "name": "عسل",
+        "quantityText": "۴",
+        "unit": "قاشق غذاخوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل: ۴ قاشق غذاخوری"
+      },
+      {
+        "name": "عسل اضافی برای سرو",
+        "quantityText": "به میزان دلخواه",
+        "unit": "",
+        "equivalentText": null,
+        "isOptional": true,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "عسل اضافی برای سرو: به میزان دلخواه"
+      },
+      {
+        "name": "شیر",
+        "quantityText": "۲",
+        "unit": "پیمانه",
+        "equivalentText": "حدود ۵۰۰ میلی‌لیتر",
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "شیر: ۲ پیمانه (حدود ۵۰۰ میلی‌لیتر)"
+      },
+      {
+        "name": "جو دوسر پرک",
+        "quantityText": "۱",
+        "unit": "پیمانه",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "جو دوسر پرک: ۱ پیمانه"
+      },
+      {
+        "name": "نمک",
+        "quantityText": "۲",
+        "unit": "قاشق چای‌خوری",
+        "equivalentText": null,
+        "isOptional": false,
+        "note": null,
+        "isLowConfidence": false,
+        "raw": "نمک: ۲ قاشق چای‌خوری"
+      }
+    ],
+    "steps": [
+      {
+        "text": "دانه واتل آسیاب‌شده را در قابلمه‌ای با کف ضخیم روی حرارت متوسط کمی تفت دهید تا عطر آن آزاد شود.",
+        "sortOrder": 0
+      },
+      {
+        "text": "عسل را اضافه کنید و اجازه دهید برای چند ثانیه تیره‌تر و کاراملی شود.",
+        "sortOrder": 1
+      },
+      {
+        "text": "کره را اضافه کنید و مرتب هم بزنید.",
+        "sortOrder": 2
+      },
+      {
+        "text": "شیر و جو دوسر را داخل قابلمه بریزید.",
+        "sortOrder": 3
+      },
+      {
+        "text": "مخلوط را به نقطه جوش ملایم برسانید و سپس حرارت را کم کنید.",
+        "sortOrder": 4
+      },
+      {
+        "text": "مواد را بپزید تا جو دوسر نرم و حریره غلیظ و کرمی شود.",
+        "sortOrder": 5
+      },
+      {
+        "text": "نمک را اضافه کنید.",
+        "sortOrder": 6
+      },
+      {
+        "text": "حریره را در ظرف‌های سرو بریزید و در صورت تمایل کمی عسل روی آن اضافه کنید.",
+        "sortOrder": 7
+      }
+    ],
+    "categories": [
+      "breakfast"
+    ],
+    "categoryIds": [
+      "cat_breakfast"
+    ],
+    "createdAt": "2026-11-26T12:00:00.000Z",
+    "updatedAt": "2026-11-26T12:00:00.000Z",
+    "searchText": "حریره دانه واتل و عسل کاراملی wattle seed and burnt honey porridge استرالیا برای 4 نفر حریره معطر استرالیایی با دانه واتل بوداده عسل کاراملی شده کره و جو دوسر پرک صبحانه دانه واتل اسیاب شده کره عسل عسل اضافی برای سرو شیر جو دوسر پرک نمک",
+    "imageUrl": "/uploads/recipes/breakfast-wattle-seed-honey-porridge-1794320000021.webp",
+    "shortDescription": "حریره معطر استرالیایی با دانه واتل بوداده، عسل کاراملی شده، کره و جو دوسر پرک.",
+    "longDescription": null,
+    "mainImageId": "ast_recipe_breakfast_wattle-seed-honey-porridge",
+    "mainImage": "/uploads/recipes/breakfast-wattle-seed-honey-porridge-1794320000021.webp",
+    "image": "/uploads/recipes/breakfast-wattle-seed-honey-porridge-1794320000021.webp"
   }
 ]

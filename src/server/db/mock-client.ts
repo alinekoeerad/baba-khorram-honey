@@ -560,8 +560,10 @@ function createFallbackClient() {
           // Category filter: handles w.categorySlug, w.categories.some.category.slug, w.categoryIds
           const catSlug = w.categories?.some?.category?.slug || w.categorySlug;
           if (catSlug && catSlug !== 'all' && catSlug !== 'همه') {
+            const matchedCat = categoriesStore.find((c) => c.slug === catSlug);
             list = list.filter((p) => {
               if (p.categorySlug === catSlug) return true;
+              if (matchedCat && p.categoryIds && p.categoryIds.includes(matchedCat.id)) return true;
               if (p.categoryIds && (p.categoryIds.includes(catSlug) || p.categoryIds.includes('cat_' + catSlug))) return true;
               return false;
             });
@@ -989,8 +991,10 @@ function createFallbackClient() {
           // Category filter
           const catSlug = w.categories?.some?.category?.slug || w.categorySlug;
           if (catSlug && catSlug !== 'all' && catSlug !== 'همه') {
+            const matchedCat = categoriesStore.find((c) => c.slug === catSlug);
             list = list.filter((r) => {
               if (Array.isArray(r.categories) && r.categories.includes(catSlug)) return true;
+              if (matchedCat && r.categoryIds && r.categoryIds.includes(matchedCat.id)) return true;
               if (r.categoryIds && (r.categoryIds.includes(catSlug) || r.categoryIds.includes('cat_' + catSlug))) return true;
               return false;
             });

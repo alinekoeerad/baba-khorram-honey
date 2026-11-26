@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 
 import type { MetadataRoute } from 'next';
 import { db } from '@/server/db/client';
+import { MAGAZINE_ARTICLES } from '@/content/magazine-articles';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://babakhorram.com';
@@ -39,6 +40,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.9,
+    },
+    {
+      url: `${siteUrl}/magazine`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
+    ...MAGAZINE_ARTICLES.map((article) => ({
+      url: `${siteUrl}/magazine/${article.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.75,
+    })),
+    {
+      url: `${siteUrl}/faq`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
     },
     {
       url: `${siteUrl}/contact`,

@@ -58,6 +58,16 @@ export function Footer({ settings, channels }: FooterProps) {
                 </Link>
               </li>
               <li>
+                <Link href="/magazine" className="text-white hover:text-[#FBBF24] transition-colors">
+                  مجله علمی عسل
+                </Link>
+              </li>
+              <li>
+                <Link href="/faq" className="text-white hover:text-[#FBBF24] transition-colors">
+                  سوالات متداول
+                </Link>
+              </li>
+              <li>
                 <Link href="/contact" className="text-white hover:text-[#FBBF24] transition-colors">
                   تماس با ما
                 </Link>
