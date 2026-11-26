@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { MagazineArticleView } from '@/components/public/magazine-article-view';
 import { getMagazineArticleBySlug, MAGAZINE_ARTICLES } from '@/content/magazine-articles';
+import { serializeJsonLd } from '@/lib/utils';
 
 export const revalidate = 3600;
 
@@ -62,7 +63,7 @@ export default async function MagazineArticlePage({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(articleSchema) }}
       />
       <MagazineArticleView article={article} />
     </>

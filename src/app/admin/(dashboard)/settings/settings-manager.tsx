@@ -52,16 +52,22 @@ import { AdminToggleSwitch } from '@/components/admin/toggle-switch';
 interface SettingsManagerProps {
   initialSettings: SiteSettingsData;
   initialChannels: ContactChannelData[];
+  hasBaleBotToken?: boolean;
+  hasEitaaBotToken?: boolean;
 }
 
 export function SettingsManager({
   initialSettings,
   initialChannels,
+  hasBaleBotToken = false,
+  hasEitaaBotToken = false,
 }: SettingsManagerProps) {
   const router = useRouter();
   const { showSuccess, showError } = useToast();
   const [activeTab, setActiveTab] = useState<'general' | 'contact' | 'seo' | 'cart' | 'messengers'>('general');
   const [settings, setSettings] = useState<SiteSettingsData>(initialSettings);
+  const [baleTokenConfigured, setBaleTokenConfigured] = useState(hasBaleBotToken);
+  const [eitaaTokenConfigured, setEitaaTokenConfigured] = useState(hasEitaaBotToken);
   const [channels, setChannels] = useState<ContactChannelData[]>(initialChannels);
   const [isPending, startTransition] = useTransition();
   const [testingMessenger, setTestingMessenger] = useState<'BALE' | 'EITAA' | null>(null);
@@ -130,19 +136,37 @@ export function SettingsManager({
       const parsedLng = lngInput ? parseLocalizedNumber(lngInput) : null;
       const parsedZoom = zoomInput ? parseLocalizedInt(zoomInput) : null;
 
-      const payload: SiteSettingsData = {
+      const newBaleToken = settings.baleBotToken?.trim();
+      const newEitaaToken = settings.eitaaBotToken?.trim();
+
+      const payload: Partial<SiteSettingsData> = {
         ...settings,
         latitude: Number.isFinite(parsedLat) ? parsedLat : null,
         longitude: Number.isFinite(parsedLng) ? parsedLng : null,
         mapZoom: Number.isFinite(parsedZoom) ? parsedZoom : null,
-        baleBotToken: settings.baleBotToken?.trim() || null,
         baleChatId: settings.baleChatId?.trim() || null,
-        eitaaBotToken: settings.eitaaBotToken?.trim() || null,
         eitaaChatId: settings.eitaaChatId?.trim() || null,
       };
+      delete payload.baleBotToken;
+      delete payload.eitaaBotToken;
+      if (newBaleToken) {
+        payload.baleBotToken = newBaleToken;
+      }
+      if (newEitaaToken) {
+        payload.eitaaBotToken = newEitaaToken;
+      }
 
       const res = await updateSiteSettingsAction(payload);
       if (res.success) {
+        if (newBaleToken) {
+          setBaleTokenConfigured(true);
+        }
+        if (newEitaaToken) {
+          setEitaaTokenConfigured(true);
+        }
+        if (newBaleToken || newEitaaToken) {
+          setSettings((prev) => ({ ...prev, baleBotToken: null, eitaaBotToken: null }));
+        }
         showSuccess('تنظیمات با موفقیت ذخیره شد.');
         router.refresh();
       } else {
@@ -774,13 +798,23 @@ export function SettingsManager({
                 <div>
                   <label className="block text-xs font-bold text-[#14532D] mb-1.5">
                     توکن ربات بله (Bale Bot Token)
+                    {baleTokenConfigured && (
+                      <span className="mr-2 px-1.5 py-0.5 text-[10px] font-black bg-[#DCFCE7] text-[#166534] border border-[#86EFAC]">
+                        توکن ثبت شده (محافظت‌شده)
+                      </span>
+                    )}
                   </label>
                   <input
-                    type="text"
+                    type="password"
+                    autoComplete="new-password"
                     dir="ltr"
                     value={settings.baleBotToken || ''}
                     onChange={(e) => setSettings({ ...settings, baleBotToken: e.target.value })}
-                    placeholder="123456789:ABCdefGhIjkLmNoPqRsTuVwXyZ"
+                    placeholder={
+                      baleTokenConfigured
+                        ? 'توکن فعلی ذخیره شده است — برای تغییر، توکن جدید وارد کنید'
+                        : '123456789:ABCdefGhIjkLmNoPqRsTuVwXyZ'
+                    }
                     className="w-full bg-white border border-[#86EFAC] text-[#14532D] text-xs font-mono p-2.5 focus:outline-none focus:border-[#00A859] rounded-none"
                   />
                   <span className="text-[10px] text-[#166534] mt-1 block">
@@ -849,13 +883,23 @@ export function SettingsManager({
                 <div>
                   <label className="block text-xs font-bold text-[#7C2D12] mb-1.5">
                     توکن ربات در ایتایار (Eitaa Bot Token)
+                    {eitaaTokenConfigured && (
+                      <span className="mr-2 px-1.5 py-0.5 text-[10px] font-black bg-[#FFEDD5] text-[#9A3412] border border-[#FDBA74]">
+                        توکن ثبت شده (محافظت‌شده)
+                      </span>
+                    )}
                   </label>
                   <input
-                    type="text"
+                    type="password"
+                    autoComplete="new-password"
                     dir="ltr"
                     value={settings.eitaaBotToken || ''}
                     onChange={(e) => setSettings({ ...settings, eitaaBotToken: e.target.value })}
-                    placeholder="bot12345:xxxxxxxxxxxxxxxxxxxxxx"
+                    placeholder={
+                      eitaaTokenConfigured
+                        ? 'توکن فعلی ذخیره شده است — برای تغییر، توکن جدید وارد کنید'
+                        : 'bot12345:xxxxxxxxxxxxxxxxxxxxxx'
+                    }
                     className="w-full bg-white border border-[#FED7AA] text-[#7C2D12] text-xs font-mono p-2.5 focus:outline-none focus:border-[#EA580C] rounded-none"
                   />
                   <span className="text-[10px] text-[#9A3412] mt-1 block">

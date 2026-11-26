@@ -143,6 +143,22 @@ export function recordLoginFailure(key: string): { attempts: number; retryAfterS
 }
 
 /**
+ * Checks whether a key is currently in an active exponential-backoff lockout
+ * without incrementing its attempt counter.
+ */
+export function isRateLimitLocked(key: string): { locked: boolean; retryAfterSec: number } {
+  const now = Date.now();
+  const record = memoryStore.get(key);
+  if (record?.lockedUntil && record.lockedUntil > now) {
+    return {
+      locked: true,
+      retryAfterSec: Math.max(1, Math.ceil((record.lockedUntil - now) / 1000)),
+    };
+  }
+  return { locked: false, retryAfterSec: 0 };
+}
+
+/**
  * Resets rate limit for a key upon successful action.
  */
 export function resetRateLimit(key: string): void {

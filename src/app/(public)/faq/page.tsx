@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { FaqDirectoryClient } from '@/components/public/faq-directory-client';
 import { FAQ_ENTRIES } from '@/content/faq-data';
+import { serializeJsonLd } from '@/lib/utils';
 
 export const revalidate = 3600;
 
@@ -31,7 +32,7 @@ export default function FaqPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqSchema) }}
       />
       <FaqDirectoryClient />
     </>

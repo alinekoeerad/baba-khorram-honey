@@ -44,7 +44,7 @@ export class LocalDiskStorage implements StorageProvider {
     const fullPath = path.resolve(this.baseDir, cleanKey);
 
     // Strictly ensure resolved path resides inside baseDir
-    if (!fullPath.startsWith(this.baseDir)) {
+    if (fullPath !== this.baseDir && !fullPath.startsWith(this.baseDir + path.sep)) {
       throw new Error(`Path traversal security violation: ${key}`);
     }
 

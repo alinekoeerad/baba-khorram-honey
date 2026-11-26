@@ -17,6 +17,7 @@ import { SettingsService } from '@/server/services/settings-service';
 import { buildChannelUrl } from '@/lib/contact-channels';
 import { ContactView } from '@/components/public/contact-view';
 import { env } from '@/lib/env';
+import { serializeJsonLd } from '@/lib/utils';
 
 export const revalidate = 86400;
 
@@ -92,7 +93,7 @@ export default async function ContactPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
       <ContactView
         siteNameFa={settings.siteNameFa}

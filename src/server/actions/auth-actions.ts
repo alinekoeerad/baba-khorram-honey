@@ -13,6 +13,7 @@ import { db } from '@/server/db/client';
 import { verifyPassword } from '@/server/auth/password';
 import {
   checkRateLimit,
+  isRateLimitLocked,
   recordLoginFailure,
   resetRateLimit,
   getGenericAuthError,
@@ -32,16 +33,26 @@ export async function adminLoginAction(data: { email: string; password: string }
     userAgent = headerList.get('user-agent') || '';
   } catch {}
 
-  const rateLimitKey = `login:${normalizedEmail || ip}`;
-  const rateLimitCheck = checkRateLimit(rateLimitKey, {
+  const ipRateLimitKey = `login:ip:${ip}`;
+  const ipRateLimitCheck = checkRateLimit(ipRateLimitKey, {
     windowMs: 15 * 60 * 1000,
-    maxAttempts: 5,
+    maxAttempts: 20,
   });
 
-  if (!rateLimitCheck.success) {
+  if (!ipRateLimitCheck.success) {
     return {
       success: false,
-      error: getGenericAuthError(rateLimitCheck.retryAfterSec),
+      error: getGenericAuthError(ipRateLimitCheck.retryAfterSec),
+    };
+  }
+
+  const rateLimitKey = `login:${ip}:${normalizedEmail}`;
+  const lockCheck = isRateLimitLocked(rateLimitKey);
+
+  if (lockCheck.locked) {
+    return {
+      success: false,
+      error: getGenericAuthError(lockCheck.retryAfterSec),
     };
   }
 
@@ -94,8 +105,9 @@ export async function adminLoginAction(data: { email: string; password: string }
     };
   }
 
-  // Credentials valid: reset rate limiter
+  // Credentials valid: reset rate limiters
   resetRateLimit(rateLimitKey);
+  resetRateLimit(ipRateLimitKey);
 
   const sessionToken = crypto.randomBytes(32).toString('hex');
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days

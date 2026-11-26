@@ -10,6 +10,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { PillButton } from '@/components/ui/pill-button';
+import { serializeJsonLd } from '@/lib/utils';
 import { WoodBackground } from '@/components/ui/wood-background';
 import { WoodGroup } from '@/components/ui/wood-group';
 import { Container } from '@/components/ui/container';
@@ -134,7 +135,7 @@ export default async function HomePage() {
       <div className="flex flex-col w-full overflow-hidden">
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
         />
         {groupedSections.map((group, gIdx) => {
           if (group.isWood) {
@@ -170,7 +171,7 @@ export default async function HomePage() {
     <div className="flex flex-col w-full overflow-hidden">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
       {/* 1. Hero Section (Slideshow with Blur-Fade & Ken Burns Zoom, NO buttons, NO dots) */}
       <HeroSlider />

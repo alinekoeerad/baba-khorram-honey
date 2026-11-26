@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { requireAdmin } from '@/server/auth/require-admin';
 import { db, OrderRecord } from '@/server/db/client';
 import { getRecentAuditLogs } from '@/server/services/audit-log-service';
 import { uiStringsFa } from '@/content/ui-strings.fa';
@@ -26,6 +27,8 @@ import {
 export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboardPage() {
+  await requireAdmin({ allowRedirect: true });
+
   // Query orders, status counts & catalog health metrics
   const [
     rawOrders,
