@@ -58,6 +58,9 @@ export class CategoryService {
     try {
       revalidateTag('categories', 'max');
       revalidatePath('/admin/categories');
+      revalidatePath('/', 'layout');
+      revalidatePath('/products');
+      revalidatePath('/recipes');
     } catch {}
 
     // Audit log
@@ -116,6 +119,9 @@ export class CategoryService {
       revalidateTag('categories', 'max');
       revalidateTag(type === 'PRODUCT' ? 'products' : 'recipes', 'max');
       revalidatePath('/admin/categories');
+      revalidatePath('/', 'layout');
+      revalidatePath('/products');
+      revalidatePath('/recipes');
     } catch {}
 
     // Audit log
@@ -186,6 +192,9 @@ export class CategoryService {
     try {
       revalidateTag('categories', 'max');
       revalidatePath('/admin/categories');
+      revalidatePath('/', 'layout');
+      revalidatePath('/products');
+      revalidatePath('/recipes');
     } catch {}
 
     await recordAuditLog({

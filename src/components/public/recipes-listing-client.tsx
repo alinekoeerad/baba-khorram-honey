@@ -127,12 +127,14 @@ export function RecipesListingClient({
 
   const handleCategoryClick = (categorySlug: string) => {
     setActiveCategory(categorySlug);
-    const cacheKey = `${categorySlug || 'all'}_${serving}`;
-    if (recipeListingCache.has(cacheKey)) {
-      const cached = recipeListingCache.get(cacheKey)!;
-      setItems(cached.items);
-      setCursor(cached.cursor);
-      setHasMore(cached.hasMore);
+    if (!searchTerm.trim()) {
+      const cacheKey = `${categorySlug || 'all'}_${serving}`;
+      if (recipeListingCache.has(cacheKey)) {
+        const cached = recipeListingCache.get(cacheKey)!;
+        setItems(cached.items);
+        setCursor(cached.cursor);
+        setHasMore(cached.hasMore);
+      }
     }
     updateUrlParams(categorySlug, undefined, undefined);
   };
@@ -159,7 +161,7 @@ export function RecipesListingClient({
         serving,
         q: searchTerm.trim() || undefined,
         cursor,
-        skip: items.length,
+        skip: cursor ? undefined : items.length,
         take: initialBatchCount,
       });
 

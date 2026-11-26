@@ -9,7 +9,7 @@ import { db } from '@/server/db/client';
 import { ProductInput, productInputSchema } from '@/server/validation';
 import { buildProductSearchText } from '@/server/services/search-text';
 import { recordAuditLog } from '@/server/services/audit-log-service';
-import { resolveSlugCollision } from '@/lib/domain-utils';
+import { resolveSlugCollision, normalizeSearchText } from '@/lib/domain-utils';
 import { uiStringsFa } from '@/content/ui-strings.fa';
 import { deletePhysicalImageFile, deleteMediaAsset } from '@/server/services/media-service';
 import { findMediaAssetReferences } from '@/server/services/media-reference-tracker';
@@ -100,7 +100,10 @@ export class ProductService {
       };
     }
     if (filters.search) {
-      where.searchQuery = filters.search;
+      const normalizedSearch = normalizeSearchText(filters.search);
+      if (normalizedSearch) {
+        where.searchText = { contains: normalizedSearch, mode: 'insensitive' };
+      }
     }
 
     const items = await db.product.findMany({

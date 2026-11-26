@@ -93,9 +93,21 @@ export async function getFreshCartItems(
 
   const items: FreshCartLineItem[] = lines.map((line) => {
     let opt: any = optionMap.get(line.optionId);
+    if (opt) {
+      const optProductId = opt.productId || opt.product?.id;
+      if (optProductId && optProductId !== line.productId) {
+        opt = undefined;
+      }
+    }
     let prod: any = opt?.product || productMap.get(line.productId);
 
-    if (!opt && prod && prod.status === 'PUBLISHED') {
+    const isAllowedDefaultOption =
+      line.optionId === `opt_${prod?.id}_1kg` ||
+      line.optionId === `opt_${prod?.id}_500g` ||
+      line.optionId === `${prod?.id}_1000g` ||
+      line.optionId === `${prod?.id}_500g`;
+
+    if (!opt && prod && prod.status === 'PUBLISHED' && isAllowedDefaultOption) {
       const label = line.optionId.includes('500g') ? 'نیم کیلوگرم (ظرف شیشه‌ای)' : 'یک کیلوگرم (ظرف شیشه‌ای)';
       opt = { id: line.optionId, label, isAvailable: true, productId: prod.id, product: prod } as any;
     }
@@ -128,8 +140,8 @@ export async function getFreshCartItems(
     const rawOptions = (prod.options && prod.options.length > 0)
       ? prod.options
       : [
-          { id: `${prod.id}_1000g`, label: 'یک کیلوگرم (ظرف شیشه‌ای)', isAvailable: prod.isAvailable },
-          { id: `${prod.id}_500g`, label: 'نیم کیلوگرم (ظرف شیشه‌ای)', isAvailable: prod.isAvailable },
+          { id: `opt_${prod.id}_1kg`, label: 'یک کیلوگرم (ظرف شیشه‌ای)', isAvailable: prod.isAvailable },
+          { id: `opt_${prod.id}_500g`, label: 'نیم کیلوگرم (ظرف شیشه‌ای)', isAvailable: prod.isAvailable },
         ];
 
     const allOptions = rawOptions.map((o: any) => ({

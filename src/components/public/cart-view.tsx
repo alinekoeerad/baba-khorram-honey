@@ -24,6 +24,7 @@ import {
 } from '@/lib/cart-store';
 import { toPersianDigits, validateAndNormalizeIranianMobile, normalizeDigits } from '@/lib/domain-utils';
 import { copyTextSync, copyTextToClipboard } from '@/lib/clipboard';
+import { buildChannelOrderUrl, buildChannelUrl } from '@/lib/contact-channels';
 import { fetchFreshCartAction } from '@/server/actions/cart-actions';
 import { buildOrderAction, BuildOrderResult } from '@/server/actions/order-actions';
 import { ChannelIcon } from './channel-icon';
@@ -86,6 +87,24 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
   const [isSummaryExpanded, setIsSummaryExpanded] = useState(true);
 
   const receiptRef = useRef<HTMLDivElement>(null);
+  const idempotencyKeyRef = useRef<string>('');
+
+  const createFreshIdempotencyKey = () => {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+      return crypto.randomUUID();
+    }
+    return `ord_${Date.now()}_${Math.random().toString(36).slice(2, 12)}`;
+  };
+
+  useEffect(() => {
+    idempotencyKeyRef.current = createFreshIdempotencyKey();
+  }, [lines]);
+
+  const whatsappChannel = orderChannels.find((c) => c.type === 'WHATSAPP');
+  const telegramChannel = orderChannels.find((c) => c.type === 'TELEGRAM');
+  const baleChannel = orderChannels.find((c) => c.type === 'BALE');
+  const eitaaChannel = orderChannels.find((c) => c.type === 'EITAA');
+  const phoneChannel = orderChannels.find((c) => c.type === 'PHONE');
 
   // 1. Initial Customer "Remember Me" Load
   useEffect(() => {
@@ -162,7 +181,7 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
 
   // 1-Click Order Submission
   const handleProceedToOrder = async () => {
-    if (lines.length === 0) return;
+    if (isSubmitting || lines.length === 0) return;
     if (hasUnavailable) {
       setSubmitError('برخی از اقلام سبد خرید ناموجود هستند. لطفاً ابتدا آن‌ها را حذف یا تغییر دهید.');
       return;
@@ -171,6 +190,10 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
     if (!validateForm()) {
       setSubmitError('لطفاً فیلدهای الزامی مشخصات (نام و شماره موبایل) را با دقت تکمیل فرمایید.');
       return;
+    }
+
+    if (!idempotencyKeyRef.current) {
+      idempotencyKeyRef.current = createFreshIdempotencyKey();
     }
 
     setIsSubmitting(true);
@@ -192,13 +215,18 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
     try {
       const result = await buildOrderAction({
         lines,
-        customer: customerData,
-        preferredContactMethod,
+        customer: {
+          ...customerData,
+          preferredContactMethod: preferredContactMethod as any,
+        },
+        preferredContactMethod: preferredContactMethod as any,
         createShareLink: true,
+        idempotencyKey: idempotencyKeyRef.current,
       });
 
       if (result.success && result.orderCode) {
         setOrderResult(result);
+        actions.clearCart();
         const textToCopy = result.fullMessageText || result.messageText || '';
         if (textToCopy) {
           copyTextSync(textToCopy);
@@ -235,6 +263,7 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
 
   // Messenger fast-track chat handlers
   const handleOpenBale = () => {
+    if (!baleChannel) return;
     const text = orderResult?.fullMessageText || orderResult?.messageText || '';
     if (text) {
       copyTextSync(text);
@@ -242,10 +271,11 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
     }
     setMessengerToast('متن سفارش کپی شد — در صفحه چت بله Paste کنید');
     setTimeout(() => setMessengerToast(null), 6000);
-    window.open('https://ble.ir/Babakhoram', '_blank', 'noopener,noreferrer');
+    window.open(baleChannel.url || buildChannelUrl('BALE', baleChannel.value), '_blank', 'noopener,noreferrer');
   };
 
   const handleOpenEitaa = () => {
+    if (!eitaaChannel) return;
     const text = orderResult?.fullMessageText || orderResult?.messageText || '';
     if (text) {
       copyTextSync(text);
@@ -253,7 +283,7 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
     }
     setMessengerToast('متن سفارش کپی شد — در صفحه چت ایتا Paste کنید');
     setTimeout(() => setMessengerToast(null), 6000);
-    window.open('https://eitaa.com/Babakhoram', '_blank', 'noopener,noreferrer');
+    window.open(eitaaChannel.url || buildChannelUrl('EITAA', eitaaChannel.value), '_blank', 'noopener,noreferrer');
   };
 
   const selectedContactMethodLabel =
@@ -507,93 +537,111 @@ export function CartView({ cartNotice, orderChannels }: CartViewProps) {
                 </div>
               )}
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-                {/* WhatsApp */}
-                <a
-                  href={`https://wa.me/989389196010?text=${encodeURIComponent(friendlySupportText)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-4 bg-[#F0FDF4] hover:bg-[#DCFCE7] border border-[#22C55E]/40 hover:border-[#22C55E] flex items-center gap-3 transition-all rounded-none cursor-pointer group shadow-2xs"
-                >
-                  <div className="w-10 h-10 rounded-full bg-[#25D366] text-white flex items-center justify-center shrink-0 shadow-sm">
-                    <ChannelIcon type="WHATSAPP" className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <div className="font-black text-sm text-[#14532D]">واتساپ</div>
-                    <div className="text-[11px] text-[#166534]">ارسال پیام با متن آماده</div>
-                  </div>
-                </a>
+              {(whatsappChannel || telegramChannel || baleChannel || eitaaChannel) && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+                  {/* WhatsApp */}
+                  {whatsappChannel && (
+                    <a
+                      href={buildChannelOrderUrl('WHATSAPP', whatsappChannel.value, friendlySupportText)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-4 bg-[#F0FDF4] hover:bg-[#DCFCE7] border border-[#22C55E]/40 hover:border-[#22C55E] flex items-center gap-3 transition-all rounded-none cursor-pointer group shadow-2xs"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-[#25D366] text-white flex items-center justify-center shrink-0 shadow-sm">
+                        <ChannelIcon type="WHATSAPP" className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <div className="font-black text-sm text-[#14532D]">واتساپ</div>
+                        <div className="text-[11px] text-[#166534]">ارسال پیام با متن آماده</div>
+                      </div>
+                    </a>
+                  )}
 
-                {/* Telegram */}
-                <a
-                  href={`https://t.me/Babakhoram?text=${encodeURIComponent(friendlySupportText)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-4 bg-[#F0F9FF] hover:bg-[#E0F2FE] border border-[#38BDF8]/40 hover:border-[#0284C7] flex items-center gap-3 transition-all rounded-none cursor-pointer group shadow-2xs"
-                >
-                  <div className="w-10 h-10 rounded-full bg-[#229ED9] text-white flex items-center justify-center shrink-0 shadow-sm">
-                    <ChannelIcon type="TELEGRAM" className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <div className="font-black text-sm text-[#0C4A6E]">تلگرام</div>
-                    <div className="text-[11px] text-[#0369A1]">ارسال پیام با متن آماده</div>
-                  </div>
-                </a>
+                  {/* Telegram */}
+                  {telegramChannel && (
+                    <a
+                      href={buildChannelOrderUrl('TELEGRAM', telegramChannel.value, friendlySupportText)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-4 bg-[#F0F9FF] hover:bg-[#E0F2FE] border border-[#38BDF8]/40 hover:border-[#0284C7] flex items-center gap-3 transition-all rounded-none cursor-pointer group shadow-2xs"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-[#229ED9] text-white flex items-center justify-center shrink-0 shadow-sm">
+                        <ChannelIcon type="TELEGRAM" className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <div className="font-black text-sm text-[#0C4A6E]">تلگرام</div>
+                        <div className="text-[11px] text-[#0369A1]">ارسال پیام با متن آماده</div>
+                      </div>
+                    </a>
+                  )}
 
-                {/* Bale */}
-                <button
-                  type="button"
-                  onClick={handleOpenBale}
-                  className="p-4 bg-[#F0FDF4] hover:bg-[#DCFCE7] border border-[#00A859]/40 hover:border-[#00A859] flex items-center gap-3 transition-all rounded-none cursor-pointer group shadow-2xs text-right"
-                >
-                  <div className="w-10 h-10 rounded-full bg-[#00A859] text-white flex items-center justify-center shrink-0 shadow-sm">
-                    <ChannelIcon type="BALE" className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <div className="font-black text-sm text-[#14532D]">بله (Bale)</div>
-                    <div className="text-[11px] text-[#166534]">کپی خودکار + باز شدن چت</div>
-                  </div>
-                </button>
+                  {/* Bale */}
+                  {baleChannel && (
+                    <button
+                      type="button"
+                      onClick={handleOpenBale}
+                      className="p-4 bg-[#F0FDF4] hover:bg-[#DCFCE7] border border-[#00A859]/40 hover:border-[#00A859] flex items-center gap-3 transition-all rounded-none cursor-pointer group shadow-2xs text-right"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-[#00A859] text-white flex items-center justify-center shrink-0 shadow-sm">
+                        <ChannelIcon type="BALE" className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <div className="font-black text-sm text-[#14532D]">بله (Bale)</div>
+                        <div className="text-[11px] text-[#166534]">کپی خودکار + باز شدن چت</div>
+                      </div>
+                    </button>
+                  )}
 
-                {/* Eitaa */}
-                <button
-                  type="button"
-                  onClick={handleOpenEitaa}
-                  className="p-4 bg-[#FFF7ED] hover:bg-[#FFEDD5] border border-[#F97316]/40 hover:border-[#EA580C] flex items-center gap-3 transition-all rounded-none cursor-pointer group shadow-2xs text-right"
-                >
-                  <div className="w-10 h-10 rounded-full bg-[#FF6600] text-white flex items-center justify-center shrink-0 shadow-sm">
-                    <ChannelIcon type="EITAA" className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <div className="font-black text-sm text-[#7C2D12]">ایتا (Eitaa)</div>
-                    <div className="text-[11px] text-[#C2410C]">کپی خودکار + باز شدن چت</div>
-                  </div>
-                </button>
-              </div>
+                  {/* Eitaa */}
+                  {eitaaChannel && (
+                    <button
+                      type="button"
+                      onClick={handleOpenEitaa}
+                      className="p-4 bg-[#FFF7ED] hover:bg-[#FFEDD5] border border-[#F97316]/40 hover:border-[#EA580C] flex items-center gap-3 transition-all rounded-none cursor-pointer group shadow-2xs text-right"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-[#FF6600] text-white flex items-center justify-center shrink-0 shadow-sm">
+                        <ChannelIcon type="EITAA" className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <div className="font-black text-sm text-[#7C2D12]">ایتا (Eitaa)</div>
+                        <div className="text-[11px] text-[#C2410C]">کپی خودکار + باز شدن چت</div>
+                      </div>
+                    </button>
+                  )}
+                </div>
+              )}
 
               {/* Direct Phone / SMS bar */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 bg-[#FAF7F2] border border-[#EFE9E0] text-xs">
-                <div className="flex items-center gap-2 text-[#5C5248] font-medium">
-                  <Phone className="w-4 h-4 text-[#D97706]" />
-                  <span>شماره مستقیم واحد سفارشات و پشتیبانی:</span>
-                  <strong className="text-[#2B2017] font-mono text-sm">۰۹۳۸ ۹۱۹ ۶۰۱۰</strong>
-                </div>
+              {phoneChannel && (
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 bg-[#FAF7F2] border border-[#EFE9E0] text-xs">
+                  <div className="flex items-center gap-2 text-[#5C5248] font-medium">
+                    <Phone className="w-4 h-4 text-[#D97706]" />
+                    <span>شماره مستقیم واحد سفارشات و پشتیبانی:</span>
+                    <strong className="text-[#2B2017] font-mono text-sm" dir="ltr">
+                      {toPersianDigits(phoneChannel.value)}
+                    </strong>
+                  </div>
 
-                <div className="flex items-center gap-2 w-full sm:w-auto">
-                  <a
-                    href="tel:09389196010"
-                    className="flex-1 sm:flex-none px-4 py-2 bg-white hover:bg-stone-50 border border-[#EFE9E0] text-[#2B2017] font-bold text-center transition-colors rounded-none"
-                  >
-                    تماس تلفنی
-                  </a>
-                  <a
-                    href={`sms:09389196010?body=${encodeURIComponent(`سلام، سفارش شماره ${orderResult.orderCode} به نام ${customerDisplayName} ثبت شد.`)}`}
-                    className="flex-1 sm:flex-none px-4 py-2 bg-white hover:bg-stone-50 border border-[#EFE9E0] text-[#2B2017] font-bold text-center transition-colors rounded-none"
-                  >
-                    ارسال پیامک (SMS)
-                  </a>
+                  <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <a
+                      href={`tel:${phoneChannel.value}`}
+                      className="flex-1 sm:flex-none px-4 py-2 bg-white hover:bg-stone-50 border border-[#EFE9E0] text-[#2B2017] font-bold text-center transition-colors rounded-none"
+                    >
+                      تماس تلفنی
+                    </a>
+                    <a
+                      href={buildChannelOrderUrl(
+                        'PHONE',
+                        phoneChannel.value,
+                        `سلام، سفارش شماره ${orderResult.orderCode} به نام ${customerDisplayName} ثبت شد.`
+                      )}
+                      className="flex-1 sm:flex-none px-4 py-2 bg-white hover:bg-stone-50 border border-[#EFE9E0] text-[#2B2017] font-bold text-center transition-colors rounded-none"
+                    >
+                      ارسال پیامک (SMS)
+                    </a>
+                  </div>
                 </div>
-              </div>
+              )}
 
               <p className="text-[11px] text-[#786455] leading-relaxed">
                 💡 نکته: مدیریت و کارشناسان فروش عسل باباخُرم هم‌اکنون این سفارش را به صورت خودکار دریافت کرده‌اند. بنابراین حتی در صورت عدم ارسال پیام در پیام‌رسان‌ها، جهت هماهنگی ارسال با شما تماس گرفته خواهد شد.

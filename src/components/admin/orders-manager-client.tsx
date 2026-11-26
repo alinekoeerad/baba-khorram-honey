@@ -5,7 +5,7 @@
  * Interactive client table and card manager for orders in the admin panel.
  */
 
-import React, { useState, useTransition } from 'react';
+import React, { useState, useEffect, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   updateOrderStatusAction,
@@ -119,6 +119,10 @@ export function OrdersManagerClient({
   const router = useRouter();
   const { setNewOrdersCount } = useAdminBadges();
   const [orders, setOrders] = useState<OrderItem[]>(initialOrders);
+
+  useEffect(() => {
+    setOrders(initialOrders);
+  }, [initialOrders]);
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [isPending, startTransition] = useTransition();

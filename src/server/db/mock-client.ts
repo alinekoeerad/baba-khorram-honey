@@ -589,17 +589,25 @@ function createFallbackClient() {
           if (searchTerms.length > 0) {
             const words = Array.from(new Set(searchTerms.map((t) => t.toLowerCase().trim()).filter(Boolean)));
             list = list.filter((p) => {
-              const fullText = [p.nameFa, p.nameOriginal, p.slug, p.description, p.shortDescription, (p.benefits || []).join(" ")].filter(Boolean).join(" ").toLowerCase();
+              const fullText = [p.nameFa, p.nameOriginal, p.slug, p.searchText, p.description, p.shortDescription, (p.benefits || []).join(" ")].filter(Boolean).join(" ").toLowerCase();
               return words.some((w) => fullText.includes(w));
             });
           }
 
-          // Cursor filter: handles w.OR cursor pagination
+          // Cursor filter: handles w.OR cursor pagination including [sortOrder, id] tie-breaker
           if (Array.isArray(w.OR) && w.OR.length > 0) {
             const sortCond = w.OR.find((c: any) => c.sortOrder?.gt !== undefined);
+            const tieCond = w.OR.find((c: any) => c.sortOrder !== undefined && c.sortOrder?.gt === undefined && c.id?.gt !== undefined);
             if (sortCond) {
               const minSort = sortCond.sortOrder.gt;
-              list = list.filter((p) => (p.sortOrder || 0) > minSort);
+              const tieSort = tieCond?.sortOrder;
+              const minId = tieCond?.id?.gt;
+              list = list.filter((p) => {
+                const s = p.sortOrder || 0;
+                if (s > minSort) return true;
+                if (tieCond && s === tieSort && String(p.id) > String(minId)) return true;
+                return false;
+              });
             }
           }
         }
@@ -608,7 +616,7 @@ function createFallbackClient() {
         if (args?.orderBy) {
           const order = args.orderBy;
           if (Array.isArray(order)) {
-            list.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+            list.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0) || String(a.id).localeCompare(String(b.id)));
           } else if (order.sortOrder) {
             list.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
           } else if (order.createdAt === 'desc') {
@@ -1020,17 +1028,25 @@ function createFallbackClient() {
           if (searchTerms.length > 0) {
             const words = Array.from(new Set(searchTerms.map((t) => t.toLowerCase().trim()).filter(Boolean)));
             list = list.filter((r) => {
-              const fullText = [r.nameFa, r.nameOriginal, r.slug, r.shortDescription, r.longDescription, (r.steps || []).join(" ")].filter(Boolean).join(" ").toLowerCase();
+              const fullText = [r.nameFa, r.nameOriginal, r.slug, r.searchText, r.shortDescription, r.longDescription, (r.steps || []).join(" ")].filter(Boolean).join(" ").toLowerCase();
               return words.some((w) => fullText.includes(w));
             });
           }
 
-          // Cursor filter
+          // Cursor filter (with [sortOrder, id] tie-breaker)
           if (Array.isArray(w.OR) && w.OR.length > 0) {
             const sortCond = w.OR.find((c: any) => c.sortOrder?.gt !== undefined);
+            const tieCond = w.OR.find((c: any) => c.sortOrder !== undefined && c.sortOrder?.gt === undefined && c.id?.gt !== undefined);
             if (sortCond) {
               const minSort = sortCond.sortOrder.gt;
-              list = list.filter((r) => (r.sortOrder || 0) > minSort);
+              const tieSort = tieCond?.sortOrder;
+              const minId = tieCond?.id?.gt;
+              list = list.filter((r) => {
+                const s = r.sortOrder || 0;
+                if (s > minSort) return true;
+                if (tieCond && s === tieSort && String(r.id) > String(minId)) return true;
+                return false;
+              });
             }
           }
         }
@@ -1038,7 +1054,7 @@ function createFallbackClient() {
         if (args?.orderBy) {
           const order = args.orderBy;
           if (Array.isArray(order)) {
-            list.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+            list.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0) || String(a.id).localeCompare(String(b.id)));
           } else if (order.sortOrder) {
             list.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
           } else if (order.createdAt === 'desc') {
@@ -1393,10 +1409,12 @@ function createFallbackClient() {
         return this.findFirst();
       },
       async upsert(args: { where: { id: number }; create: any; update: any }) {
-        let current = loadJson('site-settings.json', {});
-        current = { ...current, ...args.update };
-        saveJson('site-settings.json', current);
-        return current;
+        let current = loadJson('site-settings.json', null);
+        if (Array.isArray(current)) current = current[0] || null;
+        const base = current && Object.keys(current).length > 0 ? current : (args.create || {});
+        const next = { ...base, ...args.update };
+        saveJson('site-settings.json', next);
+        return next;
       },
     },
 

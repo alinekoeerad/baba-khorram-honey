@@ -135,7 +135,7 @@ export async function getPublicProducts(filters: PublicProductFilters = {}) {
       { sortOrder: 'asc' },
       { id: 'asc' },
     ],
-    skip: filters.skip,
+    skip: filters.cursor ? undefined : filters.skip,
     take: takeLimit + 1,
     include: {
       categories: {

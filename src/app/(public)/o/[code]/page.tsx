@@ -13,9 +13,11 @@
 
 import React from 'react';
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { db } from '@/server/db/client';
-import { getPublicSiteSettings } from '@/server/queries/settings';
+import { getPublicSiteSettings, getPublicContactChannels } from '@/server/queries/settings';
+import { checkRateLimit } from '@/lib/rate-limit';
 import { decryptOrderPayload } from '@/server/auth/order-encryption';
 import { OrderShareView } from '@/components/public/order-share-view';
 import { WoodBackground } from '@/components/ui/wood-background';
@@ -44,11 +46,47 @@ interface OrderSharePageProps {
 export default async function OrderSharePage({ params }: OrderSharePageProps) {
   const { code } = await params;
 
-  // 1. Check cartEnabled
-  const settings = await getPublicSiteSettings();
+  // 0. Per-IP Rate Limiting (30 lookups / 10 min)
+  let clientIp = '127.0.0.1';
+  try {
+    const headerList = await headers();
+    clientIp =
+      headerList.get('x-forwarded-for')?.split(',')[0].trim() ||
+      headerList.get('x-real-ip') ||
+      '127.0.0.1';
+  } catch {}
+
+  const rateCheck = checkRateLimit(`order_share:${clientIp}`, {
+    windowMs: 10 * 60 * 1000,
+    maxAttempts: 30,
+  });
+
+  if (!rateCheck.success) {
+    return (
+      <WoodBackground className="py-20 min-h-screen">
+        <Container size="narrow" className="text-center space-y-6 bg-white p-8 sm:p-10 border border-[#FDE68A] shadow-xl rounded-none">
+          <Clock className="w-12 h-12 text-[#D97706] mx-auto" />
+          <h1 className="text-2xl font-black text-[#2B2017]">تعداد درخواست‌ها بیش از حد مجاز است</h1>
+          <p className="text-sm text-[#5C5248] leading-relaxed max-w-md mx-auto font-medium">
+            لطفاً چند دقیقه دیگر مجدداً تلاش فرمایید.
+          </p>
+        </Container>
+      </WoodBackground>
+    );
+  }
+
+  // 1. Check cartEnabled & resolve support phone from DB channels
+  const [settings, publicChannels] = await Promise.all([
+    getPublicSiteSettings(),
+    getPublicContactChannels(),
+  ]);
   if (!settings.cartEnabled) {
     notFound();
   }
+  const supportPhone =
+    publicChannels.orderChannels.find((c) => c.type === 'PHONE')?.value ||
+    publicChannels.contactBarChannels.find((c) => c.type === 'PHONE')?.value ||
+    null;
 
   // 2. Fetch OrderShareLink
   const link = await db.orderShareLink.findUnique({
@@ -137,6 +175,7 @@ export default async function OrderSharePage({ params }: OrderSharePageProps) {
       channelType={link.channelType}
       channelValue={decrypted.channelValue}
       directUrl={decrypted.directUrl}
+      supportPhone={supportPhone}
       expiresAt={
         link.expiresAt instanceof Date
           ? link.expiresAt.toISOString()

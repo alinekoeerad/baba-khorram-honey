@@ -9,7 +9,7 @@ import { db } from '@/server/db/client';
 import { RecipeInput, recipeInputSchema } from '@/server/validation';
 import { buildRecipeSearchText } from '@/server/services/search-text';
 import { recordAuditLog } from '@/server/services/audit-log-service';
-import { resolveSlugCollision } from '@/lib/domain-utils';
+import { resolveSlugCollision, normalizeSearchText } from '@/lib/domain-utils';
 import { ConcurrencyConflictError } from '@/server/services/product-service';
 import { uiStringsFa } from '@/content/ui-strings.fa';
 import { deletePhysicalImageFile, deleteMediaAsset } from '@/server/services/media-service';
@@ -90,7 +90,10 @@ export class RecipeService {
       };
     }
     if (filters.search) {
-      where.searchQuery = filters.search;
+      const normalizedSearch = normalizeSearchText(filters.search);
+      if (normalizedSearch) {
+        where.searchText = { contains: normalizedSearch, mode: 'insensitive' };
+      }
     }
 
     const items = await db.recipe.findMany({
