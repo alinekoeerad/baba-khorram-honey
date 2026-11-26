@@ -10,7 +10,7 @@ export default async function AdminProductsPage() {
   await requireAdmin({ allowRedirect: true });
 
   const [productsData, categories] = await Promise.all([
-    ProductService.listProducts({ take: 200 }),
+    ProductService.listProducts({ take: 250 }),
     CategoryService.listCategories('PRODUCT'),
   ]);
 

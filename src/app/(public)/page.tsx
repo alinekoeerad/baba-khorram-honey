@@ -64,27 +64,64 @@ export default async function HomePage() {
     dbSections = [];
   }
 
-  const hasSelectedCarousel = dbSections.some(
-    (s: any) => s?.type === 'CARD_CAROUSEL' && s?.content?.source === 'SELECTED'
-  );
-  const catalogTake = hasSelectedCarousel ? 200 : 12;
-
   try {
-    const productsRes = await getPublicProducts({ take: catalogTake });
+    const productsRes = await getPublicProducts({ take: 12 });
     dbProducts = productsRes.products || productsRes.items || (Array.isArray(productsRes) ? productsRes : []);
   } catch {
     dbProducts = [];
   }
 
   try {
-    const recipesRes = await getPublicRecipes({ take: catalogTake });
+    const recipesRes = await getPublicRecipes({ take: 12 });
     dbRecipes = recipesRes.recipes || recipesRes.items || (Array.isArray(recipesRes) ? recipesRes : []);
   } catch {
     dbRecipes = [];
   }
 
-  const displayProducts = dbProducts;
-  const displayRecipes = dbRecipes;
+  // Ensure CARD_CAROUSEL sections using SELECTED items beyond the first 12 are hydrated
+  const selectedIds = new Set<string>();
+  for (const sec of dbSections) {
+    if (
+      sec?.type === 'CARD_CAROUSEL' &&
+      sec?.content?.source === 'SELECTED' &&
+      Array.isArray(sec?.content?.selectedItems)
+    ) {
+      for (const id of sec.content.selectedItems) {
+        if (typeof id === 'string' && id) selectedIds.add(id);
+      }
+    }
+  }
+
+  let displayProducts = dbProducts;
+  let displayRecipes = dbRecipes;
+
+  if (selectedIds.size > 0) {
+    const existingProductIds = new Set(dbProducts.map((p: any) => p.id));
+    const existingRecipeIds = new Set(dbRecipes.map((r: any) => r.id));
+    const missingIds = Array.from(selectedIds).filter(
+      (id) => !existingProductIds.has(id) && !existingRecipeIds.has(id)
+    );
+
+    if (missingIds.length > 0) {
+      try {
+        const missingSet = new Set(missingIds);
+        const [allProdsRes, allRecsRes] = await Promise.all([
+          getPublicProducts({ take: 200 }),
+          getPublicRecipes({ take: 200 }),
+        ]);
+        const extraProducts = (allProdsRes.products || []).filter((p: any) => missingSet.has(p.id));
+        const extraRecipes = (allRecsRes.recipes || []).filter((r: any) => missingSet.has(r.id));
+        if (extraProducts.length > 0) {
+          displayProducts = [...dbProducts, ...extraProducts];
+        }
+        if (extraRecipes.length > 0) {
+          displayRecipes = [...dbRecipes, ...extraRecipes];
+        }
+      } catch {
+        // Non-blocking fallback
+      }
+    }
+  }
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://babakhorram.com';
   const jsonLd = {

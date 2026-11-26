@@ -10,7 +10,7 @@ export default async function AdminRecipesPage() {
   await requireAdmin({ allowRedirect: true });
 
   const [recipesData, categories] = await Promise.all([
-    RecipeService.listRecipes({ take: 200 }),
+    RecipeService.listRecipes({ take: 250 }),
     CategoryService.listCategories('RECIPE'),
   ]);
 

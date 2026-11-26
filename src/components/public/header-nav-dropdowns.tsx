@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ChevronDown, ChevronLeft, BookOpen, HelpCircle, ShoppingBag, Sparkles } from 'lucide-react';
+import { toPersianDigits } from '@/lib/domain-utils';
 import {
   FAQ_DROPDOWN_ITEMS,
   MAGAZINE_DROPDOWN_ITEMS,
@@ -18,24 +19,23 @@ export interface HeaderNavDropdownsProps {
 }
 
 export function HeaderNavDropdowns({ pathname, publishedProductSlugs }: HeaderNavDropdownsProps) {
-  const [openMenu, setOpenMenu] = useState<DropdownKey>(null);
-  const [isMonofloralOpen, setIsMonofloralOpen] = useState(false);
-
-  const publishedSlugSet = publishedProductSlugs ? new Set(publishedProductSlugs) : null;
-  const visibleMonofloralLinks = publishedSlugSet
-    ? MONOFLORAL_HONEY_LINKS.filter((item) =>
-        publishedSlugSet.has(item.href.replace('/products/', ''))
-      )
+  const activeSlugSet = publishedProductSlugs ? new Set(publishedProductSlugs) : null;
+  const visibleMonofloralLinks = activeSlugSet
+    ? MONOFLORAL_HONEY_LINKS.filter((link) => {
+        const slug = link.href.replace('/products/', '').split('?')[0];
+        return activeSlugSet.has(slug);
+      })
     : MONOFLORAL_HONEY_LINKS;
-  const visibleProductDropdownItems = publishedSlugSet
+
+  const visibleProductDropdownItems = activeSlugSet
     ? PRODUCT_DROPDOWN_ITEMS.filter((item) => {
-        if (item.hasMonofloralSubmenu) return visibleMonofloralLinks.length > 0;
-        if (item.href.startsWith('/products/') && !item.href.includes('?')) {
-          return publishedSlugSet.has(item.href.replace('/products/', ''));
-        }
-        return true;
+        if (!item.href.startsWith('/products/')) return true;
+        const slug = item.href.replace('/products/', '').split('?')[0];
+        return activeSlugSet.has(slug);
       })
     : PRODUCT_DROPDOWN_ITEMS;
+  const [openMenu, setOpenMenu] = useState<DropdownKey>(null);
+  const [isMonofloralOpen, setIsMonofloralOpen] = useState(false);
   const navRef = useRef<HTMLDivElement>(null);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -95,7 +95,7 @@ export function HeaderNavDropdowns({ pathname, publishedProductSlugs }: HeaderNa
   }, []);
 
   const linkClass = (active: boolean) =>
-    `transition-colors py-1 text-[11px] xl:text-[13px] 2xl:text-sm whitespace-nowrap ${
+    `transition-colors py-1 px-0.5 xl:px-1 text-[11px] xl:text-xs 2xl:text-sm whitespace-nowrap shrink-0 ${
       active
         ? 'font-black text-white underline underline-offset-8 decoration-[3px] decoration-[#FFF6D6] drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]'
         : 'font-black text-white hover:text-[#FFF6D6] drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]'
@@ -103,7 +103,7 @@ export function HeaderNavDropdowns({ pathname, publishedProductSlugs }: HeaderNa
 
   const divider = (
     <span
-      className="mx-1 xl:mx-1.5 2xl:mx-2.5 text-white/90 font-black text-sm xl:text-base select-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+      className="mx-0.5 xl:mx-1 2xl:mx-2 text-white/90 font-black text-xs xl:text-sm 2xl:text-base select-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)] shrink-0"
       aria-hidden="true"
     >
       |
@@ -111,7 +111,7 @@ export function HeaderNavDropdowns({ pathname, publishedProductSlugs }: HeaderNa
   );
 
   return (
-    <div ref={navRef} className="flex items-center">
+    <div ref={navRef} className="flex items-center shrink-0">
       {/* 1. صفحه اصلی */}
       <Link href="/" className={linkClass(pathname === '/')}>
         صفحه اصلی
@@ -221,13 +221,13 @@ export function HeaderNavDropdowns({ pathname, publishedProductSlugs }: HeaderNa
                   </div>
                 </div>
 
-                {/* Expandable Nested Panel: 27 Monofloral Honeys */}
+                {/* Expandable Nested Panel: Published Monofloral Honeys */}
                 {isMonofloralOpen && (
                   <div className="w-[460px] xl:w-[540px] max-w-[calc(100vw-20rem)] bg-[#FAF6EE] border-r-2 border-[#D9A441] p-4 space-y-3">
                     <div className="flex items-center justify-between border-b border-[#EFE9E0] pb-2">
                       <span className="text-xs font-black text-[#3F2A1D] flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5 text-[#D97706]" />
-                        عسل‌های تک‌گیاه طبیعی (۲۷ گونه)
+                        عسل‌های تک‌گیاه طبیعی ({toPersianDigits(visibleMonofloralLinks.length)} گونه)
                       </span>
                       <Link
                         href="/products?category=honey-types"
@@ -436,7 +436,8 @@ export function HeaderNavDropdowns({ pathname, publishedProductSlugs }: HeaderNa
         onClick={closeAll}
         className={linkClass(pathname.startsWith('/feedback'))}
       >
-        انتقادات و پیشنهادات
+        <span className="lg:hidden 2xl:inline">انتقادات و پیشنهادات</span>
+        <span className="hidden lg:inline 2xl:hidden">انتقادات</span>
       </Link>
     </div>
   );

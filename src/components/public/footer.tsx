@@ -23,25 +23,20 @@ interface FooterProps {
   publishedProductSlugs?: string[];
 }
 
-const FOOTER_HONEY_LINKS = [
-  { href: '/products/astragalus', label: 'عسل طبیعی گون کوهستان' },
-  { href: '/products/ziziphus', label: 'عسل وحشی کنار (سدر) جنوب' },
-  { href: '/products/thymus', label: 'عسل آویشن وحشی البرز' },
-  { href: '/products/multi-plants', label: 'عسل چهل‌گیاه ییلاقی ارسباران' },
-  { href: '/products?q=موم', label: 'عسل طبیعی با موم کوهی' },
-  { href: '/products/citrus-bigaradia', label: 'عسل معطر بهارنارنج و مرکبات' },
+const FOOTER_PRODUCT_LINKS = [
+  { href: '/products/astragalus', slug: 'astragalus', label: 'عسل طبیعی گون کوهستان' },
+  { href: '/products/ziziphus', slug: 'ziziphus', label: 'عسل وحشی کنار (سدر) جنوب' },
+  { href: '/products/thymus', slug: 'thymus', label: 'عسل آویشن وحشی البرز' },
+  { href: '/products/multi-plants', slug: 'multi-plants', label: 'عسل چهل‌گیاه ییلاقی ارسباران' },
+  { href: '/products?q=موم', slug: null, label: 'عسل طبیعی با موم کوهی' },
+  { href: '/products/citrus-bigaradia', slug: 'citrus-bigaradia', label: 'عسل معطر بهارنارنج و مرکبات' },
 ];
 
 export function Footer({ settings, channels, publishedProductSlugs }: FooterProps) {
-  const publishedSlugSet = publishedProductSlugs ? new Set(publishedProductSlugs) : null;
-  const visibleFooterHoneyLinks = publishedSlugSet
-    ? FOOTER_HONEY_LINKS.filter((link) => {
-        if (link.href.startsWith('/products/') && !link.href.includes('?')) {
-          return publishedSlugSet.has(link.href.replace('/products/', ''));
-        }
-        return true;
-      })
-    : FOOTER_HONEY_LINKS;
+  const activeSlugSet = publishedProductSlugs ? new Set(publishedProductSlugs) : null;
+  const visibleFooterProducts = activeSlugSet
+    ? FOOTER_PRODUCT_LINKS.filter((item) => !item.slug || activeSlugSet.has(item.slug))
+    : FOOTER_PRODUCT_LINKS;
   const currentYear = 1405; // Solar Hijri brand year
   const footerLogoSrc =
     typeof settings.footerLogo === 'string'
@@ -105,7 +100,7 @@ export function Footer({ settings, channels, publishedProductSlugs }: FooterProp
               انواع عسل طبیعی باباخُرم
             </h4>
             <ul className="space-y-2.5 text-xs sm:text-sm font-bold flex flex-col text-white/95">
-              {visibleFooterHoneyLinks.map((item) => (
+              {visibleFooterProducts.map((item) => (
                 <li key={item.href}>
                   <Link href={item.href} className="hover:text-[#FBBF24] transition-colors">
                     {item.label}

@@ -184,7 +184,7 @@ export function Header({
       */}
       <div
         ref={desktopContactRef}
-        className={`hidden lg:block absolute top-0 left-0 z-50 bg-[#382013] text-white shadow-2xl transition-all duration-300 ease-out border-b border-r border-black/30 select-none w-60 sm:w-64 rounded-none rounded-br-2xl overflow-hidden ${
+        className={`hidden lg:block absolute top-0 left-0 z-50 bg-[#382013] text-white shadow-2xl transition-all duration-300 ease-out border-b border-r border-black/30 select-none w-48 xl:w-52 2xl:w-60 rounded-none rounded-br-2xl overflow-hidden ${
           isContactOpen ? 'max-h-[500px]' : 'max-h-10'
         }`}
       >
@@ -201,9 +201,8 @@ export function Header({
             <span className="font-black text-xs">ارتباط با ما</span>
           </div>
           <ChevronDown
-            className={`w-3.5 h-3.5 transition-transform duration-300 ${
-              isContactOpen ? 'rotate-180 text-[#FBBF24]' : 'text-white/80'
-            }`}
+            className={`w-3.5 h-3.5 transition-transform duration-300 ${isContactOpen ? 'rotate-180 text-[#FBBF24]' : 'text-white/80'
+              }`}
           />
         </button>
 
@@ -228,9 +227,8 @@ export function Header({
             <Phone className="w-3.5 h-3.5 text-[#FBBF24] shrink-0" />
             <span>ارتباط با ما</span>
             <ChevronDown
-              className={`w-3 h-3 text-white/80 transition-transform duration-300 ${
-                isContactOpen ? 'rotate-180 text-[#FBBF24]' : ''
-              }`}
+              className={`w-3 h-3 text-white/80 transition-transform duration-300 ${isContactOpen ? 'rotate-180 text-[#FBBF24]' : ''
+                }`}
             />
           </button>
 
@@ -254,16 +252,16 @@ export function Header({
       </div>
 
       {/* 3. Main Header Container */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3 sm:gap-6 relative">
+      <div className="max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1600px] mx-auto px-3 sm:px-5 lg:px-6 xl:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4 xl:gap-6 relative">
         {/* Right Section in RTL: Hamburger Button directly at far-right edge, followed by Brand Logo & Title */}
-        <div className="flex items-center gap-2 sm:gap-4 shrink-0 min-w-max">
+        <div className="flex items-center gap-2 xl:gap-3 shrink-0 min-w-max">
           {/* Hamburger Trigger: "منو" on mobile, "دسته‌بندی‌ها" on desktop */}
           <button
             ref={hamburgerButtonRef}
             type="button"
             onClick={onOpenHamburger}
             aria-label="باز کردن منوی سایت"
-            className="flex flex-col items-center justify-center p-1.5 sm:p-2 rounded-none hover:bg-black/20 text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer select-none shrink-0 group ml-1 sm:ml-2"
+            className="flex flex-col items-center justify-center p-1.5 sm:p-2 rounded-none hover:bg-black/20 text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer select-none shrink-0 group ml-0.5 xl:ml-1"
           >
             <Menu className="w-5 h-5 sm:w-6 sm:h-6 drop-shadow-sm group-hover:scale-105 transition-transform" />
             <span className="text-[10px] sm:text-xs font-black text-white mt-0.5 whitespace-nowrap">
@@ -272,7 +270,7 @@ export function Header({
             </span>
           </button>
 
-          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0 min-w-max">
+          <Link href="/" className="flex items-center gap-2 xl:gap-3 group shrink-0 min-w-max">
             {/* Dedicated Brand Emblem (Crisp High-DPI 3x/4x DPR) */}
             <img
               src={headerLogoSrc}
@@ -281,11 +279,11 @@ export function Header({
               height={160}
               decoding="async"
               fetchPriority="high"
-              className="h-11 w-11 sm:h-12 sm:w-12 object-contain shrink-0 group-hover:scale-105 transition-transform"
+              className="h-10 w-10 xl:h-11 xl:w-11 2xl:h-12 2xl:w-12 object-contain shrink-0 group-hover:scale-105 transition-transform"
             />
 
             <div className="flex flex-col text-right shrink-0 whitespace-nowrap">
-              <span className="text-base sm:text-xl 2xl:text-2xl font-black text-white drop-shadow-md group-hover:text-[#FFF6D6] transition-colors leading-snug whitespace-nowrap">
+              <span className="text-base sm:text-lg xl:text-xl 2xl:text-2xl font-black text-white drop-shadow-md group-hover:text-[#FFF6D6] transition-colors leading-snug whitespace-nowrap">
                 {siteNameFa}
               </span>
               <span className="text-[10px] sm:text-[11px] text-[#FEF3C7] tracking-wider font-bold drop-shadow-xs hidden xs:inline lg:hidden 2xl:inline whitespace-nowrap">
@@ -296,26 +294,29 @@ export function Header({
         </div>
 
         {/* Center Section: Desktop Main Navigation with Dropdowns, "|" Dividers and Search */}
-        <nav className="hidden lg:flex items-center text-sm xl:text-base font-black shrink min-w-0" aria-label="ناوبری اصلی">
-          <HeaderNavDropdowns pathname={pathname} publishedProductSlugs={publishedProductSlugs} />
+        <nav className="hidden lg:flex items-center text-xs xl:text-sm font-black shrink-0 min-w-max" aria-label="ناوبری اصلی">
+          <HeaderNavDropdowns
+            pathname={pathname}
+            publishedProductSlugs={publishedProductSlugs}
+          />
 
           {/* Thick bold | divider before Search Button */}
-          <span className="mx-1 xl:mx-1.5 2xl:mx-2.5 text-white/90 font-black text-sm xl:text-base select-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]" aria-hidden="true">|</span>
+          <span className="mx-0.5 xl:mx-1 2xl:mx-2 text-white/90 font-black text-xs xl:text-sm 2xl:text-base select-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)] shrink-0" aria-hidden="true">|</span>
 
           {/* Search Trigger Button inside nav (Desktop) */}
           <button
             type="button"
             onClick={onOpenSearch}
             aria-label="جستجوی محصولات و مقالات"
-            className="flex items-center gap-1.5 py-1 px-1.5 text-white hover:text-[#FFF6D6] transition-colors cursor-pointer group whitespace-nowrap"
+            className="flex items-center gap-1 xl:gap-1.5 py-1 px-1 xl:px-1.5 text-white hover:text-[#FFF6D6] transition-colors cursor-pointer group whitespace-nowrap shrink-0"
           >
-            <Search className="w-4 h-4 stroke-[3] text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)] group-hover:scale-110 transition-transform" />
-            <span className="text-xs xl:text-sm font-black text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">جستجو</span>
+            <Search className="w-3.5 h-3.5 xl:w-4 xl:h-4 stroke-[2.5] text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)] group-hover:scale-110 transition-transform" />
+            <span className="hidden xl:inline text-xs xl:text-sm font-black text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">جستجو</span>
           </button>
         </nav>
 
-        {/* Left Section in RTL: Mobile Search Button + Cart Island (lg:pl-64 on desktop to clear corner tab) */}
-        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0 lg:pl-64">
+        {/* Left Section in RTL: Mobile Search Button + Cart Island (lg:pl-52 xl:pl-56 2xl:pl-64 on desktop to clear corner tab) */}
+        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0 lg:pl-52 xl:pl-56 2xl:pl-64">
           {/* Mobile Search Trigger Button (< lg) */}
           <button
             type="button"
