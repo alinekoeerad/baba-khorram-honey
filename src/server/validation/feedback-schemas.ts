@@ -24,7 +24,7 @@ export const feedbackSubmissionSchema = z.object({
     .string()
     .transform((val) => normalizeDigits(val).replace(/[\s-]/g, ''))
     .refine(
-      (val) => /^(\+98|0)?9\d{9}$/.test(val) || /^(\+98|0)[1-8]\d{8,9}$/.test(val),
+      (val) => /^(\+98|0098|98|0)?9\d{9}$/.test(val) || /^(\+98|0098|0)[1-8]\d{8,9}$/.test(val),
       'شماره تماس وارد شده معتبر نیست (مثال: 09123456789)'
     ),
   type: feedbackTypeEnum.default('SUGGESTION'),
@@ -52,7 +52,7 @@ export const trackFeedbackSchema = z.object({
     .string()
     .transform((val) => normalizeDigits(val).replace(/[\s-]/g, ''))
     .refine(
-      (val) => /^(\+98|0)?9\d{9}$/.test(val) || /^(\+98|0)[1-8]\d{8,9}$/.test(val),
+      (val) => /^(\+98|0098|98|0)?9\d{9}$/.test(val) || /^(\+98|0098|0)[1-8]\d{8,9}$/.test(val),
       'شماره تماس وارد شده معتبر نیست (مثال: 09123456789)'
     ),
 });

@@ -6,6 +6,7 @@
 import React from 'react';
 import { getPublicSiteSettings, getPublicContactChannels } from '@/server/queries/settings';
 import { getPublicCategories } from '@/server/queries/categories';
+import { db } from '@/server/db/client';
 import { ShellLayout } from '@/components/public/shell-layout';
 
 export const revalidate = 3600; // 1 hour default ISR, actively revalidated on admin mutation
@@ -20,6 +21,22 @@ export default async function PublicLayout({
   const productCategories = await getPublicCategories('PRODUCT');
   const recipeCategories = await getPublicCategories('RECIPE');
 
+  let publishedProductSlugs: string[] | undefined = undefined;
+  try {
+    const publishedProducts = await db.product.findMany({
+      where: { status: 'PUBLISHED' },
+      select: { slug: true },
+      take: 500,
+    });
+    if (Array.isArray(publishedProducts)) {
+      publishedProductSlugs = publishedProducts
+        .map((p: any) => p.slug)
+        .filter((s: any): s is string => typeof s === 'string' && s.length > 0);
+    }
+  } catch {
+    publishedProductSlugs = undefined;
+  }
+
   return (
     <ShellLayout
       settings={settings}
@@ -27,6 +44,7 @@ export default async function PublicLayout({
       footerChannels={footerChannels}
       productCategories={productCategories}
       recipeCategories={recipeCategories}
+      publishedProductSlugs={publishedProductSlugs}
     >
       {children}
     </ShellLayout>

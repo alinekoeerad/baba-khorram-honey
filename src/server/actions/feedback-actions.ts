@@ -191,7 +191,16 @@ export async function trackFeedbackAction(input: import('@/server/validation/fee
   }
 
   const { trackingCode, phone } = parseResult.data;
-  const rawPhone = phone.replace(/^\+98/, '0').replace(/^9/, '09');
+  const { validateAndNormalizeIranianMobile, normalizeDigits } = await import('@/lib/domain-utils');
+  const normalizeTrackPhone = (val: string) => {
+    const mobile = validateAndNormalizeIranianMobile(val);
+    if (mobile.isValid && mobile.normalized) return mobile.normalized;
+    return normalizeDigits(val)
+      .replace(/[\s-]/g, '')
+      .replace(/^(?:\+98|0098)/, '0')
+      .replace(/^9(\d{9})$/, '09$1');
+  };
+  const rawPhone = normalizeTrackPhone(phone);
 
   const record = await db.feedback.findFirst({
     where: { trackingCode },
@@ -204,7 +213,7 @@ export async function trackFeedbackAction(input: import('@/server/validation/fee
     };
   }
 
-  const recordPhone = record.phone.replace(/^\+98/, '0').replace(/^9/, '09');
+  const recordPhone = normalizeTrackPhone(record.phone);
   if (recordPhone !== rawPhone) {
     return {
       success: false,

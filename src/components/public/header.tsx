@@ -31,6 +31,7 @@ interface HeaderProps {
   cartEnabled: boolean;
   logo?: PublicMediaAssetInfo | null;
   channels?: PublicChannelItem[];
+  publishedProductSlugs?: string[];
   onOpenSearch: () => void;
   onOpenHamburger: () => void;
   hamburgerButtonRef?: React.RefObject<HTMLButtonElement | null>;
@@ -41,6 +42,7 @@ export function Header({
   cartEnabled,
   logo,
   channels = [],
+  publishedProductSlugs,
   onOpenSearch,
   onOpenHamburger,
   hamburgerButtonRef,
@@ -295,7 +297,7 @@ export function Header({
 
         {/* Center Section: Desktop Main Navigation with Dropdowns, "|" Dividers and Search */}
         <nav className="hidden lg:flex items-center text-sm xl:text-base font-black shrink min-w-0" aria-label="ناوبری اصلی">
-          <HeaderNavDropdowns pathname={pathname} />
+          <HeaderNavDropdowns pathname={pathname} publishedProductSlugs={publishedProductSlugs} />
 
           {/* Thick bold | divider before Search Button */}
           <span className="mx-1 xl:mx-1.5 2xl:mx-2.5 text-white/90 font-black text-sm xl:text-base select-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]" aria-hidden="true">|</span>

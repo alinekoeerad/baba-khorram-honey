@@ -14,11 +14,28 @@ type DropdownKey = 'products' | 'magazine' | 'faq' | null;
 
 export interface HeaderNavDropdownsProps {
   pathname: string;
+  publishedProductSlugs?: string[];
 }
 
-export function HeaderNavDropdowns({ pathname }: HeaderNavDropdownsProps) {
+export function HeaderNavDropdowns({ pathname, publishedProductSlugs }: HeaderNavDropdownsProps) {
   const [openMenu, setOpenMenu] = useState<DropdownKey>(null);
   const [isMonofloralOpen, setIsMonofloralOpen] = useState(false);
+
+  const publishedSlugSet = publishedProductSlugs ? new Set(publishedProductSlugs) : null;
+  const visibleMonofloralLinks = publishedSlugSet
+    ? MONOFLORAL_HONEY_LINKS.filter((item) =>
+        publishedSlugSet.has(item.href.replace('/products/', ''))
+      )
+    : MONOFLORAL_HONEY_LINKS;
+  const visibleProductDropdownItems = publishedSlugSet
+    ? PRODUCT_DROPDOWN_ITEMS.filter((item) => {
+        if (item.hasMonofloralSubmenu) return visibleMonofloralLinks.length > 0;
+        if (item.href.startsWith('/products/') && !item.href.includes('?')) {
+          return publishedSlugSet.has(item.href.replace('/products/', ''));
+        }
+        return true;
+      })
+    : PRODUCT_DROPDOWN_ITEMS;
   const navRef = useRef<HTMLDivElement>(null);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -152,7 +169,7 @@ export function HeaderNavDropdowns({ pathname }: HeaderNavDropdownsProps) {
                   </div>
 
                   <div className="py-1">
-                    {PRODUCT_DROPDOWN_ITEMS.map((item) => {
+                    {visibleProductDropdownItems.map((item) => {
                       if (item.hasMonofloralSubmenu) {
                         return (
                           <button
@@ -223,7 +240,7 @@ export function HeaderNavDropdowns({ pathname }: HeaderNavDropdownsProps) {
                     </div>
 
                     <div className="grid grid-cols-2 xl:grid-cols-3 gap-1.5 max-h-[60vh] overflow-y-auto pl-1">
-                      {MONOFLORAL_HONEY_LINKS.map((honey) => (
+                      {visibleMonofloralLinks.map((honey) => (
                         <Link
                           key={honey.href}
                           href={honey.href}

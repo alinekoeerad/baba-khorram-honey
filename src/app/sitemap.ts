@@ -12,8 +12,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   try {
     const [prods, recs] = await Promise.all([
-      db.product.findMany({ where: { status: 'PUBLISHED' } }),
-      db.recipe.findMany({ where: { status: 'PUBLISHED' } }),
+      db.product.findMany({
+        where: { status: 'PUBLISHED' },
+        select: { slug: true, updatedAt: true },
+        take: 5000,
+      }),
+      db.recipe.findMany({
+        where: { status: 'PUBLISHED' },
+        select: { slug: true, updatedAt: true },
+        take: 5000,
+      }),
     ]);
     products = prods || [];
     recipes = recs || [];

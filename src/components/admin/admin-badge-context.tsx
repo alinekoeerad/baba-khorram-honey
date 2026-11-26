@@ -63,7 +63,7 @@ export function AdminBadgeProvider({ children }: { children: ReactNode }) {
 
   const refreshFeedbacksCount = useCallback(async () => {
     try {
-      const res = await getAdminFeedbacksAction({ status: 'NEW' });
+      const res = await getAdminFeedbacksAction({ status: 'UNREAD' });
       if (res && res.success && typeof res.unreadCount === 'number') {
         setUnreadFeedbacksCount(res.unreadCount);
       }

@@ -64,15 +64,20 @@ export default async function HomePage() {
     dbSections = [];
   }
 
+  const hasSelectedCarousel = dbSections.some(
+    (s: any) => s?.type === 'CARD_CAROUSEL' && s?.content?.source === 'SELECTED'
+  );
+  const catalogTake = hasSelectedCarousel ? 200 : 12;
+
   try {
-    const productsRes = await getPublicProducts({ take: 12 });
+    const productsRes = await getPublicProducts({ take: catalogTake });
     dbProducts = productsRes.products || productsRes.items || (Array.isArray(productsRes) ? productsRes : []);
   } catch {
     dbProducts = [];
   }
 
   try {
-    const recipesRes = await getPublicRecipes({ take: 12 });
+    const recipesRes = await getPublicRecipes({ take: catalogTake });
     dbRecipes = recipesRes.recipes || recipesRes.items || (Array.isArray(recipesRes) ? recipesRes : []);
   } catch {
     dbRecipes = [];

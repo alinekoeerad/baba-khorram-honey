@@ -20,9 +20,28 @@ import { ChannelIcon } from './channel-icon';
 interface FooterProps {
   settings: PublicSiteSettings;
   channels: PublicChannelItem[];
+  publishedProductSlugs?: string[];
 }
 
-export function Footer({ settings, channels }: FooterProps) {
+const FOOTER_HONEY_LINKS = [
+  { href: '/products/astragalus', label: 'عسل طبیعی گون کوهستان' },
+  { href: '/products/ziziphus', label: 'عسل وحشی کنار (سدر) جنوب' },
+  { href: '/products/thymus', label: 'عسل آویشن وحشی البرز' },
+  { href: '/products/multi-plants', label: 'عسل چهل‌گیاه ییلاقی ارسباران' },
+  { href: '/products?q=موم', label: 'عسل طبیعی با موم کوهی' },
+  { href: '/products/citrus-bigaradia', label: 'عسل معطر بهارنارنج و مرکبات' },
+];
+
+export function Footer({ settings, channels, publishedProductSlugs }: FooterProps) {
+  const publishedSlugSet = publishedProductSlugs ? new Set(publishedProductSlugs) : null;
+  const visibleFooterHoneyLinks = publishedSlugSet
+    ? FOOTER_HONEY_LINKS.filter((link) => {
+        if (link.href.startsWith('/products/') && !link.href.includes('?')) {
+          return publishedSlugSet.has(link.href.replace('/products/', ''));
+        }
+        return true;
+      })
+    : FOOTER_HONEY_LINKS;
   const currentYear = 1405; // Solar Hijri brand year
   const footerLogoSrc =
     typeof settings.footerLogo === 'string'
@@ -86,36 +105,13 @@ export function Footer({ settings, channels }: FooterProps) {
               انواع عسل طبیعی باباخُرم
             </h4>
             <ul className="space-y-2.5 text-xs sm:text-sm font-bold flex flex-col text-white/95">
-              <li>
-                <Link href="/products/astragalus" className="hover:text-[#FBBF24] transition-colors">
-                  عسل طبیعی گون کوهستان
-                </Link>
-              </li>
-              <li>
-                <Link href="/products/ziziphus" className="hover:text-[#FBBF24] transition-colors">
-                  عسل وحشی کنار (سدر) جنوب
-                </Link>
-              </li>
-              <li>
-                <Link href="/products/thymus" className="hover:text-[#FBBF24] transition-colors">
-                  عسل آویشن وحشی البرز
-                </Link>
-              </li>
-              <li>
-                <Link href="/products/multi-plants" className="hover:text-[#FBBF24] transition-colors">
-                  عسل چهل‌گیاه ییلاقی ارسباران
-                </Link>
-              </li>
-              <li>
-                <Link href="/products?q=موم" className="hover:text-[#FBBF24] transition-colors">
-                  عسل طبیعی با موم کوهی
-                </Link>
-              </li>
-              <li>
-                <Link href="/products/citrus-bigaradia" className="hover:text-[#FBBF24] transition-colors">
-                  عسل معطر بهارنارنج و مرکبات
-                </Link>
-              </li>
+              {visibleFooterHoneyLinks.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href} className="hover:text-[#FBBF24] transition-colors">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

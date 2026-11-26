@@ -17,6 +17,7 @@ export default async function AdminFeedbacksPage() {
 
   const feedbacks = await db.feedback.findMany({
     orderBy: { createdAt: 'desc' },
+    take: 200,
   });
 
   const formattedFeedbacks = feedbacks.map((f: any) => ({

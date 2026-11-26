@@ -26,7 +26,7 @@ export class LocalDiskStorage implements StorageProvider {
   private baseDir: string;
 
   constructor(baseDir?: string) {
-    this.baseDir = path.join(process.cwd(), baseDir || process.env.UPLOAD_DIR || 'uploads');
+    this.baseDir = path.join(/*turbopackIgnore: true*/ process.cwd(), baseDir || process.env.UPLOAD_DIR || 'uploads');
     this.ensureDirectory();
   }
 
