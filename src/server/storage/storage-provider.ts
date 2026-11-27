@@ -26,7 +26,7 @@ export class LocalDiskStorage implements StorageProvider {
   private baseDir: string;
 
   constructor(baseDir?: string) {
-    this.baseDir = path.join(process.cwd(), baseDir || process.env.UPLOAD_DIR || 'uploads');
+    this.baseDir = path.join(/*turbopackIgnore: true*/ process.cwd(), baseDir || process.env.UPLOAD_DIR || 'uploads');
     this.ensureDirectory();
   }
 
@@ -44,7 +44,7 @@ export class LocalDiskStorage implements StorageProvider {
     const fullPath = path.resolve(this.baseDir, cleanKey);
 
     // Strictly ensure resolved path resides inside baseDir
-    if (!fullPath.startsWith(this.baseDir)) {
+    if (fullPath !== this.baseDir && !fullPath.startsWith(this.baseDir + path.sep)) {
       throw new Error(`Path traversal security violation: ${key}`);
     }
 

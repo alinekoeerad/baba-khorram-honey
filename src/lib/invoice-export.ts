@@ -34,6 +34,16 @@ export interface InvoiceExportData {
   printMode?: 'BOTH' | 'LABEL_ONLY' | 'INVOICE_ONLY';
 }
 
+function escapeHtml(value: unknown): string {
+  if (value === null || value === undefined) return '';
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function formatToman(amount: number): string {
   if (isNaN(amount) || !isFinite(amount)) return '۰';
   const rounded = Math.round(amount);
@@ -46,23 +56,41 @@ function formatToman(amount: number): string {
  */
 export function buildInvoicePrintHtml(data: InvoiceExportData): string {
   const {
-    orderCode,
-    invoiceDate,
-    senderName,
-    senderPhone,
-    senderAddress,
-    senderPostalCode,
-    customerName,
-    customerMobile,
-    customerCity,
-    customerAddress,
-    customerPostalCode,
-    customerNotes,
-    lines,
+    orderCode: rawOrderCode,
+    invoiceDate: rawInvoiceDate,
+    senderName: rawSenderName,
+    senderPhone: rawSenderPhone,
+    senderAddress: rawSenderAddress,
+    senderPostalCode: rawSenderPostalCode,
+    customerName: rawCustomerName,
+    customerMobile: rawCustomerMobile,
+    customerCity: rawCustomerCity,
+    customerAddress: rawCustomerAddress,
+    customerPostalCode: rawCustomerPostalCode,
+    customerNotes: rawCustomerNotes,
+    lines: rawLines,
     shippingCost = 0,
     discount = 0,
     printMode = 'BOTH',
   } = data;
+
+  const orderCode = escapeHtml(rawOrderCode);
+  const invoiceDate = escapeHtml(rawInvoiceDate);
+  const senderName = escapeHtml(rawSenderName);
+  const senderPhone = escapeHtml(rawSenderPhone);
+  const senderAddress = escapeHtml(rawSenderAddress);
+  const senderPostalCode = escapeHtml(rawSenderPostalCode);
+  const customerName = escapeHtml(rawCustomerName);
+  const customerMobile = escapeHtml(rawCustomerMobile);
+  const customerCity = rawCustomerCity ? escapeHtml(rawCustomerCity) : null;
+  const customerAddress = rawCustomerAddress ? escapeHtml(rawCustomerAddress) : null;
+  const customerPostalCode = rawCustomerPostalCode ? escapeHtml(rawCustomerPostalCode) : null;
+  const customerNotes = rawCustomerNotes ? escapeHtml(rawCustomerNotes) : null;
+  const lines = rawLines.map((line) => ({
+    ...line,
+    productNameFa: escapeHtml(line.productNameFa),
+    optionLabel: escapeHtml(line.optionLabel),
+  }));
 
   const itemsTotal = lines.reduce((acc, curr) => acc + curr.qty * (curr.unitPrice || 0), 0);
   const grandTotal = Math.max(0, itemsTotal + shippingCost - discount);
@@ -381,22 +409,40 @@ export function buildInvoicePrintHtml(data: InvoiceExportData): string {
  */
 export function buildInvoiceWordHtml(data: InvoiceExportData): string {
   const {
-    orderCode,
-    invoiceDate,
-    senderName,
-    senderPhone,
-    senderAddress,
-    senderPostalCode,
-    customerName,
-    customerMobile,
-    customerCity,
-    customerAddress,
-    customerPostalCode,
-    customerNotes,
-    lines,
+    orderCode: rawOrderCode,
+    invoiceDate: rawInvoiceDate,
+    senderName: rawSenderName,
+    senderPhone: rawSenderPhone,
+    senderAddress: rawSenderAddress,
+    senderPostalCode: rawSenderPostalCode,
+    customerName: rawCustomerName,
+    customerMobile: rawCustomerMobile,
+    customerCity: rawCustomerCity,
+    customerAddress: rawCustomerAddress,
+    customerPostalCode: rawCustomerPostalCode,
+    customerNotes: rawCustomerNotes,
+    lines: rawLines,
     shippingCost = 0,
     discount = 0,
   } = data;
+
+  const orderCode = escapeHtml(rawOrderCode);
+  const invoiceDate = escapeHtml(rawInvoiceDate);
+  const senderName = escapeHtml(rawSenderName);
+  const senderPhone = escapeHtml(rawSenderPhone);
+  const senderAddress = escapeHtml(rawSenderAddress);
+  const senderPostalCode = escapeHtml(rawSenderPostalCode);
+  const customerName = escapeHtml(rawCustomerName);
+  const customerMobile = escapeHtml(rawCustomerMobile);
+  const customerCity = rawCustomerCity ? escapeHtml(rawCustomerCity) : null;
+  const customerAddress = rawCustomerAddress ? escapeHtml(rawCustomerAddress) : null;
+  const customerPostalCode = rawCustomerPostalCode ? escapeHtml(rawCustomerPostalCode) : null;
+  const customerNotes = rawCustomerNotes ? escapeHtml(rawCustomerNotes) : null;
+  const lines = rawLines.map((line) => ({
+    ...line,
+    productNameFa: escapeHtml(line.productNameFa),
+    optionLabel: escapeHtml(line.optionLabel),
+  }));
 
   const itemsTotal = lines.reduce((acc, curr) => acc + curr.qty * (curr.unitPrice || 0), 0);
   const grandTotal = Math.max(0, itemsTotal + shippingCost - discount);

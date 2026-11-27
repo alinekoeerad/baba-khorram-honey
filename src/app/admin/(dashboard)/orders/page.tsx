@@ -16,6 +16,7 @@ export default async function AdminOrdersPage() {
 
   const orders = await db.order.findMany({
     orderBy: { createdAt: 'desc' },
+    take: 250,
   });
 
   return (

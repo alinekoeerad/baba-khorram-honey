@@ -113,8 +113,8 @@ export async function deletePhysicalImageFile(
   const relativeSubdir = path.dirname(cleanKey); // e.g. '.' or 'recipes'
 
   const targetRoots = [
-    path.join(process.cwd(), process.env.UPLOAD_DIR || 'uploads'),
-    path.join(process.cwd(), 'public', 'uploads'),
+    path.join(/*turbopackIgnore: true*/ process.cwd(), process.env.UPLOAD_DIR || 'uploads'),
+    path.join(/*turbopackIgnore: true*/ process.cwd(), 'public', 'uploads'),
   ];
 
   for (const root of targetRoots) {
@@ -183,7 +183,7 @@ export async function processImage(
   buffer: Buffer,
   filePrefix: string
 ): Promise<ProcessedImageResult> {
-  const uploadDir = path.join(process.cwd(), process.env.UPLOAD_DIR || 'uploads');
+  const uploadDir = path.join(/*turbopackIgnore: true*/ process.cwd(), process.env.UPLOAD_DIR || 'uploads');
   if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
   }

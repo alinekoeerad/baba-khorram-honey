@@ -12,6 +12,7 @@ import { revalidatePath } from 'next/cache';
 import { db } from '@/server/db/client';
 import { requireAdmin } from '@/server/auth/require-admin';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { validateAndNormalizeIranianMobile, normalizeDigits } from '@/lib/domain-utils';
 import { recordAuditLog } from '@/server/services/audit-log-service';
 import {
   feedbackSubmissionSchema,
@@ -190,8 +191,19 @@ export async function trackFeedbackAction(input: import('@/server/validation/fee
     };
   }
 
+  const normalizeFeedbackPhone = (value: string) => {
+    const mobile = validateAndNormalizeIranianMobile(value);
+    if (mobile.isValid && mobile.normalized) return mobile.normalized;
+    return normalizeDigits(value)
+      .replace(/[\s\-()]/g, '')
+      .replace(/^0098/, '0')
+      .replace(/^\+98/, '0')
+      .replace(/^98(?=\d{10}$)/, '0')
+      .replace(/^9(?=\d{9}$)/, '09');
+  };
+
   const { trackingCode, phone } = parseResult.data;
-  const rawPhone = phone.replace(/^\+98/, '0').replace(/^9/, '09');
+  const rawPhone = normalizeFeedbackPhone(phone);
 
   const record = await db.feedback.findFirst({
     where: { trackingCode },
@@ -204,7 +216,7 @@ export async function trackFeedbackAction(input: import('@/server/validation/fee
     };
   }
 
-  const recordPhone = record.phone.replace(/^\+98/, '0').replace(/^9/, '09');
+  const recordPhone = normalizeFeedbackPhone(record.phone);
   if (recordPhone !== rawPhone) {
     return {
       success: false,

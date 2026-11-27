@@ -17,13 +17,44 @@ import fs from 'fs';
 import path from 'path';
 import { LocalDiskStorage } from '@/server/storage/storage-provider';
 
+const ALLOWED_IMAGE_MIME: Record<string, string> = {
+  '.webp': 'image/webp',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.png': 'image/png',
+  '.avif': 'image/avif',
+};
+
 export async function GET(
   _request: NextRequest,
   context: { params: Promise<{ path: string[] }> }
 ) {
   try {
     const { path: pathSegments } = await context.params;
+    if (
+      !pathSegments ||
+      pathSegments.length === 0 ||
+      pathSegments.some(
+        (seg) =>
+          !seg ||
+          seg === '.' ||
+          seg === '..' ||
+          seg.startsWith('.') ||
+          seg.includes('..') ||
+          seg.includes('/') ||
+          seg.includes('\\') ||
+          seg.includes('\0')
+      )
+    ) {
+      return new NextResponse('Forbidden', { status: 403 });
+    }
+
     const requestedFilename = pathSegments.join('/');
+    const ext = path.extname(requestedFilename).toLowerCase();
+    const contentType = ALLOWED_IMAGE_MIME[ext];
+    if (!contentType) {
+      return new NextResponse('Forbidden', { status: 403 });
+    }
 
     // Prevent directory traversal
     const storage = new LocalDiskStorage();
@@ -40,20 +71,13 @@ export async function GET(
 
     const fileBuffer = await fs.promises.readFile(filePath);
 
-    // Determine MIME type
-    let contentType = 'image/webp';
-    if (requestedFilename.endsWith('.jpg') || requestedFilename.endsWith('.jpeg')) {
-      contentType = 'image/jpeg';
-    } else if (requestedFilename.endsWith('.png')) {
-      contentType = 'image/png';
-    }
-
     return new NextResponse(new Uint8Array(fileBuffer), {
       status: 200,
       headers: {
         'Content-Type': contentType,
         'Cache-Control': 'public, max-age=31536000, immutable',
         'X-Content-Type-Options': 'nosniff',
+        'Content-Security-Policy': "default-src 'none'; sandbox",
       },
     });
   } catch (err: any) {

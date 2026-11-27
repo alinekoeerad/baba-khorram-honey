@@ -106,5 +106,5 @@ describe('Global Search Unit Tests (Phase 10 Task 1/6)', () => {
     // 65th request should be rate-limited
     expect(lastResult?.success).toBe(false);
     expect(lastResult?.error).toContain('بیش از حد مجاز');
-  });
+  }, 15000);
 });

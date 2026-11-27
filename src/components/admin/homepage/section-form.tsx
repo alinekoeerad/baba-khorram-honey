@@ -29,6 +29,11 @@ import {
   Monitor,
   Tablet,
   Smartphone,
+  Star,
+  HelpCircle,
+  MessageSquare,
+  Compass,
+  Award,
 } from 'lucide-react';
 import Link from 'next/link';
 import { ImageLightboxModal } from '@/components/admin/image-lightbox-modal';
@@ -429,6 +434,127 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
 
   const handleRemoveGridItem = (index: number) => {
     const next = gridItems.filter((_, i) => i !== index);
+    updateContentField('items', next);
+  };
+
+  // Helper for ARTISAN_HERITAGE
+  const heritagePillars: any[] = Array.isArray(content.pillars) ? content.pillars : [];
+  const [isUploadingHeritageBg, setIsUploadingHeritageBg] = useState(false);
+  const handleUploadHeritageBg = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUploadingHeritageBg(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('alt', 'پس‌زمینه اصالت و میراث');
+      const res = await uploadMediaAction(formData);
+      if (res.success && res.data) {
+        const url = res.data.url || (res.data.storageKey ? `/uploads/${res.data.storageKey}` : '');
+        updateContentField('bgImageUrl', url);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsUploadingHeritageBg(false);
+    }
+  };
+  const handleAddHeritagePillar = () => {
+    const next = [
+      ...heritagePillars,
+      {
+        id: Math.random().toString(36).substring(2, 9),
+        icon: 'mountain',
+        title: 'اصل جدید اصالت',
+        desc: '',
+      },
+    ];
+    updateContentField('pillars', next);
+  };
+  const handleUpdateHeritagePillar = (index: number, field: string, val: any) => {
+    const next = [...heritagePillars];
+    next[index] = { ...next[index], [field]: val };
+    updateContentField('pillars', next);
+  };
+  const handleRemoveHeritagePillar = (index: number) => {
+    const next = heritagePillars.filter((_, i) => i !== index);
+    updateContentField('pillars', next);
+  };
+
+  // Helper for HONEY_FINDER
+  const finderPurposes: any[] = Array.isArray(content.purposes) ? content.purposes : [];
+  const handleAddFinderPurpose = () => {
+    const next = [
+      ...finderPurposes,
+      {
+        id: Math.random().toString(36).substring(2, 9),
+        label: 'کاربرد جدید',
+        honeyName: 'عسل طبیعی کوهستان',
+        honeySlug: 'natural-honey',
+        description: '',
+        tasteProfile: '',
+      },
+    ];
+    updateContentField('purposes', next);
+  };
+  const handleUpdateFinderPurpose = (index: number, field: string, val: any) => {
+    const next = [...finderPurposes];
+    next[index] = { ...next[index], [field]: val };
+    updateContentField('purposes', next);
+  };
+  const handleRemoveFinderPurpose = (index: number) => {
+    const next = finderPurposes.filter((_, i) => i !== index);
+    updateContentField('purposes', next);
+  };
+
+  // Helper for TESTIMONIALS
+  const testimonialReviews: any[] = Array.isArray(content.reviews) ? content.reviews : [];
+  const handleAddTestimonialReview = () => {
+    const next = [
+      ...testimonialReviews,
+      {
+        id: Math.random().toString(36).substring(2, 9),
+        author: 'مشتری جدید',
+        city: 'تهران',
+        product: 'عسل گون کوهی',
+        date: 'امروز',
+        rating: 5,
+        comment: '',
+      },
+    ];
+    updateContentField('reviews', next);
+  };
+  const handleUpdateTestimonialReview = (index: number, field: string, val: any) => {
+    const next = [...testimonialReviews];
+    next[index] = { ...next[index], [field]: val };
+    updateContentField('reviews', next);
+  };
+  const handleRemoveTestimonialReview = (index: number) => {
+    const next = testimonialReviews.filter((_, i) => i !== index);
+    updateContentField('reviews', next);
+  };
+
+  // Helper for FAQ_SECTION
+  const faqSectionItems: any[] = Array.isArray(content.items) ? content.items : [];
+  const handleAddFaqSectionItem = () => {
+    const next = [
+      ...faqSectionItems,
+      {
+        id: Math.random().toString(36).substring(2, 9),
+        question: 'پرسش جدید؟',
+        answer: '',
+        categoryLabel: '',
+      },
+    ];
+    updateContentField('items', next);
+  };
+  const handleUpdateFaqSectionItem = (index: number, field: string, val: any) => {
+    const next = [...faqSectionItems];
+    next[index] = { ...next[index], [field]: val };
+    updateContentField('items', next);
+  };
+  const handleRemoveFaqSectionItem = (index: number) => {
+    const next = faqSectionItems.filter((_, i) => i !== index);
     updateContentField('items', next);
   };
 
@@ -1120,6 +1246,640 @@ export function SectionForm({ initialData, isNew = false }: SectionFormProps) {
                       placeholder="توضیحات کوتاه آیتم..."
                       className="w-full p-2.5 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
                     />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ARTISAN_HERITAGE Form */}
+        {type === 'ARTISAN_HERITAGE' && (
+          <div className="space-y-6">
+            <div className="p-3.5 bg-amber-50/80 border border-amber-200 text-xs font-bold text-amber-900 rounded-none leading-relaxed">
+              سکشن اصالت، میراث و فرآیند تولید عسل (Artisan Heritage). در صورت خالی گذاشتن هر فیلد، مقادیر پیش‌فرض اصیل نمایش داده می‌شوند.
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-stone-700">نشان/برچسب بالای تیتر (Badge)</label>
+                <input
+                  type="text"
+                  value={content.badgeText || ''}
+                  onChange={(e) => updateContentField('badgeText', e.target.value)}
+                  placeholder="اصالت زنبورداری کوهستان"
+                  className="w-full h-11 px-3.5 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B]"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-stone-700">عنوان اصلی بخش</label>
+                <input
+                  type="text"
+                  value={content.title || ''}
+                  onChange={(e) => updateContentField('title', e.target.value)}
+                  placeholder="دست‌چین شهد بکر از کهن‌ترین مراتع ارسباران"
+                  className="w-full h-11 px-3.5 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B]"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-xs font-bold text-stone-700">زیرعنوان توضیحی</label>
+              <textarea
+                rows={2}
+                value={content.subtitle || ''}
+                onChange={(e) => updateContentField('subtitle', e.target.value)}
+                placeholder="ما در باباخُرم، با تکیه بر چهار اصل خدشه‌ناپذیر، اصالت و سلامت هر قطره عسل را تضمین می‌کنیم."
+                className="w-full p-2.5 text-xs font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B]"
+              />
+            </div>
+
+            {/* Background Image */}
+            <div className="p-4 bg-stone-50 border border-stone-200 rounded-none space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-xs font-black text-stone-800">
+                  <ImageIcon className="w-4 h-4 text-[#D97706]" />
+                  <span>تصویر پس‌زمینه کارت اصالت (اختیاری)</span>
+                </div>
+                {content.bgImageUrl && (
+                  <button
+                    type="button"
+                    onClick={() => updateContentField('bgImageUrl', '')}
+                    className="text-red-500 hover:text-red-700 text-xs font-bold cursor-pointer"
+                  >
+                    حذف تصویر پس‌زمینه
+                  </button>
+                )}
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3 items-start">
+                {content.bgImageUrl && (
+                  <div
+                    onClick={() => setLightboxUrl(content.bgImageUrl)}
+                    className="w-24 h-16 shrink-0 border border-[#D5C7B8] bg-black/5 p-1 flex items-center justify-center overflow-hidden rounded-none shadow-xs relative group cursor-zoom-in"
+                  >
+                    <img
+                      src={content.bgImageUrl}
+                      alt="پس‌زمینه اصالت"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+                <div className="flex-1 space-y-2 w-full">
+                  <input
+                    type="text"
+                    value={content.bgImageUrl || ''}
+                    onChange={(e) => updateContentField('bgImageUrl', e.target.value)}
+                    placeholder="مثلاً /images/beekeeping.jpg یا آدرس اینترنتی تصویر"
+                    className="w-full h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B] font-mono"
+                    dir="ltr"
+                  />
+                  <div className="flex items-center gap-2">
+                    <label className="flex items-center gap-1.5 px-3 py-1.5 bg-stone-200 hover:bg-stone-300 text-stone-800 text-xs font-black rounded-none cursor-pointer">
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>{isUploadingHeritageBg ? 'در حال آپلود...' : 'بارگذاری فایل جدید'}</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleUploadHeritageBg}
+                        className="hidden"
+                        disabled={isUploadingHeritageBg}
+                      />
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Pillars Array */}
+            <div className="space-y-3 pt-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black text-stone-800">
+                  ستون‌های چهارگانه اصالت ({toPersianDigits(heritagePillars.length)} از ۶ ستون)
+                </span>
+                {heritagePillars.length < 6 && (
+                  <button
+                    type="button"
+                    onClick={handleAddHeritagePillar}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#FEF3C7] text-[#92400E] hover:bg-[#FDE68A] text-xs font-black rounded-none transition-colors cursor-pointer"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>افزودن ستون اصالت</span>
+                  </button>
+                )}
+              </div>
+
+              {heritagePillars.length === 0 && (
+                <div className="p-3 bg-stone-100 border border-stone-200 text-xs text-stone-600 rounded-none font-bold">
+                  هیچ ستونی به صورت سفارشی وارد نشده است؛ ۴ ستون پیش‌فرض (کوهستان‌های بکر، زنبورداری سنتی، خلوص تضمین‌شده، کندوهای طبیعی) نمایش داده می‌شوند.
+                </div>
+              )}
+
+              <div className="space-y-4">
+                {heritagePillars.map((pillar, idx) => (
+                  <div key={pillar.id || idx} className="p-4 bg-stone-50 border border-stone-200 rounded-none space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-black text-amber-700">ستون شماره {toPersianDigits(idx + 1)}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveHeritagePillar(idx)}
+                        className="text-red-500 hover:text-red-700 text-xs font-bold flex items-center gap-1 cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>حذف ستون</span>
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div className="space-y-1">
+                        <label className="block text-[11px] font-bold text-stone-600">آیکون ستون</label>
+                        <select
+                          value={pillar.icon || 'mountain'}
+                          onChange={(e) => handleUpdateHeritagePillar(idx, 'icon', e.target.value)}
+                          className="w-full h-10 px-2.5 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
+                        >
+                          <option value="mountain">کوهستان (Mountain)</option>
+                          <option value="compass">قطب‌نما / راهنما (Compass)</option>
+                          <option value="shield">سپر / ضمانت (Shield)</option>
+                          <option value="sparkles">درخشش / خلوص (Sparkles)</option>
+                        </select>
+                      </div>
+
+                      <div className="sm:col-span-2 space-y-1">
+                        <label className="block text-[11px] font-bold text-stone-600">عنوان ستون *</label>
+                        <input
+                          type="text"
+                          required
+                          value={pillar.title || ''}
+                          onChange={(e) => handleUpdateHeritagePillar(idx, 'title', e.target.value)}
+                          placeholder="مثلاً: کوهستان‌های بکر ارسباران"
+                          className="w-full h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="block text-[11px] font-bold text-stone-600">توضیحات ستون *</label>
+                      <textarea
+                        rows={2}
+                        required
+                        value={pillar.desc || ''}
+                        onChange={(e) => handleUpdateHeritagePillar(idx, 'desc', e.target.value)}
+                        placeholder="توضیح کوتاه این ویژگی اصالت..."
+                        className="w-full p-2.5 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* CTA Link */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-stone-200">
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-stone-700">متن دکمه اقدام (CTA)</label>
+                <input
+                  type="text"
+                  value={content.ctaText || ''}
+                  onChange={(e) => updateContentField('ctaText', e.target.value)}
+                  placeholder="مشاهده کندوخانه‌ها و تصاویر مستند"
+                  className="w-full h-10 px-3 text-xs font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B]"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-stone-700">پیوند دکمه اقدام (URL)</label>
+                <input
+                  type="text"
+                  value={content.ctaHref || ''}
+                  onChange={(e) => updateContentField('ctaHref', e.target.value)}
+                  placeholder="/about"
+                  className="w-full h-10 px-3 text-xs font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B] font-mono"
+                  dir="ltr"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* HONEY_FINDER Form */}
+        {type === 'HONEY_FINDER' && (
+          <div className="space-y-6">
+            <div className="p-3.5 bg-amber-50/80 border border-amber-200 text-xs font-bold text-amber-900 rounded-none leading-relaxed">
+              سکشن راهنمای هوشمند انتخاب عسل (Honey Finder). کاربران می‌توانند با کلیک روی هر هدف، عسل متناسب با طبع و نیاز خود را پیدا کنند.
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-stone-700">روتیتر (Kicker)</label>
+                <input
+                  type="text"
+                  value={content.kicker || ''}
+                  onChange={(e) => updateContentField('kicker', e.target.value)}
+                  placeholder="راهنمای هوشمند"
+                  className="w-full h-11 px-3 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B]"
+                />
+              </div>
+
+              <div className="sm:col-span-2 space-y-1">
+                <label className="block text-xs font-bold text-stone-700">عنوان اصلی بخش</label>
+                <input
+                  type="text"
+                  value={content.title || ''}
+                  onChange={(e) => updateContentField('title', e.target.value)}
+                  placeholder="عسل مناسب طبع و نیاز شما کدام است؟"
+                  className="w-full h-11 px-3.5 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B]"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-xs font-bold text-stone-700">زیرعنوان توضیحی</label>
+              <textarea
+                rows={2}
+                value={content.subtitle || ''}
+                onChange={(e) => updateContentField('subtitle', e.target.value)}
+                placeholder="هدف و اولویت مصرف خود را انتخاب کنید تا تخصصی‌ترین محصول را همراه با خواص ویژه به شما معرفی کنیم."
+                className="w-full p-2.5 text-xs font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B]"
+              />
+            </div>
+
+            {/* Purposes Array */}
+            <div className="space-y-3 pt-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black text-stone-800">
+                  اهداف و کاربردهای هوشمند ({toPersianDigits(finderPurposes.length)} از ۱۰ کاربرد)
+                </span>
+                {finderPurposes.length < 10 && (
+                  <button
+                    type="button"
+                    onClick={handleAddFinderPurpose}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#FEF3C7] text-[#92400E] hover:bg-[#FDE68A] text-xs font-black rounded-none transition-colors cursor-pointer"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>افزودن کاربرد جدید</span>
+                  </button>
+                )}
+              </div>
+
+              {finderPurposes.length === 0 && (
+                <div className="p-3 bg-stone-100 border border-stone-200 text-xs text-stone-600 rounded-none font-bold">
+                  لیست اهداف سفارشی خالی است؛ ۴ هدف پیش‌فرض سایت (تقویت ایمنی، گوارش و آرامش، صبحانه و انرژی، طبع گرم) نمایش داده خواهند شد.
+                </div>
+              )}
+
+              <div className="space-y-4">
+                {finderPurposes.map((p, idx) => (
+                  <div key={p.id || idx} className="p-4 bg-stone-50 border border-stone-200 rounded-none space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-black text-amber-700">کاربرد شماره {toPersianDigits(idx + 1)}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveFinderPurpose(idx)}
+                        className="text-red-500 hover:text-red-700 text-xs font-bold flex items-center gap-1 cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>حذف کاربرد</span>
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div className="space-y-1">
+                        <label className="block text-[11px] font-bold text-stone-600">عنوان تب / نیاز *</label>
+                        <input
+                          type="text"
+                          required
+                          value={p.label || ''}
+                          onChange={(e) => handleUpdateFinderPurpose(idx, 'label', e.target.value)}
+                          placeholder="مثلاً تقویت انرژی"
+                          className="w-full h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="block text-[11px] font-bold text-stone-600">نام عسل پیشنهادی *</label>
+                        <input
+                          type="text"
+                          required
+                          value={p.honeyName || ''}
+                          onChange={(e) => handleUpdateFinderPurpose(idx, 'honeyName', e.target.value)}
+                          placeholder="مثلاً عسل گون اصل"
+                          className="w-full h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="block text-[11px] font-bold text-stone-600">شناسه اسلاگ محصول (Slug) *</label>
+                        <input
+                          type="text"
+                          required
+                          value={p.honeySlug || ''}
+                          onChange={(e) => handleUpdateFinderPurpose(idx, 'honeySlug', e.target.value)}
+                          placeholder="govan-honey"
+                          className="w-full h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B] font-mono"
+                          dir="ltr"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="space-y-1">
+                        <label className="block text-[11px] font-bold text-stone-600">پروفایل طعم و طبع (اختیاری)</label>
+                        <input
+                          type="text"
+                          value={p.tasteProfile || ''}
+                          onChange={(e) => handleUpdateFinderPurpose(idx, 'tasteProfile', e.target.value)}
+                          placeholder="طبع معتدل، شیرینی ملایم و دلنشین"
+                          className="w-full h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="block text-[11px] font-bold text-stone-600">توضیح کوتاه دلیل پیشنهاد</label>
+                        <input
+                          type="text"
+                          value={p.description || ''}
+                          onChange={(e) => handleUpdateFinderPurpose(idx, 'description', e.target.value)}
+                          placeholder="سرشار از آنزیم‌های فعال مناسب تقویت عمومی"
+                          className="w-full h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TESTIMONIALS Form */}
+        {type === 'TESTIMONIALS' && (
+          <div className="space-y-6">
+            <div className="p-3.5 bg-amber-50/80 border border-amber-200 text-xs font-bold text-amber-900 rounded-none leading-relaxed">
+              سکشن دیدگاه‌ها و رضایت مشتریان (Testimonials). نمایش بازخوردها و تجربیات واقعی خریداران عسل باباخُرم.
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-stone-700">نشان/برچسب بالای تیتر (Badge)</label>
+                <input
+                  type="text"
+                  value={content.badgeText || ''}
+                  onChange={(e) => updateContentField('badgeText', e.target.value)}
+                  placeholder="صدای همراهان باباخُرم"
+                  className="w-full h-11 px-3.5 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B]"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-stone-700">عنوان اصلی بخش</label>
+                <input
+                  type="text"
+                  value={content.title || ''}
+                  onChange={(e) => updateContentField('title', e.target.value)}
+                  placeholder="روایت خریداران از طعم و اصالت واقعی"
+                  className="w-full h-11 px-3.5 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B]"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-xs font-bold text-stone-700">زیرعنوان توضیحی</label>
+              <textarea
+                rows={2}
+                value={content.subtitle || ''}
+                onChange={(e) => updateContentField('subtitle', e.target.value)}
+                placeholder="نظرات ثبت‌شده مشتریانی که خلوص و عطر عسل کوهستان را در زندگی روزمره‌شان تجربه کرده‌اند."
+                className="w-full p-2.5 text-xs font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B]"
+              />
+            </div>
+
+            {/* Reviews Array */}
+            <div className="space-y-3 pt-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black text-stone-800">
+                  دیدگاه‌های مشتریان ({toPersianDigits(testimonialReviews.length)} از ۲۰ دیدگاه)
+                </span>
+                {testimonialReviews.length < 20 && (
+                  <button
+                    type="button"
+                    onClick={handleAddTestimonialReview}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#FEF3C7] text-[#92400E] hover:bg-[#FDE68A] text-xs font-black rounded-none transition-colors cursor-pointer"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>افزودن دیدگاه جدید</span>
+                  </button>
+                )}
+              </div>
+
+              {testimonialReviews.length === 0 && (
+                <div className="p-3 bg-stone-100 border border-stone-200 text-xs text-stone-600 rounded-none font-bold">
+                  دیدگاه سفارشی ثبت نشده است؛ نظرات پیش‌فرض مشتریان در سایت به نمایش درمی‌آیند.
+                </div>
+              )}
+
+              <div className="space-y-4">
+                {testimonialReviews.map((rev, idx) => (
+                  <div key={rev.id || idx} className="p-4 bg-stone-50 border border-stone-200 rounded-none space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-black text-amber-700">نظر شماره {toPersianDigits(idx + 1)}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveTestimonialReview(idx)}
+                        className="text-red-500 hover:text-red-700 text-xs font-bold flex items-center gap-1 cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>حذف نظر</span>
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      <div className="space-y-1">
+                        <label className="block text-[11px] font-bold text-stone-600">نام مشتری *</label>
+                        <input
+                          type="text"
+                          required
+                          value={rev.author || ''}
+                          onChange={(e) => handleUpdateTestimonialReview(idx, 'author', e.target.value)}
+                          placeholder="دکتر احمدی"
+                          className="w-full h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="block text-[11px] font-bold text-stone-600">شهر مشتری</label>
+                        <input
+                          type="text"
+                          value={rev.city || ''}
+                          onChange={(e) => handleUpdateTestimonialReview(idx, 'city', e.target.value)}
+                          placeholder="تبریز"
+                          className="w-full h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="block text-[11px] font-bold text-stone-600">محصول خریداری‌شده</label>
+                        <input
+                          type="text"
+                          value={rev.product || ''}
+                          onChange={(e) => handleUpdateTestimonialReview(idx, 'product', e.target.value)}
+                          placeholder="عسل گون کوهی"
+                          className="w-full h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="block text-[11px] font-bold text-stone-600">امتیاز (ستاره)</label>
+                        <select
+                          value={rev.rating || 5}
+                          onChange={(e) => handleUpdateTestimonialReview(idx, 'rating', Number(e.target.value))}
+                          className="w-full h-10 px-2.5 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
+                        >
+                          <option value={5}>۵ ستاره (عالی)</option>
+                          <option value={4}>۴ ستاره (خیلی خوب)</option>
+                          <option value={3}>۳ ستاره (متوسط)</option>
+                          <option value={2}>۲ ستاره (ضعیف)</option>
+                          <option value={1}>۱ ستاره (خیلی ضعیف)</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="block text-[11px] font-bold text-stone-600">متن نظر مشتری *</label>
+                      <textarea
+                        rows={2}
+                        required
+                        value={rev.comment || ''}
+                        onChange={(e) => handleUpdateTestimonialReview(idx, 'comment', e.target.value)}
+                        placeholder="تجربه مشتری از عطر، طعم، بسته‌بندی یا خواص عسل..."
+                        className="w-full p-2.5 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* FAQ_SECTION Form */}
+        {type === 'FAQ_SECTION' && (
+          <div className="space-y-6">
+            <div className="p-3.5 bg-amber-50/80 border border-amber-200 text-xs font-bold text-amber-900 rounded-none leading-relaxed">
+              سکشن پرسش‌های متداول مشتریان (FAQ Section). پاسخ‌های علمی و مستند به پرسش‌های پرتکرار خریداران.
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-stone-700">نشان/برچسب بالای تیتر (Badge)</label>
+                <input
+                  type="text"
+                  value={content.badgeText || ''}
+                  onChange={(e) => updateContentField('badgeText', e.target.value)}
+                  placeholder="دانشنامه عسل طبیعی"
+                  className="w-full h-11 px-3.5 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B]"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-stone-700">عنوان اصلی بخش</label>
+                <input
+                  type="text"
+                  value={content.title || ''}
+                  onChange={(e) => updateContentField('title', e.target.value)}
+                  placeholder="سوالات متداول مشتریان"
+                  className="w-full h-11 px-3.5 text-sm font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B]"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-xs font-bold text-stone-700">زیرعنوان توضیحی</label>
+              <textarea
+                rows={2}
+                value={content.subtitle || ''}
+                onChange={(e) => updateContentField('subtitle', e.target.value)}
+                placeholder="پاسخ علمی به پرسش‌های پرتکرار درباره اصالت عسل، طبع و تفاوت انواع عسل طبیعی."
+                className="w-full p-2.5 text-xs font-bold bg-[#FDFBF8] border border-[#D5C7B8] rounded-none focus:bg-white focus:ring-1 focus:ring-[#F59E0B]"
+              />
+            </div>
+
+            {/* FAQ Items Array */}
+            <div className="space-y-3 pt-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black text-stone-800">
+                  پرسش‌ها و پاسخ‌ها ({toPersianDigits(faqSectionItems.length)} از ۲۰ پرسش)
+                </span>
+                {faqSectionItems.length < 20 && (
+                  <button
+                    type="button"
+                    onClick={handleAddFaqSectionItem}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#FEF3C7] text-[#92400E] hover:bg-[#FDE68A] text-xs font-black rounded-none transition-colors cursor-pointer"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>افزودن پرسش جدید</span>
+                  </button>
+                )}
+              </div>
+
+              {faqSectionItems.length === 0 && (
+                <div className="p-3 bg-stone-100 border border-stone-200 text-xs text-stone-600 rounded-none font-bold">
+                  پرسش سفارشی تعریف نشده است؛ سوالات متداول منتخب دانشنامه به صورت پیش‌فرض رندر خواهند شد.
+                </div>
+              )}
+
+              <div className="space-y-4">
+                {faqSectionItems.map((item, idx) => (
+                  <div key={item.id || idx} className="p-4 bg-stone-50 border border-stone-200 rounded-none space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-black text-amber-700">پرسش شماره {toPersianDigits(idx + 1)}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveFaqSectionItem(idx)}
+                        className="text-red-500 hover:text-red-700 text-xs font-bold flex items-center gap-1 cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>حذف پرسش</span>
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div className="sm:col-span-2 space-y-1">
+                        <label className="block text-[11px] font-bold text-stone-600">متن پرسش *</label>
+                        <input
+                          type="text"
+                          required
+                          value={item.question || ''}
+                          onChange={(e) => handleUpdateFaqSectionItem(idx, 'question', e.target.value)}
+                          placeholder="آیا شکرک زدن عسل نشانه تقلبی بودن آن است؟"
+                          className="w-full h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="block text-[11px] font-bold text-stone-600">برچسب دسته‌بندی (اختیاری)</label>
+                        <input
+                          type="text"
+                          value={item.categoryLabel || ''}
+                          onChange={(e) => handleUpdateFaqSectionItem(idx, 'categoryLabel', e.target.value)}
+                          placeholder="اصالت و آزمایشگاه"
+                          className="w-full h-10 px-3 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="block text-[11px] font-bold text-stone-600">پاسخ علمی و مستند *</label>
+                      <textarea
+                        rows={3}
+                        required
+                        value={item.answer || ''}
+                        onChange={(e) => handleUpdateFaqSectionItem(idx, 'answer', e.target.value)}
+                        placeholder="خیر، رس بستن یا شکرک زدن یکی از ویژگی‌های بارز عسل‌های طبیعی حرارت‌ندیده است..."
+                        className="w-full p-2.5 text-xs font-bold bg-white border border-stone-300 rounded-none focus:ring-1 focus:ring-[#F59E0B]"
+                      />
+                    </div>
                   </div>
                 ))}
               </div>

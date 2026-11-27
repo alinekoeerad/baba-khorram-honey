@@ -54,6 +54,8 @@ FROM node:22-alpine AS runner
 WORKDIR /app
 
 RUN apk add --no-cache libc6-compat openssl
+RUN npm install -g prisma@7.0.0
+
 ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
@@ -71,9 +73,13 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Copy prisma migration scripts & schema for deployment migration commands
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/scripts ./scripts
+# Copy prisma migration scripts, schema, seed data, and scripts
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
+COPY --from=builder --chown=nextjs:nodejs /app/data ./data
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
+COPY --from=builder --chown=nextjs:nodejs /app/docker-entrypoint.sh ./docker-entrypoint.sh
+RUN chmod +x ./docker-entrypoint.sh
 
 USER nextjs
 
@@ -81,5 +87,5 @@ EXPOSE 3000
 
 VOLUME ["/app/uploads"]
 
-CMD ["node", "server.js"]
+ENTRYPOINT ["./docker-entrypoint.sh"]
 

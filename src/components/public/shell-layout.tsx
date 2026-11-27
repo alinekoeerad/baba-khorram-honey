@@ -19,6 +19,7 @@ interface ShellLayoutProps {
   footerChannels: PublicChannelItem[];
   productCategories: CategoryNavItem[];
   recipeCategories: CategoryNavItem[];
+  publishedProductSlugs?: string[];
   children: React.ReactNode;
 }
 
@@ -28,6 +29,7 @@ export function ShellLayout({
   footerChannels,
   productCategories,
   recipeCategories,
+  publishedProductSlugs,
   children,
 }: ShellLayoutProps) {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
@@ -42,6 +44,7 @@ export function ShellLayout({
         cartEnabled={settings.cartEnabled}
         logo={settings.logo}
         channels={contactBarChannels}
+        publishedProductSlugs={publishedProductSlugs}
         onOpenSearch={() => setIsSearchOpen((prev) => !prev)}
         onOpenHamburger={() => setIsHamburgerOpen(true)}
         hamburgerButtonRef={hamburgerButtonRef}
@@ -70,7 +73,11 @@ export function ShellLayout({
       <main className="flex-1 w-full">{children}</main>
 
       {/* Authentic honey.com Footer */}
-      <Footer settings={settings} channels={footerChannels} />
+      <Footer
+        settings={settings}
+        channels={footerChannels}
+        publishedProductSlugs={publishedProductSlugs}
+      />
     </div>
   );
 }

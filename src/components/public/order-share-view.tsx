@@ -12,6 +12,7 @@ import { PillButton } from '@/components/ui/pill-button';
 import { Copy, Check, ExternalLink, Clock, Share2 } from 'lucide-react';
 import { copyTextSync, copyTextToClipboard, isIosDevice, buildSmsUri } from '@/lib/clipboard';
 import { buildChannelOrderUrl } from '@/lib/contact-channels';
+import { toPersianDigits } from '@/lib/domain-utils';
 import { SmartHandoffPanel } from './smart-handoff-panel';
 import type { ChannelType } from '@prisma/client';
 
@@ -22,6 +23,7 @@ export interface OrderShareViewProps {
   channelValue: string;
   directUrl: string;
   expiresAt: string; // ISO string
+  supportPhone?: string | null;
 }
 
 const CHANNEL_NAMES: Record<ChannelType, string> = {
@@ -42,6 +44,7 @@ export function OrderShareView({
   channelValue,
   directUrl,
   expiresAt,
+  supportPhone,
 }: OrderShareViewProps) {
   const [copied, setCopied] = useState(false);
   const [canShare, setCanShare] = useState(false);
@@ -225,18 +228,22 @@ export function OrderShareView({
         )}
 
         {/* Support Direct Call */}
-        <div className="flex items-center justify-between gap-3 p-3.5 bg-white border border-[#EFE9E0] text-xs shadow-sm rounded-none text-right">
-          <div className="text-[#5C5248]">
-            <span>پشتیبانی و هماهنگی تلفنی: </span>
-            <strong className="text-[#2B2017] font-mono text-sm">۰۹۳۸ ۹۱۹ ۶۰۱۰</strong>
+        {supportPhone && (
+          <div className="flex items-center justify-between gap-3 p-3.5 bg-white border border-[#EFE9E0] text-xs shadow-sm rounded-none text-right">
+            <div className="text-[#5C5248]">
+              <span>پشتیبانی و هماهنگی تلفنی: </span>
+              <strong className="text-[#2B2017] font-mono text-sm" dir="ltr">
+                {toPersianDigits(supportPhone)}
+              </strong>
+            </div>
+            <a
+              href={`tel:${supportPhone}`}
+              className="px-4 py-1.5 bg-[#FAF7F2] hover:bg-[#FEF3C7] border border-[#D97706] text-[#B45309] font-bold transition-colors rounded-none"
+            >
+              تماس مستقیم
+            </a>
           </div>
-          <a
-            href="tel:09389196010"
-            className="px-4 py-1.5 bg-[#FAF7F2] hover:bg-[#FEF3C7] border border-[#D97706] text-[#B45309] font-bold transition-colors rounded-none"
-          >
-            تماس مستقیم
-          </a>
-        </div>
+        )}
       </Container>
     </WoodBackground>
   );

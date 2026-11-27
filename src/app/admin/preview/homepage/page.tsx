@@ -23,8 +23,43 @@ export default async function AdminHomepagePreviewPage() {
   const productsRes = await getPublicProducts({ take: 12 });
   const recipesRes = await getPublicRecipes({ take: 12 });
 
-  const products = productsRes.products || [];
-  const recipes = recipesRes.recipes || [];
+  let products = productsRes.products || [];
+  let recipes = recipesRes.recipes || [];
+
+  const selectedIds = new Set<string>();
+  for (const sec of sections) {
+    if (
+      sec?.type === 'CARD_CAROUSEL' &&
+      sec?.content?.source === 'SELECTED' &&
+      Array.isArray(sec?.content?.selectedItems)
+    ) {
+      for (const id of sec.content.selectedItems) {
+        if (typeof id === 'string' && id) selectedIds.add(id);
+      }
+    }
+  }
+
+  if (selectedIds.size > 0) {
+    const existingIds = new Set([...products.map((p: any) => p.id), ...recipes.map((r: any) => r.id)]);
+    const missingIds = Array.from(selectedIds).filter((id) => !existingIds.has(id));
+    if (missingIds.length > 0) {
+      try {
+        const missingSet = new Set(missingIds);
+        const [allProdsRes, allRecsRes] = await Promise.all([
+          getPublicProducts({ take: 200 }),
+          getPublicRecipes({ take: 200 }),
+        ]);
+        const extraProducts = (allProdsRes.products || []).filter((p: any) => missingSet.has(p.id));
+        const extraRecipes = (allRecsRes.recipes || []).filter((r: any) => missingSet.has(r.id));
+        if (extraProducts.length > 0) {
+          products = [...products, ...extraProducts];
+        }
+        if (extraRecipes.length > 0) {
+          recipes = [...recipes, ...extraRecipes];
+        }
+      } catch {}
+    }
+  }
 
   // Group consecutive sections by background === 'WOOD' for seamless merging
   const groupedSections: Array<{ isWood: boolean; sections: typeof sections }> = [];

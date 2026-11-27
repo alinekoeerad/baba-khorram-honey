@@ -30,6 +30,10 @@ import {
   textGalleryContentSchema,
   cardCarouselContentSchema,
   contentGridContentSchema,
+  artisanHeritageContentSchema,
+  honeyFinderContentSchema,
+  testimonialsContentSchema,
+  faqSectionContentSchema,
   HomepageSectionInput,
 } from '@/server/validation/homepage-schemas';
 import { switchSectionTemplate, TEMPLATE_REGISTRY } from '@/server/services/homepage-template-service';
@@ -57,10 +61,13 @@ function validateSectionContent(type: string, content: any): Record<string, any>
     case 'CONTENT_GRID':
       return contentGridContentSchema.parse(content);
     case 'ARTISAN_HERITAGE':
+      return artisanHeritageContentSchema.parse(content || { schemaVersion: 1 });
     case 'HONEY_FINDER':
+      return honeyFinderContentSchema.parse(content || { schemaVersion: 1 });
     case 'TESTIMONIALS':
+      return testimonialsContentSchema.parse(content || { schemaVersion: 1 });
     case 'FAQ_SECTION':
-      return content || {};
+      return faqSectionContentSchema.parse(content || { schemaVersion: 1 });
     default:
       throw new Error(`نوع سکشن نامعتبر است: ${type}`);
   }

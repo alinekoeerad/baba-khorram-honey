@@ -9,6 +9,14 @@ export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
 }
 
+/**
+ * Serializes JSON-LD safely for inline <script type="application/ld+json">
+ * by escaping '<' so embedded strings cannot break out of the script tag.
+ */
+export function serializeJsonLd(data: unknown): string {
+  return JSON.stringify(data).replace(/</g, '\\u003c');
+}
+
 export {
   normalizeDigits,
   normalizePersianDigits,

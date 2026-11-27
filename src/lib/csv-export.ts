@@ -10,7 +10,13 @@ export function exportToCsv(
 ) {
   const sanitizeCell = (val: any): string => {
     if (val === null || val === undefined) return '""';
-    const str = String(val).replace(/"/g, '""');
+    let raw = String(val);
+    // Neutralize CSV formula injection (=, +, -, @, tab, CR) on non-numeric values
+    const isFiniteNegativeNumber = typeof val === 'number' && Number.isFinite(val);
+    if (!isFiniteNegativeNumber && /^[=+\-@\t\r]/.test(raw.trimStart())) {
+      raw = `'${raw}`;
+    }
+    const str = raw.replace(/"/g, '""');
     return `"${str}"`;
   };
 

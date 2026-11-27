@@ -149,6 +149,53 @@ let ordersStore: OrderRecord[] = loadJson('orders.json', []);
 let productGalleryStore: any[] = loadJson('product-gallery.json', []);
 let recipeGalleryStore: any[] = loadJson('recipe-gallery.json', []);
 
+export interface FaqItemRecord {
+  id: string;
+  anchorId: string;
+  question: string;
+  answer: string;
+  category: string;
+  categoryLabel?: string | null;
+  sortOrder: number;
+  isPublished: boolean;
+  featuredInNav: boolean;
+  featuredOnHome: boolean;
+  relatedArticleSlug?: string | null;
+  relatedArticleLabel?: string | null;
+  extraData?: any;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface MagazineArticleRecord {
+  id: string;
+  slug: string;
+  title: string;
+  shortTitle?: string | null;
+  subtitle?: string | null;
+  excerpt: string;
+  coverImage?: string | null;
+  category: string;
+  categoryLabel?: string | null;
+  badge?: string | null;
+  theme: string;
+  readTime?: string | null;
+  readTimeMinutes?: number | null;
+  status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
+  sortOrder: number;
+  featuredInNav: boolean;
+  navOrder: number;
+  sections?: any;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  publishedAt?: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+let faqItemsStore: any[] = loadJson('faq-items.json', []);
+let magazineArticlesStore: any[] = loadJson('magazine-articles.json', []);
+
 // Create fallback Prisma-compatible client
 function createFallbackClient() {
   return {
@@ -560,8 +607,10 @@ function createFallbackClient() {
           // Category filter: handles w.categorySlug, w.categories.some.category.slug, w.categoryIds
           const catSlug = w.categories?.some?.category?.slug || w.categorySlug;
           if (catSlug && catSlug !== 'all' && catSlug !== 'همه') {
+            const matchedCat = categoriesStore.find((c) => c.slug === catSlug);
             list = list.filter((p) => {
               if (p.categorySlug === catSlug) return true;
+              if (matchedCat && p.categoryIds && p.categoryIds.includes(matchedCat.id)) return true;
               if (p.categoryIds && (p.categoryIds.includes(catSlug) || p.categoryIds.includes('cat_' + catSlug))) return true;
               return false;
             });
@@ -587,17 +636,25 @@ function createFallbackClient() {
           if (searchTerms.length > 0) {
             const words = Array.from(new Set(searchTerms.map((t) => t.toLowerCase().trim()).filter(Boolean)));
             list = list.filter((p) => {
-              const fullText = [p.nameFa, p.nameOriginal, p.slug, p.description, p.shortDescription, (p.benefits || []).join(" ")].filter(Boolean).join(" ").toLowerCase();
+              const fullText = [p.nameFa, p.nameOriginal, p.slug, p.searchText, p.description, p.shortDescription, (p.benefits || []).join(" ")].filter(Boolean).join(" ").toLowerCase();
               return words.some((w) => fullText.includes(w));
             });
           }
 
-          // Cursor filter: handles w.OR cursor pagination
+          // Cursor filter: handles w.OR cursor pagination including [sortOrder, id] tie-breaker
           if (Array.isArray(w.OR) && w.OR.length > 0) {
             const sortCond = w.OR.find((c: any) => c.sortOrder?.gt !== undefined);
+            const tieCond = w.OR.find((c: any) => c.sortOrder !== undefined && c.sortOrder?.gt === undefined && c.id?.gt !== undefined);
             if (sortCond) {
               const minSort = sortCond.sortOrder.gt;
-              list = list.filter((p) => (p.sortOrder || 0) > minSort);
+              const tieSort = tieCond?.sortOrder;
+              const minId = tieCond?.id?.gt;
+              list = list.filter((p) => {
+                const s = p.sortOrder || 0;
+                if (s > minSort) return true;
+                if (tieCond && s === tieSort && String(p.id) > String(minId)) return true;
+                return false;
+              });
             }
           }
         }
@@ -606,7 +663,7 @@ function createFallbackClient() {
         if (args?.orderBy) {
           const order = args.orderBy;
           if (Array.isArray(order)) {
-            list.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+            list.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0) || String(a.id).localeCompare(String(b.id)));
           } else if (order.sortOrder) {
             list.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
           } else if (order.createdAt === 'desc') {
@@ -989,8 +1046,10 @@ function createFallbackClient() {
           // Category filter
           const catSlug = w.categories?.some?.category?.slug || w.categorySlug;
           if (catSlug && catSlug !== 'all' && catSlug !== 'همه') {
+            const matchedCat = categoriesStore.find((c) => c.slug === catSlug);
             list = list.filter((r) => {
               if (Array.isArray(r.categories) && r.categories.includes(catSlug)) return true;
+              if (matchedCat && r.categoryIds && r.categoryIds.includes(matchedCat.id)) return true;
               if (r.categoryIds && (r.categoryIds.includes(catSlug) || r.categoryIds.includes('cat_' + catSlug))) return true;
               return false;
             });
@@ -1016,17 +1075,25 @@ function createFallbackClient() {
           if (searchTerms.length > 0) {
             const words = Array.from(new Set(searchTerms.map((t) => t.toLowerCase().trim()).filter(Boolean)));
             list = list.filter((r) => {
-              const fullText = [r.nameFa, r.nameOriginal, r.slug, r.shortDescription, r.longDescription, (r.steps || []).join(" ")].filter(Boolean).join(" ").toLowerCase();
+              const fullText = [r.nameFa, r.nameOriginal, r.slug, r.searchText, r.shortDescription, r.longDescription, (r.steps || []).join(" ")].filter(Boolean).join(" ").toLowerCase();
               return words.some((w) => fullText.includes(w));
             });
           }
 
-          // Cursor filter
+          // Cursor filter (with [sortOrder, id] tie-breaker)
           if (Array.isArray(w.OR) && w.OR.length > 0) {
             const sortCond = w.OR.find((c: any) => c.sortOrder?.gt !== undefined);
+            const tieCond = w.OR.find((c: any) => c.sortOrder !== undefined && c.sortOrder?.gt === undefined && c.id?.gt !== undefined);
             if (sortCond) {
               const minSort = sortCond.sortOrder.gt;
-              list = list.filter((r) => (r.sortOrder || 0) > minSort);
+              const tieSort = tieCond?.sortOrder;
+              const minId = tieCond?.id?.gt;
+              list = list.filter((r) => {
+                const s = r.sortOrder || 0;
+                if (s > minSort) return true;
+                if (tieCond && s === tieSort && String(r.id) > String(minId)) return true;
+                return false;
+              });
             }
           }
         }
@@ -1034,7 +1101,7 @@ function createFallbackClient() {
         if (args?.orderBy) {
           const order = args.orderBy;
           if (Array.isArray(order)) {
-            list.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+            list.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0) || String(a.id).localeCompare(String(b.id)));
           } else if (order.sortOrder) {
             list.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
           } else if (order.createdAt === 'desc') {
@@ -1389,10 +1456,12 @@ function createFallbackClient() {
         return this.findFirst();
       },
       async upsert(args: { where: { id: number }; create: any; update: any }) {
-        let current = loadJson('site-settings.json', {});
-        current = { ...current, ...args.update };
-        saveJson('site-settings.json', current);
-        return current;
+        let current = loadJson('site-settings.json', null);
+        if (Array.isArray(current)) current = current[0] || null;
+        const base = current && Object.keys(current).length > 0 ? current : (args.create || {});
+        const next = { ...base, ...args.update };
+        saveJson('site-settings.json', next);
+        return next;
       },
     },
 
@@ -1919,6 +1988,263 @@ function createFallbackClient() {
         if (args.where.status) list = list.filter((s) => s.status === args.where.status);
         if (args.where.type) list = list.filter((s) => s.type === args.where.type);
         return list.length;
+      },
+    },
+
+    faqItem: {
+      async findMany(args?: { where?: any; orderBy?: any; take?: number; skip?: number }) {
+        let list = [...faqItemsStore];
+        if (args?.where) {
+          const w = args.where;
+          if (w.isPublished !== undefined) {
+            list = list.filter((x) => x.isPublished === w.isPublished);
+          }
+          if (w.category) {
+            list = list.filter((x) => x.category === w.category);
+          }
+          if (w.featuredOnHome !== undefined) {
+            list = list.filter((x) => x.featuredOnHome === w.featuredOnHome);
+          }
+          if (w.featuredInNav !== undefined) {
+            list = list.filter((x) => x.featuredInNav === w.featuredInNav);
+          }
+        }
+        if (args?.orderBy) {
+          const ob = Array.isArray(args.orderBy) ? args.orderBy[0] : args.orderBy;
+          if (ob?.sortOrder === 'asc') {
+            list.sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+          } else if (ob?.sortOrder === 'desc') {
+            list.sort((a, b) => (b.sortOrder ?? 0) - (a.sortOrder ?? 0));
+          } else if (ob?.createdAt === 'desc') {
+            list.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+          }
+        } else {
+          list.sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+        }
+        if (args?.skip) {
+          list = list.slice(args.skip);
+        }
+        if (args?.take) {
+          list = list.slice(0, args.take);
+        }
+        return list.map((item) => ({
+          ...item,
+          createdAt: item.createdAt ? new Date(item.createdAt) : new Date(),
+          updatedAt: item.updatedAt ? new Date(item.updatedAt) : new Date(),
+        }));
+      },
+      async findUnique(args: { where: { id?: string; anchorId?: string } }) {
+        const item = faqItemsStore.find(
+          (x) =>
+            (args.where.id && x.id === args.where.id) ||
+            (args.where.anchorId && x.anchorId === args.where.anchorId)
+        );
+        return item
+          ? {
+              ...item,
+              createdAt: item.createdAt ? new Date(item.createdAt) : new Date(),
+              updatedAt: item.updatedAt ? new Date(item.updatedAt) : new Date(),
+            }
+          : null;
+      },
+      async findFirst(args?: { where?: any; orderBy?: any }) {
+        const items = await this.findMany({ ...args, take: 1 });
+        return items[0] || null;
+      },
+      async count(args?: { where?: any }) {
+        if (!args?.where) return faqItemsStore.length;
+        const items = await this.findMany({ where: args.where });
+        return items.length;
+      },
+      async create(args: { data: any }) {
+        const now = new Date();
+        const id = args.data.id || `faq_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+        const newItem = {
+          ...args.data,
+          id,
+          sortOrder: args.data.sortOrder ?? faqItemsStore.length,
+          isPublished: args.data.isPublished ?? true,
+          featuredInNav: args.data.featuredInNav ?? false,
+          featuredOnHome: args.data.featuredOnHome ?? false,
+          createdAt: now,
+          updatedAt: now,
+        };
+        faqItemsStore.push(newItem);
+        saveJson('faq-items.json', faqItemsStore);
+        return { ...newItem };
+      },
+      async update(args: { where: { id?: string; anchorId?: string }; data: any }) {
+        const idx = faqItemsStore.findIndex(
+          (x) =>
+            (args.where.id && x.id === args.where.id) ||
+            (args.where.anchorId && x.anchorId === args.where.anchorId)
+        );
+        if (idx === -1) throw new Error('FaqItem not found');
+        const updated = {
+          ...faqItemsStore[idx],
+          ...args.data,
+          updatedAt: new Date(),
+        };
+        faqItemsStore[idx] = updated;
+        saveJson('faq-items.json', faqItemsStore);
+        return { ...updated };
+      },
+      async delete(args: { where: { id?: string; anchorId?: string } }) {
+        const idx = faqItemsStore.findIndex(
+          (x) =>
+            (args.where.id && x.id === args.where.id) ||
+            (args.where.anchorId && x.anchorId === args.where.anchorId)
+        );
+        if (idx === -1) throw new Error('FaqItem not found');
+        const [deleted] = faqItemsStore.splice(idx, 1);
+        saveJson('faq-items.json', faqItemsStore);
+        return { ...deleted };
+      },
+      async upsert(args: { where: { id?: string; anchorId?: string }; create: any; update: any }) {
+        const existing = await this.findUnique({ where: args.where });
+        if (existing) {
+          return this.update({ where: args.where, data: args.update });
+        }
+        return this.create({ data: args.create });
+      },
+    },
+
+    magazineArticle: {
+      async findMany(args?: { where?: any; orderBy?: any; take?: number; skip?: number; select?: any }) {
+        let list = [...magazineArticlesStore];
+        if (args?.where) {
+          const w = args.where;
+          if (w.id) {
+            list = list.filter((x) => x.id === w.id);
+          }
+          if (w.slug) {
+            list = list.filter((x) => x.slug === w.slug);
+          }
+          if (w.status) {
+            list = list.filter((x) => x.status === w.status);
+          }
+          if (w.category) {
+            list = list.filter((x) => x.category === w.category);
+          }
+          if (w.featuredInNav !== undefined) {
+            list = list.filter((x) => x.featuredInNav === w.featuredInNav);
+          }
+        }
+        if (args?.orderBy) {
+          const ob = Array.isArray(args.orderBy) ? args.orderBy[0] : args.orderBy;
+          if (ob?.sortOrder === 'asc') {
+            list.sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+          } else if (ob?.sortOrder === 'desc') {
+            list.sort((a, b) => (b.sortOrder ?? 0) - (a.sortOrder ?? 0));
+          } else if (ob?.createdAt === 'desc') {
+            list.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+          }
+        } else {
+          list.sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+        }
+        if (args?.skip) {
+          list = list.slice(args.skip);
+        }
+        if (args?.take) {
+          list = list.slice(0, args.take);
+        }
+        const mapped = list.map((item) => ({
+          ...item,
+          publishedAt: item.publishedAt ? new Date(item.publishedAt) : null,
+          createdAt: item.createdAt ? new Date(item.createdAt) : new Date(),
+          updatedAt: item.updatedAt ? new Date(item.updatedAt) : new Date(),
+        }));
+        if (args?.select) {
+          return mapped.map((item) => {
+            const picked: any = {};
+            for (const key of Object.keys(args.select)) {
+              if (args.select[key]) picked[key] = (item as any)[key];
+            }
+            return picked;
+          });
+        }
+        return mapped;
+      },
+      async findUnique(args: { where: { id?: string; slug?: string }; select?: any }) {
+        const item = magazineArticlesStore.find(
+          (x) =>
+            (args.where.id && x.id === args.where.id) ||
+            (args.where.slug && x.slug === args.where.slug)
+        );
+        if (!item) return null;
+        const res = {
+          ...item,
+          publishedAt: item.publishedAt ? new Date(item.publishedAt) : null,
+          createdAt: item.createdAt ? new Date(item.createdAt) : new Date(),
+          updatedAt: item.updatedAt ? new Date(item.updatedAt) : new Date(),
+        };
+        if (args?.select) {
+          const picked: any = {};
+          for (const key of Object.keys(args.select)) {
+            if (args.select[key]) picked[key] = (res as any)[key];
+          }
+          return picked;
+        }
+        return res;
+      },
+      async findFirst(args?: { where?: any; orderBy?: any; select?: any }) {
+        const items = await this.findMany({ ...args, take: 1 });
+        return items[0] || null;
+      },
+      async count(args?: { where?: any }) {
+        if (!args?.where) return magazineArticlesStore.length;
+        const items = await this.findMany({ where: args.where });
+        return items.length;
+      },
+      async create(args: { data: any }) {
+        const now = new Date();
+        const id = args.data.id || `art_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+        const newItem = {
+          ...args.data,
+          id,
+          sortOrder: args.data.sortOrder ?? magazineArticlesStore.length,
+          status: args.data.status || 'PUBLISHED',
+          publishedAt: args.data.publishedAt ? new Date(args.data.publishedAt) : now,
+          createdAt: now,
+          updatedAt: now,
+        };
+        magazineArticlesStore.push(newItem);
+        saveJson('magazine-articles.json', magazineArticlesStore);
+        return { ...newItem };
+      },
+      async update(args: { where: { id?: string; slug?: string }; data: any }) {
+        const idx = magazineArticlesStore.findIndex(
+          (x) =>
+            (args.where.id && x.id === args.where.id) ||
+            (args.where.slug && x.slug === args.where.slug)
+        );
+        if (idx === -1) throw new Error('MagazineArticle not found');
+        const updated = {
+          ...magazineArticlesStore[idx],
+          ...args.data,
+          updatedAt: new Date(),
+        };
+        magazineArticlesStore[idx] = updated;
+        saveJson('magazine-articles.json', magazineArticlesStore);
+        return { ...updated };
+      },
+      async delete(args: { where: { id?: string; slug?: string } }) {
+        const idx = magazineArticlesStore.findIndex(
+          (x) =>
+            (args.where.id && x.id === args.where.id) ||
+            (args.where.slug && x.slug === args.where.slug)
+        );
+        if (idx === -1) throw new Error('MagazineArticle not found');
+        const [deleted] = magazineArticlesStore.splice(idx, 1);
+        saveJson('magazine-articles.json', magazineArticlesStore);
+        return { ...deleted };
+      },
+      async upsert(args: { where: { id?: string; slug?: string }; create: any; update: any }) {
+        const existing = await this.findUnique({ where: args.where });
+        if (existing) {
+          return this.update({ where: args.where, data: args.update });
+        }
+        return this.create({ data: args.create });
       },
     },
     $transaction: async (promisesOrFn: any) => {

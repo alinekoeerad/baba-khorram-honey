@@ -10,6 +10,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { PillButton } from '@/components/ui/pill-button';
+import { serializeJsonLd } from '@/lib/utils';
 import { WoodBackground } from '@/components/ui/wood-background';
 import { WoodGroup } from '@/components/ui/wood-group';
 import { Container } from '@/components/ui/container';
@@ -77,8 +78,50 @@ export default async function HomePage() {
     dbRecipes = [];
   }
 
-  const displayProducts = dbProducts;
-  const displayRecipes = dbRecipes;
+  // Ensure CARD_CAROUSEL sections using SELECTED items beyond the first 12 are hydrated
+  const selectedIds = new Set<string>();
+  for (const sec of dbSections) {
+    if (
+      sec?.type === 'CARD_CAROUSEL' &&
+      sec?.content?.source === 'SELECTED' &&
+      Array.isArray(sec?.content?.selectedItems)
+    ) {
+      for (const id of sec.content.selectedItems) {
+        if (typeof id === 'string' && id) selectedIds.add(id);
+      }
+    }
+  }
+
+  let displayProducts = dbProducts;
+  let displayRecipes = dbRecipes;
+
+  if (selectedIds.size > 0) {
+    const existingProductIds = new Set(dbProducts.map((p: any) => p.id));
+    const existingRecipeIds = new Set(dbRecipes.map((r: any) => r.id));
+    const missingIds = Array.from(selectedIds).filter(
+      (id) => !existingProductIds.has(id) && !existingRecipeIds.has(id)
+    );
+
+    if (missingIds.length > 0) {
+      try {
+        const missingSet = new Set(missingIds);
+        const [allProdsRes, allRecsRes] = await Promise.all([
+          getPublicProducts({ take: 200 }),
+          getPublicRecipes({ take: 200 }),
+        ]);
+        const extraProducts = (allProdsRes.products || []).filter((p: any) => missingSet.has(p.id));
+        const extraRecipes = (allRecsRes.recipes || []).filter((r: any) => missingSet.has(r.id));
+        if (extraProducts.length > 0) {
+          displayProducts = [...dbProducts, ...extraProducts];
+        }
+        if (extraRecipes.length > 0) {
+          displayRecipes = [...dbRecipes, ...extraRecipes];
+        }
+      } catch {
+        // Non-blocking fallback
+      }
+    }
+  }
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://babakhorram.com';
   const jsonLd = {
@@ -134,7 +177,7 @@ export default async function HomePage() {
       <div className="flex flex-col w-full overflow-hidden">
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
         />
         {groupedSections.map((group, gIdx) => {
           if (group.isWood) {
@@ -170,7 +213,7 @@ export default async function HomePage() {
     <div className="flex flex-col w-full overflow-hidden">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
       {/* 1. Hero Section (Slideshow with Blur-Fade & Ken Burns Zoom, NO buttons, NO dots) */}
       <HeroSlider />

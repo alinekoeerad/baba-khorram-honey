@@ -387,7 +387,7 @@ export function DynamicSectionRenderer({
   if (type === 'ARTISAN_HERITAGE' || template === 'heritage-default') {
     return (
       <div id={`section-${section.id}`}>
-        <ArtisanHeritageShowcase />
+        <ArtisanHeritageShowcase {...(content as any)} />
       </div>
     );
   }
@@ -397,7 +397,7 @@ export function DynamicSectionRenderer({
     if (!products || products.length === 0) return null;
     return (
       <div id={`section-${section.id}`}>
-        <HoneyFinder products={products} />
+        <HoneyFinder products={products} {...(content as any)} />
       </div>
     );
   }
@@ -406,7 +406,7 @@ export function DynamicSectionRenderer({
   if (type === 'TESTIMONIALS' || template === 'testimonials-default') {
     return (
       <div id={`section-${section.id}`}>
-        <TestimonialsSection />
+        <TestimonialsSection {...(content as any)} />
       </div>
     );
   }
@@ -415,7 +415,7 @@ export function DynamicSectionRenderer({
   if (type === 'FAQ_SECTION' || template === 'faq-default') {
     return (
       <div id={`section-${section.id}`}>
-        <FaqSection />
+        <FaqSection {...(content as any)} />
       </div>
     );
   }

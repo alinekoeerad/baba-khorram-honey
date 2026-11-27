@@ -34,6 +34,17 @@ import {
 import { encryptOrderPayload } from '@/server/auth/order-encryption';
 import type { ChannelType } from '@prisma/client';
 
+const ChannelTypeSchema = z.preprocess(
+  (val) => (typeof val === 'string' && val.trim() ? val.trim().toUpperCase() : undefined),
+  z
+    .enum(['PHONE', 'WHATSAPP', 'TELEGRAM', 'EITAA', 'RUBIKA', 'BALE', 'INSTAGRAM', 'YOUTUBE'])
+    .optional()
+);
+
+const ORDER_IDEMPOTENCY_TTL_MS = 5 * 60 * 1000;
+const orderIdempotencyStore = new Map<string, { result: BuildOrderResult; expiresAt: number }>();
+const pendingIdempotencyKeys = new Set<string>();
+
 const BuildOrderInputSchema = z.object({
   lines: z
     .array(
@@ -66,7 +77,7 @@ const BuildOrderInputSchema = z.object({
         z.string().max(10).optional()
       ),
       notes: z.string().max(300).optional(),
-      preferredContactMethod: z.string().max(50).optional(),
+      preferredContactMethod: ChannelTypeSchema,
     })
     .refine(
       (c) =>
@@ -81,8 +92,9 @@ const BuildOrderInputSchema = z.object({
     ),
 
   channelId: z.string().optional().nullable(),
-  preferredContactMethod: z.string().max(50).optional(),
+  preferredContactMethod: ChannelTypeSchema,
   createShareLink: z.boolean().default(false),
+  idempotencyKey: z.string().trim().min(4).max(120).optional(),
 });
 
 export type BuildOrderInput = z.infer<typeof BuildOrderInputSchema>;
@@ -141,7 +153,31 @@ export async function buildOrderAction(
       };
     }
 
-    const { lines, customer, channelId, preferredContactMethod, createShareLink } = parsed.data;
+    const { lines, customer, channelId, preferredContactMethod, idempotencyKey } = parsed.data;
+
+    // 2b. Idempotency check (prevents duplicate order creation on double-click/retry)
+    const idempStoreKey = idempotencyKey ? `${clientIp}:${idempotencyKey}` : null;
+    if (idempStoreKey) {
+      const now = Date.now();
+      for (const [k, entry] of orderIdempotencyStore.entries()) {
+        if (entry.expiresAt <= now) {
+          orderIdempotencyStore.delete(k);
+        }
+      }
+      const cached = orderIdempotencyStore.get(idempStoreKey);
+      if (cached && cached.expiresAt > now) {
+        return cached.result;
+      }
+      if (pendingIdempotencyKeys.has(idempStoreKey)) {
+        return {
+          success: false,
+          error: 'درخواست سفارش شما در حال پردازش است. لطفاً چند لحظه صبر کنید.',
+        };
+      }
+      pendingIdempotencyKeys.add(idempStoreKey);
+    }
+
+    try {
 
     // 3. Verify SiteSettings: cartEnabled
     const settings = await db.siteSettings.findUnique({ where: { id: 1 } });
@@ -228,11 +264,29 @@ export async function buildOrderAction(
     const verifiedItems: OrderItemLine[] = [];
     for (const line of lines) {
       let opt: any = optionMap.get(line.optionId);
-      if (!opt) {
-        const prod = await db.product.findUnique({ where: { id: line.productId } });
-        if (prod && prod.status === 'PUBLISHED' && prod.isAvailable) {
-          const label = line.optionId.includes('500g') ? 'نیم کیلوگرم (ظرف شیشه‌ای)' : 'یک کیلوگرم (ظرف شیشه‌ای)';
-          opt = { id: line.optionId, label, isAvailable: true, product: prod };
+      if (opt) {
+        const optProductId = opt.productId || opt.product?.id;
+        if (optProductId && optProductId !== line.productId) {
+          return {
+            success: false,
+            error: 'گزینه انتخاب‌شده با محصول مطابقت ندارد.',
+          };
+        }
+      } else {
+        const isAllowedDefaultOption =
+          line.optionId === `opt_${line.productId}_1kg` ||
+          line.optionId === `opt_${line.productId}_500g` ||
+          line.optionId === `${line.productId}_1000g` ||
+          line.optionId === `${line.productId}_500g`;
+
+        if (isAllowedDefaultOption) {
+          const prod = await db.product.findUnique({ where: { id: line.productId } });
+          if (prod && prod.status === 'PUBLISHED' && prod.isAvailable) {
+            const label = line.optionId.includes('500g')
+              ? 'نیم کیلوگرم (ظرف شیشه‌ای)'
+              : 'یک کیلوگرم (ظرف شیشه‌ای)';
+            opt = { id: line.optionId, label, isAvailable: true, productId: prod.id, product: prod };
+          }
         }
       }
       if (!opt) {
@@ -284,77 +338,108 @@ export async function buildOrderAction(
       preferredContactMethod: sanitizePlainText(preferredMethod, 50),
     };
 
-    // 8. Generate Reference Code
-    const orderCode = generateOrderReferenceCode();
-
-    // 9. Build Message Text
-    const fullMessageText = buildFullOrderMessage({
-      referenceCode: orderCode,
-      customer: sanitizedCustomer,
-      items: verifiedItems,
-      introText: settings.orderIntroText,
-      outroText: settings.orderOutroText,
-    });
-
-    const isSms = channel.type === 'PHONE';
-    const messageText = isSms
-      ? buildCompactOrderMessage({
-        referenceCode: orderCode,
-        customer: sanitizedCustomer,
-        items: verifiedItems,
-      })
-      : fullMessageText;
-
-    // 9b. Instant non-blocking notification to business owner / admin via Eitaa, Bale, Telegram
-    // Always send full invoice to store admin bot
-    await notifyAdminOfOrder(fullMessageText, channel.type);
-
-    // 10. Generate Channel Deep Link
-    // 10. Generate Channel Deep Link
-    const linkResult = buildChannelOrderLink(channel.type, channel.value, messageText);
-
-    // 10b. Always persist Order in Database for Admin Management
+    // 8. Generate Reference Code & Persist Order in Database BEFORE Admin Notification
     const customerDisplayName = (
       customer.fullName ||
       `${sanitizedCustomer.firstName} ${sanitizedCustomer.lastName}`
     ).trim();
 
-    try {
-      await db.order.create({
-        data: {
-          id: `ord_${orderCode}`,
-          code: orderCode,
-          customerName: customerDisplayName,
-          customerMobile: sanitizedCustomer.mobile,
-          customerCity: sanitizedCustomer.city || null,
-          customerAddress: sanitizedCustomer.address || null,
-          customerNotes: sanitizedCustomer.notes || null,
-          preferredContact: sanitizedCustomer.preferredContactMethod || 'PHONE',
-          lines: lines.map((l, idx) => {
-            const v = verifiedItems[idx];
-            return {
-              productId: l.productId,
-              productNameFa: v?.productNameFa || '',
-              optionId: l.optionId,
-              optionLabel: v?.optionLabel || '',
-              qty: l.qty,
-            };
-          }),
-          totalPrice: null,
-          messageText: fullMessageText,
-          status: 'NEW',
-          channelType: channel.type,
-          channelValue: channel.value,
-          createdAt: new Date(),
-        },
+    let orderCode = generateOrderReferenceCode();
+    let fullMessageText = '';
+    let messageText = '';
+    let linkResult: ReturnType<typeof buildChannelOrderLink> | null = null;
+    let saved = false;
+    let lastSaveError: unknown = null;
+
+    for (let attempt = 0; attempt < 3; attempt++) {
+      if (attempt > 0) {
+        orderCode = generateOrderReferenceCode();
+      }
+
+      fullMessageText = buildFullOrderMessage({
+        referenceCode: orderCode,
+        customer: sanitizedCustomer,
+        items: verifiedItems,
+        introText: settings.orderIntroText,
+        outroText: settings.orderOutroText,
       });
 
+      const isSms = channel.type === 'PHONE';
+      messageText = isSms
+        ? buildCompactOrderMessage({
+            referenceCode: orderCode,
+            customer: sanitizedCustomer,
+            items: verifiedItems,
+          })
+        : fullMessageText;
+
+      linkResult = buildChannelOrderLink(channel.type, channel.value, messageText);
+
       try {
-        revalidatePath('/admin/orders');
-        revalidatePath('/admin');
-      } catch { }
-    } catch (saveErr) {
-      console.warn('Failed to persist order record in database:', saveErr);
+        await db.order.create({
+          data: {
+            id: `ord_${orderCode}`,
+            code: orderCode,
+            customerName: customerDisplayName,
+            customerMobile: sanitizedCustomer.mobile,
+            customerCity: sanitizedCustomer.city || null,
+            customerAddress: sanitizedCustomer.address || null,
+            customerNotes: sanitizedCustomer.notes || null,
+            preferredContact: (sanitizedCustomer.preferredContactMethod || 'PHONE') as ChannelType,
+            lines: lines.map((l, idx) => {
+              const v = verifiedItems[idx];
+              return {
+                productId: l.productId,
+                productNameFa: v?.productNameFa || '',
+                optionId: l.optionId,
+                optionLabel: v?.optionLabel || '',
+                qty: l.qty,
+              };
+            }),
+            totalPrice: null,
+            messageText: fullMessageText,
+            status: 'NEW',
+            channelType: channel.type,
+            channelValue: channel.value,
+            createdAt: new Date(),
+          },
+        });
+        saved = true;
+        break;
+      } catch (saveErr: any) {
+        lastSaveError = saveErr;
+        const msg = String(saveErr?.message || '');
+        const isUniqueCollision = saveErr?.code === 'P2002' || msg.includes('unique') || msg.includes('already exists');
+        if (!isUniqueCollision) {
+          break;
+        }
+      }
+    }
+
+    if (!saved || !linkResult) {
+      console.error(
+        'Failed to persist order record in database:',
+        lastSaveError instanceof Error ? lastSaveError.message : 'Unknown'
+      );
+      return {
+        success: false,
+        error: 'خطا در ذخیره‌سازی سفارش در سامانه. لطفاً دوباره تلاش فرمایید.',
+      };
+    }
+
+    try {
+      revalidatePath('/admin/orders');
+      revalidatePath('/admin');
+    } catch {}
+
+    // 9. Notify business owner / admin via Eitaa, Bale, Telegram ONLY AFTER DB persistence succeeds
+    try {
+      await notifyAdminOfOrder(fullMessageText, channel.type);
+    } catch (notifyErr) {
+      console.warn(
+        'Order saved but admin messenger notification failed:',
+        notifyErr instanceof Error ? notifyErr.message : 'Unknown'
+      );
     }
 
     // 11. Always create OrderShareLink (for QR, desktop handoff & /o/[code])
@@ -406,7 +491,7 @@ export async function buildOrderAction(
     }
 
     // Return result without logging customer PII
-    return {
+    const successResult: BuildOrderResult = {
       success: true,
       orderCode,
       messageText,
@@ -419,6 +504,20 @@ export async function buildOrderAction(
       shareUrl,
       shareCode,
     };
+
+    if (idempStoreKey) {
+      orderIdempotencyStore.set(idempStoreKey, {
+        result: successResult,
+        expiresAt: Date.now() + ORDER_IDEMPOTENCY_TTL_MS,
+      });
+    }
+
+    return successResult;
+    } finally {
+      if (idempStoreKey) {
+        pendingIdempotencyKeys.delete(idempStoreKey);
+      }
+    }
 
   } catch (error) {
     console.error('buildOrderAction internal error:', error instanceof Error ? error.message : 'Unknown');

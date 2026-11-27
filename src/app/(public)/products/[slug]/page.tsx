@@ -13,6 +13,7 @@
 
 import React from 'react';
 import { db } from '@/server/db/client';
+import { serializeJsonLd } from '@/lib/utils';
 
 export const revalidate = 3600;
 
@@ -129,7 +130,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
       <ProductDetailView
         product={product}

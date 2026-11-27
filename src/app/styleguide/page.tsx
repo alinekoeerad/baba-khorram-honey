@@ -5,6 +5,7 @@
  */
 
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { requireAdmin } from '@/server/auth/require-admin';
 import { PillButton } from '@/components/ui/pill-button';
 import { ContentCard } from '@/components/ui/content-card';
@@ -21,6 +22,10 @@ export const metadata: Metadata = {
 };
 
 export default async function StyleguidePage() {
+  if (process.env.NODE_ENV === 'production') {
+    notFound();
+  }
+
   // Task 4 constraint: Protected for admin-only access
   await requireAdmin();
 

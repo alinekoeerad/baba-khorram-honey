@@ -70,6 +70,17 @@ export const envSchema = z.object({
           message: 'ORDER_LINK_SECRET is required and must not use the development default in production',
         });
       }
+      if (
+        !isBuild &&
+        (!data.BETTER_AUTH_SECRET ||
+          data.BETTER_AUTH_SECRET === 'development-better-auth-secret-key-32-chars-long!')
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['BETTER_AUTH_SECRET'],
+          message: 'BETTER_AUTH_SECRET is required and must not use the development default in production',
+        });
+      }
     }
   });
 

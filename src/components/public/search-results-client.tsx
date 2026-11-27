@@ -11,7 +11,7 @@
  * - Empty state with helpful suggestions.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, Loader2 } from 'lucide-react';
 import { ContentCard } from '@/components/ui/content-card';
@@ -64,6 +64,32 @@ export function SearchResultsClient({
   );
   const [hasMoreRecipes, setHasMoreRecipes] = useState(totalRecipes > initialRecipes.length);
   const [isLoadingMoreRecipes, setIsLoadingMoreRecipes] = useState(false);
+
+  // Sync state when URL query / server props change on /search
+  useEffect(() => {
+    setSearchInput(initialQuery);
+    setProducts(initialProducts);
+    setProductCursor(
+      initialProducts.length >= 20
+        ? {
+            sortOrder: initialProducts[initialProducts.length - 1].sortOrder,
+            id: initialProducts[initialProducts.length - 1].id,
+          }
+        : null
+    );
+    setHasMoreProducts(totalProducts > initialProducts.length);
+
+    setRecipes(initialRecipes);
+    setRecipeCursor(
+      initialRecipes.length >= 20
+        ? {
+            sortOrder: initialRecipes[initialRecipes.length - 1].sortOrder,
+            id: initialRecipes[initialRecipes.length - 1].id,
+          }
+        : null
+    );
+    setHasMoreRecipes(totalRecipes > initialRecipes.length);
+  }, [initialQuery, initialProducts, initialRecipes, totalProducts, totalRecipes]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();

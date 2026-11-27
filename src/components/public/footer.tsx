@@ -20,9 +20,23 @@ import { ChannelIcon } from './channel-icon';
 interface FooterProps {
   settings: PublicSiteSettings;
   channels: PublicChannelItem[];
+  publishedProductSlugs?: string[];
 }
 
-export function Footer({ settings, channels }: FooterProps) {
+const FOOTER_PRODUCT_LINKS = [
+  { href: '/products/astragalus', slug: 'astragalus', label: 'عسل طبیعی گون کوهستان' },
+  { href: '/products/ziziphus', slug: 'ziziphus', label: 'عسل وحشی کنار (سدر) جنوب' },
+  { href: '/products/thymus', slug: 'thymus', label: 'عسل آویشن وحشی البرز' },
+  { href: '/products/multi-plants', slug: 'multi-plants', label: 'عسل چهل‌گیاه ییلاقی ارسباران' },
+  { href: '/products?q=موم', slug: null, label: 'عسل طبیعی با موم کوهی' },
+  { href: '/products/citrus-bigaradia', slug: 'citrus-bigaradia', label: 'عسل معطر بهارنارنج و مرکبات' },
+];
+
+export function Footer({ settings, channels, publishedProductSlugs }: FooterProps) {
+  const activeSlugSet = publishedProductSlugs ? new Set(publishedProductSlugs) : null;
+  const visibleFooterProducts = activeSlugSet
+    ? FOOTER_PRODUCT_LINKS.filter((item) => !item.slug || activeSlugSet.has(item.slug))
+    : FOOTER_PRODUCT_LINKS;
   const currentYear = 1405; // Solar Hijri brand year
   const footerLogoSrc =
     typeof settings.footerLogo === 'string'
@@ -58,6 +72,16 @@ export function Footer({ settings, channels }: FooterProps) {
                 </Link>
               </li>
               <li>
+                <Link href="/magazine" className="text-white hover:text-[#FBBF24] transition-colors">
+                  مجله علمی عسل
+                </Link>
+              </li>
+              <li>
+                <Link href="/faq" className="text-white hover:text-[#FBBF24] transition-colors">
+                  سوالات متداول
+                </Link>
+              </li>
+              <li>
                 <Link href="/contact" className="text-white hover:text-[#FBBF24] transition-colors">
                   تماس با ما
                 </Link>
@@ -76,36 +100,13 @@ export function Footer({ settings, channels }: FooterProps) {
               انواع عسل طبیعی باباخُرم
             </h4>
             <ul className="space-y-2.5 text-xs sm:text-sm font-bold flex flex-col text-white/95">
-              <li>
-                <Link href="/products/astragalus" className="hover:text-[#FBBF24] transition-colors">
-                  عسل طبیعی گون کوهستان
-                </Link>
-              </li>
-              <li>
-                <Link href="/products/ziziphus" className="hover:text-[#FBBF24] transition-colors">
-                  عسل وحشی کنار (سدر) جنوب
-                </Link>
-              </li>
-              <li>
-                <Link href="/products/thymus" className="hover:text-[#FBBF24] transition-colors">
-                  عسل آویشن وحشی البرز
-                </Link>
-              </li>
-              <li>
-                <Link href="/products/multi-plants" className="hover:text-[#FBBF24] transition-colors">
-                  عسل چهل‌گیاه ییلاقی ارسباران
-                </Link>
-              </li>
-              <li>
-                <Link href="/products?q=موم" className="hover:text-[#FBBF24] transition-colors">
-                  عسل طبیعی با موم کوهی
-                </Link>
-              </li>
-              <li>
-                <Link href="/products/citrus-bigaradia" className="hover:text-[#FBBF24] transition-colors">
-                  عسل معطر بهارنارنج و مرکبات
-                </Link>
-              </li>
+              {visibleFooterProducts.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href} className="hover:text-[#FBBF24] transition-colors">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

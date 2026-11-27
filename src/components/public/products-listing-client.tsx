@@ -121,12 +121,14 @@ export function ProductsListingClient({
 
   const handleCategoryClick = (categorySlug: string) => {
     setActiveCategory(categorySlug);
-    const cacheKey = categorySlug || 'all';
-    if (productListingCache.has(cacheKey)) {
-      const cached = productListingCache.get(cacheKey)!;
-      setItems(cached.items);
-      setCursor(cached.cursor);
-      setHasMore(cached.hasMore);
+    if (!searchTerm.trim()) {
+      const cacheKey = categorySlug || 'all';
+      if (productListingCache.has(cacheKey)) {
+        const cached = productListingCache.get(cacheKey)!;
+        setItems(cached.items);
+        setCursor(cached.cursor);
+        setHasMore(cached.hasMore);
+      }
     }
     updateUrlParams(categorySlug, undefined);
   };
@@ -148,7 +150,7 @@ export function ProductsListingClient({
         categorySlug: activeCategory || undefined,
         q: searchTerm.trim() || undefined,
         cursor,
-        skip: items.length,
+        skip: cursor ? undefined : items.length,
         take: initialBatchCount,
       });
 

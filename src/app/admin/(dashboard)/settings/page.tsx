@@ -17,6 +17,18 @@ export default async function SettingsPage() {
   await requireAdmin({ allowRedirect: true });
   const settings = await SettingsService.getSettings();
   const channels = await SettingsService.getChannels();
+  const { baleBotToken, eitaaBotToken, ...safeSettings } = settings;
 
-  return <SettingsManager initialSettings={settings} initialChannels={channels} />;
+  return (
+    <SettingsManager
+      initialSettings={{
+        ...safeSettings,
+        baleBotToken: null,
+        eitaaBotToken: null,
+      }}
+      initialChannels={channels}
+      hasBaleBotToken={Boolean(baleBotToken)}
+      hasEitaaBotToken={Boolean(eitaaBotToken)}
+    />
+  );
 }

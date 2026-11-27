@@ -1,111 +1,124 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
+import { ChevronDown, BookOpen } from 'lucide-react';
 import { Container } from '@/components/ui/container';
-import { ChevronDown, HelpCircle } from 'lucide-react';
+import { PillButton } from '@/components/ui/pill-button';
+import { FAQ_ENTRIES } from '@/content/faq-data';
 
-interface FaqItem {
+export const FAQS = FAQ_ENTRIES.filter((entry) => entry.featuredOnHome).map((entry) => ({
+  id: entry.id,
+  question: entry.question,
+  answer: entry.shortAnswer,
+  categoryLabel: entry.categoryLabel,
+}));
+
+export interface FaqItem {
   id: string;
   question: string;
   answer: string;
+  categoryLabel?: string | null;
 }
 
-const FAQS: FaqItem[] = [
-  {
-    id: 'crystallization',
-    question: 'آیا رُس بستن (شکرک زدن) عسل نشانه تقلبی بودن آن است؟',
-    answer:
-      'خیر، کاملاً برعکس! رس بستن (Crystallization) فرآیندی کاملاً طبیعی و زیستی در عسل‌های خام و حرارت‌ندیده است که نشان‌دهنده حفظ تمام دیاستازها، آنزیم‌ها و گرده‌های طبیعی گل است. عسل‌های صنعتی با حرارت دادن بالا مانع از این اتفاق می‌شوند اما خاصیت درمانی عسل را نابود می‌کنند. برای بازگرداندن عسل به حالت روان، کافی است ظرف آن را در آب گرم کمتر از ۴۰ درجه سانتی‌گراد (بن‌ماری) قرار دهید.',
-  },
-  {
-    id: 'storage',
-    question: 'بهترین روش نگهداری عسل طبیعی چیست؟',
-    answer:
-      'عسل طبیعی نیازی به یخچال ندارد! دمای یخچال فرآیند تبلور و رُس بستن را تسریع می‌کند. بهترین مکان برای نگهداری عسل، محیط خشک، خنک و دور از نور مستقیم خورشید (در دمای اتاق بین ۱۸ تا ۲۵ درجه سانتی‌گراد) و در ظروف شیشه‌ای با درب کاملاً محکم است تا رطوبت محیط را به خود جذب نکند.',
-  },
-  {
-    id: 'raw-vs-commercial',
-    question: 'تفاوت عسل خام طبیعی با عسل‌های سوپرمارکتی در چیست؟',
-    answer:
-      'عسل خام باباخُرم بدون حرارت‌دهی، بدون فیلتراسیون با فشار بالا و مستقیماً از کندو استخراج می‌شود؛ بنابراین پر از آنتی‌اکسیدان، پروپولیس و گرده گل است. در مقابل، عسل‌های تجاری سوپرمارکتی جهت جلوگیری از شکرک زدن و افزایش ماندگاری ظاهری، تا دمای ۷۰ درجه حرارت دیده و تمام خواص دارویی خود را از دست می‌دهند.',
-  },
-  {
-    id: 'diabetes',
-    question: 'آیا افراد مبتلا به دیابت می‌توانند از عسل باباخُرم استفاده کنند؟',
-    answer:
-      'عسل‌های طبیعی باباخُرم (به‌ویژه عسل گون و عسل کُنار) کاملاً طبیعی، خام و بدون تغذیه مصنوعی زنبورها تولید می‌شوند. با این حال، افراد دیابتی باید تحت نظر پزشک معالج و با کنترل قند خون، به میزان حساب‌شده مصرف نمایند، چرا که قندهای طبیعی میوه و گل‌ها نیز نیاز به مدیریت انسولین دارند.',
-  },
-];
+export interface FaqSectionProps {
+  badgeText?: string | null;
+  title?: string | null;
+  subtitle?: string | null;
+  items?: FaqItem[] | null;
+}
 
-export function FaqSection() {
-  const [openId, setOpenId] = useState<string | null>(FAQS[0].id);
+export function FaqSection({
+  badgeText,
+  title,
+  subtitle,
+  items,
+}: FaqSectionProps = {}) {
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
-  const toggle = (id: string) => {
-    setOpenId((prev) => (prev === id ? null : id));
-  };
+  const displayBadge = badgeText || 'دانشنامه عسل طبیعی';
+  const displayTitle = title || 'سوالات متداول مشتریان';
+  const displaySubtitle = subtitle || 'پاسخ علمی به پرسش‌های پرتکرار درباره اصالت عسل، طبع و تفاوت انواع عسل طبیعی.';
+  const displayItems = (items && items.length > 0) ? items : FAQS;
 
   return (
-    <section className="py-16 sm:py-24 bg-[#FDFBF8]" aria-labelledby="faq-heading">
-      <Container size="narrow">
-        <div className="text-center space-y-4 mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F59E0B]/15 border border-[#F59E0B]/30 text-[#C86A00] text-xs sm:text-sm font-bold">
-            <HelpCircle className="w-4 h-4 text-[#F59E0B]" />
-            <span>پاسخ به ابهامات رایج شما</span>
+    <section
+      aria-labelledby="faq-heading"
+      className="py-12 sm:py-16 bg-[#FDFBF8] border-t border-[#EFE9E0]"
+    >
+      <Container className="max-w-4xl">
+        <div className="text-center mb-8 sm:mb-10">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FAF5EB] border border-[#D9A441]/40 text-[#C58A2A] text-xs font-bold mb-3">
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>{displayBadge}</span>
           </div>
 
           <h2
             id="faq-heading"
-            className="text-2xl sm:text-4xl font-black text-[#2B2017] leading-snug sm:leading-normal"
+            className="text-2xl sm:text-3xl font-black text-[#2B2017] mb-3"
           >
-            پرسش‌های متداول درباره عسل طبیعی
+            {displayTitle}
           </h2>
 
+          <div className="flex items-center justify-center gap-3 my-3" aria-hidden="true">
+            <span className="h-[1px] w-10 sm:w-16 bg-[#D9A441]/60" />
+            <span className="w-2 h-2 rotate-45 bg-[#D9A441]" />
+            <span className="h-[1px] w-10 sm:w-16 bg-[#D9A441]/60" />
+          </div>
+
           <p className="text-sm sm:text-base text-[#5C5248] font-medium max-w-xl mx-auto">
-            همه آنچه باید درباره تشخیص اصالت، نگهداری صحیح و مصرف هوشمندانه عسل طبیعی بدانید.
+            {displaySubtitle}
           </p>
         </div>
 
-        {/* Accordion list */}
-        <div className="space-y-4">
-          {FAQS.map((faq) => {
-            const isOpen = openId === faq.id;
+        <div className="space-y-3">
+          {displayItems.map((faq, idx) => {
+            const isOpen = openIndex === idx;
             return (
               <div
-                key={faq.id}
-                className={`border rounded-none transition-all ${
-                  isOpen
-                    ? 'border-[#F59E0B] bg-white shadow-md'
-                    : 'border-[#EFE9E0] bg-white/70 hover:border-stone-300'
-                }`}
+                key={faq.id || idx}
+                className="bg-white border border-[#EFE9E0] rounded-none shadow-xs overflow-hidden transition-colors hover:border-[#D9A441]/60"
               >
                 <button
                   type="button"
-                  onClick={() => toggle(faq.id)}
+                  onClick={() => setOpenIndex(isOpen ? null : idx)}
                   aria-expanded={isOpen}
-                  className="w-full p-5 sm:p-6 text-right flex items-center justify-between gap-4 cursor-pointer focus:outline-none"
+                  className="w-full px-5 sm:px-6 py-4 text-right flex items-center justify-between gap-4 hover:bg-[#FAF6EE]/60 transition-colors cursor-pointer"
                 >
-                  <span className={`text-base sm:text-lg font-black ${isOpen ? 'text-[#C86A00]' : 'text-[#2B2017]'}`}>
+                  <span className="font-black text-[#2B2017] text-sm sm:text-base leading-snug">
                     {faq.question}
                   </span>
-                  <div
-                    className={`w-8 h-8 rounded-none border flex items-center justify-center shrink-0 transition-transform duration-300 ${
-                      isOpen
-                        ? 'border-[#F59E0B] bg-[#FFFBEB] text-[#C86A00] rotate-180'
-                        : 'border-[#EFE9E0] text-[#5C5248]'
+                  <ChevronDown
+                    className={`w-5 h-5 shrink-0 text-[#D97706] transition-transform duration-200 ${
+                      isOpen ? 'rotate-180' : ''
                     }`}
-                  >
-                    <ChevronDown className="w-4 h-4" />
-                  </div>
+                  />
                 </button>
-
                 {isOpen && (
-                  <div className="px-5 pb-6 sm:px-6 pt-1 text-sm sm:text-base text-[#4A3B32] font-medium leading-loose border-t border-stone-100 animate-fadeIn">
-                    {faq.answer}
+                  <div className="px-5 sm:px-6 pb-5 pt-2 text-[#4A3B31] text-sm sm:text-base font-medium leading-relaxed border-t border-[#EFE9E0] space-y-3 bg-[#FFFEFA]">
+                    <p>{faq.answer}</p>
+                    <div>
+                      <Link
+                        href={faq.id ? `/faq#${faq.id}` : '/faq'}
+                        className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-black text-[#B45309] hover:text-[#78350F] underline underline-offset-4"
+                      >
+                        مطالعه توضیح علمی کامل
+                      </Link>
+                    </div>
                   </div>
                 )}
               </div>
             );
           })}
+        </div>
+
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+          <PillButton variant="gold" size="md" href="/faq">
+            مشاهده همه سوالات متداول ({FAQ_ENTRIES.length} پرسش)
+          </PillButton>
+          <PillButton variant="green" size="md" href="/magazine">
+            ورود به مجله علمی
+          </PillButton>
         </div>
       </Container>
     </section>

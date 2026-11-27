@@ -92,12 +92,48 @@ export function NewSectionClient() {
               template: selectedTemplate.id,
               status: 'DRAFT',
               background: selectedTemplate.defaultBackground,
-              content: {
-                title: '',
-                images: [{ url: '/images/hero-1.jpg', alt: '' }],
-                image: { url: selectedTemplate.thumbnail, alt: '' },
-                body: '',
-              },
+              content: (() => {
+                switch (selectedTemplate.id) {
+                  case 'heritage-default':
+                    return {
+                      badgeText: 'اصالت زنبورداری کوهستان',
+                      title: 'دست‌چین شهد بکر از کهن‌ترین مراتع ارسباران',
+                      subtitle: 'ما در باباخُرم، با تکیه بر چهار اصل خدشه‌ناپذیر، اصالت و سلامت هر قطره عسل را تضمین می‌کنیم.',
+                      bgImageUrl: '/images/beekeeping.jpg',
+                      pillars: [],
+                      ctaText: 'مشاهده کندوخانه‌ها و تصاویر مستند',
+                      ctaHref: '/about',
+                    };
+                  case 'honey-finder-default':
+                    return {
+                      kicker: 'راهنمای هوشمند',
+                      title: 'عسل مناسب طبع و نیاز شما کدام است؟',
+                      subtitle: 'هدف و اولویت مصرف خود را انتخاب کنید تا تخصصی‌ترین محصول را همراه با خواص ویژه به شما معرفی کنیم.',
+                      purposes: [],
+                    };
+                  case 'testimonials-default':
+                    return {
+                      badgeText: 'صدای همراهان باباخُرم',
+                      title: 'روایت خریداران از طعم و اصالت واقعی',
+                      subtitle: 'نظرات ثبت‌شده مشتریانی که خلوص و عطر عسل کوهستان را در زندگی روزمره‌شان تجربه کرده‌اند.',
+                      reviews: [],
+                    };
+                  case 'faq-default':
+                    return {
+                      badgeText: 'دانشنامه عسل طبیعی',
+                      title: 'سوالات متداول مشتریان',
+                      subtitle: 'پاسخ علمی به پرسش‌های پرتکرار درباره اصالت عسل، طبع و تفاوت انواع عسل طبیعی.',
+                      items: [],
+                    };
+                  default:
+                    return {
+                      title: '',
+                      images: [{ url: '/images/hero-1.jpg', alt: '' }],
+                      image: { url: selectedTemplate.thumbnail, alt: '' },
+                      body: '',
+                    };
+                }
+              })(),
             }}
           />
         </div>
