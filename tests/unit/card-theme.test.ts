@@ -86,4 +86,41 @@ describe('Dynamic Card Palette & Non-Adjacent Coloring', () => {
     expect(DEFAULT_CARD_PALETTE.length).toBeGreaterThanOrEqual(4);
     expect(CURATED_BRAND_PRESETS.length).toBeGreaterThanOrEqual(5);
   });
+
+  it('distributes colors evenly (fair-share) and prevents ping-pong (A -> B -> A) patterns', () => {
+    const items = Array.from({ length: 20 }, (_, i) => ({
+      id: `product-${i}`,
+      slug: `product-slug-${i}`,
+    }));
+
+    // In a 1D list (or carousel) of 20 items
+    const themes = resolveNonAdjacentThemes(items, { columns: 20 });
+    expect(themes).toHaveLength(20);
+
+    // 1. Strict zero adjacent duplicates
+    for (let i = 1; i < themes.length; i++) {
+      expect(themes[i]).not.toBe(themes[i - 1]);
+    }
+
+    // 2. Anti-ping-pong: no direct A -> B -> A oscillation
+    let pingPongCount = 0;
+    for (let i = 2; i < themes.length; i++) {
+      if (themes[i] === themes[i - 2]) {
+        pingPongCount++;
+      }
+    }
+    // With 4 colors and penalty +5000, ping-pong should be 0 in a 1D sequence
+    expect(pingPongCount).toBe(0);
+
+    // 3. Fair-share: each of the 4 default colors should be used approximately 5 times (within 3..7)
+    const counts: Record<string, number> = {};
+    for (const th of themes) {
+      counts[th] = (counts[th] || 0) + 1;
+    }
+    const defaultIds = DEFAULT_CARD_PALETTE.map((p) => p.id);
+    for (const id of defaultIds) {
+      expect(counts[id] || 0).toBeGreaterThanOrEqual(3);
+      expect(counts[id] || 0).toBeLessThanOrEqual(7);
+    }
+  });
 });

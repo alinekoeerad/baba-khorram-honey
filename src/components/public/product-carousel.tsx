@@ -207,7 +207,7 @@ export function ProductCarousel({
                   scrollSnapStop: 'always',
                 }}
               >
-                <Link href={`/products/${p.slug}`} className="flex flex-col h-full">
+                <Link href={`/products/${p.slug}?theme=${encodeURIComponent(themeKey)}`} className="flex flex-col h-full">
                   {/* Image Wrap - Aspect 3:4 portrait presentation with Glassy Magnifier Hover */}
                   <div className="w-full aspect-[3/4] overflow-hidden shrink-0 relative bg-[#FAF8F5] rounded-none">
                     <Image

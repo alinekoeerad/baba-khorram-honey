@@ -21,6 +21,8 @@ import { AddToCartSlot } from '@/components/public/add-to-cart-slot';
 import { MobileStickyBuyBar } from '@/components/public/mobile-sticky-buy-bar';
 import { ProductCarousel } from '@/components/public/product-carousel';
 import { toPersianDigits, resolveItemCardTheme } from '@/lib/domain-utils';
+import { getCardThemeStyles, resolveSingleCardTheme } from '@/lib/card-theme';
+import { useCardPalette } from '@/lib/card-palette-context';
 import { AlertTriangle, ShieldCheck, Truck, Sparkles, CheckCircle2 } from 'lucide-react';
 import type { ProductCardViewModel } from '@/server/queries/products';
 
@@ -78,6 +80,7 @@ export interface ProductDetailViewProps {
   relatedProducts?: ProductCardViewModel[];
   isAdminPreview?: boolean;
   cartEnabled?: boolean;
+  themeOverride?: string;
 }
 
 export function ProductDetailView({
@@ -85,6 +88,7 @@ export function ProductDetailView({
   relatedProducts = [],
   isAdminPreview = false,
   cartEnabled = true,
+  themeOverride,
 }: ProductDetailViewProps) {
   const metaChips = [
     { label: 'طبع غذایی', value: product.foodNature },
@@ -94,35 +98,38 @@ export function ProductDetailView({
     { label: 'رنگ عسل', value: product.color },
   ].filter((chip) => chip.value && chip.value.trim().length > 0);
 
-  const resolvedThemeKey = resolveItemCardTheme(product);
-  const themeColors = THEME_BREADCRUMB_COLORS[resolvedThemeKey] || THEME_BREADCRUMB_COLORS.GREEN;
+  const palette = useCardPalette();
+  const effectiveThemeKey = (themeOverride && themeOverride !== 'AUTO')
+    ? themeOverride
+    : (product.cardTheme && product.cardTheme !== 'AUTO' ? product.cardTheme : resolveSingleCardTheme(product, palette));
+  const themeStyles = getCardThemeStyles(effectiveThemeKey, palette);
 
   return (
     <WoodBackground className="py-10 sm:py-16 min-h-screen">
       <Container>
-        {/* Breadcrumb Navigation - Transparent with dynamic theme primary color matching its card */}
+        {/* Breadcrumb Navigation - Transparent with dynamic theme primary color matching its card 100% */}
         <nav
           aria-label="مسیر راهنما"
           className="flex items-center gap-2 text-xs sm:text-sm font-black mb-8 bg-transparent"
         >
           <Link
             href="/"
-            style={{ color: themeColors.hex }}
+            style={{ color: themeStyles.bg }}
             className="hover:underline underline-offset-4 transition-colors font-black"
           >
             صفحه اصلی
           </Link>
-          <span style={{ color: themeColors.hex, opacity: 0.7 }} aria-hidden="true">/</span>
+          <span style={{ color: themeStyles.bg, opacity: 0.7 }} aria-hidden="true">/</span>
           <Link
             href="/products"
-            style={{ color: themeColors.hex }}
+            style={{ color: themeStyles.bg }}
             className="hover:underline underline-offset-4 transition-colors font-black"
           >
             محصولات
           </Link>
-          <span style={{ color: themeColors.hex, opacity: 0.7 }} aria-hidden="true">/</span>
+          <span style={{ color: themeStyles.bg, opacity: 0.7 }} aria-hidden="true">/</span>
           <span
-            style={{ color: themeColors.hex }}
+            style={{ color: themeStyles.bg }}
             className="truncate max-w-[240px] font-black"
           >
             {product.nameFa}

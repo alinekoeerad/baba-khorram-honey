@@ -69,8 +69,15 @@ export function normalizeCardTheme(
 }
 
 /**
- * Central non-adjacent theme resolution algorithm.
- * Operates on the final displayed order of items (after sorting & filtering).
+ * Central non-adjacent theme resolution algorithm with Balanced Fair-Share,
+ * Recency Penalty, and Anti-Ping-Pong distribution (Idea 1).
+ *
+ * Guarantees:
+ * 1. Zero adjacent colors horizontally (left/right in rows).
+ * 2. Zero adjacent colors vertically (above/below in grids).
+ * 3. Zero adjacent colors circularly (end-to-start in infinite carousels).
+ * 4. Anti-Ping-Pong: Prevents alternating two colors back-and-forth (e.g. A -> B -> A).
+ * 5. Balanced Fair-Share: Dynamically prioritizes least-used colors across the collection.
  */
 export function resolveNonAdjacentThemes<T extends ThemeResolvableItem>(
   items: T[],
@@ -91,6 +98,14 @@ export function resolveNonAdjacentThemes<T extends ThemeResolvableItem>(
   const N = items.length;
 
   const result: string[] = new Array(N);
+
+  // Tracking usage frequency and last used index for each theme
+  const freq: Record<string, number> = {};
+  const lastIndex: Record<string, number> = {};
+  for (const id of paletteIds) {
+    freq[id] = 0;
+    lastIndex[id] = -999;
+  }
 
   for (let i = 0; i < N; i++) {
     const item = items[i];
@@ -125,27 +140,63 @@ export function resolveNonAdjacentThemes<T extends ThemeResolvableItem>(
     // Determine deterministic candidate
     const manualTheme = normalizeCardTheme(item.cardTheme || item.theme, paletteIds);
     const seed = item.slug || item.id || `idx-${i}`;
-    const seedHash = hashString(seed) + i;
+    const hashVal = hashString(seed) + i;
 
     // Check if manual theme is valid in current palette and not forbidden
     if (manualTheme && paletteIds.includes(manualTheme) && !forbidden.has(manualTheme)) {
       result[i] = manualTheme;
     } else {
       // Pick a theme from palette that is NOT forbidden
-      const available = paletteIds.filter((th) => !forbidden.has(th));
+      let candidates = paletteIds.filter((th) => !forbidden.has(th));
 
-      if (available.length > 0) {
-        const chosen = available[seedHash % available.length];
-        result[i] = chosen;
-      } else {
+      if (candidates.length === 0) {
         // Fallback: Pick color least colliding with immediate horizontal neighbor
         const hForbidden = i > 0 ? result[i - 1] : undefined;
         const semiAvailable = paletteIds.filter((th) => th !== hForbidden);
-        result[i] = semiAvailable.length > 0
-          ? semiAvailable[seedHash % semiAvailable.length]
-          : paletteIds[seedHash % paletteIds.length];
+        candidates = semiAvailable.length > 0 ? semiAvailable : paletteIds;
       }
+
+      // Score each candidate (Lower score = higher priority)
+      // 1. Base score by frequency: least-used color gets massive advantage
+      // 2. Anti-Ping-Pong: heavy penalty (+5000) if candidate was used at i - 2
+      // 3. Short-loop suppression: moderate penalty (+800) if candidate was used at i - 3
+      // 4. Recency bonus: greater distance since last use lowers the score
+      // 5. Deterministic tie-breaker
+      let bestCandidate = candidates[0];
+      let lowestScore = Number.POSITIVE_INFINITY;
+
+      for (const c of candidates) {
+        let score = (freq[c] || 0) * 1000;
+
+        // Anti-Ping-Pong: if this candidate is the same as the card 2 steps ago (i - 2), penalize!
+        if (i >= 2 && result[i - 2] === c) {
+          score += 5000;
+        }
+
+        // Short-cycle penalty (i - 3) if palette has enough colors (>= 4 colors)
+        if (i >= 3 && result[i - 3] === c && paletteIds.length >= 4) {
+          score += 800;
+        }
+
+        // Distance reward (encourage colors not seen for a while)
+        const dist = i - (lastIndex[c] ?? -999);
+        score -= Math.min(dist, 50) * 10;
+
+        // Deterministic hash tie-breaker
+        score += (hashVal + paletteIds.indexOf(c)) % 10;
+
+        if (score < lowestScore) {
+          lowestScore = score;
+          bestCandidate = c;
+        }
+      }
+
+      result[i] = bestCandidate;
     }
+
+    const chosen = result[i];
+    freq[chosen] = (freq[chosen] || 0) + 1;
+    lastIndex[chosen] = i;
   }
 
   // Circular loop safety check

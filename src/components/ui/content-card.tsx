@@ -268,11 +268,20 @@ export function ContentCard({
 
   const objectPositionClass = FOCAL_MAP[rawFocal] || (rawFocal.includes('top') ? 'object-top' : rawFocal.includes('bottom') ? 'object-bottom' : 'object-center');
 
+  // Propagate card theme to target URL so detail page breadcrumbs match card color 100%
+  const targetHref = React.useMemo(() => {
+    if (!href) return href;
+    if (!resolvedTheme || resolvedTheme === 'AUTO') return href;
+    if (href.includes('theme=')) return href;
+    const sep = href.includes('?') ? '&' : '?';
+    return `${href}${sep}theme=${encodeURIComponent(resolvedTheme)}`;
+  }, [href, resolvedTheme]);
+
   // Horizontal variant (Mobile-row: Image on visual right in RTL, text on left)
   if (variant === 'horizontal') {
     return (
       <Link
-        href={href}
+        href={targetHref}
         style={{
           backgroundColor: dynamicStyles.bg,
           borderColor: dynamicStyles.borderColor,
@@ -365,7 +374,7 @@ export function ContentCard({
   // Vertical Standard Card (Desktop & Default) -> Aspect 3:4 portrait + Glassy Magnifier Hover
   return (
     <Link
-      href={href}
+      href={targetHref}
       style={{
         backgroundColor: dynamicStyles.bg,
         borderColor: dynamicStyles.borderColor,

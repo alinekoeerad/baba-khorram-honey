@@ -37,6 +37,9 @@ interface RecipePageProps {
   params: Promise<{
     slug: string;
   }>;
+  searchParams?: Promise<{
+    theme?: string;
+  }>;
 }
 
 export async function generateMetadata({ params }: RecipePageProps): Promise<Metadata> {
@@ -89,8 +92,10 @@ export async function generateMetadata({ params }: RecipePageProps): Promise<Met
   };
 }
 
-export default async function RecipeDetailPage({ params }: RecipePageProps) {
+export default async function RecipeDetailPage({ params, searchParams }: RecipePageProps) {
   const { slug } = await params;
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+  const themeOverride = resolvedSearchParams?.theme;
   const { recipe, relatedRecipes, redirect } = await getPublicRecipeBySlug(slug);
 
   // 1. Handle 301 Permanent Redirect
@@ -147,6 +152,7 @@ export default async function RecipeDetailPage({ params }: RecipePageProps) {
       <RecipeDetailView
         recipe={recipe}
         relatedRecipes={relatedRecipes}
+        themeOverride={themeOverride}
       />
     </>
   );

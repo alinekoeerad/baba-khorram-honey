@@ -39,6 +39,9 @@ interface ProductPageProps {
   params: Promise<{
     slug: string;
   }>;
+  searchParams?: Promise<{
+    theme?: string;
+  }>;
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
@@ -91,8 +94,10 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   };
 }
 
-export default async function ProductDetailPage({ params }: ProductPageProps) {
+export default async function ProductDetailPage({ params, searchParams }: ProductPageProps) {
   const { slug } = await params;
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+  const themeOverride = resolvedSearchParams?.theme;
   const { product, relatedProducts, redirect } = await getPublicProductBySlug(slug);
   const settings = await getPublicSiteSettings();
 
@@ -136,6 +141,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         product={product}
         relatedProducts={relatedProducts}
         cartEnabled={settings.cartEnabled}
+        themeOverride={themeOverride}
       />
     </>
   );

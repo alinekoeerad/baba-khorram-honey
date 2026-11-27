@@ -19,6 +19,8 @@ import { InteractiveMediaGallery } from '@/components/public/interactive-media-g
 import { ImageLightboxModal } from '@/components/admin/image-lightbox-modal';
 import { RecipeCarousel } from '@/components/public/recipe-carousel';
 import { toPersianDigits, ServingTypeValue, resolveItemCardTheme } from '@/lib/domain-utils';
+import { getCardThemeStyles, resolveSingleCardTheme } from '@/lib/card-theme';
+import { useCardPalette } from '@/lib/card-palette-context';
 import { ZoomIn } from 'lucide-react';
 import type { RecipeCardViewModel } from '@/server/queries/recipes';
 
@@ -80,6 +82,7 @@ export interface RecipeDetailViewProps {
   };
   relatedRecipes?: RecipeCardViewModel[];
   isAdminPreview?: boolean;
+  themeOverride?: string;
 }
 
 const SERVING_LABELS: Record<ServingTypeValue, string> = {
@@ -92,15 +95,19 @@ export function RecipeDetailView({
   recipe,
   relatedRecipes = [],
   isAdminPreview = false,
+  themeOverride,
 }: RecipeDetailViewProps) {
   const [lightboxSlide, setLightboxSlide] = useState<{ url: string; alt?: string | null; width?: number | null; height?: number | null } | null>(null);
-  const resolvedThemeKey = resolveItemCardTheme(recipe);
-  const themeColors = THEME_BREADCRUMB_COLORS[resolvedThemeKey] || THEME_BREADCRUMB_COLORS.GREEN;
+  const palette = useCardPalette();
+  const effectiveThemeKey = (themeOverride && themeOverride !== 'AUTO')
+    ? themeOverride
+    : (recipe.cardTheme && recipe.cardTheme !== 'AUTO' ? recipe.cardTheme : resolveSingleCardTheme(recipe, palette));
+  const themeStyles = getCardThemeStyles(effectiveThemeKey, palette);
 
   return (
     <WoodBackground className="py-12 sm:py-20 min-h-screen">
       <Container size="narrow" className="space-y-10 sm:space-y-12">
-        {/* Breadcrumb Navigation - Transparent with dynamic theme primary color matching its card */}
+        {/* Breadcrumb Navigation - Transparent with dynamic theme primary color matching its card 100% */}
         <div className="flex justify-center">
           <nav
             aria-label="مسیر راهنما"
@@ -108,22 +115,22 @@ export function RecipeDetailView({
           >
             <Link
               href="/"
-              style={{ color: themeColors.hex }}
+              style={{ color: themeStyles.bg }}
               className="hover:underline underline-offset-4 transition-colors font-black"
             >
               صفحه اصلی
             </Link>
-            <span style={{ color: themeColors.hex, opacity: 0.7 }} aria-hidden="true">/</span>
+            <span style={{ color: themeStyles.bg, opacity: 0.7 }} aria-hidden="true">/</span>
             <Link
               href="/recipes"
-              style={{ color: themeColors.hex }}
+              style={{ color: themeStyles.bg }}
               className="hover:underline underline-offset-4 transition-colors font-black"
             >
               دستورها و دسرها
             </Link>
-            <span style={{ color: themeColors.hex, opacity: 0.7 }} aria-hidden="true">/</span>
+            <span style={{ color: themeStyles.bg, opacity: 0.7 }} aria-hidden="true">/</span>
             <span
-              style={{ color: themeColors.hex }}
+              style={{ color: themeStyles.bg }}
               className="truncate max-w-[200px] font-black"
             >
               {recipe.nameFa}
