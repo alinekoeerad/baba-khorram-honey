@@ -64,10 +64,55 @@ const PURPOSES: PurposeOption[] = [
   },
 ];
 
-export function HoneyFinder({ products = [] }: { products?: any[] }) {
-  const [selectedPurposeId, setSelectedPurposeId] = useState(PURPOSES[0].id);
+export interface HoneyFinderProps {
+  products?: any[];
+  kicker?: string | null;
+  title?: string | null;
+  subtitle?: string | null;
+  purposes?: Array<{
+    id: string;
+    label: string;
+    honeyName: string;
+    honeySlug: string;
+    description: string;
+    tasteProfile?: string | null;
+  }>;
+}
 
-  const selected = PURPOSES.find((p) => p.id === selectedPurposeId) || PURPOSES[0];
+export function HoneyFinder({
+  products = [],
+  kicker,
+  title,
+  subtitle,
+  purposes: customPurposes,
+}: HoneyFinderProps) {
+  const displayKicker = kicker || 'راهنمای هوشمند انتخاب عسل';
+  const displayTitle = title || 'کدام عسل باباخُرم برای شما مناسب‌تر است؟';
+  const displaySubtitle =
+    subtitle ||
+    'با پاسخ به یک سوال ساده، عسل طبیعی مناسب نیاز سلامتی یا ذائقه خود را در چند ثانیه پیدا کنید.';
+
+  const purposesList: PurposeOption[] =
+    Array.isArray(customPurposes) && customPurposes.length > 0
+      ? customPurposes.map((cp, idx) => {
+          const fallbackPurpose = PURPOSES[idx % PURPOSES.length];
+          return {
+            id: cp.id,
+            label: cp.label,
+            icon: fallbackPurpose.icon,
+            honeyName: cp.honeyName,
+            honeySlug: cp.honeySlug,
+            description: cp.description,
+            tasteProfile: cp.tasteProfile || fallbackPurpose.tasteProfile,
+            keywords: [cp.honeyName, cp.honeySlug],
+            preferredNature: fallbackPurpose.preferredNature,
+          };
+        })
+      : PURPOSES;
+
+  const [selectedPurposeId, setSelectedPurposeId] = useState(purposesList[0]?.id || PURPOSES[0].id);
+
+  const selected = purposesList.find((p) => p.id === selectedPurposeId) || purposesList[0] || PURPOSES[0];
 
   // Filter only live PUBLISHED & available products
   const activeProducts = (products || []).filter(
@@ -125,25 +170,25 @@ export function HoneyFinder({ products = [] }: { products?: any[] }) {
         <div className="text-center space-y-4 mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F59E0B]/20 border border-[#F59E0B]/35 text-[#C86A00] text-xs sm:text-sm font-bold">
             <Sparkles className="w-4 h-4 text-[#F59E0B]" />
-            <span>راهنمای هوشمند انتخاب عسل</span>
+            <span>{displayKicker}</span>
           </div>
 
           <h2
             id="finder-heading"
             className="text-2xl sm:text-4xl font-black text-[#2B2017] leading-snug sm:leading-normal"
           >
-            کدام عسل برای سلامتی شما مناسب‌تر است؟
+            {displayTitle}
           </h2>
 
           <p className="text-sm sm:text-base text-[#5C5248] font-medium max-w-xl mx-auto">
-            هدف اصلی خود از مصرف عسل را انتخاب کنید تا تخصصی‌ترین شهد طبیعی را به شما معرفی کنیم.
+            {displaySubtitle}
           </p>
         </div>
 
         <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Options List (5 cols) */}
           <div className="lg:col-span-5 space-y-3">
-            {PURPOSES.map((purpose) => {
+            {purposesList.map((purpose) => {
               const Icon = purpose.icon;
               const isSelected = selectedPurposeId === purpose.id;
               return (

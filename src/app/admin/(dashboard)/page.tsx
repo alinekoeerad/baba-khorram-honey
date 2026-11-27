@@ -35,6 +35,8 @@ export default async function AdminDashboardPage() {
     totalOrders,
     newOrders,
     contactedOrders,
+    shippedOrders,
+    cancelledOrders,
     totalProducts,
     publishedProducts,
     draftProducts,
@@ -51,10 +53,12 @@ export default async function AdminDashboardPage() {
     activeAdmins,
     recentAuditLogs,
   ] = await Promise.all([
-    db.order.findMany({ orderBy: { createdAt: 'desc' } }),
+    db.order.findMany({ orderBy: { createdAt: 'desc' }, take: 500 }),
     db.order.count(),
     db.order.count({ where: { status: 'NEW' } }),
     db.order.count({ where: { status: 'CONTACTED' } }),
+    db.order.count({ where: { status: 'SHIPPED' } }),
+    db.order.count({ where: { status: 'CANCELLED' } }),
     db.product.count(),
     db.product.count({ where: { status: 'PUBLISHED' } }),
     db.product.count({ where: { status: 'DRAFT' } }),
@@ -121,12 +125,12 @@ export default async function AdminDashboardPage() {
 
   // 2. Order Status Breakdown
   const statusCounts = {
-    NEW: allOrders.filter((o: OrderRecord) => o.status === 'NEW').length,
-    CONTACTED: allOrders.filter((o: OrderRecord) => o.status === 'CONTACTED').length,
-    SHIPPED: allOrders.filter((o: OrderRecord) => o.status === 'SHIPPED').length,
-    CANCELLED: allOrders.filter((o: OrderRecord) => o.status === 'CANCELLED').length,
+    NEW: newOrders,
+    CONTACTED: contactedOrders,
+    SHIPPED: shippedOrders,
+    CANCELLED: cancelledOrders,
   };
-  const totalOrdersForBreakdown = allOrders.length;
+  const totalOrdersForBreakdown = totalOrders;
   const statusPercentages = {
     NEW: totalOrdersForBreakdown > 0 ? Math.round((statusCounts.NEW / totalOrdersForBreakdown) * 100) : 0,
     CONTACTED: totalOrdersForBreakdown > 0 ? Math.round((statusCounts.CONTACTED / totalOrdersForBreakdown) * 100) : 0,

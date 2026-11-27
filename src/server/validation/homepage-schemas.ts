@@ -241,6 +241,90 @@ export const contentGridContentSchema = z.object({
 
 export type ContentGridContent = z.infer<typeof contentGridContentSchema>;
 
+// 7. ARTISAN_HERITAGE (heritage-default)
+export const heritagePillarSchema = z.object({
+  id: z.string().default(() => Math.random().toString(36).substring(2, 9)),
+  icon: z.enum(['mountain', 'compass', 'shield', 'sparkles']).default('mountain'),
+  title: z.string().min(1, 'عنوان ستون الزامی است').max(100).trim(),
+  desc: z.string().min(1, 'توضیحات ستون الزامی است').max(400).trim(),
+});
+export type HeritagePillar = z.infer<typeof heritagePillarSchema>;
+
+export const artisanHeritageContentSchema = z.object({
+  schemaVersion: z.literal(1).default(1),
+  badgeText: z.string().max(80).optional().nullable(),
+  title: z.string().max(150).optional().nullable(),
+  subtitle: z.string().max(400).optional().nullable(),
+  bgImageUrl: z.string().optional().nullable(),
+  pillars: z.array(heritagePillarSchema).max(6).default([]),
+  ctaText: z.string().max(80).optional().nullable(),
+  ctaHref: z.string().max(200).optional().nullable(),
+  preserved: z.record(z.string(), z.any()).optional(),
+});
+export type ArtisanHeritageContent = z.infer<typeof artisanHeritageContentSchema>;
+
+// 8. HONEY_FINDER (honey-finder-default)
+export const honeyFinderPurposeSchema = z.object({
+  id: z.string().min(1),
+  label: z.string().min(1, 'عنوان هدف الزامی است').max(100).trim(),
+  honeyName: z.string().min(1).max(100).trim(),
+  honeySlug: z.string().min(1).max(100).trim(),
+  description: z.string().max(400).trim(),
+  tasteProfile: z.string().max(200).optional().nullable(),
+});
+export type HoneyFinderPurpose = z.infer<typeof honeyFinderPurposeSchema>;
+
+export const honeyFinderContentSchema = z.object({
+  schemaVersion: z.literal(1).default(1),
+  kicker: z.string().max(60).optional().nullable(),
+  title: z.string().max(150).optional().nullable(),
+  subtitle: z.string().max(400).optional().nullable(),
+  purposes: z.array(honeyFinderPurposeSchema).max(10).default([]),
+  preserved: z.record(z.string(), z.any()).optional(),
+});
+export type HoneyFinderContent = z.infer<typeof honeyFinderContentSchema>;
+
+// 9. TESTIMONIALS (testimonials-default)
+export const testimonialReviewSchema = z.object({
+  id: z.string().default(() => Math.random().toString(36).substring(2, 9)),
+  author: z.string().min(1, 'نام نویسنده الزامی است').max(100).trim(),
+  city: z.string().max(60).default(''),
+  product: z.string().max(100).default(''),
+  date: z.string().max(50).default(''),
+  rating: z.number().int().min(1).max(5).default(5),
+  comment: z.string().min(1, 'متن نظر الزامی است').max(600).trim(),
+});
+export type TestimonialReview = z.infer<typeof testimonialReviewSchema>;
+
+export const testimonialsContentSchema = z.object({
+  schemaVersion: z.literal(1).default(1),
+  badgeText: z.string().max(80).optional().nullable(),
+  title: z.string().max(150).optional().nullable(),
+  subtitle: z.string().max(400).optional().nullable(),
+  reviews: z.array(testimonialReviewSchema).max(20).default([]),
+  preserved: z.record(z.string(), z.any()).optional(),
+});
+export type TestimonialsContent = z.infer<typeof testimonialsContentSchema>;
+
+// 10. FAQ_SECTION (faq-default)
+export const faqSectionItemSchema = z.object({
+  id: z.string().default(() => Math.random().toString(36).substring(2, 9)),
+  question: z.string().min(1, 'پرسش الزامی است').max(250).trim(),
+  answer: z.string().min(1, 'پاسخ الزامی است').max(1000).trim(),
+  categoryLabel: z.string().max(60).optional().nullable(),
+});
+export type FaqSectionItem = z.infer<typeof faqSectionItemSchema>;
+
+export const faqSectionContentSchema = z.object({
+  schemaVersion: z.literal(1).default(1),
+  badgeText: z.string().max(80).optional().nullable(),
+  title: z.string().max(150).optional().nullable(),
+  subtitle: z.string().max(400).optional().nullable(),
+  items: z.array(faqSectionItemSchema).max(20).default([]),
+  preserved: z.record(z.string(), z.any()).optional(),
+});
+export type FaqSectionContent = z.infer<typeof faqSectionContentSchema>;
+
 // ---------------------------------------------------------------
 // Section CRUD Input Schema
 // ---------------------------------------------------------------

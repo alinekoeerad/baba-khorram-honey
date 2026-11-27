@@ -57,18 +57,49 @@ const REVIEWS: Review[] = [
   },
 ];
 
-export function TestimonialsSection() {
+export interface TestimonialsSectionProps {
+  badgeText?: string | null;
+  title?: string | null;
+  subtitle?: string | null;
+  reviews?: Array<{
+    id: string;
+    author: string;
+    city?: string;
+    product?: string;
+    date?: string;
+    rating: number;
+    comment: string;
+  }>;
+}
+
+export function TestimonialsSection({
+  badgeText,
+  title,
+  subtitle,
+  reviews: customReviews,
+}: TestimonialsSectionProps = {}) {
+  const reviewsList =
+    Array.isArray(customReviews) && customReviews.length > 0
+      ? customReviews
+      : REVIEWS;
+
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const prev = () => {
-    setCurrentIndex((i) => (i === 0 ? REVIEWS.length - 1 : i - 1));
+    setCurrentIndex((i) => (i === 0 ? reviewsList.length - 1 : i - 1));
   };
 
   const next = () => {
-    setCurrentIndex((i) => (i === REVIEWS.length - 1 ? 0 : i + 1));
+    setCurrentIndex((i) => (i === reviewsList.length - 1 ? 0 : i + 1));
   };
 
-  const current = REVIEWS[currentIndex];
+  const current = reviewsList[currentIndex] || reviewsList[0];
+
+  const displayBadge = badgeText || 'نظرات ثبت‌شده خریداران تاییدشده';
+  const displayTitle = title || 'تجربه مشتریان از عسل طبیعی باباخُرم';
+  const displaySubtitle =
+    subtitle ||
+    'بیش از ۱۰,۰۰۰ خانواده ایرانی روز خود را با شهد پاک و طبیعی کندوهای ما آغاز می‌کنند.';
 
   return (
     <section className="py-16 sm:py-24 bg-white border-y border-[#EFE9E0]" aria-labelledby="testimonials-heading">
@@ -76,18 +107,18 @@ export function TestimonialsSection() {
         <div className="text-center space-y-4 mb-12">
           <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs sm:text-sm font-bold">
             <CheckCircle className="w-4 h-4 text-emerald-600" />
-            <span>نظرات ثبت‌شده خریداران تاییدشده</span>
+            <span>{displayBadge}</span>
           </div>
 
           <h2
             id="testimonials-heading"
             className="text-2xl sm:text-4xl font-black text-[#2B2017] leading-snug sm:leading-normal"
           >
-            تجربه مشتریان از عسل طبیعی باباخُرم
+            {displayTitle}
           </h2>
 
           <p className="text-sm sm:text-base text-[#5C5248] font-medium max-w-xl mx-auto">
-            بیش از ۱۰,۰۰۰ خانواده ایرانی روز خود را با شهد پاک و طبیعی کندوهای ما آغاز می‌کنند.
+            {displaySubtitle}
           </p>
         </div>
 

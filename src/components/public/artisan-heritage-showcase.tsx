@@ -5,24 +5,71 @@ import { Container } from '@/components/ui/container';
 import { PillButton } from '@/components/ui/pill-button';
 import { Mountain, Compass, ShieldCheck, Sparkles } from 'lucide-react';
 
-export function ArtisanHeritageShowcase() {
-  const pillars = [
-    {
-      icon: Mountain,
-      title: 'ارتفاعات بکر زاگرس و البرز',
-      desc: 'استقرار کندوها در ارتفاع بالای ۲۰۰۰ متر به دور از هرگونه سموم شیمیایی کشاورزی، آلودگی‌های شهری و صنایع.',
-    },
-    {
-      icon: Compass,
-      title: 'کوچ‌نشینی پایدار سنتی',
-      desc: 'همراه با رویش فصلی گل‌های وحشی (گون، آویشن، گشنیز و کنار) با احترام کامل به چرخه زیستی زنبور عسل.',
-    },
-    {
-      icon: ShieldCheck,
-      title: 'شهد ۱۰۰٪ خام و گرما‌ندیده',
-      desc: 'برداشت سنتی با حفظ تمام آنزیم‌های زنده، گرده گل و مواد معدنی، بدون پاستوریزاسیون یا فرآوری صنعتی.',
-    },
-  ];
+const ICON_MAP = {
+  mountain: Mountain,
+  compass: Compass,
+  shield: ShieldCheck,
+  sparkles: Sparkles,
+};
+
+const DEFAULT_PILLARS = [
+  {
+    icon: Mountain,
+    title: 'ارتفاعات بکر زاگرس و البرز',
+    desc: 'استقرار کندوها در ارتفاع بالای ۲۰۰۰ متر به دور از هرگونه سموم شیمیایی کشاورزی، آلودگی‌های شهری و صنایع.',
+  },
+  {
+    icon: Compass,
+    title: 'کوچ‌نشینی پایدار سنتی',
+    desc: 'همراه با رویش فصلی گل‌های وحشی (گون، آویشن، گشنیز و کنار) با احترام کامل به چرخه زیستی زنبور عسل.',
+  },
+  {
+    icon: ShieldCheck,
+    title: 'شهد ۱۰۰٪ خام و گرما‌ندیده',
+    desc: 'برداشت سنتی با حفظ تمام آنزیم‌های زنده، گرده گل و مواد معدنی، بدون پاستوریزاسیون یا فرآوری صنعتی.',
+  },
+];
+
+export interface ArtisanHeritageShowcaseProps {
+  badgeText?: string | null;
+  title?: string | null;
+  subtitle?: string | null;
+  bgImageUrl?: string | null;
+  pillars?: Array<{
+    icon?: string;
+    title: string;
+    desc: string;
+  }>;
+  ctaText?: string | null;
+  ctaHref?: string | null;
+}
+
+export function ArtisanHeritageShowcase({
+  badgeText,
+  title,
+  subtitle,
+  bgImageUrl,
+  pillars: customPillars,
+  ctaText,
+  ctaHref,
+}: ArtisanHeritageShowcaseProps = {}) {
+  const displayBadge = badgeText || 'اصالت، ریشه در کوهستان دارد';
+  const displayTitle = title || 'هنر زنبورداری اصیل و پایدار باباخُرم';
+  const displaySubtitle =
+    subtitle ||
+    'بیش از سه دهه تعهد به استخراج عسل خالص، بدون دستکاری حرارتی و با تکیه بر دانش بومی کوچ در دشت‌های بکر ایران.';
+  const displayBg = bgImageUrl || '/images/beekeeping.jpg';
+  const displayCtaText = ctaText || 'مشاهده عسل‌های ییلاقی و کوهستان';
+  const displayCtaHref = ctaHref || '/products';
+
+  const pillars =
+    Array.isArray(customPillars) && customPillars.length > 0
+      ? customPillars.map((p) => ({
+          icon: ICON_MAP[(p.icon as keyof typeof ICON_MAP) || 'mountain'] || Mountain,
+          title: p.title,
+          desc: p.desc,
+        }))
+      : DEFAULT_PILLARS;
 
   return (
     <section
@@ -32,7 +79,7 @@ export function ArtisanHeritageShowcase() {
       {/* Background with texture & subtle radial glow */}
       <div
         className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-luminosity pointer-events-none"
-        style={{ backgroundImage: "url('/images/beekeeping.jpg')" }}
+        style={{ backgroundImage: `url('${displayBg}')` }}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-[#23150B]/90 via-[#23150B]/95 to-[#23150B] pointer-events-none" />
 
@@ -40,18 +87,18 @@ export function ArtisanHeritageShowcase() {
         <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F59E0B]/20 border border-[#F59E0B]/30 text-[#FBBF24] text-xs sm:text-sm font-bold">
             <Sparkles className="w-4 h-4 text-[#FBBF24]" />
-            <span>اصالت، ریشه در کوهستان دارد</span>
+            <span>{displayBadge}</span>
           </div>
 
           <h2
             id="heritage-heading"
             className="text-3xl sm:text-5xl font-black text-[#FFFBEB] leading-snug sm:leading-normal drop-shadow-md"
           >
-            هنر زنبورداری اصیل و پایدار باباخُرم
+            {displayTitle}
           </h2>
 
           <p className="text-base sm:text-lg text-[#E5D5C5] leading-relaxed font-medium max-w-2xl mx-auto">
-            بیش از سه دهه تعهد به استخراج عسل خالص، بدون دستکاری حرارتی و با تکیه بر دانش بومی کوچ در دشت‌های بکر ایران.
+            {displaySubtitle}
           </p>
         </div>
 
@@ -82,8 +129,8 @@ export function ArtisanHeritageShowcase() {
 
         {/* Action Button */}
         <div className="text-center">
-          <PillButton variant="gold" size="lg" href="/products">
-            مشاهده عسل‌های ییلاقی و کوهستان
+          <PillButton variant="gold" size="lg" href={displayCtaHref}>
+            {displayCtaText}
           </PillButton>
         </div>
       </Container>

@@ -14,8 +14,32 @@ export const FAQS = FAQ_ENTRIES.filter((entry) => entry.featuredOnHome).map((ent
   categoryLabel: entry.categoryLabel,
 }));
 
-export function FaqSection() {
+export interface FaqItem {
+  id: string;
+  question: string;
+  answer: string;
+  categoryLabel?: string | null;
+}
+
+export interface FaqSectionProps {
+  badgeText?: string | null;
+  title?: string | null;
+  subtitle?: string | null;
+  items?: FaqItem[] | null;
+}
+
+export function FaqSection({
+  badgeText,
+  title,
+  subtitle,
+  items,
+}: FaqSectionProps = {}) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  const displayBadge = badgeText || 'دانشنامه عسل طبیعی';
+  const displayTitle = title || 'سوالات متداول مشتریان';
+  const displaySubtitle = subtitle || 'پاسخ علمی به پرسش‌های پرتکرار درباره اصالت عسل، طبع و تفاوت انواع عسل طبیعی.';
+  const displayItems = (items && items.length > 0) ? items : FAQS;
 
   return (
     <section
@@ -26,14 +50,14 @@ export function FaqSection() {
         <div className="text-center mb-8 sm:mb-10">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FAF5EB] border border-[#D9A441]/40 text-[#C58A2A] text-xs font-bold mb-3">
             <BookOpen className="w-3.5 h-3.5" />
-            <span>دانشنامه عسل طبیعی</span>
+            <span>{displayBadge}</span>
           </div>
 
           <h2
             id="faq-heading"
             className="text-2xl sm:text-3xl font-black text-[#2B2017] mb-3"
           >
-            سوالات متداول مشتریان
+            {displayTitle}
           </h2>
 
           <div className="flex items-center justify-center gap-3 my-3" aria-hidden="true">
@@ -43,16 +67,16 @@ export function FaqSection() {
           </div>
 
           <p className="text-sm sm:text-base text-[#5C5248] font-medium max-w-xl mx-auto">
-            پاسخ علمی به پرسش‌های پرتکرار درباره اصالت عسل، طبع و تفاوت انواع عسل طبیعی.
+            {displaySubtitle}
           </p>
         </div>
 
         <div className="space-y-3">
-          {FAQS.map((faq, idx) => {
+          {displayItems.map((faq, idx) => {
             const isOpen = openIndex === idx;
             return (
               <div
-                key={faq.id}
+                key={faq.id || idx}
                 className="bg-white border border-[#EFE9E0] rounded-none shadow-xs overflow-hidden transition-colors hover:border-[#D9A441]/60"
               >
                 <button
@@ -75,7 +99,7 @@ export function FaqSection() {
                     <p>{faq.answer}</p>
                     <div>
                       <Link
-                        href={`/faq#${faq.id}`}
+                        href={faq.id ? `/faq#${faq.id}` : '/faq'}
                         className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-black text-[#B45309] hover:text-[#78350F] underline underline-offset-4"
                       >
                         مطالعه توضیح علمی کامل
