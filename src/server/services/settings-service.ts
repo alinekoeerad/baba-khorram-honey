@@ -186,34 +186,38 @@ export class SettingsService {
    * Fetches singleton site settings with safe default fallback
    */
   static async getSettings(): Promise<SiteSettingsData> {
-    const raw = await db.siteSettings.findFirst({
-      include: { logo: true, footerLogo: true, ogImage: true },
-    });
-    if (!raw || Object.keys(raw).length === 0) {
+    try {
+      const raw = await db.siteSettings.findFirst({
+        include: { logo: true, footerLogo: true, ogImage: true },
+      });
+      if (!raw || Object.keys(raw).length === 0) {
+        return DEFAULT_SETTINGS;
+      }
+      const merged: SiteSettingsData = {
+        ...DEFAULT_SETTINGS,
+        ...raw,
+      };
+
+      if (merged.logoId && !merged.logo && typeof db.mediaAsset?.findUnique === 'function') {
+        try {
+          merged.logo = await db.mediaAsset.findUnique({ where: { id: merged.logoId } });
+        } catch {}
+      }
+      if (merged.footerLogoId && !merged.footerLogo && typeof db.mediaAsset?.findUnique === 'function') {
+        try {
+          merged.footerLogo = await db.mediaAsset.findUnique({ where: { id: merged.footerLogoId } });
+        } catch {}
+      }
+      if (merged.ogImageId && !merged.ogImage && typeof db.mediaAsset?.findUnique === 'function') {
+        try {
+          merged.ogImage = await db.mediaAsset.findUnique({ where: { id: merged.ogImageId } });
+        } catch {}
+      }
+
+      return merged;
+    } catch {
       return DEFAULT_SETTINGS;
     }
-    const merged: SiteSettingsData = {
-      ...DEFAULT_SETTINGS,
-      ...raw,
-    };
-
-    if (merged.logoId && !merged.logo && typeof db.mediaAsset?.findUnique === 'function') {
-      try {
-        merged.logo = await db.mediaAsset.findUnique({ where: { id: merged.logoId } });
-      } catch {}
-    }
-    if (merged.footerLogoId && !merged.footerLogo && typeof db.mediaAsset?.findUnique === 'function') {
-      try {
-        merged.footerLogo = await db.mediaAsset.findUnique({ where: { id: merged.footerLogoId } });
-      } catch {}
-    }
-    if (merged.ogImageId && !merged.ogImage && typeof db.mediaAsset?.findUnique === 'function') {
-      try {
-        merged.ogImage = await db.mediaAsset.findUnique({ where: { id: merged.ogImageId } });
-      } catch {}
-    }
-
-    return merged;
   }
 
   /**
@@ -291,10 +295,21 @@ export class SettingsService {
     if (filter?.contactPage !== undefined) where.showInContactPage = filter.contactPage;
     if (filter?.acceptsOrders !== undefined) where.acceptsOrders = filter.acceptsOrders;
 
-    return db.contactChannel.findMany({
-      where,
-      orderBy: { sortOrder: 'asc' },
-    });
+    try {
+      return await db.contactChannel.findMany({
+        where,
+        orderBy: { sortOrder: 'asc' },
+      });
+    } catch {
+      return DEFAULT_CONTACT_CHANNELS.filter((ch: ContactChannelData) => {
+        if (filter?.onlyActive !== undefined && ch.isActive !== filter.onlyActive) return false;
+        if (filter?.bar !== undefined && ch.showInContactBar !== filter.bar) return false;
+        if (filter?.footer !== undefined && ch.showInFooter !== filter.footer) return false;
+        if (filter?.contactPage !== undefined && ch.showInContactPage !== filter.contactPage) return false;
+        if (filter?.acceptsOrders !== undefined && ch.acceptsOrders !== filter.acceptsOrders) return false;
+        return true;
+      });
+    }
   }
 
   /**

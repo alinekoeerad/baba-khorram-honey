@@ -29,12 +29,7 @@ RUN pnpm prisma generate
 # ---------------------------------------------------------------
 # Stage 3: Build the Next.js Application
 # ---------------------------------------------------------------
-FROM base AS builder
-WORKDIR /app
-
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=deps /app/node_modules/@prisma ./node_modules/@prisma
+FROM deps AS builder
 COPY . .
 
 # Environment variables for build phase
@@ -44,6 +39,7 @@ ENV SITE_URL="https://babakhorram.com"
 ENV ORDER_LINK_SECRET="build-phase-temporary-secret-32-chars-long!"
 ENV BETTER_AUTH_SECRET="build-phase-temporary-secret-32-chars-long!"
 ENV DATABASE_URL="postgresql://postgres:postgres@localhost:5432/honey_build?schema=public"
+ENV USE_MOCK_DB="true"
 
 RUN pnpm build
 
@@ -54,12 +50,13 @@ FROM node:22-alpine AS runner
 WORKDIR /app
 
 RUN apk add --no-cache libc6-compat openssl
-RUN npm install -g prisma@7.0.0
+RUN npm install -g prisma@7.0.0 @prisma/adapter-pg pg
 
 ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_PATH="/usr/local/lib/node_modules:/app/node_modules"
 
 # Create non-root system user for security
 RUN addgroup --system --gid 1001 nodejs
@@ -73,8 +70,15 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# Link global prisma and adapters to local node_modules so scripts, client, and config are resolvable
+RUN mkdir -p /app/node_modules/@prisma && \
+    ln -sf "$(npm root -g)/prisma" /app/node_modules/prisma && \
+    ln -sf "$(npm root -g)/@prisma/adapter-pg" /app/node_modules/@prisma/adapter-pg && \
+    ln -sf "$(npm root -g)/pg" /app/node_modules/pg || true
+
 # Copy prisma migration scripts, schema, seed data, and scripts
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/prisma.config.ts ./prisma.config.ts
 COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
 COPY --from=builder --chown=nextjs:nodejs /app/data ./data
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json

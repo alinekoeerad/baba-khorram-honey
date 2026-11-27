@@ -9381,7 +9381,7 @@
         "name": "ماست برای سرو",
         "quantityText": "به میزان دلخواه",
         "unit": null,
-        "equivalentText": true,
+        "equivalentText": null,
         "isOptional": false,
         "note": null,
         "isLowConfidence": false,

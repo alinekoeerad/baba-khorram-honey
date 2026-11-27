@@ -23,6 +23,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -49,6 +50,31 @@ function parseDate(val, fallback = new Date()) {
   return isNaN(d.getTime()) ? fallback : d;
 }
 
+function safeInt(val, fallback = 0) {
+  if (val === null || val === undefined || val === '') return fallback;
+  const n = Number(val);
+  return Number.isFinite(n) ? Math.round(n) : fallback;
+}
+
+function safeFloat(val, fallback = 0) {
+  if (val === null || val === undefined || val === '') return fallback;
+  const n = Number(val);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+function safeNullableInt(val) {
+  if (val === null || val === undefined || val === '') return null;
+  const n = Number(val);
+  return Number.isFinite(n) ? Math.round(n) : null;
+}
+
+function safeNullableString(val) {
+  if (val === null || val === undefined || val === '') return null;
+  if (typeof val === 'string') return val;
+  if (typeof val === 'boolean') return null;
+  return String(val);
+}
+
 async function insertInChunks(label, items, chunkSize, inserter) {
   if (!items.length) {
     console.log(`  ℹ️  ${label}: 0 records.`);
@@ -69,7 +95,12 @@ export async function runDatabaseSeed() {
   console.log('🍯 IDEMPOTENT DATABASE SEED: JSON Seed -> PostgreSQL Database');
   console.log('========================================================================\n');
 
-  const prisma = new PrismaClient();
+  const connectionString =
+    process.env.DATABASE_URL ||
+    'postgresql://honey_admin:ChangeMeSecurePassword123!@localhost:5432/honey_prod?schema=public';
+
+  const adapter = new PrismaPg({ connectionString });
+  const prisma = new PrismaClient({ adapter });
 
   try {
     console.log('📡 1. Checking database connection...');
@@ -153,15 +184,11 @@ export async function runDatabaseSeed() {
 
     for (const a of accountsRaw) {
       if (validUserIds.has(a.userId)) {
+        const accountId = a.id || `acc_${a.userId}`;
         await prisma.account.upsert({
-          where: {
-            providerId_accountId: {
-              providerId: a.providerId || 'credential',
-              accountId: a.accountId || a.userId,
-            },
-          },
+          where: { id: accountId },
           create: {
-            id: a.id,
+            id: accountId,
             userId: a.userId,
             accountId: a.accountId || a.userId,
             providerId: a.providerId || 'credential',
@@ -184,23 +211,25 @@ export async function runDatabaseSeed() {
     console.log('🏷️ 3. Seeding Categories...');
     const categoriesRaw = loadJson('categories.json', []);
     for (const c of categoriesRaw) {
+      const categoryId = c.id || `cat_${c.slug}`;
       await prisma.category.upsert({
-        where: { slug: c.slug },
+        where: { id: categoryId },
         create: {
-          id: c.id,
+          id: categoryId,
           name: c.name,
           slug: c.slug,
           type: c.type || 'PRODUCT',
           status: c.status || 'ACTIVE',
-          sortOrder: Number(c.sortOrder) || 0,
+          sortOrder: safeInt(c.sortOrder, 0),
           createdAt: parseDate(c.createdAt),
           updatedAt: parseDate(c.updatedAt),
         },
         update: {
           name: c.name,
+          slug: c.slug,
           type: c.type || 'PRODUCT',
           status: c.status || 'ACTIVE',
-          sortOrder: Number(c.sortOrder) || 0,
+          sortOrder: safeInt(c.sortOrder, 0),
         },
       });
     }
@@ -218,9 +247,9 @@ export async function runDatabaseSeed() {
       id: m.id,
       storageKey: m.storageKey,
       mime: m.mime || 'image/webp',
-      bytes: Number(m.bytes) || 0,
-      width: m.width !== undefined && m.width !== null ? Number(m.width) : null,
-      height: m.height !== undefined && m.height !== null ? Number(m.height) : null,
+      bytes: safeInt(m.bytes, 0),
+      width: safeNullableInt(m.width),
+      height: safeNullableInt(m.height),
       blurDataUrl: m.blurDataUrl ?? null,
       variants: m.variants ? (typeof m.variants === 'string' ? JSON.parse(m.variants) : m.variants) : undefined,
       alt: m.alt ?? null,
@@ -248,7 +277,7 @@ export async function runDatabaseSeed() {
           value: ch.value,
           label: ch.label ?? null,
           isActive: ch.isActive !== undefined ? Boolean(ch.isActive) : true,
-          sortOrder: Number(ch.sortOrder) || 0,
+          sortOrder: safeInt(ch.sortOrder, 0),
           showInContactBar: ch.showInContactBar !== undefined ? Boolean(ch.showInContactBar) : true,
           showInFooter: ch.showInFooter !== undefined ? Boolean(ch.showInFooter) : true,
           showInContactPage: ch.showInContactPage !== undefined ? Boolean(ch.showInContactPage) : true,
@@ -260,7 +289,7 @@ export async function runDatabaseSeed() {
           value: ch.value,
           label: ch.label ?? null,
           isActive: ch.isActive !== undefined ? Boolean(ch.isActive) : true,
-          sortOrder: Number(ch.sortOrder) || 0,
+          sortOrder: safeInt(ch.sortOrder, 0),
         },
       });
     }
@@ -290,9 +319,9 @@ export async function runDatabaseSeed() {
         ogImageId: settingsOgImageId,
         address: settingsRaw.address ?? 'کرج، جهانشهر، بلوار مولانا',
         workingHours: settingsRaw.workingHours ?? 'همه‌روزه از ساعت ۹:۰۰ الی ۲۱:۰۰',
-        latitude: settingsRaw.latitude !== undefined && settingsRaw.latitude !== null ? Number(settingsRaw.latitude) : 35.8339878,
-        longitude: settingsRaw.longitude !== undefined && settingsRaw.longitude !== null ? Number(settingsRaw.longitude) : 50.9915841,
-        mapZoom: settingsRaw.mapZoom !== undefined && settingsRaw.mapZoom !== null ? Number(settingsRaw.mapZoom) : 15,
+        latitude: safeFloat(settingsRaw.latitude, 35.8339878),
+        longitude: safeFloat(settingsRaw.longitude, 50.9915841),
+        mapZoom: safeInt(settingsRaw.mapZoom, 15),
         copyrightText: settingsRaw.copyrightText ?? 'تمامی حقوق برای برند عسل باباخُرم محفوظ است. طراحی و توسعه ۱۴۰۵.',
         seoTitle: settingsRaw.seoTitle ?? 'عسل باباخُرم | طعم اصیل و طبیعی کوهستان',
         seoDescription: settingsRaw.seoDescription ?? 'تولید و عرضه مستقیم انواع عسل طبیعی و ارگانیک از دامنه‌های ارسباران و قره‌داغ.',
@@ -334,7 +363,7 @@ export async function runDatabaseSeed() {
           type: s.type || 'HERO',
           template: s.template || 'default',
           status: s.status || 'DRAFT',
-          sortOrder: Number(s.sortOrder) || 0,
+          sortOrder: safeInt(s.sortOrder, 0),
           background: s.background || 'NONE',
           internalName: s.internalName || 'Section',
           content: s.content ?? {},
@@ -344,7 +373,7 @@ export async function runDatabaseSeed() {
         update: {
           template: s.template || 'default',
           status: s.status || 'DRAFT',
-          sortOrder: Number(s.sortOrder) || 0,
+          sortOrder: safeInt(s.sortOrder, 0),
           background: s.background || 'NONE',
           internalName: s.internalName || 'Section',
           content: s.content ?? {},
@@ -376,7 +405,7 @@ export async function runDatabaseSeed() {
           isAvailable: p.isAvailable !== undefined ? Boolean(p.isAvailable) : true,
           isFeatured: p.isFeatured !== undefined ? Boolean(p.isFeatured) : false,
           cardTheme: p.cardTheme || 'AUTO',
-          sortOrder: Number(p.sortOrder) || 0,
+          sortOrder: safeInt(p.sortOrder, 0),
           shortDescription: p.shortDescription ?? null,
           description: p.description ?? null,
           foodNature: p.foodNature ?? null,
@@ -398,7 +427,7 @@ export async function runDatabaseSeed() {
           isAvailable: p.isAvailable !== undefined ? Boolean(p.isAvailable) : true,
           isFeatured: p.isFeatured !== undefined ? Boolean(p.isFeatured) : false,
           cardTheme: p.cardTheme || 'AUTO',
-          sortOrder: Number(p.sortOrder) || 0,
+          sortOrder: safeInt(p.sortOrder, 0),
           shortDescription: p.shortDescription ?? null,
           description: p.description ?? null,
           foodNature: p.foodNature ?? null,
@@ -448,7 +477,7 @@ export async function runDatabaseSeed() {
               productId: p.id,
               label: opt.label || 'وزن پیش‌فرض',
               isAvailable: opt.isAvailable !== undefined ? Boolean(opt.isAvailable) : true,
-              sortOrder: Number(opt.sortOrder) || 0,
+              sortOrder: safeInt(opt.sortOrder, 0),
               createdAt: parseDate(opt.createdAt || p.createdAt),
               updatedAt: parseDate(opt.updatedAt || p.updatedAt),
             });
@@ -463,7 +492,7 @@ export async function runDatabaseSeed() {
           productId: opt.productId,
           label: opt.label || 'وزن',
           isAvailable: opt.isAvailable !== undefined ? Boolean(opt.isAvailable) : true,
-          sortOrder: Number(opt.sortOrder) || 0,
+          sortOrder: safeInt(opt.sortOrder, 0),
           createdAt: parseDate(opt.createdAt),
           updatedAt: parseDate(opt.updatedAt),
         });
@@ -506,7 +535,7 @@ export async function runDatabaseSeed() {
             id: gi.id || `pgi_${gi.productId}_${gi.assetId}`,
             productId: gi.productId,
             assetId: gi.assetId,
-            sortOrder: Number(gi.sortOrder) || 0,
+            sortOrder: safeInt(gi.sortOrder, 0),
           });
         }
       }
@@ -534,21 +563,15 @@ export async function runDatabaseSeed() {
           slug: r.slug,
           nameFa: r.nameFa,
           nameOriginal: r.nameOriginal ?? null,
+          country: r.country ?? null,
+          servingTypes: r.servingTypes || [],
+          yieldText: r.yieldText ?? null,
+          shortDescription: r.shortDescription ?? null,
+          longDescription: r.longDescription ?? null,
           status: r.status || 'DRAFT',
           isFeatured: r.isFeatured !== undefined ? Boolean(r.isFeatured) : false,
           cardTheme: r.cardTheme || 'YELLOW',
-          sortOrder: Number(r.sortOrder) || 0,
-          country: r.country ?? null,
-          servingTypes: r.servingTypes || [],
-          shortDescription: r.shortDescription ?? null,
-          prepTimeMinutes: Number(r.prepTimeMinutes) || 0,
-          cookTimeMinutes: Number(r.cookTimeMinutes) || 0,
-          servings: Number(r.servings) || 1,
-          difficulty: r.difficulty || 'MEDIUM',
-          caloriesPerServing: r.caloriesPerServing !== undefined && r.caloriesPerServing !== null ? Number(r.caloriesPerServing) : null,
-          temperature: r.temperature || 'ROOM',
-          sweetnessDegree: r.sweetnessDegree || 'MEDIUM',
-          suitableSeasons: r.suitableSeasons || [],
+          sortOrder: safeInt(r.sortOrder, 0),
           mainImageId,
           focalPoint: r.focalPoint || 'center',
           searchText: r.searchText || '',
@@ -558,21 +581,15 @@ export async function runDatabaseSeed() {
         update: {
           nameFa: r.nameFa,
           nameOriginal: r.nameOriginal ?? null,
+          country: r.country ?? null,
+          servingTypes: r.servingTypes || [],
+          yieldText: r.yieldText ?? null,
+          shortDescription: r.shortDescription ?? null,
+          longDescription: r.longDescription ?? null,
           status: r.status || 'DRAFT',
           isFeatured: r.isFeatured !== undefined ? Boolean(r.isFeatured) : false,
           cardTheme: r.cardTheme || 'YELLOW',
-          sortOrder: Number(r.sortOrder) || 0,
-          country: r.country ?? null,
-          servingTypes: r.servingTypes || [],
-          shortDescription: r.shortDescription ?? null,
-          prepTimeMinutes: Number(r.prepTimeMinutes) || 0,
-          cookTimeMinutes: Number(r.cookTimeMinutes) || 0,
-          servings: Number(r.servings) || 1,
-          difficulty: r.difficulty || 'MEDIUM',
-          caloriesPerServing: r.caloriesPerServing !== undefined && r.caloriesPerServing !== null ? Number(r.caloriesPerServing) : null,
-          temperature: r.temperature || 'ROOM',
-          sweetnessDegree: r.sweetnessDegree || 'MEDIUM',
-          suitableSeasons: r.suitableSeasons || [],
+          sortOrder: safeInt(r.sortOrder, 0),
           mainImageId,
           focalPoint: r.focalPoint || 'center',
           searchText: r.searchText || '',
@@ -593,13 +610,13 @@ export async function runDatabaseSeed() {
           ingredientsData.push({
             id: ing.id || `ring_${r.id}_${idx}`,
             recipeId: r.id,
-            name: ing.name || 'ماده اولیه',
-            quantityText: ing.quantityText ?? null,
-            unit: ing.unit ?? null,
-            equivalentText: ing.equivalentText ?? null,
+            name: String(ing.name || 'ماده اولیه'),
+            quantityText: safeNullableString(ing.quantityText),
+            unit: safeNullableString(ing.unit),
+            equivalentText: safeNullableString(ing.equivalentText),
             isOptional: Boolean(ing.isOptional),
-            note: ing.note ?? null,
-            sortOrder: Number(ing.sortOrder) ?? idx,
+            note: safeNullableString(ing.note),
+            sortOrder: safeInt(ing.sortOrder, idx),
           });
         });
       }
@@ -617,7 +634,7 @@ export async function runDatabaseSeed() {
             id: st.id || `rstp_${r.id}_${idx}`,
             recipeId: r.id,
             text: st.text || '',
-            sortOrder: Number(st.sortOrder) ?? idx,
+            sortOrder: safeInt(st.sortOrder, idx),
           });
         });
       }
@@ -661,7 +678,7 @@ export async function runDatabaseSeed() {
             id: gi.id || `rgi_${gi.recipeId}_${gi.assetId}`,
             recipeId: gi.recipeId,
             assetId: gi.assetId,
-            sortOrder: Number(gi.sortOrder) || 0,
+            sortOrder: safeInt(gi.sortOrder, 0),
           });
         }
       }
@@ -687,7 +704,7 @@ export async function runDatabaseSeed() {
             sectionId: sec.id,
             productId,
             recipeId,
-            sortOrder: Number(item.sortOrder) ?? idx,
+            sortOrder: safeInt(item.sortOrder, idx),
           });
         });
       }
@@ -712,7 +729,7 @@ export async function runDatabaseSeed() {
           answer: f.answer || f.shortAnswer || '',
           category: f.category,
           categoryLabel: f.categoryLabel ?? null,
-          sortOrder: f.sortOrder !== undefined ? Number(f.sortOrder) : idx,
+          sortOrder: safeInt(f.sortOrder, idx),
           isPublished: f.isPublished !== undefined ? Boolean(f.isPublished) : true,
           featuredInNav: Boolean(f.featuredInNav),
           featuredOnHome: Boolean(f.featuredOnHome),
@@ -725,7 +742,7 @@ export async function runDatabaseSeed() {
           answer: f.answer || f.shortAnswer || '',
           category: f.category,
           categoryLabel: f.categoryLabel ?? null,
-          sortOrder: f.sortOrder !== undefined ? Number(f.sortOrder) : idx,
+          sortOrder: safeInt(f.sortOrder, idx),
           isPublished: f.isPublished !== undefined ? Boolean(f.isPublished) : true,
           featuredInNav: Boolean(f.featuredInNav),
           featuredOnHome: Boolean(f.featuredOnHome),
@@ -759,12 +776,12 @@ export async function runDatabaseSeed() {
           categoryLabel: m.categoryLabel ?? null,
           badge: m.badge ?? null,
           theme: m.theme || 'YELLOW',
-          readTime: m.readTime || `${m.readTimeMinutes || 5} دقیقه مطالعه`,
-          readTimeMinutes: Number(m.readTimeMinutes) || 5,
+          readTime: m.readTime || `${safeInt(m.readTimeMinutes, 5)} دقیقه مطالعه`,
+          readTimeMinutes: safeInt(m.readTimeMinutes, 5),
           status: m.status || 'PUBLISHED',
-          sortOrder: m.sortOrder !== undefined ? Number(m.sortOrder) : idx,
+          sortOrder: safeInt(m.sortOrder, idx),
           featuredInNav: Boolean(m.featuredInNav),
-          navOrder: Number(m.navOrder) || 0,
+          navOrder: safeInt(m.navOrder, 0),
           sections: m.sections ?? null,
           seoTitle: m.seoTitle ?? null,
           seoDescription: m.seoDescription ?? null,
@@ -780,12 +797,12 @@ export async function runDatabaseSeed() {
           categoryLabel: m.categoryLabel ?? null,
           badge: m.badge ?? null,
           theme: m.theme || 'YELLOW',
-          readTime: m.readTime || `${m.readTimeMinutes || 5} دقیقه مطالعه`,
-          readTimeMinutes: Number(m.readTimeMinutes) || 5,
+          readTime: m.readTime || `${safeInt(m.readTimeMinutes, 5)} دقیقه مطالعه`,
+          readTimeMinutes: safeInt(m.readTimeMinutes, 5),
           status: m.status || 'PUBLISHED',
-          sortOrder: m.sortOrder !== undefined ? Number(m.sortOrder) : idx,
+          sortOrder: safeInt(m.sortOrder, idx),
           featuredInNav: Boolean(m.featuredInNav),
-          navOrder: Number(m.navOrder) || 0,
+          navOrder: safeInt(m.navOrder, 0),
           sections: m.sections ?? null,
           seoTitle: m.seoTitle ?? null,
           seoDescription: m.seoDescription ?? null,
@@ -828,7 +845,9 @@ export async function runDatabaseSeed() {
     console.error('\n❌ [SEED ERROR]', error);
     process.exit(1);
   } finally {
-    await prisma.$disconnect();
+    if (prisma) {
+      await prisma.$disconnect();
+    }
   }
 }
 

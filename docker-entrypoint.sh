@@ -1,6 +1,9 @@
 #!/bin/sh
 set -e
 
+# Export NODE_PATH so global prisma modules (like 'prisma/config') can be resolved
+export NODE_PATH="$(npm root -g):/app/node_modules:${NODE_PATH:-}"
+
 echo "==============================================================="
 echo "🍯 Persian Honey Website — Production Container Boot"
 echo "==============================================================="
@@ -10,7 +13,7 @@ echo "📡 Synchronizing PostgreSQL schema with Prisma (prisma db push)..."
 MAX_RETRIES=15
 COUNT=0
 
-until prisma db push --skip-generate; do
+until prisma db push; do
   COUNT=$((COUNT+1))
   if [ $COUNT -ge $MAX_RETRIES ]; then
     echo "❌ [ERROR] Could not connect to PostgreSQL after $MAX_RETRIES attempts. Exiting."

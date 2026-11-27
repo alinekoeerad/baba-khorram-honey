@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 
 export interface UserRecord {
   id: string;
@@ -162,10 +163,12 @@ if (process.env.NODE_ENV === 'test' || process.env.USE_MOCK_DB === 'true') {
   prismaInstance = activeDb as unknown as PrismaClient;
 } else {
   try {
-    prismaInstance = globalForPrisma.prisma || new PrismaClient();
-    if (process.env.NODE_ENV !== 'production') {
-      globalForPrisma.prisma = prismaInstance;
+    if (!globalForPrisma.prisma) {
+      const connectionString = process.env.DATABASE_URL;
+      const adapter = new PrismaPg({ connectionString });
+      globalForPrisma.prisma = new PrismaClient({ adapter });
     }
+    prismaInstance = globalForPrisma.prisma;
     activeDb = prismaInstance as AppPrismaClient;
   } catch {
     const { mockDb } = require('./mock-client.ts');

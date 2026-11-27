@@ -38,6 +38,7 @@ const devOrigins = [
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  serverExternalPackages: ['@prisma/adapter-pg', 'pg'],
   reactStrictMode: false,
   poweredByHeader: false,
   compress: true,
