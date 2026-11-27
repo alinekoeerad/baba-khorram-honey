@@ -9,9 +9,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   let products: any[] = [];
   let recipes: any[] = [];
+  let magazineArticles: any[] = [];
 
   try {
-    const [prods, recs] = await Promise.all([
+    const [prods, recs, mags] = await Promise.all([
       db.product.findMany({
         where: { status: 'PUBLISHED' },
         select: { slug: true, updatedAt: true },
@@ -22,12 +23,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         select: { slug: true, updatedAt: true },
         take: 5000,
       }),
+      db.magazineArticle.findMany({
+        where: { status: 'PUBLISHED' },
+        select: { slug: true, updatedAt: true },
+        take: 1000,
+      }),
     ]);
     products = prods || [];
     recipes = recs || [];
+    magazineArticles = mags || [];
   } catch {
     products = [];
     recipes = [];
+    magazineArticles = [];
   }
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -55,12 +63,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.85,
     },
-    ...MAGAZINE_ARTICLES.map((article) => ({
-      url: `${siteUrl}/magazine/${article.slug}`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.75,
-    })),
     {
       url: `${siteUrl}/faq`,
       lastModified: new Date(),
@@ -81,6 +83,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
+  const magazineRoutes: MetadataRoute.Sitemap =
+    magazineArticles.length > 0
+      ? magazineArticles.map((article: any) => ({
+          url: `${siteUrl}/magazine/${article.slug}`,
+          lastModified: new Date(article.updatedAt || new Date()),
+          changeFrequency: 'monthly' as const,
+          priority: 0.75,
+        }))
+      : MAGAZINE_ARTICLES.map((article) => ({
+          url: `${siteUrl}/magazine/${article.slug}`,
+          lastModified: new Date(),
+          changeFrequency: 'monthly' as const,
+          priority: 0.75,
+        }));
+
   const productRoutes: MetadataRoute.Sitemap = products.map((p: any) => ({
     url: `${siteUrl}/products/${p.slug}`,
     lastModified: new Date(p.updatedAt || p.createdAt || new Date()),
@@ -95,5 +112,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...staticRoutes, ...productRoutes, ...recipeRoutes];
+  return [...staticRoutes, ...magazineRoutes, ...productRoutes, ...recipeRoutes];
 }

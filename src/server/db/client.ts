@@ -115,10 +115,37 @@ export interface FaqItemRecord {
   updatedAt: Date;
 }
 
+export interface MagazineArticleRecord {
+  id: string;
+  slug: string;
+  title: string;
+  shortTitle?: string | null;
+  subtitle?: string | null;
+  excerpt: string;
+  coverImage?: string | null;
+  category: string;
+  categoryLabel?: string | null;
+  badge?: string | null;
+  theme: string;
+  readTime?: string | null;
+  readTimeMinutes?: number | null;
+  status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
+  sortOrder: number;
+  featuredInNav: boolean;
+  navOrder: number;
+  sections?: any;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  publishedAt?: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 // Extended PrismaClient type supporting legacy order mock model
 export type AppPrismaClient = PrismaClient & {
   order: any;
   faqItem: any;
+  magazineArticle: any;
 };
 
 // Global singleton for PrismaClient to prevent connection pool exhaustion during hot-reloads

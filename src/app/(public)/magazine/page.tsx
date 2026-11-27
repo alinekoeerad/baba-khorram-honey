@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { MagazineListingClient } from '@/components/public/magazine-listing-client';
+import { getPublicMagazineArticles } from '@/server/services/magazine-service';
 
 export const revalidate = 3600;
 
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function MagazinePage() {
-  return <MagazineListingClient />;
+export default async function MagazinePage() {
+  const articles = await getPublicMagazineArticles();
+  return <MagazineListingClient initialArticles={articles} />;
 }

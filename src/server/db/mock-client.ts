@@ -167,7 +167,34 @@ export interface FaqItemRecord {
   updatedAt: Date;
 }
 
+export interface MagazineArticleRecord {
+  id: string;
+  slug: string;
+  title: string;
+  shortTitle?: string | null;
+  subtitle?: string | null;
+  excerpt: string;
+  coverImage?: string | null;
+  category: string;
+  categoryLabel?: string | null;
+  badge?: string | null;
+  theme: string;
+  readTime?: string | null;
+  readTimeMinutes?: number | null;
+  status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
+  sortOrder: number;
+  featuredInNav: boolean;
+  navOrder: number;
+  sections?: any;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  publishedAt?: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 let faqItemsStore: any[] = loadJson('faq-items.json', []);
+let magazineArticlesStore: any[] = loadJson('magazine-articles.json', []);
 
 // Create fallback Prisma-compatible client
 function createFallbackClient() {
@@ -2074,6 +2101,145 @@ function createFallbackClient() {
         return { ...deleted };
       },
       async upsert(args: { where: { id?: string; anchorId?: string }; create: any; update: any }) {
+        const existing = await this.findUnique({ where: args.where });
+        if (existing) {
+          return this.update({ where: args.where, data: args.update });
+        }
+        return this.create({ data: args.create });
+      },
+    },
+
+    magazineArticle: {
+      async findMany(args?: { where?: any; orderBy?: any; take?: number; skip?: number; select?: any }) {
+        let list = [...magazineArticlesStore];
+        if (args?.where) {
+          const w = args.where;
+          if (w.id) {
+            list = list.filter((x) => x.id === w.id);
+          }
+          if (w.slug) {
+            list = list.filter((x) => x.slug === w.slug);
+          }
+          if (w.status) {
+            list = list.filter((x) => x.status === w.status);
+          }
+          if (w.category) {
+            list = list.filter((x) => x.category === w.category);
+          }
+          if (w.featuredInNav !== undefined) {
+            list = list.filter((x) => x.featuredInNav === w.featuredInNav);
+          }
+        }
+        if (args?.orderBy) {
+          const ob = Array.isArray(args.orderBy) ? args.orderBy[0] : args.orderBy;
+          if (ob?.sortOrder === 'asc') {
+            list.sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+          } else if (ob?.sortOrder === 'desc') {
+            list.sort((a, b) => (b.sortOrder ?? 0) - (a.sortOrder ?? 0));
+          } else if (ob?.createdAt === 'desc') {
+            list.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+          }
+        } else {
+          list.sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+        }
+        if (args?.skip) {
+          list = list.slice(args.skip);
+        }
+        if (args?.take) {
+          list = list.slice(0, args.take);
+        }
+        const mapped = list.map((item) => ({
+          ...item,
+          publishedAt: item.publishedAt ? new Date(item.publishedAt) : null,
+          createdAt: item.createdAt ? new Date(item.createdAt) : new Date(),
+          updatedAt: item.updatedAt ? new Date(item.updatedAt) : new Date(),
+        }));
+        if (args?.select) {
+          return mapped.map((item) => {
+            const picked: any = {};
+            for (const key of Object.keys(args.select)) {
+              if (args.select[key]) picked[key] = (item as any)[key];
+            }
+            return picked;
+          });
+        }
+        return mapped;
+      },
+      async findUnique(args: { where: { id?: string; slug?: string }; select?: any }) {
+        const item = magazineArticlesStore.find(
+          (x) =>
+            (args.where.id && x.id === args.where.id) ||
+            (args.where.slug && x.slug === args.where.slug)
+        );
+        if (!item) return null;
+        const res = {
+          ...item,
+          publishedAt: item.publishedAt ? new Date(item.publishedAt) : null,
+          createdAt: item.createdAt ? new Date(item.createdAt) : new Date(),
+          updatedAt: item.updatedAt ? new Date(item.updatedAt) : new Date(),
+        };
+        if (args?.select) {
+          const picked: any = {};
+          for (const key of Object.keys(args.select)) {
+            if (args.select[key]) picked[key] = (res as any)[key];
+          }
+          return picked;
+        }
+        return res;
+      },
+      async findFirst(args?: { where?: any; orderBy?: any; select?: any }) {
+        const items = await this.findMany({ ...args, take: 1 });
+        return items[0] || null;
+      },
+      async count(args?: { where?: any }) {
+        if (!args?.where) return magazineArticlesStore.length;
+        const items = await this.findMany({ where: args.where });
+        return items.length;
+      },
+      async create(args: { data: any }) {
+        const now = new Date();
+        const id = args.data.id || `art_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+        const newItem = {
+          ...args.data,
+          id,
+          sortOrder: args.data.sortOrder ?? magazineArticlesStore.length,
+          status: args.data.status || 'PUBLISHED',
+          publishedAt: args.data.publishedAt ? new Date(args.data.publishedAt) : now,
+          createdAt: now,
+          updatedAt: now,
+        };
+        magazineArticlesStore.push(newItem);
+        saveJson('magazine-articles.json', magazineArticlesStore);
+        return { ...newItem };
+      },
+      async update(args: { where: { id?: string; slug?: string }; data: any }) {
+        const idx = magazineArticlesStore.findIndex(
+          (x) =>
+            (args.where.id && x.id === args.where.id) ||
+            (args.where.slug && x.slug === args.where.slug)
+        );
+        if (idx === -1) throw new Error('MagazineArticle not found');
+        const updated = {
+          ...magazineArticlesStore[idx],
+          ...args.data,
+          updatedAt: new Date(),
+        };
+        magazineArticlesStore[idx] = updated;
+        saveJson('magazine-articles.json', magazineArticlesStore);
+        return { ...updated };
+      },
+      async delete(args: { where: { id?: string; slug?: string } }) {
+        const idx = magazineArticlesStore.findIndex(
+          (x) =>
+            (args.where.id && x.id === args.where.id) ||
+            (args.where.slug && x.slug === args.where.slug)
+        );
+        if (idx === -1) throw new Error('MagazineArticle not found');
+        const [deleted] = magazineArticlesStore.splice(idx, 1);
+        saveJson('magazine-articles.json', magazineArticlesStore);
+        return { ...deleted };
+      },
+      async upsert(args: { where: { id?: string; slug?: string }; create: any; update: any }) {
         const existing = await this.findUnique({ where: args.where });
         if (existing) {
           return this.update({ where: args.where, data: args.update });

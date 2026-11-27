@@ -116,13 +116,17 @@ function MagazineArticleCard({ article }: { article: MagazineArticle }) {
   );
 }
 
-export function MagazineListingClient() {
+export function MagazineListingClient({
+  initialArticles = MAGAZINE_ARTICLES,
+}: {
+  initialArticles?: MagazineArticle[];
+} = {}) {
   const [selectedCategory, setSelectedCategory] = useState<'all' | MagazineCategoryId>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredArticles = useMemo(() => {
     const q = normalizeSearchText(searchQuery);
-    return MAGAZINE_ARTICLES.filter((article) => {
+    return initialArticles.filter((article) => {
       if (selectedCategory !== 'all' && article.category !== selectedCategory) return false;
       if (!q) return true;
       const hay = normalizeSearchText(
@@ -132,12 +136,12 @@ export function MagazineListingClient() {
           article.excerpt,
           article.categoryLabel,
           article.badge,
-          ...article.sections.map((s) => s.title),
+          ...(Array.isArray(article.sections) ? article.sections.map((s) => s.title) : []),
         ].join(' ')
       );
       return hay.includes(q);
     });
-  }, [selectedCategory, searchQuery]);
+  }, [initialArticles, selectedCategory, searchQuery]);
 
   return (
     <WoodBackground className="min-h-screen py-10 sm:py-16">
