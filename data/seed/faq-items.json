@@ -86,7 +86,7 @@
     "answer": "برگه آزمایش ابزار مهمی برای بررسی کیفیت است، اما اعتبار آن کاملاً به نوع آزمون‌های انجام‌شده، روش نمونه‌برداری و صلاحیت آزمایشگاه بستگی دارد.",
     "category": "authenticity",
     "categoryLabel": "اصالت و تشخیص علمی",
-    "sortOrder": 5,
+    "sortOrder": 6,
     "isPublished": true,
     "featuredInNav": false,
     "featuredOnHome": false,
@@ -121,7 +121,7 @@
       ]
     },
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-11-27T06:24:33.054Z"
+    "updatedAt": "2026-11-27T06:36:48.327Z"
   },
   {
     "id": "faq_temperament",
@@ -244,7 +244,7 @@
     "answer": "عسل یک محصول زنده طبیعی است؛ بارندگی، دما، خاک، زمان برداشت، نسبت قندها و حضور گل‌های همراه باعث می‌شوند عسل یک گیاه در برداشت‌های مختلف طعم یکسانی نداشته باشد.",
     "category": "temperament",
     "categoryLabel": "طبع، عطر و تفاوت‌های طبیعی",
-    "sortOrder": 4,
+    "sortOrder": 5,
     "isPublished": true,
     "featuredInNav": true,
     "featuredOnHome": true,
@@ -271,7 +271,7 @@
       ]
     },
     "createdAt": "2026-10-08T00:00:00.000Z",
-    "updatedAt": "2026-11-27T06:13:55.150Z"
+    "updatedAt": "2026-11-27T06:36:48.324Z"
   },
   {
     "id": "faq_types-comparison",
