@@ -660,3 +660,38 @@ export async function getNewOrdersCountAction() {
     return { success: false, count: 0 };
   }
 }
+
+/**
+ * Admin Action: Resend notification bot webhook for an order
+ */
+export async function resendOrderNotificationAction(orderId: string) {
+  try {
+    const { user } = await requireAdmin({ allowRedirect: false });
+    const order = await db.order.findUnique({ where: { id: orderId } });
+    if (!order) {
+      return { success: false, error: 'سفارش یافت نشد.' };
+    }
+
+    const result = await notifyAdminOfOrder(
+      order.messageText || `سفارش جدید: ${order.code} - ${order.customerName} (${order.customerMobile})`,
+      order.channelType || 'WEB'
+    );
+
+    await recordAuditLog({
+      userId: user.id,
+      action: 'RESEND_NOTIFICATION',
+      entityType: 'ORDER',
+      entityId: order.id,
+      summary: `ارسال مجدد اعلان ربات برای سفارش ${order.code} (نتیجه: ${result.dispatched ? 'موفق' : 'ناموفق'})`,
+    });
+
+    return {
+      success: true,
+      dispatched: result.dispatched,
+      services: result.services,
+    };
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'خطا در ارسال اعلان' };
+  }
+}
+

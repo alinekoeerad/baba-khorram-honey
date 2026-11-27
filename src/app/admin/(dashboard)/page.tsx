@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { requireAdmin } from '@/server/auth/require-admin';
 import { db, OrderRecord } from '@/server/db/client';
 import { getRecentAuditLogs } from '@/server/services/audit-log-service';
+import { getSystemHealthReport } from '@/server/services/system-health-service';
 import { uiStringsFa } from '@/content/ui-strings.fa';
 import { toPersianDigits } from '@/lib/utils';
 import {
@@ -22,14 +23,29 @@ import {
   Truck,
   XCircle,
   Share2,
+  HardDrive,
+  Database,
+  Radio,
+  MapPin,
+  Users,
+  AlertCircle,
+  ExternalLink,
+  DollarSign,
+  Activity,
+  Bot,
+  FileCheck,
 } from 'lucide-react';
+import {
+  DatabaseBackupButton,
+  ResendOrderNotificationButton,
+} from '@/components/admin/dashboard-monitoring-actions';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboardPage() {
   await requireAdmin({ allowRedirect: true });
 
-  // Query orders, status counts & catalog health metrics
+  // 1. Fetch system health metrics and domain statistics in parallel
   const [
     rawOrders,
     totalOrders,
@@ -44,14 +60,17 @@ export default async function AdminDashboardPage() {
     inStockProducts,
     outOfStockProducts,
     featuredProducts,
+    allProductsCatalog,
     totalRecipes,
     publishedRecipes,
     draftRecipes,
     archivedRecipes,
     totalCategories,
     unreadFeedbacks,
+    recentFeedbacks,
     activeAdmins,
     recentAuditLogs,
+    systemHealth,
   ] = await Promise.all([
     db.order.findMany({ orderBy: { createdAt: 'desc' }, take: 500 }),
     db.order.count(),
@@ -66,26 +85,48 @@ export default async function AdminDashboardPage() {
     db.product.count({ where: { isAvailable: true, status: 'PUBLISHED' } }),
     db.product.count({ where: { isAvailable: false, status: 'PUBLISHED' } }),
     db.product.count({ where: { isFeatured: true } }),
+    db.product.findMany({
+      select: {
+        id: true,
+        slug: true,
+        titleFa: true,
+        status: true,
+        isAvailable: true,
+        mainImageId: true,
+        options: { select: { id: true, price: true, weightGrams: true } },
+      },
+    }),
     db.recipe.count(),
     db.recipe.count({ where: { status: 'PUBLISHED' } }),
     db.recipe.count({ where: { status: 'DRAFT' } }),
     db.recipe.count({ where: { status: 'ARCHIVED' } }),
     db.category.count(),
     db.feedback.count({ where: { status: 'UNREAD' } }),
+    db.feedback.findMany({
+      where: { status: 'UNREAD' },
+      orderBy: { createdAt: 'desc' },
+      take: 3,
+    }),
     db.user.count({ where: { role: 'ADMIN', isActive: true } }),
     getRecentAuditLogs(10),
+    getSystemHealthReport(),
   ]);
 
   const allOrders: OrderRecord[] = (rawOrders || []) as OrderRecord[];
 
-  const stockRatio = publishedProducts > 0
-    ? Math.round((inStockProducts / publishedProducts) * 100)
-    : 100;
+  // 2. Financial Metrics: Total Revenue & Average Order Value (AOV)
+  const totalRevenue = allOrders.reduce((acc, order) => acc + (order.totalPrice || 0), 0);
+  const averageOrderValue = totalOrders > 0 ? Math.round(totalRevenue / totalOrders) : 0;
 
-  // 1. Calculate Daily Orders & Revenue over the last 7 days
+  // 3. Stock ratio
+  const stockRatio =
+    publishedProducts > 0
+      ? Math.round((inStockProducts / publishedProducts) * 100)
+      : 100;
+
+  // 4. Calculate Daily Orders & Revenue over the last 7 days
   const now = new Date();
   const daysData = Array.from({ length: 7 }, (_, i) => {
-    // 0 is 6 days ago, 6 is today
     const d = new Date(now);
     d.setDate(d.getDate() - (6 - i));
     const startOfDay = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
@@ -123,7 +164,7 @@ export default async function AdminDashboardPage() {
   const total7DaysOrders = daysData.reduce((sum: number, d) => sum + d.count, 0);
   const total7DaysRevenue = daysData.reduce((sum: number, d) => sum + d.revenue, 0);
 
-  // 2. Order Status Breakdown
+  // 5. Order Status Breakdown
   const statusCounts = {
     NEW: newOrders,
     CONTACTED: contactedOrders,
@@ -138,7 +179,7 @@ export default async function AdminDashboardPage() {
     CANCELLED: totalOrdersForBreakdown > 0 ? Math.round((statusCounts.CANCELLED / totalOrdersForBreakdown) * 100) : 0,
   };
 
-  // 3. Top Ordered Products
+  // 6. Top Ordered Products
   const productSalesMap = new Map<string, { name: string; totalQty: number; orderCount: number; sampleOption: string }>();
   for (const order of allOrders) {
     if (Array.isArray(order.lines)) {
@@ -164,7 +205,7 @@ export default async function AdminDashboardPage() {
     .slice(0, 5);
   const maxTopQty = topProducts[0]?.totalQty || 1;
 
-  // 4. Customer Contact Channels
+  // 7. Customer Contact Channels
   const channelCounts: Record<string, number> = {
     BALE: 0,
     EITAA: 0,
@@ -235,15 +276,57 @@ export default async function AdminDashboardPage() {
     },
   ];
 
+  // 8. Priority 2: Catalog Quality Control (Missing image, options, unavailable)
+  const productsMissingImage = allProductsCatalog.filter((p) => !p.mainImageId);
+  const productsMissingOptions = allProductsCatalog.filter((p) => !p.options || p.options.length === 0);
+  const productsUnavailable = allProductsCatalog.filter((p) => !p.isAvailable && p.status === 'PUBLISHED');
+
+  // 9. Priority 2: Customer Analytics (Top demand cities & repeat loyal customers)
+  const cityCountMap = new Map<string, number>();
+  const customerMobileMap = new Map<string, { mobile: string; name: string; orderCount: number; totalSpent: number }>();
+
+  for (const order of allOrders) {
+    if (order.customerCity?.trim()) {
+      const city = order.customerCity.trim();
+      cityCountMap.set(city, (cityCountMap.get(city) || 0) + 1);
+    }
+    if (order.customerMobile?.trim()) {
+      const mob = order.customerMobile.trim();
+      const existing = customerMobileMap.get(mob) || {
+        mobile: mob,
+        name: order.customerName || 'مشتری گرامی',
+        orderCount: 0,
+        totalSpent: 0,
+      };
+      existing.orderCount += 1;
+      existing.totalSpent += order.totalPrice || 0;
+      customerMobileMap.set(mob, existing);
+    }
+  }
+
+  const topCities = Array.from(cityCountMap.entries())
+    .map(([city, count]) => ({ city, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 5);
+
+  const loyalCustomers = Array.from(customerMobileMap.values())
+    .filter((c) => c.orderCount > 1)
+    .sort((a, b) => b.orderCount - a.orderCount)
+    .slice(0, 5);
+
+  // 10. Failed Dispatches / Recent Pending Orders needing notification
+  const recentOrdersNeedingNotice = allOrders.slice(0, 5);
+
   return (
     <div className="space-y-8">
-      {/* Header */}
+      {/* Top Header & Fast Navigation */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#EFE9E0] pb-4">
         <div>
           <h1 className="text-2xl font-black text-[#2B2017]">{uiStringsFa.adminDashboard.title}</h1>
           <p className="text-sm text-[#5C5248] mt-1">{uiStringsFa.adminDashboard.subtitle}</p>
         </div>
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+          <DatabaseBackupButton />
           <Link
             href="/admin/orders"
             className="flex-1 sm:flex-none justify-center flex items-center px-3.5 py-2 bg-[#D97706] hover:bg-[#B45309] text-white text-xs font-black transition-colors shadow-xs rounded-none text-center"
@@ -264,6 +347,139 @@ export default async function AdminDashboardPage() {
           </Link>
         </div>
       </div>
+
+      {/* PRIORITY 1: System Health, Storage & Bots Diagnostic Bar */}
+      <div className="bg-[#2B2017] text-white p-4 sm:p-5 shadow-sm border border-stone-800 space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-2.5">
+          <div className="flex items-center gap-2">
+            <Activity className="w-4 h-4 text-amber-400" />
+            <span className="text-xs font-black tracking-wide text-amber-300">
+              سلامت زیرساخت و ارتباطات سیستم (System Health & Bot Integrations)
+            </span>
+          </div>
+          <div className="flex items-center gap-3 text-[11px] text-stone-300">
+            <span>مدت فعالیت سرور: {toPersianDigits(Math.round(systemHealth.uptimeSeconds / 60))} دقیقه</span>
+            <span>•</span>
+            <Link href="/admin/settings" className="text-amber-400 hover:underline flex items-center gap-1 font-bold">
+              <span>تنظیم توکن‌ها</span>
+              <span>←</span>
+            </Link>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+          {/* Database Connectivity & Latency */}
+          <div className="bg-white/5 border border-white/10 p-3 rounded-none flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <Database className="w-4 h-4 text-emerald-400 shrink-0" />
+              <div>
+                <div className="font-bold text-stone-200">اتصال PostgreSQL</div>
+                <div className="text-[10px] text-stone-400 font-mono mt-0.5">
+                  {systemHealth.database.connected
+                    ? `پاسخ‌دهی: ${toPersianDigits(systemHealth.database.latencyMs)}ms`
+                    : 'قطع ارتباط'}
+                </div>
+              </div>
+            </div>
+            <span
+              className={`px-2 py-0.5 text-[10px] font-black ${
+                systemHealth.database.connected
+                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                  : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+              }`}
+            >
+              {systemHealth.database.connected ? 'متصل و پایدار' : 'خطای اتصال'}
+            </span>
+          </div>
+
+          {/* Upload Storage */}
+          <div className="bg-white/5 border border-white/10 p-3 rounded-none flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <HardDrive className="w-4 h-4 text-cyan-400 shrink-0" />
+              <div>
+                <div className="font-bold text-stone-200">فضای ذخیره رسانه‌ها</div>
+                <div className="text-[10px] text-stone-400 font-mono mt-0.5">
+                  {toPersianDigits(systemHealth.storage.fileCount)} فایل تصویری
+                </div>
+              </div>
+            </div>
+            <span className="px-2 py-0.5 text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-mono">
+              {toPersianDigits(systemHealth.storage.totalSizeMB)} MB
+            </span>
+          </div>
+
+          {/* Bale Bot Status */}
+          <div className="bg-white/5 border border-white/10 p-3 rounded-none flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <Bot className="w-4 h-4 text-sky-400 shrink-0" />
+              <div>
+                <div className="font-bold text-stone-200">ربات بله (Bale)</div>
+                <div className="text-[10px] text-stone-400 font-mono mt-0.5">
+                  {systemHealth.bots.bale.chatIdMasked ? `Chat: ${systemHealth.bots.bale.chatIdMasked}` : 'تنظیم‌نشده'}
+                </div>
+              </div>
+            </div>
+            <span
+              className={`px-2 py-0.5 text-[10px] font-bold ${
+                systemHealth.bots.bale.isConfigured
+                  ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30'
+                  : 'bg-stone-500/20 text-stone-400 border border-stone-500/30'
+              }`}
+            >
+              {systemHealth.bots.bale.isConfigured ? 'آماده ارسال' : 'غیرفعال'}
+            </span>
+          </div>
+
+          {/* Eitaa Bot Status */}
+          <div className="bg-white/5 border border-white/10 p-3 rounded-none flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <Radio className="w-4 h-4 text-orange-400 shrink-0" />
+              <div>
+                <div className="font-bold text-stone-200">وب‌هوک ایتا (Eitaa)</div>
+                <div className="text-[10px] text-stone-400 font-mono mt-0.5">
+                  {systemHealth.bots.eitaa.chatIdMasked ? `Chat: ${systemHealth.bots.eitaa.chatIdMasked}` : 'تنظیم‌نشده'}
+                </div>
+              </div>
+            </div>
+            <span
+              className={`px-2 py-0.5 text-[10px] font-bold ${
+                systemHealth.bots.eitaa.isConfigured
+                  ? 'bg-orange-500/20 text-orange-300 border border-orange-500/30'
+                  : 'bg-stone-500/20 text-stone-400 border border-stone-500/30'
+              }`}
+            >
+              {systemHealth.bots.eitaa.isConfigured ? 'آماده ارسال' : 'غیرفعال'}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* PRIORITY 1: Customer Feedback Alert Banner */}
+      {unreadFeedbacks > 0 && (
+        <div className="bg-rose-50 border-2 border-rose-300 p-4 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-start sm:items-center gap-3">
+            <div className="p-2 bg-rose-100 border border-rose-300 text-rose-700 shrink-0">
+              <MessageSquare className="w-5 h-5 animate-pulse" />
+            </div>
+            <div>
+              <div className="text-sm font-black text-rose-950 flex items-center gap-2">
+                <span>توجه: {toPersianDigits(unreadFeedbacks)} پیام و بازخورد جدید از سمت مشتریان دارید!</span>
+                <span className="bg-rose-600 text-white text-[10px] font-black px-2 py-0.5">اقدام فوری</span>
+              </div>
+              <p className="text-xs text-rose-800 mt-0.5">
+                آخرین پیام: {recentFeedbacks[0]?.message?.slice(0, 50) || 'بازخورد جدید'} - از {recentFeedbacks[0]?.name || 'مشتری'} ({recentFeedbacks[0]?.phone ? toPersianDigits(recentFeedbacks[0].phone) : 'شماره ثبت نشده'})
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/admin/feedbacks"
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-rose-700 hover:bg-rose-800 text-white text-xs font-black shadow-xs transition-colors shrink-0"
+          >
+            <span>مشاهده صندوق بازخوردها</span>
+            <span>←</span>
+          </Link>
+        </div>
+      )}
 
       {/* Primary Metrics Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3.5 sm:gap-5">
@@ -301,6 +517,30 @@ export default async function AdminDashboardPage() {
             </Link>
           </div>
         </div>
+
+        {/* Revenue & AOV Metric Card (Priority 1) */}
+        <div className="bg-white border border-[#EFE9E0] p-4 sm:p-6 shadow-xs rounded-none">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-[#D97706] uppercase tracking-wide flex items-center gap-1.5">
+              <DollarSign className="w-4 h-4 text-[#D97706]" />
+              <span>مجموع ارزش سفارشات</span>
+            </span>
+            <span className="text-lg font-black text-[#332115]">
+              {toPersianDigits(totalRevenue.toLocaleString('fa-IR'))} <span className="text-xs font-normal">تومان</span>
+            </span>
+          </div>
+          <div className="mt-4 pt-4 border-t border-[#EFE9E0] space-y-1 text-xs">
+            <div className="flex justify-between items-center text-[#5C5248]">
+              <span>میانگین ارزش سفارش (AOV):</span>
+              <span className="font-bold text-[#332115]">{toPersianDigits(averageOrderValue.toLocaleString('fa-IR'))} تومان</span>
+            </div>
+            <div className="flex justify-between items-center text-[#5C5248]">
+              <span>فروش ۷ روز اخیر:</span>
+              <span className="font-bold text-emerald-700">{toPersianDigits(total7DaysRevenue.toLocaleString('fa-IR'))} تومان</span>
+            </div>
+          </div>
+        </div>
+
         {/* Products Card */}
         <div className="bg-white border border-[#EFE9E0] p-4 sm:p-6 shadow-xs rounded-none">
           <div className="flex items-center justify-between">
@@ -351,29 +591,6 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
 
-        {/* Catalog & Categories */}
-        <div className="bg-white border border-[#EFE9E0] p-4 sm:p-6 shadow-xs rounded-none">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-[#C86A00] uppercase tracking-wide flex items-center gap-1.5">
-              <Layers className="w-4 h-4 text-[#C86A00]" />
-              <span>دسته‌بندی و پوشش</span>
-            </span>
-            <span className="text-2xl font-black text-[#332115]">{toPersianDigits(totalCategories)}</span>
-          </div>
-          <p className="text-xs text-[#5C5248] mt-3">
-            دسته‌بندی‌های فعال کاتالوگ عسل و دستورهای طب سنتی
-          </p>
-          <div className="mt-4 pt-3 border-t border-[#EFE9E0]">
-            <Link
-              href="/admin/categories"
-              className="text-xs font-bold text-[#D97706] hover:text-[#C86A00] flex items-center justify-between"
-            >
-              <span>مدیریت دسته‌ها</span>
-              <span>←</span>
-            </Link>
-          </div>
-        </div>
-
         {/* Feedback Alert Card */}
         <div className="bg-white border border-[#EFE9E0] p-4 sm:p-6 shadow-xs rounded-none">
           <div className="flex items-center justify-between">
@@ -390,8 +607,8 @@ export default async function AdminDashboardPage() {
           </div>
           <p className="text-xs text-[#5C5248] mt-3">
             {unreadFeedbacks > 0
-              ? `${toPersianDigits(unreadFeedbacks)} پیام و پیشنهاد جدید در انتظار بررسی مدیر`
-              : 'تمام بازخوردهای مشتریان بررسی و رسیدگی شده‌اند'}
+              ? `${toPersianDigits(unreadFeedbacks)} پیام جدید در انتظار بررسی مدیر`
+              : 'تمام بازخوردهای مشتریان بررسی شده‌اند'}
           </p>
           <div className="mt-4 pt-3 border-t border-[#EFE9E0]">
             <Link
@@ -411,10 +628,10 @@ export default async function AdminDashboardPage() {
           <div>
             <h2 className="text-lg font-black text-[#2B2017] flex items-center gap-2">
               <TrendingUp className="w-5 h-5 text-[#D97706]" />
-              <span>مانیتورینگ و آمار عملکرد فروشگاه (Store Monitoring & Analytics)</span>
+              <span>پایپ‌لاین سفارشات و کانال‌های فروش (Order Pipeline & Messenger Funnel)</span>
             </h2>
             <p className="text-xs text-[#5C5248] mt-0.5">
-              روند ثبت روزانه، وضعیت چرخه سفارش، محصولات پرتقاضا و ترجیحات ارتباطی مشتریان
+              روند روزانه، سهم پیام‌رسان‌ها (ایتا، بله، واتساپ)، توزیع استاتوس و محصولات محبوب
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -449,115 +666,62 @@ export default async function AdminDashboardPage() {
                 className="w-full h-44 overflow-visible"
                 aria-label="نمودار روند سفارشات ۷ روز اخیر"
               >
-                {/* Horizontal grid lines & Y labels */}
-                {[0, 1, 2, 3, 4].map((step) => {
-                  const yVal = 130 - (step / 4) * 105;
-                  const labelVal = Math.round((step / 4) * maxDailyCount);
-                  return (
-                    <g key={step}>
-                      <line
-                        x1="45"
-                        y1={yVal}
-                        x2="525"
-                        y2={yVal}
-                        stroke="#EFE9E0"
-                        strokeWidth="1"
-                        strokeDasharray={step > 0 ? '3 3' : undefined}
-                      />
-                      <text
-                        x="35"
-                        y={yVal + 3}
-                        textAnchor="end"
-                        fontSize="10"
-                        fill="#8C7E72"
-                        fontFamily="inherit"
-                      >
-                        {labelVal.toLocaleString('fa-IR')}
-                      </text>
-                    </g>
-                  );
-                })}
+                {/* Horizontal Guide Grid Lines */}
+                <line x1="30" y1="20" x2="520" y2="20" stroke="#F3EFEA" strokeWidth="1" strokeDasharray="3 3" />
+                <line x1="30" y1="60" x2="520" y2="60" stroke="#F3EFEA" strokeWidth="1" strokeDasharray="3 3" />
+                <line x1="30" y1="100" x2="520" y2="100" stroke="#F3EFEA" strokeWidth="1" strokeDasharray="3 3" />
+                <line x1="30" y1="135" x2="520" y2="135" stroke="#D5C7B8" strokeWidth="1.5" />
 
-                {/* Bars */}
-                {daysData.map((d, i) => {
-                  const colWidth = (525 - 50) / 7;
-                  const barWidth = 32;
-                  const x = 50 + i * colWidth + (colWidth - barWidth) / 2;
-                  const barH = d.count > 0 ? Math.max((d.count / maxDailyCount) * 105, 8) : 0;
-                  const y = 130 - barH;
+                {daysData.map((d, idx) => {
+                  const barWidth = 36;
+                  const x = 50 + idx * 68;
+                  const barHeight = d.count > 0 ? Math.max(12, (d.count / maxDailyCount) * 105) : 4;
+                  const y = 135 - barHeight;
 
                   return (
-                    <g key={d.index} className="group">
-                      {/* Hover area */}
+                    <g key={d.index} className="transition-all duration-300">
+                      {/* Bar Background Hover Area */}
                       <rect
-                        x={50 + i * colWidth + 2}
-                        y="20"
-                        width={colWidth - 4}
-                        height="110"
-                        fill="currentColor"
-                        className="text-stone-100/0 hover:text-stone-100/60 transition-colors"
+                        x={x - 4}
+                        y="15"
+                        width={barWidth + 8}
+                        height="120"
+                        fill="transparent"
+                        className="hover:fill-amber-50/50"
                       />
-
-                      {/* Bar */}
-                      {d.count > 0 ? (
-                        <rect
-                          x={x}
-                          y={y}
-                          width={barWidth}
-                          height={barH}
-                          fill={d.isToday ? '#D97706' : '#F59E0B'}
-                          className="transition-all duration-300 hover:brightness-110"
-                          stroke={d.isToday ? '#B45309' : '#D97706'}
-                          strokeWidth="1"
-                        />
-                      ) : (
-                        <rect
-                          x={x + barWidth / 2 - 8}
-                          y={128}
-                          width="16"
-                          height="2"
-                          fill="#D5C7B8"
-                        />
-                      )}
-
-                      {/* Count label above bar */}
+                      {/* Bar Fill */}
+                      <rect
+                        x={x}
+                        y={y}
+                        width={barWidth}
+                        height={barHeight}
+                        fill={d.isToday ? '#D97706' : d.count > 0 ? '#FBBF24' : '#E5E7EB'}
+                        rx="0"
+                        className="transition-all duration-500"
+                      />
+                      {/* Order Count Label Above Bar */}
                       {d.count > 0 && (
                         <text
                           x={x + barWidth / 2}
-                          y={y - 6}
+                          y={y - 5}
                           textAnchor="middle"
                           fontSize="11"
                           fontWeight="bold"
-                          fill="#2B2017"
-                          fontFamily="inherit"
+                          fill={d.isToday ? '#B45309' : '#5C5248'}
                         >
-                          {d.count.toLocaleString('fa-IR')}
+                          {toPersianDigits(d.count)}
                         </text>
                       )}
-
-                      {/* Day name label */}
+                      {/* Day Name Label */}
                       <text
                         x={x + barWidth / 2}
-                        y="146"
+                        y="152"
                         textAnchor="middle"
                         fontSize="11"
-                        fontWeight={d.isToday ? '900' : '600'}
-                        fill={d.isToday ? '#D97706' : '#2B2017'}
-                        fontFamily="inherit"
+                        fontWeight={d.isToday ? 'bold' : 'normal'}
+                        fill={d.isToday ? '#D97706' : '#5C5248'}
                       >
                         {d.dayNameFa}
-                      </text>
-
-                      {/* Short date label */}
-                      <text
-                        x={x + barWidth / 2}
-                        y="160"
-                        textAnchor="middle"
-                        fontSize="9"
-                        fill="#8C7E72"
-                        fontFamily="inherit"
-                      >
-                        {d.dateFa}
                       </text>
                     </g>
                   );
@@ -565,36 +729,21 @@ export default async function AdminDashboardPage() {
               </svg>
             </div>
 
-            {/* 7-Day Summary Badges */}
-            <div className="pt-3 border-t border-[#EFE9E0] grid grid-cols-3 gap-2 text-center text-xs">
-              <div className="p-2 bg-[#FDFBF8] border border-[#EFE9E0] rounded-none">
-                <div className="text-[11px] text-[#5C5248]">ثبت سفارش هفته</div>
-                <div className="font-bold text-[#D97706] mt-0.5">{toPersianDigits(total7DaysOrders)} سفارش</div>
-              </div>
-              <div className="p-2 bg-[#FDFBF8] border border-[#EFE9E0] rounded-none">
-                <div className="text-[11px] text-[#5C5248]">مجموع ارزش ۷ روز</div>
-                <div className="font-bold text-[#2B2017] mt-0.5">
-                  {total7DaysRevenue > 0
-                    ? `${total7DaysRevenue.toLocaleString('fa-IR')} ت`
-                    : 'محاسبه در فاکتور'}
-                </div>
-              </div>
-              <div className="p-2 bg-[#FDFBF8] border border-[#EFE9E0] rounded-none">
-                <div className="text-[11px] text-[#5C5248]">میانگین روزانه</div>
-                <div className="font-bold text-[#2B2017] mt-0.5">
-                  {toPersianDigits((total7DaysOrders / 7).toFixed(1))} / روز
-                </div>
-              </div>
+            <div className="flex items-center justify-between text-xs text-[#5C5248] pt-2 border-t border-[#EFE9E0]">
+              <span>مجموع ارزش سفارش‌های ثبت‌شده در این بازه:</span>
+              <span className="font-bold text-[#2B2017]">
+                {toPersianDigits(total7DaysRevenue.toLocaleString('fa-IR'))} تومان
+              </span>
             </div>
           </div>
 
-          {/* Chart 2: Order Status Breakdown */}
+          {/* Chart 2: Order Status Distribution */}
           <div className="bg-white border border-[#D5C7B8] p-6 shadow-sm rounded-none space-y-4">
             <div className="flex items-center justify-between border-b border-[#EFE9E0] pb-3">
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-[#D97706]" />
                 <h3 className="text-sm font-black text-[#2B2017]">
-                  وضعیت سفارشات (Order Status Breakdown)
+                  چرخه و وضعیت سفارشات (Order Status Pipeline)
                 </h3>
               </div>
               <span className="text-xs font-bold text-[#5C5248]">
@@ -650,7 +799,6 @@ export default async function AdminDashboardPage() {
 
             {/* Status Breakdown Cards */}
             <div className="grid grid-cols-2 gap-3 pt-2">
-              {/* NEW */}
               <div className="p-3 bg-rose-50/50 border border-rose-200 rounded-none flex items-center justify-between">
                 <div>
                   <div className="text-xs font-black text-rose-900 flex items-center gap-1.5">
@@ -665,7 +813,6 @@ export default async function AdminDashboardPage() {
                 </div>
               </div>
 
-              {/* CONTACTED */}
               <div className="p-3 bg-amber-50/50 border border-amber-200 rounded-none flex items-center justify-between">
                 <div>
                   <div className="text-xs font-black text-amber-900 flex items-center gap-1.5">
@@ -680,7 +827,6 @@ export default async function AdminDashboardPage() {
                 </div>
               </div>
 
-              {/* SHIPPED */}
               <div className="p-3 bg-emerald-50/50 border border-emerald-200 rounded-none flex items-center justify-between">
                 <div>
                   <div className="text-xs font-black text-emerald-900 flex items-center gap-1.5">
@@ -695,7 +841,6 @@ export default async function AdminDashboardPage() {
                 </div>
               </div>
 
-              {/* CANCELLED */}
               <div className="p-3 bg-stone-50 border border-stone-200 rounded-none flex items-center justify-between">
                 <div>
                   <div className="text-xs font-black text-stone-700 flex items-center gap-1.5">
@@ -771,7 +916,6 @@ export default async function AdminDashboardPage() {
                           <span className="text-[11px] text-[#5C5248]">عدد / شیشه</span>
                         </div>
                       </div>
-                      {/* Visual progress bar */}
                       <div className="w-full h-2 bg-stone-200 overflow-hidden rounded-none">
                         <div
                           className="h-full bg-[#D97706] transition-all duration-500 rounded-none"
@@ -791,7 +935,7 @@ export default async function AdminDashboardPage() {
               <div className="flex items-center gap-2">
                 <Share2 className="w-4 h-4 text-[#D97706]" />
                 <h3 className="text-sm font-black text-[#2B2017]">
-                  کانال‌های ارتباطی ترجیحی مشتریان (Customer Contact Channels)
+                  سهم پیام‌رسان‌ها و ترجیحات ارتباطی (Messenger Funnel)
                 </h3>
               </div>
               <span className="text-xs font-bold text-[#5C5248]">
@@ -826,7 +970,6 @@ export default async function AdminDashboardPage() {
                       </div>
                     </div>
 
-                    {/* Progress bar */}
                     <div className="w-full h-1.5 bg-black/5 overflow-hidden rounded-none">
                       <div
                         className="h-full transition-all duration-500 rounded-none"
@@ -844,7 +987,202 @@ export default async function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* Catalog Health & Stock Metrics Section [ADM-FEAT-04] */}
+      {/* PRIORITY 1: Bot Notification Health & Recent Dispatch Monitoring */}
+      <div className="bg-white border border-[#D5C7B8] p-6 shadow-sm rounded-none space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#EFE9E0] pb-3">
+          <div>
+            <h2 className="text-base font-black text-[#2B2017] flex items-center gap-2">
+              <Bot className="w-5 h-5 text-[#D97706]" />
+              <span>مانیتورینگ ارسال اعلان ربات‌ها به ادمین (Order Bot Dispatch & Retry)</span>
+            </h2>
+            <p className="text-xs text-[#5C5248] mt-0.5">
+              وضعیت اعلان‌های ارسال‌شده به تلگرام، بله یا ایتا برای سفارش‌های اخیر با امکان ارسال مجدد
+            </p>
+          </div>
+          <span className="text-xs font-bold text-[#5C5248]">
+            کانال‌های فعال: {systemHealth.bots.bale.isConfigured ? 'بله ' : ''}{systemHealth.bots.eitaa.isConfigured ? 'ایتا ' : ''}{!systemHealth.bots.bale.isConfigured && !systemHealth.bots.eitaa.isConfigured ? 'هیچ رباتی تنظیم نشده' : ''}
+          </span>
+        </div>
+
+        {recentOrdersNeedingNotice.length === 0 ? (
+          <div className="p-4 bg-[#FDFBF8] text-center text-xs text-[#5C5248] border border-dashed border-[#D5C7B8]">
+            هنوز سفارشی ثبت نشده است.
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-start text-xs border-collapse">
+              <thead>
+                <tr className="border-b border-[#EFE9E0] text-[#5C5248] bg-[#FDFBF8]">
+                  <th className="py-2.5 px-3 text-start">کد سفارش</th>
+                  <th className="py-2.5 px-3 text-start">مشتری</th>
+                  <th className="py-2.5 px-3 text-start">کانال سفارش</th>
+                  <th className="py-2.5 px-3 text-start">زمان ثبت</th>
+                  <th className="py-2.5 px-3 text-start">عملیات اعلان</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#EFE9E0]">
+                {recentOrdersNeedingNotice.map((order) => (
+                  <tr key={order.id} className="hover:bg-[#FFFBEB]/40 transition-colors">
+                    <td className="py-2.5 px-3 font-mono font-bold text-[#D97706]">
+                      {order.code}
+                    </td>
+                    <td className="py-2.5 px-3 font-bold text-[#332115]">
+                      {order.customerName} ({toPersianDigits(order.customerMobile)})
+                    </td>
+                    <td className="py-2.5 px-3 font-mono text-[#5C5248]">
+                      {order.channelType || 'WEB'}
+                    </td>
+                    <td className="py-2.5 px-3 text-[#5C5248]" dir="ltr">
+                      {new Date(order.createdAt).toLocaleString('fa-IR')}
+                    </td>
+                    <td className="py-2.5 px-3">
+                      <ResendOrderNotificationButton orderId={order.id} orderCode={order.code} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* PRIORITY 2: Customer Demand & Loyalty Analysis (Top Cities & Repeat Customers) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Top Demand Cities */}
+        <div className="bg-white border border-[#D5C7B8] p-6 shadow-sm rounded-none space-y-4">
+          <div className="flex items-center justify-between border-b border-[#EFE9E0] pb-3">
+            <div className="flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-[#D97706]" />
+              <h3 className="text-sm font-black text-[#2B2017]">
+                شهرهای با بیشترین تقاضا (Top-Demand Cities)
+              </h3>
+            </div>
+            <span className="text-xs font-bold text-[#5C5248]">
+              {topCities.length} شهر برتر
+            </span>
+          </div>
+
+          {topCities.length === 0 ? (
+            <p className="text-xs text-[#5C5248] py-4 text-center">شهری در سفارشات ثبت نشده است.</p>
+          ) : (
+            <div className="space-y-2">
+              {topCities.map((item, idx) => (
+                <div key={item.city} className="flex items-center justify-between p-2.5 bg-[#FDFBF8] border border-[#EFE9E0] text-xs">
+                  <div className="flex items-center gap-2">
+                    <span className="w-5 h-5 bg-amber-100 text-amber-900 font-bold flex items-center justify-center text-[10px]">
+                      {toPersianDigits(idx + 1)}
+                    </span>
+                    <span className="font-bold text-[#332115]">{item.city}</span>
+                  </div>
+                  <span className="font-mono font-bold text-[#D97706]">
+                    {toPersianDigits(item.count)} سفارش
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Loyal Repeat Customers */}
+        <div className="bg-white border border-[#D5C7B8] p-6 shadow-sm rounded-none space-y-4">
+          <div className="flex items-center justify-between border-b border-[#EFE9E0] pb-3">
+            <div className="flex items-center gap-2">
+              <Users className="w-4 h-4 text-[#3F8F3B]" />
+              <h3 className="text-sm font-black text-[#2B2017]">
+                مشتریان وفادار (Repeat Customers)
+              </h3>
+            </div>
+            <span className="text-xs font-bold text-[#5C5248]">
+              بیش از ۱ خرید
+            </span>
+          </div>
+
+          {loyalCustomers.length === 0 ? (
+            <p className="text-xs text-[#5C5248] py-4 text-center">هنوز مشتری با سفارش تکراری ثبت نشده است.</p>
+          ) : (
+            <div className="space-y-2">
+              {loyalCustomers.map((cust) => (
+                <div key={cust.mobile} className="flex items-center justify-between p-2.5 bg-[#FDFBF8] border border-[#EFE9E0] text-xs">
+                  <div>
+                    <div className="font-bold text-[#332115]">{cust.name}</div>
+                    <div className="text-[11px] text-[#5C5248] font-mono mt-0.5">{toPersianDigits(cust.mobile)}</div>
+                  </div>
+                  <div className="text-end">
+                    <div className="font-bold text-[#3F8F3B]">{toPersianDigits(cust.orderCount)} سفارش</div>
+                    <div className="text-[10px] text-stone-500 font-mono mt-0.5">
+                      {toPersianDigits(cust.totalSpent.toLocaleString('fa-IR'))} ت
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* PRIORITY 2: Catalog Quality Control (QC Alert Box) */}
+      <div className="bg-white border border-[#D5C7B8] p-6 shadow-sm rounded-none space-y-4">
+        <div className="flex items-center justify-between border-b border-[#EFE9E0] pb-3">
+          <div className="flex items-center gap-2">
+            <FileCheck className="w-4 h-4 text-[#D97706]" />
+            <h3 className="text-sm font-black text-[#2B2017]">
+              کنترل کیفیت کاتالوگ و محصولات ناقص (Catalog Quality Control)
+            </h3>
+          </div>
+          <Link href="/admin/products" className="text-xs font-bold text-[#D97706] hover:underline">
+            مدیریت محصولات ←
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {/* Missing Image */}
+          <div className={`p-4 border rounded-none ${productsMissingImage.length > 0 ? 'bg-amber-50/70 border-amber-300' : 'bg-emerald-50/70 border-emerald-300'}`}>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-black text-[#2B2017]">فاقد تصویر شاخص</span>
+              <span className={`text-base font-black ${productsMissingImage.length > 0 ? 'text-amber-800' : 'text-emerald-800'}`}>
+                {toPersianDigits(productsMissingImage.length)}
+              </span>
+            </div>
+            <p className="text-[11px] text-[#5C5248] mt-1">
+              {productsMissingImage.length > 0
+                ? `${toPersianDigits(productsMissingImage.length)} محصول نیاز به بارگذاری تصویر اصلی دارند.`
+                : 'تمام محصولات دارای تصویر شاخص هستند.'}
+            </p>
+          </div>
+
+          {/* Missing Pricing Options */}
+          <div className={`p-4 border rounded-none ${productsMissingOptions.length > 0 ? 'bg-rose-50/70 border-rose-300' : 'bg-emerald-50/70 border-emerald-300'}`}>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-black text-[#2B2017]">فاقد گزینه وزن/قیمت</span>
+              <span className={`text-base font-black ${productsMissingOptions.length > 0 ? 'text-rose-800' : 'text-emerald-800'}`}>
+                {toPersianDigits(productsMissingOptions.length)}
+              </span>
+            </div>
+            <p className="text-[11px] text-[#5C5248] mt-1">
+              {productsMissingOptions.length > 0
+                ? `${toPersianDigits(productsMissingOptions.length)} محصول فاقد پکیج و قیمت جهت خرید هستند.`
+                : 'تمام محصولات دارای گزینه‌های قیمت‌گذاری هستند.'}
+            </p>
+          </div>
+
+          {/* Unavailable Products */}
+          <div className="p-4 bg-stone-50 border border-stone-200 rounded-none">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-black text-[#2B2017]">کالاهای ناموجود در انبار</span>
+              <span className="text-base font-black text-stone-700">
+                {toPersianDigits(productsUnavailable.length)}
+              </span>
+            </div>
+            <p className="text-[11px] text-[#5C5248] mt-1">
+              {productsUnavailable.length > 0
+                ? `${toPersianDigits(productsUnavailable.length)} محصول فعال اما با وضعیت ناموجود در سایت.`
+                : 'هیچ محصول فعالی ناموجود نیست.'}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Catalog Health & Stock Metrics Section */}
       <div className="bg-white border border-[#EFE9E0] p-6 shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#EFE9E0] pb-3">
           <div>
@@ -944,10 +1282,13 @@ export default async function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* Last 10 Audit Entries */}
+      {/* PRIORITY 2: Last 10 Audit Entries (Enhanced Audit Trail Table) */}
       <div className="bg-white border border-[#EFE9E0] p-6 shadow-xs">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-bold text-[#332115]">{uiStringsFa.adminDashboard.recentAuditLogs}</h2>
+          <div className="flex items-center gap-2">
+            <Shield className="w-4 h-4 text-[#D97706]" />
+            <h2 className="text-base font-bold text-[#332115]">{uiStringsFa.adminDashboard.recentAuditLogs}</h2>
+          </div>
           <Link
             href="/admin/audit-log"
             className="text-xs font-bold text-[#D97706] hover:underline"
