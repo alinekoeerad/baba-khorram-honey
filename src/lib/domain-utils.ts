@@ -154,8 +154,7 @@ export function resolveItemCardTheme(item?: {
 } | null): CardThemeType {
   if (!item) return 'GREEN';
   const raw = (item.cardTheme || item.theme || 'AUTO').toUpperCase();
-  const validThemes: CardThemeType[] = ['GREEN', 'ORANGE', 'YELLOW', 'BURGUNDY'];
-  if (raw !== 'AUTO' && validThemes.includes(raw as CardThemeType)) {
+  if (raw && raw !== 'AUTO') {
     return raw as CardThemeType;
   }
   const orderIndex =

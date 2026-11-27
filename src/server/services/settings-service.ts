@@ -286,10 +286,13 @@ export class SettingsService {
       (revalidateTag as any)('settings');
       revalidatePath('/', 'layout');
       revalidatePath('/products');
+      revalidatePath('/products/[slug]', 'page');
       revalidatePath('/recipes');
+      revalidatePath('/recipes/[slug]', 'page');
       revalidatePath('/magazine');
       revalidatePath('/contact');
       revalidatePath('/search');
+      revalidatePath('/cart');
     } catch {}
 
     return updated;
@@ -374,10 +377,13 @@ export class SettingsService {
       (revalidateTag as any)('settings');
       revalidatePath('/', 'layout');
       revalidatePath('/products');
+      revalidatePath('/products/[slug]', 'page');
       revalidatePath('/recipes');
+      revalidatePath('/recipes/[slug]', 'page');
       revalidatePath('/magazine');
       revalidatePath('/contact');
       revalidatePath('/search');
+      revalidatePath('/cart');
     } catch {}
 
     return created;
@@ -434,10 +440,13 @@ export class SettingsService {
       (revalidateTag as any)('settings');
       revalidatePath('/', 'layout');
       revalidatePath('/products');
+      revalidatePath('/products/[slug]', 'page');
       revalidatePath('/recipes');
+      revalidatePath('/recipes/[slug]', 'page');
       revalidatePath('/magazine');
       revalidatePath('/contact');
       revalidatePath('/search');
+      revalidatePath('/cart');
     } catch {}
 
     return updated;
@@ -473,10 +482,13 @@ export class SettingsService {
       (revalidateTag as any)('settings');
       revalidatePath('/', 'layout');
       revalidatePath('/products');
+      revalidatePath('/products/[slug]', 'page');
       revalidatePath('/recipes');
+      revalidatePath('/recipes/[slug]', 'page');
       revalidatePath('/magazine');
       revalidatePath('/contact');
       revalidatePath('/search');
+      revalidatePath('/cart');
     } catch {}
   }
 }

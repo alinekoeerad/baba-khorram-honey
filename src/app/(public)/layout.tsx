@@ -9,7 +9,8 @@ import { getPublicSiteSettings, getPublicContactChannels } from '@/server/querie
 import { getPublicCategories } from '@/server/queries/categories';
 import { ShellLayout } from '@/components/public/shell-layout';
 
-export const revalidate = 3600; // 1 hour default ISR, actively revalidated on admin mutation
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function PublicLayout({
   children,

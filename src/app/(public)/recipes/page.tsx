@@ -23,7 +23,8 @@ import { getPublicCategories } from '@/server/queries/categories';
 import { RecipesListingClient } from '@/components/public/recipes-listing-client';
 import { uiStringsFa } from '@/content/ui-strings.fa';
 
-export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 interface RecipesPageProps {
   searchParams: Promise<{

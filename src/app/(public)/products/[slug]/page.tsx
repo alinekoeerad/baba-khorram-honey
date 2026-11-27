@@ -15,7 +15,7 @@ import React from 'react';
 import { db } from '@/server/db/client';
 import { serializeJsonLd } from '@/lib/utils';
 
-export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
 
 export async function generateStaticParams() {
   try {

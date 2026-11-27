@@ -17,7 +17,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { CardTheme, getCardThemeForSlug, getBalancedCardTheme, resolveItemCardTheme } from '@/lib/domain-utils';
-import { getCardThemeStyles } from '@/lib/card-theme';
+import { getCardThemeStyles, resolveSingleCardTheme } from '@/lib/card-theme';
 import { useCardPalette } from '@/lib/card-palette-context';
 import { DottedArrowIcon } from './dotted-arrow-icon';
 
@@ -172,15 +172,21 @@ export function ContentCard({
 }: ContentCardProps) {
   const palette = useCardPalette();
 
-  // Resolve card theme consistently matching detail page breadcrumbs
-  const resolvedTheme: string = resolveItemCardTheme({
-    cardTheme: theme,
-    sortOrder: typeof sortOrder === 'number' ? sortOrder : index,
-    slug: slug || title,
-    index,
-  });
+  // If a specific theme key is already provided (e.g. from resolveNonAdjacentThemes),
+  // trust it directly! Only resolve dynamically using active palette when 'AUTO' or missing.
+  const resolvedTheme: string =
+    theme && theme !== 'AUTO'
+      ? theme
+      : resolveSingleCardTheme(
+          {
+            cardTheme: theme,
+            sortOrder: typeof sortOrder === 'number' ? sortOrder : index,
+            slug: slug || title,
+            id: slug || title,
+          },
+          palette
+        );
 
-  const currentTheme = THEME_STYLES[resolvedTheme] || THEME_STYLES.GREEN;
   const dynamicStyles = getCardThemeStyles(resolvedTheme, palette);
   const isProduct = itemType === 'product' || (itemType === undefined && href.startsWith('/products'));
   const rawSlug = slug || href.split('/').pop() || '';

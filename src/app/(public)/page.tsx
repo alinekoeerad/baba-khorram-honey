@@ -26,7 +26,8 @@ import { getPublicHomepageSections } from '@/server/queries/homepage-sections';
 import { getPublicProducts } from '@/server/queries/products';
 import { getPublicRecipes } from '@/server/queries/recipes';
 
-export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 function isSectionVisible(section: any, products: any[], recipes: any[]): boolean {
   if (section.type === 'VIDEO') {

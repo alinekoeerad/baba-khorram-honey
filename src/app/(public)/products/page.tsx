@@ -21,7 +21,7 @@ import { getPublicCategories } from '@/server/queries/categories';
 import { ProductsListingClient } from '@/components/public/products-listing-client';
 import { uiStringsFa } from '@/content/ui-strings.fa';
 
-export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
 
 interface ProductsPageProps {
   searchParams: Promise<{
