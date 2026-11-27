@@ -11,13 +11,15 @@
  * - Empty state with helpful suggestions.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, Loader2 } from 'lucide-react';
 import { ContentCard } from '@/components/ui/content-card';
 import { PillButton } from '@/components/ui/pill-button';
 import { loadMoreProductsAction, loadMoreRecipesAction } from '@/server/actions/listing-actions';
 import { toPersianDigits } from '@/lib/domain-utils';
+import { resolveNonAdjacentThemes } from '@/lib/card-theme';
+import { useGridColumns } from '@/lib/use-grid-columns';
 import type { ProductCardViewModel, ProductCursor } from '@/server/queries/products';
 import type { RecipeCardViewModel, RecipeCursor } from '@/server/queries/recipes';
 
@@ -64,6 +66,33 @@ export function SearchResultsClient({
   );
   const [hasMoreRecipes, setHasMoreRecipes] = useState(totalRecipes > initialRecipes.length);
   const [isLoadingMoreRecipes, setIsLoadingMoreRecipes] = useState(false);
+
+  // Responsive grid columns detection (sm: 2, md: 3, lg: 4, xl: 5)
+  const gridColumns = useGridColumns({
+    base: 1,
+    sm: 2,
+    md: 3,
+    lg: 4,
+    xl: 5,
+  });
+
+  // Non-adjacent theme resolution for products
+  const desktopProductThemes = useMemo(() => {
+    return resolveNonAdjacentThemes(products, { columns: gridColumns });
+  }, [products, gridColumns]);
+
+  const mobileProductThemes = useMemo(() => {
+    return resolveNonAdjacentThemes(products, { columns: 1 });
+  }, [products]);
+
+  // Non-adjacent theme resolution for recipes
+  const desktopRecipeThemes = useMemo(() => {
+    return resolveNonAdjacentThemes(recipes, { columns: gridColumns });
+  }, [recipes, gridColumns]);
+
+  const mobileRecipeThemes = useMemo(() => {
+    return resolveNonAdjacentThemes(recipes, { columns: 1 });
+  }, [recipes]);
 
   // Sync state when URL query / server props change on /search
   useEffect(() => {
@@ -209,7 +238,7 @@ export function SearchResultsClient({
                     imageAsset={item.imageAsset}
                     secondaryImageAsset={item.secondaryImageAsset}
                     secondaryImageUrl={item.secondaryImageUrl}
-                    theme={item.theme}
+                    theme={desktopProductThemes[idx] || item.theme}
                     slug={item.slug}
                     sortOrder={item.sortOrder}
                     isAvailable={item.isAvailable}
@@ -232,7 +261,7 @@ export function SearchResultsClient({
                     imageAsset={item.imageAsset}
                     secondaryImageAsset={item.secondaryImageAsset}
                     secondaryImageUrl={item.secondaryImageUrl}
-                    theme={item.theme}
+                    theme={mobileProductThemes[idx] || item.theme}
                     slug={item.slug}
                     sortOrder={item.sortOrder}
                     isAvailable={item.isAvailable}
@@ -290,7 +319,7 @@ export function SearchResultsClient({
                     imageAsset={item.imageAsset}
                     secondaryImageAsset={item.secondaryImageAsset}
                     secondaryImageUrl={item.secondaryImageUrl}
-                    theme={item.theme}
+                    theme={desktopRecipeThemes[idx] || item.theme}
                     slug={item.slug}
                     sortOrder={item.sortOrder}
                     linkLabel={item.linkLabel}
@@ -310,7 +339,7 @@ export function SearchResultsClient({
                     subtitle={item.subtitle}
                     href={item.href}
                     imageAsset={item.imageAsset}
-                    theme={item.theme}
+                    theme={mobileRecipeThemes[idx] || item.theme}
                     slug={item.slug}
                     sortOrder={item.sortOrder}
                     linkLabel={item.linkLabel}

@@ -6,13 +6,17 @@
 import { db } from '@/server/db/client';
 
 export async function getPublicCategories(type: 'PRODUCT' | 'RECIPE') {
-  return await db.category.findMany({
-    where: {
-      type,
-      status: 'ACTIVE',
-    },
-    orderBy: { sortOrder: 'asc' },
-  });
+  try {
+    return await db.category.findMany({
+      where: {
+        type,
+        status: 'ACTIVE',
+      },
+      orderBy: { sortOrder: 'asc' },
+    });
+  } catch {
+    return [];
+  }
 }
 
 // Alias for backwards compatibility

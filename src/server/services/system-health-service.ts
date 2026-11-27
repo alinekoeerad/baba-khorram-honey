@@ -68,7 +68,7 @@ export async function getSystemHealthReport(): Promise<SystemHealthReport> {
   const uploadDirName = process.env.UPLOAD_DIR || 'uploads';
   const uploadPath = path.isAbsolute(uploadDirName)
     ? uploadDirName
-    : path.join(process.cwd(), uploadDirName);
+    : path.join(/*turbopackIgnore: true*/ process.cwd(), uploadDirName);
 
   let fileCount = 0;
   let totalSizeBytes = 0;

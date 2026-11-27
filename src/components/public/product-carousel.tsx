@@ -21,7 +21,7 @@ import Image from 'next/image';
 import { WoodBackground } from '@/components/ui/wood-background';
 import { Container } from '@/components/ui/container';
 import { PillButton } from '@/components/ui/pill-button';
-import { getCardThemeForSlug, getBalancedCardTheme, resolveItemCardTheme } from '@/lib/domain-utils';
+import { resolveNonAdjacentThemes, getCardThemeStyles } from '@/lib/card-theme';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 
 interface ProductItem {
@@ -75,6 +75,14 @@ export function ProductCarousel({
     }
     return list;
   }, [products, N]);
+
+  // Non-adjacent card theme resolution for looping carousel
+  const resolvedThemes = useMemo(() => {
+    return resolveNonAdjacentThemes(displayItems, {
+      columns: displayItems.length,
+      isCircular: true,
+    });
+  }, [displayItems]);
 
   const slideNext = useCallback(() => {
     const el = scrollContainerRef.current;
@@ -163,8 +171,8 @@ export function ProductCarousel({
           }}
         >
           {displayItems.map((p, idx) => {
-            const themeKey = resolveItemCardTheme({ ...p, index: idx });
-            const theme = THEME_CLASSES[themeKey] || THEME_CLASSES.GREEN;
+            const themeKey = resolvedThemes[idx] || 'GREEN';
+            const dynamicStyles = getCardThemeStyles(themeKey);
             const titleText = p.nameFa || p.title || 'عسل ممتاز باباخُرم';
             const imageSrc =
               (p as any).imageAsset?.url ||
@@ -237,17 +245,28 @@ export function ProductCarousel({
 
                   {/* Content Wrap */}
                   <div
-                    className={`p-3.5 sm:p-4 flex-1 flex flex-col justify-between ${theme.bg}`}
+                    style={{
+                      backgroundColor: dynamicStyles.bg,
+                      color: dynamicStyles.color,
+                      borderBottom: `3px solid ${dynamicStyles.borderColor}`,
+                    }}
+                    className="p-3.5 sm:p-4 flex-1 flex flex-col justify-between"
                   >
                     {/* Top text: Black */}
-                    <h3 className="font-black text-sm sm:text-base leading-normal line-clamp-2 text-[#2B2017]">
+                    <h3
+                      style={{ color: dynamicStyles.color }}
+                      className="font-black text-sm sm:text-base leading-normal line-clamp-2"
+                    >
                       {titleText}
                     </h3>
 
                     {/* Bottom text: White */}
-                    <div className="mt-3 pt-2.5 border-t border-black/10 flex items-center justify-between text-xs sm:text-sm font-black text-white">
+                    <div
+                      style={{ borderColor: dynamicStyles.borderColor, color: dynamicStyles.color }}
+                      className="mt-3 pt-2.5 border-t flex items-center justify-between text-xs sm:text-sm font-black"
+                    >
                       <span>مشاهده محصول</span>
-                      <DottedArrowIcon direction="left" className="w-4 h-4 text-white transition-transform duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:-translate-x-1.5" />
+                      <DottedArrowIcon direction="left" className="w-4 h-4 transition-transform duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:-translate-x-1.5" />
                     </div>
                   </div>
                 </Link>

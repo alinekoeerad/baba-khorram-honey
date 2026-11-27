@@ -9,6 +9,8 @@ import { WoodBackground } from '@/components/ui/wood-background';
 import { PillButton } from '@/components/ui/pill-button';
 import { DottedArrowIcon } from '@/components/ui/dotted-arrow-icon';
 import { normalizeSearchText, toPersianDigits } from '@/lib/domain-utils';
+import { resolveNonAdjacentThemes } from '@/lib/card-theme';
+import { useGridColumns } from '@/lib/use-grid-columns';
 import {
   MAGAZINE_ARTICLES,
   MAGAZINE_CATEGORIES,
@@ -62,8 +64,15 @@ const CARD_THEME_STYLES: Record<
   },
 };
 
-function MagazineArticleCard({ article }: { article: MagazineArticle }) {
-  const styles = CARD_THEME_STYLES[article.theme];
+function MagazineArticleCard({
+  article,
+  overrideTheme,
+}: {
+  article: MagazineArticle;
+  overrideTheme?: string;
+}) {
+  const themeKey = ((overrideTheme || article.theme || 'GREEN').toUpperCase()) as MagazineCardTheme;
+  const styles = CARD_THEME_STYLES[themeKey] || CARD_THEME_STYLES.GREEN;
 
   return (
     <Link
@@ -142,6 +151,17 @@ export function MagazineListingClient({
       return hay.includes(q);
     });
   }, [initialArticles, selectedCategory, searchQuery]);
+
+  // Responsive grid detection for grid-cols-1 md:grid-cols-2 lg:grid-cols-3
+  const gridColumns = useGridColumns({
+    base: 1,
+    md: 2,
+    lg: 3,
+  });
+
+  const resolvedThemes = useMemo(() => {
+    return resolveNonAdjacentThemes(filteredArticles, { columns: gridColumns });
+  }, [filteredArticles, gridColumns]);
 
   return (
     <WoodBackground className="min-h-screen py-10 sm:py-16">
@@ -224,8 +244,12 @@ export function MagazineListingClient({
         {/* Articles Grid */}
         {filteredArticles.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
-            {filteredArticles.map((article) => (
-              <MagazineArticleCard key={article.slug} article={article} />
+            {filteredArticles.map((article, idx) => (
+              <MagazineArticleCard
+                key={article.slug}
+                article={article}
+                overrideTheme={resolvedThemes[idx]}
+              />
             ))}
           </div>
         ) : (

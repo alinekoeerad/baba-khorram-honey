@@ -17,6 +17,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { CardTheme, getCardThemeForSlug, getBalancedCardTheme, resolveItemCardTheme } from '@/lib/domain-utils';
+import { getCardThemeStyles } from '@/lib/card-theme';
 import { DottedArrowIcon } from './dotted-arrow-icon';
 
 export interface ContentCardProps {
@@ -177,6 +178,7 @@ export function ContentCard({
   });
 
   const currentTheme = THEME_STYLES[resolvedTheme] || THEME_STYLES.GREEN;
+  const dynamicStyles = getCardThemeStyles(resolvedTheme);
   const isProduct = itemType === 'product' || (itemType === undefined && href.startsWith('/products'));
   const rawSlug = slug || href.split('/').pop() || '';
 
@@ -262,7 +264,12 @@ export function ContentCard({
     return (
       <Link
         href={href}
-        className={`group block rounded-none border ${currentTheme.borderColor} shadow-[0_3px_12px_rgba(51,33,21,0.18)] hover:shadow-[0_12px_28px_rgba(51,33,21,0.28)] transition-shadow duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] overflow-hidden ${currentTheme.bg} ${className}`}
+        style={{
+          backgroundColor: dynamicStyles.bg,
+          borderColor: dynamicStyles.borderColor,
+          color: dynamicStyles.color,
+        }}
+        className={`group block rounded-none border shadow-[0_3px_12px_rgba(51,33,21,0.18)] hover:shadow-[0_12px_28px_rgba(51,33,21,0.28)] transition-shadow duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] overflow-hidden ${className}`}
       >
         <div className="flex flex-row items-center h-28 sm:h-32">
           {/* Image Container - Visual Right in RTL (first in DOM under dir="rtl") */}
@@ -313,22 +320,31 @@ export function ContentCard({
           {/* Content Area - Visual Left in RTL */}
           <div className="flex-1 p-3 sm:p-4 flex flex-col justify-between h-full min-w-0 text-right">
             <div>
-              <h3 className={`font-black text-xs sm:text-sm leading-normal line-clamp-2 ${currentTheme.text}`}>
+              <h3
+                style={{ color: dynamicStyles.color }}
+                className="font-black text-xs sm:text-sm leading-normal line-clamp-2"
+              >
                 {title}
               </h3>
               {subtitle && (
-                <p className={`text-[11px] sm:text-xs mt-1.5 line-clamp-1 font-bold leading-normal ${currentTheme.subtext}`}>
+                <p
+                  style={{ color: dynamicStyles.subtextColor }}
+                  className="text-[11px] sm:text-xs mt-1.5 line-clamp-1 font-bold leading-normal"
+                >
                   {subtitle}
                 </p>
               )}
             </div>
 
             {/* Link Label with Dotted Arrow */}
-            <div className="text-xs font-black flex items-center justify-between pt-1 border-t border-black/15 mt-1 text-white">
+            <div
+              style={{ borderColor: dynamicStyles.borderColor, color: dynamicStyles.color }}
+              className="text-xs font-black flex items-center justify-between pt-1 border-t mt-1"
+            >
               <span>{linkLabel}</span>
               <DottedArrowIcon
                 direction="left"
-                className="w-4 h-4 transition-transform duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:-translate-x-1.5 text-white"
+                className="w-4 h-4 transition-transform duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:-translate-x-1.5"
               />
             </div>
           </div>
@@ -341,7 +357,12 @@ export function ContentCard({
   return (
     <Link
       href={href}
-      className={`group flex flex-col rounded-none border ${currentTheme.borderColor} shadow-[0_4px_16px_rgba(51,33,21,0.18)] hover:shadow-[0_16px_36px_rgba(51,33,21,0.28)] transition-shadow duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] overflow-hidden ${currentTheme.bg} ${className}`}
+      style={{
+        backgroundColor: dynamicStyles.bg,
+        borderColor: dynamicStyles.borderColor,
+        color: dynamicStyles.color,
+      }}
+      className={`group flex flex-col rounded-none border shadow-[0_4px_16px_rgba(51,33,21,0.18)] hover:shadow-[0_16px_36px_rgba(51,33,21,0.28)] transition-shadow duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] overflow-hidden ${className}`}
     >
       {/* Image Area - Aspect 3:4 portrait presentation with Glassy Magnifier Hover */}
       <div className="relative w-full aspect-[3/4] overflow-hidden shrink-0 bg-[#FAF8F5] rounded-none">
@@ -392,22 +413,31 @@ export function ContentCard({
       {/* Card Body - Balanced for compact elegant card presentation */}
       <div className="p-3.5 sm:p-4 flex-1 flex flex-col justify-between text-right">
         <div>
-          <h3 className={`font-black text-sm sm:text-base leading-normal line-clamp-2 ${currentTheme.text}`}>
+          <h3
+            style={{ color: dynamicStyles.color }}
+            className="font-black text-sm sm:text-base leading-normal line-clamp-2"
+          >
             {title}
           </h3>
           {subtitle && (
-            <p className={`text-[11px] sm:text-xs mt-1.5 line-clamp-1 font-bold leading-normal ${currentTheme.subtext}`}>
+            <p
+              style={{ color: dynamicStyles.subtextColor }}
+              className="text-[11px] sm:text-xs mt-1.5 line-clamp-1 font-bold leading-normal"
+            >
               {subtitle}
             </p>
           )}
         </div>
 
         {/* Card Footer Link Label with signature Dotted Arrow */}
-        <div className="mt-3 pt-2.5 border-t border-black/15 flex items-center justify-between text-xs sm:text-sm font-black text-white">
+        <div
+          style={{ borderColor: dynamicStyles.borderColor, color: dynamicStyles.color }}
+          className="mt-3 pt-2.5 border-t flex items-center justify-between text-xs sm:text-sm font-black"
+        >
           <span>{linkLabel}</span>
           <DottedArrowIcon
             direction="left"
-            className="w-4 h-4 transition-transform duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:-translate-x-1.5 text-white"
+            className="w-4 h-4 transition-transform duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:-translate-x-1.5"
           />
         </div>
       </div>

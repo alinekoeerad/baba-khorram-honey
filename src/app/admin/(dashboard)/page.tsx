@@ -89,11 +89,11 @@ export default async function AdminDashboardPage() {
       select: {
         id: true,
         slug: true,
-        titleFa: true,
+        nameFa: true,
         status: true,
         isAvailable: true,
         mainImageId: true,
-        options: { select: { id: true, price: true, weightGrams: true } },
+        options: { select: { id: true } },
       },
     }),
     db.recipe.count(),

@@ -17,6 +17,8 @@ import { ContentCard } from '@/components/ui/content-card';
 import { PillButton } from '@/components/ui/pill-button';
 import { loadMoreRecipesAction } from '@/server/actions/listing-actions';
 import { toPersianDigits, matchesServingFilter } from '@/lib/domain-utils';
+import { resolveNonAdjacentThemes } from '@/lib/card-theme';
+import { useGridColumns } from '@/lib/use-grid-columns';
 import type { RecipeCardViewModel, RecipeCursor } from '@/server/queries/recipes';
 
 export interface CategoryItem {
@@ -222,6 +224,25 @@ export function RecipesListingClient({
     return list;
   }, [items, activeCategory, serving, searchTerm]);
 
+  // Responsive grid columns detection (sm: 2, md: 3, lg: 4, xl: 5)
+  const gridColumns = useGridColumns({
+    base: 1,
+    sm: 2,
+    md: 3,
+    lg: 4,
+    xl: 5,
+  });
+
+  // Desktop/Tablet multi-column non-adjacent theme resolution
+  const desktopThemes = useMemo(() => {
+    return resolveNonAdjacentThemes(displayedItems, { columns: gridColumns });
+  }, [displayedItems, gridColumns]);
+
+  // Mobile 1-column non-adjacent theme resolution
+  const mobileThemes = useMemo(() => {
+    return resolveNonAdjacentThemes(displayedItems, { columns: 1 });
+  }, [displayedItems]);
+
   return (
     <div className="space-y-10 sm:space-y-14">
       {/* 1. Search Bar & Filter Controls */}
@@ -358,7 +379,7 @@ export function RecipesListingClient({
                 imageUrl={item.imageUrl}
                 secondaryImageAsset={item.secondaryImageAsset}
                 secondaryImageUrl={item.secondaryImageUrl}
-                theme={item.theme || item.cardTheme}
+                theme={desktopThemes[idx] || item.theme || item.cardTheme}
                 slug={item.slug}
                 linkLabel={item.linkLabel}
                 variant="vertical"
@@ -383,7 +404,7 @@ export function RecipesListingClient({
                 imageUrl={item.imageUrl}
                 secondaryImageAsset={item.secondaryImageAsset}
                 secondaryImageUrl={item.secondaryImageUrl}
-                theme={item.theme || item.cardTheme}
+                theme={mobileThemes[idx] || item.theme || item.cardTheme}
                 slug={item.slug}
                 linkLabel={item.linkLabel}
                 variant="horizontal"

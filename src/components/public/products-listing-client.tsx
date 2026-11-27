@@ -17,6 +17,8 @@ import { ContentCard } from '@/components/ui/content-card';
 import { PillButton } from '@/components/ui/pill-button';
 import { loadMoreProductsAction } from '@/server/actions/listing-actions';
 import { toPersianDigits } from '@/lib/domain-utils';
+import { resolveNonAdjacentThemes } from '@/lib/card-theme';
+import { useGridColumns } from '@/lib/use-grid-columns';
 import type { ProductCardViewModel, ProductCursor } from '@/server/queries/products';
 
 export interface CategoryItem {
@@ -214,6 +216,25 @@ export function ProductsListingClient({
     return list;
   }, [items, activeCategory, searchTerm, inStockOnly]);
 
+  // Responsive grid columns detection (sm: 2, md: 3, lg: 4, xl: 5)
+  const gridColumns = useGridColumns({
+    base: 1,
+    sm: 2,
+    md: 3,
+    lg: 4,
+    xl: 5,
+  });
+
+  // Desktop/Tablet multi-column non-adjacent theme resolution
+  const desktopThemes = useMemo(() => {
+    return resolveNonAdjacentThemes(displayedItems, { columns: gridColumns });
+  }, [displayedItems, gridColumns]);
+
+  // Mobile 1-column non-adjacent theme resolution
+  const mobileThemes = useMemo(() => {
+    return resolveNonAdjacentThemes(displayedItems, { columns: 1 });
+  }, [displayedItems]);
+
   return (
     <div className="space-y-10 sm:space-y-14">
       {/* 1. Scoped Search & Category Filter Bar */}
@@ -328,7 +349,7 @@ export function ProductsListingClient({
                 imageUrl={item.imageUrl}
                 secondaryImageAsset={item.secondaryImageAsset}
                 secondaryImageUrl={item.secondaryImageUrl}
-                theme={item.theme || item.cardTheme}
+                theme={desktopThemes[idx] || item.theme || item.cardTheme}
                 slug={item.slug}
                 isAvailable={item.isAvailable}
                 linkLabel={item.linkLabel}
@@ -354,7 +375,7 @@ export function ProductsListingClient({
                 imageUrl={item.imageUrl}
                 secondaryImageAsset={item.secondaryImageAsset}
                 secondaryImageUrl={item.secondaryImageUrl}
-                theme={item.theme || item.cardTheme}
+                theme={mobileThemes[idx] || item.theme || item.cardTheme}
                 slug={item.slug}
                 isAvailable={item.isAvailable}
                 linkLabel={item.linkLabel}

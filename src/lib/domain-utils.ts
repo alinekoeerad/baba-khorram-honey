@@ -109,6 +109,11 @@ export function resolveSlugCollision(
 export type CardTheme = 'GREEN' | 'ORANGE' | 'YELLOW' | 'BURGUNDY';
 export type CardThemeType = CardTheme;
 
+export {
+  resolveNonAdjacentThemes,
+  resolveSingleCardTheme,
+} from './card-theme';
+
 /**
  * Brief Section 8: Deterministic card theme picker for AUTO.
  * Computes a stable hash of the slug to cycle through the 4 locked themes.

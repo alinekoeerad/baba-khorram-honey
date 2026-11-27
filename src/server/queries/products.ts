@@ -129,31 +129,66 @@ export async function getPublicProducts(filters: PublicProductFilters = {}) {
   const takeLimit = filters.take ?? 20;
 
   // Fetch takeLimit + 1 items to determine hasMore and nextCursor
-  const rawItems = await db.product.findMany({
-    where,
-    orderBy: [
-      { sortOrder: 'asc' },
-      { id: 'asc' },
-    ],
-    skip: filters.cursor ? undefined : filters.skip,
-    take: takeLimit + 1,
-    include: {
-      categories: {
-        include: {
-          category: true,
+  let rawItems: any[] = [];
+  let total = 0;
+
+  try {
+    rawItems = await db.product.findMany({
+      where,
+      orderBy: [
+        { sortOrder: 'asc' },
+        { id: 'asc' },
+      ],
+      skip: filters.cursor ? undefined : filters.skip,
+      take: takeLimit + 1,
+      include: {
+        categories: {
+          include: {
+            category: true,
+          },
+        },
+        mainImage: true,
+        options: {
+          where: { isAvailable: true },
+          orderBy: { sortOrder: 'asc' },
+        },
+        gallery: {
+          orderBy: { sortOrder: 'asc' },
+          include: { asset: true },
         },
       },
-      mainImage: true,
-      options: {
-        where: { isAvailable: true },
-        orderBy: { sortOrder: 'asc' },
-      },
-      gallery: {
-        orderBy: { sortOrder: 'asc' },
-        include: { asset: true },
-      },
-    },
-  });
+    });
+
+    const countWhere = { ...where };
+    delete countWhere.OR;
+    total = await db.product.count({ where: countWhere });
+  } catch (err) {
+    console.warn('[getPublicProducts] Database query failed, falling back to static seed data:', err);
+    try {
+      const seedModule = require('../../../data/seed/products.json');
+      const seedList = Array.isArray(seedModule) ? seedModule : (seedModule.default || []);
+      rawItems = seedList.map((item: any, idx: number) => ({
+        ...item,
+        id: item.id || `prod-${idx}`,
+        status: item.status || 'PUBLISHED',
+        sortOrder: typeof item.sortOrder === 'number' ? item.sortOrder : idx,
+        categories: (item.categoryIds || []).map((cid: string) => ({
+          category: { slug: cid.replace('cat_', ''), nameFa: cid },
+        })),
+        mainImage: item.mainImageStorageKey ? { storageKey: item.mainImageStorageKey } : null,
+        options: (item.options || []).map((opt: any, optIdx: number) => ({
+          ...opt,
+          id: opt.id || `opt-${optIdx}`,
+          isAvailable: true,
+          sortOrder: optIdx,
+        })),
+      }));
+      total = rawItems.length;
+    } catch {
+      rawItems = [];
+      total = 0;
+    }
+  }
 
   const hasMore = rawItems.length > takeLimit;
   const items = hasMore ? rawItems.slice(0, takeLimit) : rawItems;
@@ -258,11 +293,6 @@ export async function getPublicProducts(filters: PublicProductFilters = {}) {
         }
       : null;
 
-  // Count total for listing summary
-  const countWhere = { ...where };
-  delete countWhere.OR; // remove cursor constraint for total count
-  const total = await db.product.count({ where: countWhere });
-
   // Dual return: works as array directly and has named properties
   const result = Object.assign([...cardItems], {
     items: cardItems,
@@ -282,27 +312,58 @@ export async function getPublishedProducts(filters: PublicProductFilters = {}) {
 }
 
 export async function getPublicProductBySlug(slug: string) {
-  // 1. Direct query
-  const product = await db.product.findUnique({
-    where: { slug },
-    include: {
-      categories: {
-        include: { category: true },
+  // 1. Direct query with graceful fallback
+  let product: any = null;
+  try {
+    product = await db.product.findUnique({
+      where: { slug },
+      include: {
+        categories: {
+          include: { category: true },
+        },
+        mainImage: true,
+        benefits: {
+          orderBy: { sortOrder: 'asc' },
+        },
+        options: {
+          where: { isAvailable: true },
+          orderBy: { sortOrder: 'asc' },
+        },
+        gallery: {
+          orderBy: { sortOrder: 'asc' },
+          include: { asset: true },
+        },
       },
-      mainImage: true,
-      benefits: {
-        orderBy: { sortOrder: 'asc' },
-      },
-      options: {
-        where: { isAvailable: true },
-        orderBy: { sortOrder: 'asc' },
-      },
-      gallery: {
-        orderBy: { sortOrder: 'asc' },
-        include: { asset: true },
-      },
-    },
-  });
+    });
+  } catch (err) {
+    console.warn(`[getPublicProductBySlug] Database query failed for slug "${slug}", falling back to static seed data:`, err);
+    try {
+      const seedModule = require('../../../data/seed/products.json');
+      const seedList = Array.isArray(seedModule) ? seedModule : (seedModule.default || []);
+      const found = seedList.find((p: any) => p.slug === slug);
+      if (found) {
+        product = {
+          ...found,
+          status: found.status || 'PUBLISHED',
+          categories: (found.categoryIds || []).map((cid: string) => ({
+            categoryId: cid,
+            category: { slug: cid.replace('cat_', ''), nameFa: cid },
+          })),
+          mainImage: found.mainImageStorageKey ? { storageKey: found.mainImageStorageKey } : null,
+          benefits: [],
+          options: (found.options || []).map((opt: any, optIdx: number) => ({
+            ...opt,
+            id: opt.id || `opt-${optIdx}`,
+            isAvailable: true,
+            sortOrder: optIdx,
+          })),
+          gallery: [],
+        };
+      }
+    } catch {
+      product = null;
+    }
+  }
 
   if (product && product.status === 'PUBLISHED') {
     const resolvedProductImageUrl =
@@ -333,30 +394,36 @@ export async function getPublicProductBySlug(slug: string) {
     let relatedProducts: ProductCardViewModel[] = [];
 
     if (categoryIds.length > 0) {
-      const rawRelated = await db.product.findMany({
-        where: {
-          status: 'PUBLISHED',
-          id: { not: product.id },
-          categories: {
-            some: {
-              categoryId: { in: categoryIds },
+      let rawRelated: any[] = [];
+      try {
+        rawRelated = await db.product.findMany({
+          where: {
+            status: 'PUBLISHED',
+            id: { not: product.id },
+            categories: {
+              some: {
+                categoryId: { in: categoryIds },
+              },
             },
           },
-        },
-        take: 4,
-        orderBy: [
-          { sortOrder: 'asc' },
-          { id: 'asc' },
-        ],
-        include: {
-          categories: { include: { category: true } },
-          mainImage: true,
-          options: {
-            where: { isAvailable: true },
-            orderBy: { sortOrder: 'asc' },
+          take: 4,
+          orderBy: [
+            { sortOrder: 'asc' },
+            { id: 'asc' },
+          ],
+          include: {
+            categories: { include: { category: true } },
+            mainImage: true,
+            options: {
+              where: { isAvailable: true },
+              orderBy: { sortOrder: 'asc' },
+            },
           },
-        },
-      });
+        });
+      } catch (err) {
+        console.warn('[getPublicProductBySlug] Failed to fetch related products:', err);
+        rawRelated = [];
+      }
 
       relatedProducts = rawRelated.map((p: any) => {
         const relMainImageUrl =

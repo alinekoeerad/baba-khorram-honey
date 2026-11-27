@@ -469,6 +469,7 @@ model SiteSettings {
   baleChatId     String?
   eitaaBotToken  String?
   eitaaChatId    String?
+  cardPalette    Json?
   isPlaceholder  Boolean  @default(true)
   updatedAt      DateTime @updatedAt
 

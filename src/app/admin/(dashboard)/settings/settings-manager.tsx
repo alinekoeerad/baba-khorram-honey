@@ -48,6 +48,8 @@ import { ConfirmModal } from '@/components/admin/confirm-modal';
 import { ImageUploader } from '@/components/admin/image-uploader';
 import { useToast } from '@/components/admin/toast-provider';
 import { AdminToggleSwitch } from '@/components/admin/toggle-switch';
+import { CardPaletteManager } from '@/components/admin/card-palette-manager';
+import { DEFAULT_CARD_PALETTE, CardPaletteItem } from '@/lib/card-palette';
 
 interface SettingsManagerProps {
   initialSettings: SiteSettingsData;
@@ -64,7 +66,7 @@ export function SettingsManager({
 }: SettingsManagerProps) {
   const router = useRouter();
   const { showSuccess, showError } = useToast();
-  const [activeTab, setActiveTab] = useState<'general' | 'contact' | 'seo' | 'cart' | 'messengers'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'contact' | 'seo' | 'cart' | 'messengers' | 'palette'>('general');
   const [settings, setSettings] = useState<SiteSettingsData>(initialSettings);
   const [baleTokenConfigured, setBaleTokenConfigured] = useState(hasBaleBotToken);
   const [eitaaTokenConfigured, setEitaaTokenConfigured] = useState(hasEitaaBotToken);
@@ -346,6 +348,17 @@ export function SettingsManager({
         >
           <Bot className="w-4 h-4" />
           <span>ربات‌های اطلاع‌رسانی (بله و ایتا)</span>
+        </button>
+        <button
+          onClick={() => setActiveTab('palette')}
+          className={`flex items-center gap-2 px-5 py-3 rounded-none text-sm font-bold transition-all border-b-2 whitespace-nowrap shrink-0 min-w-max cursor-pointer ${
+            activeTab === 'palette'
+              ? 'border-[#F59E0B] text-[#D97706] bg-amber-50/50'
+              : 'border-transparent text-[#5C5248] hover:text-[#2B2017]'
+          }`}
+        >
+          <span className="w-3.5 h-3.5 rounded-full bg-gradient-to-tr from-emerald-600 via-amber-500 to-rose-600 inline-block shrink-0" />
+          <span>پالت و رنگ‌های کارت</span>
         </button>
       </div>
 
@@ -947,6 +960,16 @@ export function SettingsManager({
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Tab 6: Card Palette & Dynamic Themes */}
+      {activeTab === 'palette' && (
+        <div className="bg-white border border-[#D5C7B8] rounded-none p-6 shadow-sm">
+          <CardPaletteManager
+            palette={settings.cardPalette || DEFAULT_CARD_PALETTE}
+            onChange={(newPalette) => setSettings({ ...settings, cardPalette: newPalette })}
+          />
         </div>
       )}
 

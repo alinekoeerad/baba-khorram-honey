@@ -1,19 +1,16 @@
 'use client';
 
 /**
- * Contact Map & Route Buttons Component (Phase 10 Tasks 3 & 4 - Luxury Map Theme & Navigation Pass)
+ * Contact Map & Route Buttons Component (Phase 10 Tasks 3 & 4)
  *
- * Requirements:
- * - CartoDB Voyager tiles (https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png) with fallback to OSM.
- * - Subtle warm CSS filter (sepia(12%) contrast(103%) saturate(108%)) harmonizing with the honey palette.
- * - Custom luxury SVG Map Pin Marker (dark chocolate #2B2017 & gold honeycomb drop with pulse ring).
- * - Styled RTL popup: "فروشگاه عسل باباخُرم - کرج، جهانشهر، بلوار مولانا".
- * - Smart Navigation Launcher 4-card grid: Neshan, Balad, Google Maps, Waze with brand badge and "مسیریابی ←".
+ * Robust, interactive embed map supporting OpenStreetMap & Google Maps views.
+ * Eliminates CORS tile 403 errors and manual slippy calculation bugs.
+ * Includes Smart Navigation Launcher grid for Neshan, Balad, Google Maps, and Waze.
  */
 
-import React, { useState, useEffect, useRef } from 'react';
-import { MapPin, Navigation, AlertTriangle } from 'lucide-react';
-import { toPersianDigits, parseLocalizedNumber } from '@/lib/domain-utils';
+import React, { useState } from 'react';
+import { MapPin, Navigation, ExternalLink, Layers, RefreshCw } from 'lucide-react';
+import { parseLocalizedNumber } from '@/lib/domain-utils';
 
 export interface ContactMapProps {
   latitude?: number;
@@ -28,16 +25,13 @@ export interface ContactMapProps {
 export function ContactMap({
   latitude = 35.8339878,
   longitude = 50.9915841,
-  zoom = 15,
+  zoom = 16,
   siteNameFa = 'عسل باباخُرم',
   address = 'کرج، جهانشهر، بلوار مولانا',
   workingHours,
-  tileUrl = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
 }: ContactMapProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [hasError, setHasError] = useState(false);
-  const [currentZoom, setCurrentZoom] = useState(zoom);
+  const [mapProvider, setMapProvider] = useState<'osm' | 'google'>('osm');
+  const [isLoading, setIsLoading] = useState(true);
 
   // Parse & guard coordinates to prevent NaN or non-finite errors
   const parsedLat = typeof latitude === 'number' ? latitude : parseLocalizedNumber(latitude);
@@ -45,23 +39,16 @@ export function ContactMap({
   const safeLat = Number.isFinite(parsedLat) ? parsedLat : 35.8339878;
   const safeLng = Number.isFinite(parsedLng) ? parsedLng : 50.9915841;
 
-  // Lazy loading via IntersectionObserver
-  useEffect(() => {
-    if (!containerRef.current || isLoaded) return;
+  // OpenStreetMap embed bbox calculation around store center
+  const deltaLon = 0.007;
+  const deltaLat = 0.004;
+  const minLon = (safeLng - deltaLon).toFixed(6);
+  const minLat = (safeLat - deltaLat).toFixed(6);
+  const maxLon = (safeLng + deltaLon).toFixed(6);
+  const maxLat = (safeLat + deltaLat).toFixed(6);
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsLoaded(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: '200px' }
-    );
-
-    observer.observe(containerRef.current);
-    return () => observer.disconnect();
-  }, [isLoaded]);
+  const osmEmbedUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${minLon}%2C${minLat}%2C${maxLon}%2C${maxLat}&layer=mapnik&marker=${safeLat}%2C${safeLng}`;
+  const googleEmbedUrl = `https://maps.google.com/maps?q=${safeLat},${safeLng}&hl=fa&z=${zoom}&output=embed`;
 
   // Major 4 Routing Options
   const routingApps = [
@@ -95,198 +82,97 @@ export function ContactMap({
     },
   ];
 
-  // Slippy map tile calculations
-  const lon2tile = (lon: number, z: number) => Math.floor(((lon + 180) / 360) * Math.pow(2, z));
-  const lat2tile = (lat: number, z: number) =>
-    Math.floor(
-      ((1 -
-        Math.log(Math.tan((lat * Math.PI) / 180) + 1 / Math.cos((lat * Math.PI) / 180)) / Math.PI) /
-        2) *
-        Math.pow(2, z)
-    );
-
-  const centerTileX = lon2tile(safeLng, currentZoom);
-  const centerTileY = lat2tile(safeLat, currentZoom);
-
-  // 3x3 tile grid around center
-  const tiles: Array<{ x: number; y: number; offsetX: number; offsetY: number }> = [];
-  for (let dx = -1; dx <= 1; dx++) {
-    for (let dy = -1; dy <= 1; dy++) {
-      tiles.push({
-        x: centerTileX + dx,
-        y: centerTileY + dy,
-        offsetX: dx * 256,
-        offsetY: dy * 256,
-      });
-    }
-  }
-
-  const getTileUrl = (x: number, y: number, z: number) => {
-    const subdomains = ['a', 'b', 'c', 'd'];
-    const s = subdomains[Math.abs(x + y) % subdomains.length];
-    return tileUrl
-      .replace('{s}', s)
-      .replace('{z}', String(z))
-      .replace('{x}', String(x))
-      .replace('{y}', String(y))
-      .replace('{r}', '');
-  };
-
   return (
-    <div ref={containerRef} className="space-y-6">
-      {/* Map Display Container: Warm Ivory Frame */}
-      <div className="relative w-full h-80 sm:h-96 bg-[#FAF7F2] border-2 border-[#D4AF37]/50 overflow-hidden shadow-md rounded-none">
-        {!isLoaded ? (
-          /* Click or Scroll to Load Trigger */
-          <div
-            onClick={() => setIsLoaded(true)}
-            className="w-full h-full flex flex-col items-center justify-center gap-3 p-6 text-center cursor-pointer hover:bg-[#FFFBEB] transition-colors"
+    <div className="space-y-6">
+      {/* Map Header Controls: Provider Switcher Tabs & Direct Actions */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-1.5 p-1 bg-[#FAF6EE] border border-[#DFD3C3] shadow-xs w-fit">
+          <Layers className="w-3.5 h-3.5 text-[#B45309] mx-1" />
+          <button
+            type="button"
+            onClick={() => {
+              if (mapProvider !== 'osm') {
+                setIsLoading(true);
+                setMapProvider('osm');
+              }
+            }}
+            className={`px-3 py-1 text-xs font-black transition-colors cursor-pointer rounded-none ${
+              mapProvider === 'osm'
+                ? 'bg-[#2B2017] text-[#FFFBEB] shadow-xs'
+                : 'text-[#5C3A21] hover:text-[#2B2017] hover:bg-[#FEF3C7]'
+            }`}
           >
-            <div className="w-12 h-12 rounded-full bg-[#FEF3C7] border border-[#F59E0B] flex items-center justify-center text-[#D97706] shadow-2xs">
-              <MapPin className="w-6 h-6 animate-bounce" />
-            </div>
-            <p className="font-black text-[#2B2017] text-base">
-              بارگذاری نقشه موقعیت مکانی فروشگاه
-            </p>
-            <p className="text-xs text-[#5C5248] max-w-sm font-medium">
-              برای مشاهده نقشه زنده و مسیریابی لمس کنید یا به پایین اسکرول نمایید.
-            </p>
-          </div>
-        ) : hasError ? (
-          /* Static Fallback Card (if tiles fail or network offline) */
-          <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center space-y-3 bg-[#FAF7F2]">
-            <AlertTriangle className="w-10 h-10 text-[#D97706]" />
-            <h3 className="text-base font-black text-[#2B2017]">
-              کارت موقعیت مکانی فروشگاه عسل باباخُرم
-            </h3>
-            <p className="text-xs sm:text-sm text-[#5C5248] max-w-md leading-relaxed font-medium">
-              {address}
-            </p>
-            <div className="text-xs text-[#B45309] font-mono font-bold" dir="ltr">
-              {latitude.toFixed(4)}° N, {longitude.toFixed(4)}° E
-            </div>
-            <p className="text-[11px] text-[#786455]">
-              (امکان بارگذاری تصویر نقشه وجود نداشت؛ لطفاً از گزینه‌های مسیریابی زیر استفاده فرمایید.)
-            </p>
-          </div>
-        ) : (
-          /* Interactive Tile Container */
-          <div className="w-full h-full relative overflow-hidden bg-stone-100 select-none">
-            {/* 3x3 Tile Grid with Warm Honey Sepia Palette Filter */}
-            <div
-              className="absolute inset-0 flex items-center justify-center pointer-events-none"
-              style={{ filter: 'sepia(12%) contrast(103%) saturate(108%)' }}
-            >
-              <div className="relative w-[768px] h-[768px]">
-                {tiles.map((t) => (
-                  <img
-                    key={`${t.x}_${t.y}_${currentZoom}`}
-                    src={getTileUrl(t.x, t.y, currentZoom)}
-                    alt=""
-                    onError={(e) => {
-                      // Fallback to standard OSM tiles if CartoDB tile fails
-                      const target = e.currentTarget;
-                      const osmFallback = `https://tile.openstreetmap.org/${currentZoom}/${t.x}/${t.y}.png`;
-                      if (target.src !== osmFallback) {
-                        target.src = osmFallback;
-                      } else {
-                        setHasError(true);
-                      }
-                    }}
-                    className="absolute w-[256px] h-[256px] object-cover"
-                    style={{
-                      left: `calc(50% + ${t.offsetX - 128}px)`,
-                      top: `calc(50% + ${t.offsetY - 128}px)`,
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
+            نقشه آنلاین (OpenStreetMap)
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              if (mapProvider !== 'google') {
+                setIsLoading(true);
+                setMapProvider('google');
+              }
+            }}
+            className={`px-3 py-1 text-xs font-black transition-colors cursor-pointer rounded-none ${
+              mapProvider === 'google'
+                ? 'bg-[#2B2017] text-[#FFFBEB] shadow-xs'
+                : 'text-[#5C3A21] hover:text-[#2B2017] hover:bg-[#FEF3C7]'
+            }`}
+          >
+            گوگل مپ (Google Maps)
+          </button>
+        </div>
 
-            {/* Custom Luxury SVG Map Pin Marker & RTL Popup */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-              <div className="flex flex-col items-center -translate-y-6 animate-in fade-in duration-300">
-                {/* Styled RTL Popup */}
-                <div className="relative mb-2 filter drop-shadow-lg">
-                  <div className="px-3.5 py-1.5 bg-[#2B2017] border border-[#D4AF37] text-[#FFFBEB] font-black text-xs shadow-xl flex items-center gap-2 rounded-none whitespace-nowrap">
-                    <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse" />
-                    <span>فروشگاه عسل باباخُرم - کرج، جهانشهر، بلوار مولانا</span>
-                  </div>
-                  {/* Little bottom triangle pointer */}
-                  <div className="w-2.5 h-2.5 bg-[#2B2017] border-b border-r border-[#D4AF37] rotate-45 mx-auto -mt-1" />
-                </div>
+        <div className="flex items-center gap-2">
+          <a
+            href={`https://nshn.ir/?lat=${safeLat}&lng=${safeLng}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#00A859] hover:bg-[#008f4c] text-white text-xs font-black shadow-xs transition-colors rounded-none"
+          >
+            <MapPin className="w-3.5 h-3.5" />
+            <span>باز کردن در نشان</span>
+            <ExternalLink className="w-3 h-3" />
+          </a>
+          <a
+            href={`https://balad.ir/location?latitude=${safeLat}&longitude=${safeLng}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#2E5BFF] hover:bg-[#2047db] text-white text-xs font-black shadow-xs transition-colors rounded-none"
+          >
+            <MapPin className="w-3.5 h-3.5" />
+            <span>باز کردن در بلد</span>
+            <ExternalLink className="w-3 h-3" />
+          </a>
+        </div>
+      </div>
 
-                {/* Pin with Animated Pulse Ring */}
-                <div className="relative flex items-center justify-center">
-                  {/* Outer animated pulse ring */}
-                  <span className="absolute -bottom-1 w-7 h-3 bg-[#D97706]/40 rounded-full animate-ping pointer-events-none" />
-                  <span className="absolute -bottom-1 w-8 h-3.5 bg-[#2B2017]/30 rounded-full blur-[2px] pointer-events-none" />
-
-                  {/* Luxury Honey Drop / Pin SVG */}
-                  <svg
-                    className="w-10 h-12 filter drop-shadow-md transition-transform duration-300 hover:scale-110"
-                    viewBox="0 0 36 44"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <defs>
-                      <linearGradient id="pinGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#FBBF24" />
-                        <stop offset="50%" stopColor="#D4AF37" />
-                        <stop offset="100%" stopColor="#B45309" />
-                      </linearGradient>
-                      <linearGradient id="honeycombGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#FFFBEB" />
-                        <stop offset="100%" stopColor="#F59E0B" />
-                      </linearGradient>
-                    </defs>
-                    {/* Pin Outer Teardrop Body */}
-                    <path
-                      d="M18 42C18 42 32 26.5 32 16C32 8.26801 25.732 2 18 2C10.268 2 4 8.26801 4 16C4 26.5 18 42 18 42Z"
-                      fill="#2B2017"
-                      stroke="url(#pinGoldGrad)"
-                      strokeWidth="2.5"
-                    />
-                    {/* Inner Golden Honeycomb Hexagon */}
-                    <polygon
-                      points="18,8 24,11.5 24,18.5 18,22 12,18.5 12,11.5"
-                      fill="url(#honeycombGrad)"
-                      stroke="#92400E"
-                      strokeWidth="0.8"
-                    />
-                    {/* Honeycomb Center Droplet */}
-                    <circle cx="18" cy="15" r="2.2" fill="#2B2017" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            {/* Zoom Controls */}
-            <div className="absolute bottom-4 left-4 z-20 flex flex-col gap-1 shadow-md">
-              <button
-                type="button"
-                onClick={() => setCurrentZoom((z) => Math.min(18, z + 1))}
-                aria-label="بزرگ‌نمایی"
-                className="w-8 h-8 bg-white hover:bg-[#FEF3C7] text-[#2B2017] font-black text-base flex items-center justify-center border border-[#EFE9E0] shadow-xs cursor-pointer"
-              >
-                +
-              </button>
-              <button
-                type="button"
-                onClick={() => setCurrentZoom((z) => Math.max(10, z - 1))}
-                aria-label="کوچک‌نمایی"
-                className="w-8 h-8 bg-white hover:bg-[#FEF3C7] text-[#2B2017] font-black text-base flex items-center justify-center border border-[#EFE9E0] shadow-xs cursor-pointer"
-              >
-                −
-              </button>
-            </div>
-
-            {/* Tile Attribution */}
-            <div className="absolute bottom-1 right-2 text-[9px] text-[#786455] bg-white/90 border border-[#EFE9E0] px-1.5 py-0.5 pointer-events-none z-10 font-sans">
-              © CartoDB Voyager | © OpenStreetMap contributors
-            </div>
+      {/* Map Display Frame: Warm Luxury Frame */}
+      <div className="relative w-full h-80 sm:h-96 md:h-[420px] bg-[#FAF7F2] border-2 border-[#D4AF37]/60 overflow-hidden shadow-lg rounded-none">
+        {/* Loading Overlay */}
+        {isLoading && (
+          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-[#FAF7F2] text-[#2B2017] gap-3">
+            <RefreshCw className="w-7 h-7 text-[#D9A441] animate-spin" />
+            <p className="text-xs font-black text-[#5C3A21]">در حال بارگذاری نقشه موقعیت مکانی...</p>
           </div>
         )}
+
+        {/* Embedded Interactive Map */}
+        <iframe
+          key={mapProvider}
+          src={mapProvider === 'osm' ? osmEmbedUrl : googleEmbedUrl}
+          title={`نقشه موقعیت مکانی ${siteNameFa}`}
+          className="w-full h-full border-0"
+          loading="lazy"
+          onLoad={() => setIsLoading(false)}
+        />
+
+        {/* Floating Location Badge in Top Right Corner */}
+        <div className="absolute top-3 right-3 z-10 pointer-events-none filter drop-shadow-md hidden sm:block">
+          <div className="px-3.5 py-1.5 bg-[#2B2017]/95 border border-[#D4AF37] text-[#FFFBEB] font-black text-xs shadow-xl flex items-center gap-2 rounded-none">
+            <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse" />
+            <span>{siteNameFa} — {address}</span>
+          </div>
+        </div>
       </div>
 
       {/* 2. Structured Smart Navigation App Launcher Card Grid */}
@@ -297,7 +183,7 @@ export function ContactMap({
             <span>مسیریابی هوشمند تا فروشگاه</span>
           </div>
           <span className="text-xs text-[#5C5248] font-medium hidden sm:inline">
-            انتخاب مستقیم نقشه یا اپلیکیشن مورد علاقه شما
+            مسیریابی مستقیم با برنامه‌های ناوبری
           </span>
         </div>
 
@@ -340,7 +226,7 @@ export function ContactMap({
           <span className="font-bold text-[#2B2017]">نشانی دقیق فروشگاه:</span> {address}
         </div>
         <div className="text-[11px] text-[#B45309] font-mono font-bold" dir="ltr">
-          {latitude.toFixed(4)}° N, {longitude.toFixed(4)}° E
+          {safeLat.toFixed(4)}° N, {safeLng.toFixed(4)}° E
         </div>
       </div>
     </div>

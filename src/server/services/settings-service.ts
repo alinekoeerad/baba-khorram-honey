@@ -12,6 +12,8 @@ import { revalidateTag, revalidatePath } from 'next/cache';
 import { validateChannel, ChannelType } from '@/lib/contact-channels';
 import { parseLocalizedNumber, parseLocalizedInt } from '@/lib/domain-utils';
 
+import { DEFAULT_CARD_PALETTE, type CardPaletteItem } from '@/lib/card-palette';
+
 export interface SiteSettingsData {
   id?: number;
   siteNameFa: string;
@@ -39,6 +41,7 @@ export interface SiteSettingsData {
   baleChatId?: string | null;
   eitaaBotToken?: string | null;
   eitaaChatId?: string | null;
+  cardPalette?: CardPaletteItem[] | any;
   isPlaceholder?: boolean;
 }
 
@@ -79,6 +82,7 @@ const DEFAULT_SETTINGS: SiteSettingsData = {
   baleChatId: null,
   eitaaBotToken: null,
   eitaaChatId: null,
+  cardPalette: DEFAULT_CARD_PALETTE,
   isPlaceholder: false,
 };
 
@@ -196,6 +200,9 @@ export class SettingsService {
       const merged: SiteSettingsData = {
         ...DEFAULT_SETTINGS,
         ...raw,
+        cardPalette: (raw as any).cardPalette && Array.isArray((raw as any).cardPalette) && (raw as any).cardPalette.length >= 3
+          ? (raw as any).cardPalette
+          : DEFAULT_CARD_PALETTE,
       };
 
       if (merged.logoId && !merged.logo && typeof db.mediaAsset?.findUnique === 'function') {
@@ -237,6 +244,11 @@ export class SettingsService {
     }
     if (input.cartNotice && input.cartNotice.length > 500) {
       throw new Error('پیام اطلاع‌رسانی سبد خرید نباید بیشتر از ۵۰۰ نویسه باشد.');
+    }
+    if (input.cardPalette !== undefined) {
+      if (!Array.isArray(input.cardPalette) || input.cardPalette.length < 3) {
+        throw new Error('پالت رنگ کارتها باید حداقل شامل ۳ رنگ فعال باشد تا از همرنگ شدن کارتهای همسایه جلوگیری شود.');
+      }
     }
 
     const { logo, footerLogo, ogImage, ...dataToSave } = input as any;

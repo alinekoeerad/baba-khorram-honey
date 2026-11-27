@@ -72,10 +72,16 @@ export async function getCurrentAdminSession(tokenOverride?: string): Promise<Ad
   const token = tokenOverride || (await getSessionToken());
   if (!token) return null;
 
-  const session = await db.session.findUnique({
-    where: { token },
-    include: { user: true },
-  });
+  let session: any = null;
+  try {
+    session = await db.session.findUnique({
+      where: { token },
+      include: { user: true },
+    });
+  } catch (err) {
+    console.warn('[getCurrentAdminSession] DB query failed, redirecting to login:', err);
+    return null;
+  }
 
   if (!session) return null;
 

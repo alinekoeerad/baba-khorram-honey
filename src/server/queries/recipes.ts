@@ -147,27 +147,56 @@ export async function getPublicRecipes(filters: PublicRecipeFilters = {}) {
   const takeLimit = filters.take ?? 20;
 
   // Fetch takeLimit + 1 items to determine hasMore and nextCursor
-  const rawItems = await db.recipe.findMany({
-    where,
-    orderBy: [
-      { sortOrder: 'asc' },
-      { id: 'asc' },
-    ],
-    skip: filters.cursor ? undefined : filters.skip,
-    take: takeLimit + 1,
-    include: {
-      categories: {
-        include: {
-          category: true,
+  let rawItems: any[] = [];
+  let total = 0;
+
+  try {
+    rawItems = await db.recipe.findMany({
+      where,
+      orderBy: [
+        { sortOrder: 'asc' },
+        { id: 'asc' },
+      ],
+      skip: filters.cursor ? undefined : filters.skip,
+      take: takeLimit + 1,
+      include: {
+        categories: {
+          include: {
+            category: true,
+          },
+        },
+        mainImage: true,
+        gallery: {
+          orderBy: { sortOrder: 'asc' },
+          include: { asset: true },
         },
       },
-      mainImage: true,
-      gallery: {
-        orderBy: { sortOrder: 'asc' },
-        include: { asset: true },
-      },
-    },
-  });
+    });
+
+    const countWhere = { ...where };
+    delete countWhere.OR;
+    total = await db.recipe.count({ where: countWhere });
+  } catch (err) {
+    console.warn('[getPublicRecipes] Database query failed, falling back to static seed data:', err);
+    try {
+      const seedModule = require('../../../data/seed/recipes.json');
+      const seedList = Array.isArray(seedModule) ? seedModule : (seedModule.default || []);
+      rawItems = seedList.map((item: any, idx: number) => ({
+        ...item,
+        id: item.id || `rec-${idx}`,
+        status: item.status || 'PUBLISHED',
+        sortOrder: typeof item.sortOrder === 'number' ? item.sortOrder : idx,
+        categories: (item.categoryIds || []).map((cid: string) => ({
+          category: { slug: cid.replace('cat_', ''), nameFa: cid }
+        })),
+        mainImage: item.mainImageStorageKey ? { storageKey: item.mainImageStorageKey } : null,
+      }));
+      total = rawItems.length;
+    } catch {
+      rawItems = [];
+      total = 0;
+    }
+  }
 
   const hasMore = rawItems.length > takeLimit;
   const items = hasMore ? rawItems.slice(0, takeLimit) : rawItems;
@@ -278,11 +307,6 @@ export async function getPublicRecipes(filters: PublicRecipeFilters = {}) {
         }
       : null;
 
-  // Count total for listing summary
-  const countWhere = { ...where };
-  delete countWhere.OR;
-  const total = await db.recipe.count({ where: countWhere });
-
   // Dual return: works as array directly and has named properties
   const result = Object.assign([...cardItems], {
     items: cardItems,
@@ -302,26 +326,62 @@ export async function getPublishedRecipes(filters: PublicRecipeFilters = {}) {
 }
 
 export async function getPublicRecipeBySlug(slug: string) {
-  // 1. Direct query
-  const recipe = await db.recipe.findUnique({
-    where: { slug },
-    include: {
-      categories: {
-        include: { category: true },
+  // 1. Direct query with graceful fallback
+  let recipe: any = null;
+  try {
+    recipe = await db.recipe.findUnique({
+      where: { slug },
+      include: {
+        categories: {
+          include: { category: true },
+        },
+        mainImage: true,
+        ingredients: {
+          orderBy: { sortOrder: 'asc' },
+        },
+        steps: {
+          orderBy: { sortOrder: 'asc' },
+        },
+        gallery: {
+          orderBy: { sortOrder: 'asc' },
+          include: { asset: true },
+        },
       },
-      mainImage: true,
-      ingredients: {
-        orderBy: { sortOrder: 'asc' },
-      },
-      steps: {
-        orderBy: { sortOrder: 'asc' },
-      },
-      gallery: {
-        orderBy: { sortOrder: 'asc' },
-        include: { asset: true },
-      },
-    },
-  });
+    });
+  } catch (err) {
+    console.warn(`[getPublicRecipeBySlug] Database query failed for slug "${slug}", falling back to static seed data:`, err);
+    try {
+      const seedModule = require('../../../data/seed/recipes.json');
+      const seedList = Array.isArray(seedModule) ? seedModule : (seedModule.default || []);
+      const found = seedList.find((r: any) => r.slug === slug);
+      if (found) {
+        recipe = {
+          ...found,
+          status: found.status || 'PUBLISHED',
+          categories: (found.categoryIds || []).map((cid: string) => ({
+            categoryId: cid,
+            category: { slug: cid.replace('cat_', ''), nameFa: cid },
+          })),
+          mainImage: found.mainImageStorageKey ? { storageKey: found.mainImageStorageKey } : null,
+          ingredients: (found.ingredients || []).map((ing: any, i: number) => ({
+            id: `ing-${i}`,
+            nameFa: ing.nameFa || ing.name,
+            amount: ing.amount,
+            unit: ing.unit,
+            sortOrder: i,
+          })),
+          steps: (found.steps || []).map((st: any, i: number) => ({
+            id: `step-${i}`,
+            instructionFa: st.instructionFa || st.text,
+            sortOrder: i,
+          })),
+          gallery: [],
+        };
+      }
+    } catch {
+      recipe = null;
+    }
+  }
 
   if (recipe && recipe.status === 'PUBLISHED') {
     const isDessert =
@@ -365,26 +425,32 @@ export async function getPublicRecipeBySlug(slug: string) {
     let relatedRecipes: RecipeCardViewModel[] = [];
 
     if (categoryIds.length > 0) {
-      const rawRelated = await db.recipe.findMany({
-        where: {
-          status: 'PUBLISHED',
-          id: { not: recipe.id },
-          categories: {
-            some: {
-              categoryId: { in: categoryIds },
+      let rawRelated: any[] = [];
+      try {
+        rawRelated = await db.recipe.findMany({
+          where: {
+            status: 'PUBLISHED',
+            id: { not: recipe.id },
+            categories: {
+              some: {
+                categoryId: { in: categoryIds },
+              },
             },
           },
-        },
-        take: 4,
-        orderBy: [
-          { sortOrder: 'asc' },
-          { id: 'asc' },
-        ],
-        include: {
-          categories: { include: { category: true } },
-          mainImage: true,
-        },
-      });
+          take: 4,
+          orderBy: [
+            { sortOrder: 'asc' },
+            { id: 'asc' },
+          ],
+          include: {
+            categories: { include: { category: true } },
+            mainImage: true,
+          },
+        });
+      } catch (err) {
+        console.warn('[getPublicRecipeBySlug] Failed to fetch related recipes:', err);
+        rawRelated = [];
+      }
 
       relatedRecipes = rawRelated.map((r: any) => {
         const isRelDessert =
