@@ -97,9 +97,28 @@ export interface OrderRecord {
   updatedAt: Date;
 }
 
+export interface FaqItemRecord {
+  id: string;
+  anchorId: string;
+  question: string;
+  answer: string;
+  category: string;
+  categoryLabel?: string | null;
+  sortOrder: number;
+  isPublished: boolean;
+  featuredInNav: boolean;
+  featuredOnHome: boolean;
+  relatedArticleSlug?: string | null;
+  relatedArticleLabel?: string | null;
+  extraData?: any;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 // Extended PrismaClient type supporting legacy order mock model
 export type AppPrismaClient = PrismaClient & {
   order: any;
+  faqItem: any;
 };
 
 // Global singleton for PrismaClient to prevent connection pool exhaustion during hot-reloads

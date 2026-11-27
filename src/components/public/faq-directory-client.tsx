@@ -194,17 +194,18 @@ function FaqAccordionCard({
   );
 }
 
-export function FaqDirectoryClient() {
+export function FaqDirectoryClient({ initialEntries }: { initialEntries?: FaqEntry[] } = {}) {
+  const entries = initialEntries && initialEntries.length > 0 ? initialEntries : FAQ_ENTRIES;
   const [selectedCategory, setSelectedCategory] = useState<'all' | FaqCategoryId>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [openId, setOpenId] = useState<string | null>(FAQ_ENTRIES[0]?.id ?? null);
+  const [openId, setOpenId] = useState<string | null>(entries[0]?.id ?? null);
 
   // Sync URL hash (e.g. /faq#watery or /faq#authenticity) to open and scroll cleanly
   useEffect(() => {
     const syncHash = () => {
       const rawHash = typeof window !== 'undefined' ? window.location.hash.replace(/^#/, '') : '';
       if (!rawHash) return;
-      const target = FAQ_ENTRIES.find((item) => item.id === rawHash);
+      const target = entries.find((item) => item.id === rawHash);
       if (!target) return;
       setSelectedCategory('all');
       setSearchQuery('');
@@ -220,11 +221,11 @@ export function FaqDirectoryClient() {
     syncHash();
     window.addEventListener('hashchange', syncHash);
     return () => window.removeEventListener('hashchange', syncHash);
-  }, []);
+  }, [entries]);
 
   const filteredEntries = useMemo(() => {
     const normQuery = normalizeSearchText(searchQuery);
-    return FAQ_ENTRIES.filter((entry) => {
+    return entries.filter((entry) => {
       if (selectedCategory !== 'all' && entry.category !== selectedCategory) return false;
       if (!normQuery) return true;
       const searchable = normalizeSearchText(
@@ -237,7 +238,7 @@ export function FaqDirectoryClient() {
       );
       return searchable.includes(normQuery);
     });
-  }, [selectedCategory, searchQuery]);
+  }, [entries, selectedCategory, searchQuery]);
 
   const handleToggle = (id: string) => {
     setOpenId((prev) => (prev === id ? null : id));
@@ -320,7 +321,7 @@ export function FaqDirectoryClient() {
             </div>
 
             <span className="text-xs font-bold text-[#6B5A4D]">
-              نمایش {toPersianDigits(filteredEntries.length)} از {toPersianDigits(FAQ_ENTRIES.length)} پرسش
+              نمایش {toPersianDigits(filteredEntries.length)} از {toPersianDigits(entries.length)} پرسش
             </span>
           </div>
         </div>

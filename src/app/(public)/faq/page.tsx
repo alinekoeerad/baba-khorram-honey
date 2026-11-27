@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { FaqDirectoryClient } from '@/components/public/faq-directory-client';
-import { FAQ_ENTRIES } from '@/content/faq-data';
+import { getPublicFaqItems } from '@/server/services/faq-service';
 import { serializeJsonLd } from '@/lib/utils';
 
 export const revalidate = 3600;
@@ -14,11 +14,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function FaqPage() {
+export default async function FaqPage() {
+  const faqEntries = await getPublicFaqItems();
+
   const faqSchema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: FAQ_ENTRIES.map((item) => ({
+    mainEntity: faqEntries.map((item) => ({
       '@type': 'Question',
       name: item.question,
       acceptedAnswer: {
@@ -34,7 +36,7 @@ export default function FaqPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqSchema) }}
       />
-      <FaqDirectoryClient />
+      <FaqDirectoryClient initialEntries={faqEntries as any} />
     </>
   );
 }

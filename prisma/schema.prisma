@@ -614,3 +614,29 @@ model Feedback {
 
   @@map("feedbacks")
 }
+
+// ---------------------------------------------------------------
+// FAQ Items (CMS)
+// ---------------------------------------------------------------
+
+model FaqItem {
+  id                  String   @id @default(cuid())
+  anchorId            String   @unique
+  question            String
+  answer              String
+  category            String
+  categoryLabel       String?
+  sortOrder           Int      @default(0)
+  isPublished         Boolean  @default(true)
+  featuredInNav       Boolean  @default(false)
+  featuredOnHome      Boolean  @default(false)
+  relatedArticleSlug  String?
+  relatedArticleLabel String?
+  extraData           Json?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@index([category])
+  @@index([sortOrder])
+  @@map("faq_items")
+}

@@ -149,6 +149,26 @@ let ordersStore: OrderRecord[] = loadJson('orders.json', []);
 let productGalleryStore: any[] = loadJson('product-gallery.json', []);
 let recipeGalleryStore: any[] = loadJson('recipe-gallery.json', []);
 
+export interface FaqItemRecord {
+  id: string;
+  anchorId: string;
+  question: string;
+  answer: string;
+  category: string;
+  categoryLabel?: string | null;
+  sortOrder: number;
+  isPublished: boolean;
+  featuredInNav: boolean;
+  featuredOnHome: boolean;
+  relatedArticleSlug?: string | null;
+  relatedArticleLabel?: string | null;
+  extraData?: any;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+let faqItemsStore: any[] = loadJson('faq-items.json', []);
+
 // Create fallback Prisma-compatible client
 function createFallbackClient() {
   return {
@@ -1941,6 +1961,124 @@ function createFallbackClient() {
         if (args.where.status) list = list.filter((s) => s.status === args.where.status);
         if (args.where.type) list = list.filter((s) => s.type === args.where.type);
         return list.length;
+      },
+    },
+
+    faqItem: {
+      async findMany(args?: { where?: any; orderBy?: any; take?: number; skip?: number }) {
+        let list = [...faqItemsStore];
+        if (args?.where) {
+          const w = args.where;
+          if (w.isPublished !== undefined) {
+            list = list.filter((x) => x.isPublished === w.isPublished);
+          }
+          if (w.category) {
+            list = list.filter((x) => x.category === w.category);
+          }
+          if (w.featuredOnHome !== undefined) {
+            list = list.filter((x) => x.featuredOnHome === w.featuredOnHome);
+          }
+          if (w.featuredInNav !== undefined) {
+            list = list.filter((x) => x.featuredInNav === w.featuredInNav);
+          }
+        }
+        if (args?.orderBy) {
+          const ob = Array.isArray(args.orderBy) ? args.orderBy[0] : args.orderBy;
+          if (ob?.sortOrder === 'asc') {
+            list.sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+          } else if (ob?.sortOrder === 'desc') {
+            list.sort((a, b) => (b.sortOrder ?? 0) - (a.sortOrder ?? 0));
+          } else if (ob?.createdAt === 'desc') {
+            list.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+          }
+        } else {
+          list.sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+        }
+        if (args?.skip) {
+          list = list.slice(args.skip);
+        }
+        if (args?.take) {
+          list = list.slice(0, args.take);
+        }
+        return list.map((item) => ({
+          ...item,
+          createdAt: item.createdAt ? new Date(item.createdAt) : new Date(),
+          updatedAt: item.updatedAt ? new Date(item.updatedAt) : new Date(),
+        }));
+      },
+      async findUnique(args: { where: { id?: string; anchorId?: string } }) {
+        const item = faqItemsStore.find(
+          (x) =>
+            (args.where.id && x.id === args.where.id) ||
+            (args.where.anchorId && x.anchorId === args.where.anchorId)
+        );
+        return item
+          ? {
+              ...item,
+              createdAt: item.createdAt ? new Date(item.createdAt) : new Date(),
+              updatedAt: item.updatedAt ? new Date(item.updatedAt) : new Date(),
+            }
+          : null;
+      },
+      async findFirst(args?: { where?: any; orderBy?: any }) {
+        const items = await this.findMany({ ...args, take: 1 });
+        return items[0] || null;
+      },
+      async count(args?: { where?: any }) {
+        if (!args?.where) return faqItemsStore.length;
+        const items = await this.findMany({ where: args.where });
+        return items.length;
+      },
+      async create(args: { data: any }) {
+        const now = new Date();
+        const id = args.data.id || `faq_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+        const newItem = {
+          ...args.data,
+          id,
+          sortOrder: args.data.sortOrder ?? faqItemsStore.length,
+          isPublished: args.data.isPublished ?? true,
+          featuredInNav: args.data.featuredInNav ?? false,
+          featuredOnHome: args.data.featuredOnHome ?? false,
+          createdAt: now,
+          updatedAt: now,
+        };
+        faqItemsStore.push(newItem);
+        saveJson('faq-items.json', faqItemsStore);
+        return { ...newItem };
+      },
+      async update(args: { where: { id?: string; anchorId?: string }; data: any }) {
+        const idx = faqItemsStore.findIndex(
+          (x) =>
+            (args.where.id && x.id === args.where.id) ||
+            (args.where.anchorId && x.anchorId === args.where.anchorId)
+        );
+        if (idx === -1) throw new Error('FaqItem not found');
+        const updated = {
+          ...faqItemsStore[idx],
+          ...args.data,
+          updatedAt: new Date(),
+        };
+        faqItemsStore[idx] = updated;
+        saveJson('faq-items.json', faqItemsStore);
+        return { ...updated };
+      },
+      async delete(args: { where: { id?: string; anchorId?: string } }) {
+        const idx = faqItemsStore.findIndex(
+          (x) =>
+            (args.where.id && x.id === args.where.id) ||
+            (args.where.anchorId && x.anchorId === args.where.anchorId)
+        );
+        if (idx === -1) throw new Error('FaqItem not found');
+        const [deleted] = faqItemsStore.splice(idx, 1);
+        saveJson('faq-items.json', faqItemsStore);
+        return { ...deleted };
+      },
+      async upsert(args: { where: { id?: string; anchorId?: string }; create: any; update: any }) {
+        const existing = await this.findUnique({ where: args.where });
+        if (existing) {
+          return this.update({ where: args.where, data: args.update });
+        }
+        return this.create({ data: args.create });
       },
     },
     $transaction: async (promisesOrFn: any) => {
