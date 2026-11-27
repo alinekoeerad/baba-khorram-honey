@@ -20,6 +20,7 @@ import { loadMoreProductsAction, loadMoreRecipesAction } from '@/server/actions/
 import { toPersianDigits } from '@/lib/domain-utils';
 import { resolveNonAdjacentThemes } from '@/lib/card-theme';
 import { useGridColumns } from '@/lib/use-grid-columns';
+import { useCardPalette } from '@/lib/card-palette-context';
 import type { ProductCardViewModel, ProductCursor } from '@/server/queries/products';
 import type { RecipeCardViewModel, RecipeCursor } from '@/server/queries/recipes';
 
@@ -67,6 +68,8 @@ export function SearchResultsClient({
   const [hasMoreRecipes, setHasMoreRecipes] = useState(totalRecipes > initialRecipes.length);
   const [isLoadingMoreRecipes, setIsLoadingMoreRecipes] = useState(false);
 
+  const palette = useCardPalette();
+
   // Responsive grid columns detection (sm: 2, md: 3, lg: 4, xl: 5)
   const gridColumns = useGridColumns({
     base: 1,
@@ -78,21 +81,21 @@ export function SearchResultsClient({
 
   // Non-adjacent theme resolution for products
   const desktopProductThemes = useMemo(() => {
-    return resolveNonAdjacentThemes(products, { columns: gridColumns });
-  }, [products, gridColumns]);
+    return resolveNonAdjacentThemes(products, { columns: gridColumns, palette });
+  }, [products, gridColumns, palette]);
 
   const mobileProductThemes = useMemo(() => {
-    return resolveNonAdjacentThemes(products, { columns: 1 });
-  }, [products]);
+    return resolveNonAdjacentThemes(products, { columns: 1, palette });
+  }, [products, palette]);
 
   // Non-adjacent theme resolution for recipes
   const desktopRecipeThemes = useMemo(() => {
-    return resolveNonAdjacentThemes(recipes, { columns: gridColumns });
-  }, [recipes, gridColumns]);
+    return resolveNonAdjacentThemes(recipes, { columns: gridColumns, palette });
+  }, [recipes, gridColumns, palette]);
 
   const mobileRecipeThemes = useMemo(() => {
-    return resolveNonAdjacentThemes(recipes, { columns: 1 });
-  }, [recipes]);
+    return resolveNonAdjacentThemes(recipes, { columns: 1, palette });
+  }, [recipes, palette]);
 
   // Sync state when URL query / server props change on /search
   useEffect(() => {

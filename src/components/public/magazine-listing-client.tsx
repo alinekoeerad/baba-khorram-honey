@@ -9,8 +9,9 @@ import { WoodBackground } from '@/components/ui/wood-background';
 import { PillButton } from '@/components/ui/pill-button';
 import { DottedArrowIcon } from '@/components/ui/dotted-arrow-icon';
 import { normalizeSearchText, toPersianDigits } from '@/lib/domain-utils';
-import { resolveNonAdjacentThemes } from '@/lib/card-theme';
+import { resolveNonAdjacentThemes, getCardThemeStyles } from '@/lib/card-theme';
 import { useGridColumns } from '@/lib/use-grid-columns';
+import { useCardPalette } from '@/lib/card-palette-context';
 import {
   MAGAZINE_ARTICLES,
   MAGAZINE_CATEGORIES,
@@ -19,51 +20,6 @@ import {
   type MagazineCategoryId,
 } from '@/content/magazine-articles';
 
-const CARD_THEME_STYLES: Record<
-  MagazineCardTheme,
-  {
-    bg: string;
-    border: string;
-    topText: string;
-    subText: string;
-    badgeBg: string;
-    actionText: string;
-  }
-> = {
-  GREEN: {
-    bg: 'bg-[#4CA849]',
-    border: 'border-[#3D8B3A]',
-    topText: 'text-[#2B2017]',
-    subText: 'text-[#2B2017]/90',
-    badgeBg: 'bg-white/85 text-[#2B2017]',
-    actionText: 'text-white',
-  },
-  ORANGE: {
-    bg: 'bg-[#E08B38]',
-    border: 'border-[#C67325]',
-    topText: 'text-[#2B2017]',
-    subText: 'text-[#2B2017]/90',
-    badgeBg: 'bg-white/85 text-[#2B2017]',
-    actionText: 'text-white',
-  },
-  YELLOW: {
-    bg: 'bg-[#F5A623]',
-    border: 'border-[#D98E16]',
-    topText: 'text-[#2B2017]',
-    subText: 'text-[#2B2017]/90',
-    badgeBg: 'bg-white/85 text-[#2B2017]',
-    actionText: 'text-white',
-  },
-  BURGUNDY: {
-    bg: 'bg-[#9E3556]',
-    border: 'border-[#7E2642]',
-    topText: 'text-white',
-    subText: 'text-white/90',
-    badgeBg: 'bg-white/90 text-[#2B2017]',
-    actionText: 'text-white',
-  },
-};
-
 function MagazineArticleCard({
   article,
   overrideTheme,
@@ -71,13 +27,19 @@ function MagazineArticleCard({
   article: MagazineArticle;
   overrideTheme?: string;
 }) {
-  const themeKey = ((overrideTheme || article.theme || 'GREEN').toUpperCase()) as MagazineCardTheme;
-  const styles = CARD_THEME_STYLES[themeKey] || CARD_THEME_STYLES.GREEN;
+  const palette = useCardPalette();
+  const themeKey = overrideTheme || article.theme || 'GREEN';
+  const dynamicStyles = getCardThemeStyles(themeKey, palette);
 
   return (
     <Link
       href={`/magazine/${article.slug}`}
-      className={`group flex flex-col justify-between overflow-hidden rounded-none border ${styles.border} ${styles.bg} shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg`}
+      style={{
+        backgroundColor: dynamicStyles.bg,
+        borderColor: dynamicStyles.borderColor,
+        color: dynamicStyles.color,
+      }}
+      className="group flex flex-col justify-between overflow-hidden rounded-none border shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg"
     >
       {/* Image area matching ContentCard 240px height */}
       <div className="relative h-56 sm:h-60 w-full overflow-hidden bg-[#FAF6EE]">
@@ -89,7 +51,11 @@ function MagazineArticleCard({
           className="object-cover transition-transform duration-500 group-hover:scale-[1.08]"
         />
         <span
-          className={`absolute top-3 right-3 px-2.5 py-1 text-[11px] font-black shadow-xs rounded-full ${styles.badgeBg}`}
+          style={{
+            backgroundColor: dynamicStyles.badgeBg,
+            color: dynamicStyles.badgeColor,
+          }}
+          className="absolute top-3 right-3 px-2.5 py-1 text-[11px] font-black shadow-xs rounded-full"
         >
           {article.badge}
         </span>
@@ -102,18 +68,33 @@ function MagazineArticleCard({
       {/* Colored Body adhering strictly to Baba Khorram card hierarchy */}
       <div className="p-5 flex-1 flex flex-col justify-between gap-4">
         <div className="space-y-2">
-          <span className={`block text-xs font-bold opacity-85 ${styles.topText}`}>
+          <span
+            style={{ color: dynamicStyles.subtextColor }}
+            className="block text-xs font-bold opacity-90"
+          >
             {article.categoryLabel}
           </span>
-          <h2 className={`text-lg sm:text-xl font-black leading-snug ${styles.topText}`}>
+          <h2
+            style={{ color: dynamicStyles.color }}
+            className="text-lg sm:text-xl font-black leading-snug"
+          >
             {article.title}
           </h2>
-          <p className={`text-xs sm:text-sm font-medium leading-relaxed line-clamp-3 ${styles.subText}`}>
+          <p
+            style={{ color: dynamicStyles.subtextColor }}
+            className="text-xs sm:text-sm font-medium leading-relaxed line-clamp-3"
+          >
             {article.excerpt}
           </p>
         </div>
 
-        <div className={`pt-2 border-t border-black/10 flex items-center justify-between text-xs sm:text-sm font-black ${styles.actionText}`}>
+        <div
+          style={{
+            color: dynamicStyles.color,
+            borderTopColor: dynamicStyles.borderColor,
+          }}
+          className="pt-2 border-t flex items-center justify-between text-xs sm:text-sm font-black"
+        >
           <span>مطالعه مقاله کامل</span>
           <DottedArrowIcon
             direction="left"
@@ -152,6 +133,8 @@ export function MagazineListingClient({
     });
   }, [initialArticles, selectedCategory, searchQuery]);
 
+  const palette = useCardPalette();
+
   // Responsive grid detection for grid-cols-1 md:grid-cols-2 lg:grid-cols-3
   const gridColumns = useGridColumns({
     base: 1,
@@ -160,8 +143,8 @@ export function MagazineListingClient({
   });
 
   const resolvedThemes = useMemo(() => {
-    return resolveNonAdjacentThemes(filteredArticles, { columns: gridColumns });
-  }, [filteredArticles, gridColumns]);
+    return resolveNonAdjacentThemes(filteredArticles, { columns: gridColumns, palette });
+  }, [filteredArticles, gridColumns, palette]);
 
   return (
     <WoodBackground className="min-h-screen py-10 sm:py-16">

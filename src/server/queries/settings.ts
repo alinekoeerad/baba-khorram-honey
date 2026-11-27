@@ -5,6 +5,7 @@
 
 import { SettingsService, SiteSettingsData, ContactChannelData } from '../services/settings-service';
 import { buildChannelUrl } from '@/lib/contact-channels';
+import { DEFAULT_CARD_PALETTE, type CardPaletteItem } from '@/lib/card-palette';
 
 export interface PublicChannelItem extends ContactChannelData {
   url: string;
@@ -68,6 +69,7 @@ export interface PublicSiteSettings {
   orderIntroText: string | null;
   orderOutroText: string | null;
   isPlaceholder: boolean;
+  cardPalette?: CardPaletteItem[];
 }
 
 /**
@@ -99,6 +101,10 @@ export function toPublicSiteSettings(settings: SiteSettingsData): PublicSiteSett
     orderIntroText: settings.orderIntroText ?? null,
     orderOutroText: settings.orderOutroText ?? null,
     isPlaceholder: Boolean(settings.isPlaceholder),
+    cardPalette:
+      settings.cardPalette && Array.isArray(settings.cardPalette) && settings.cardPalette.length >= 3
+        ? settings.cardPalette
+        : DEFAULT_CARD_PALETTE,
   };
 }
 

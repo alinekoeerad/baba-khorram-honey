@@ -169,6 +169,7 @@ describe('SiteSettings Validation & Length Limits (Addendum A2)', () => {
       'orderIntroText',
       'orderOutroText',
       'isPlaceholder',
+      'cardPalette',
     ]);
 
     for (const key of Object.keys(publicSettings)) {

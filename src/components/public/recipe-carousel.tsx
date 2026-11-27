@@ -22,6 +22,7 @@ import { WoodBackground } from '@/components/ui/wood-background';
 import { Container } from '@/components/ui/container';
 import { PillButton } from '@/components/ui/pill-button';
 import { resolveNonAdjacentThemes, getCardThemeStyles } from '@/lib/card-theme';
+import { useCardPalette } from '@/lib/card-palette-context';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 
 interface RecipeItem {
@@ -40,11 +41,11 @@ interface RecipeItem {
 const THEME_CLASSES: Record<string, { bg: string; text: string }> = {
   GREEN: { bg: 'bg-[#4CA849]', text: 'text-white' },
   ORANGE: { bg: 'bg-[#E08B38]', text: 'text-white' },
-  YELLOW: { bg: 'bg-[#F5A623]', text: 'text-[#2B2017]' },
+  YELLOW: { bg: 'bg-[#C87A14]', text: 'text-white' },
   BURGUNDY: { bg: 'bg-[#9E3556]', text: 'text-white' },
   green: { bg: 'bg-[#4CA849]', text: 'text-white' },
   orange: { bg: 'bg-[#E08B38]', text: 'text-white' },
-  yellow: { bg: 'bg-[#F5A623]', text: 'text-[#2B2017]' },
+  yellow: { bg: 'bg-[#C87A14]', text: 'text-white' },
   burgundy: { bg: 'bg-[#9E3556]', text: 'text-white' },
 };
 
@@ -57,6 +58,7 @@ export function RecipeCarousel({
   recipes: RecipeItem[];
   noBackground?: boolean;
 }) {
+  const palette = useCardPalette();
   const N = recipes.length;
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
@@ -79,8 +81,9 @@ export function RecipeCarousel({
     return resolveNonAdjacentThemes(displayItems, {
       columns: displayItems.length,
       isCircular: true,
+      palette,
     });
-  }, [displayItems]);
+  }, [displayItems, palette]);
 
   const slideNext = useCallback(() => {
     const el = scrollContainerRef.current;
@@ -170,7 +173,7 @@ export function RecipeCarousel({
         >
           {displayItems.map((r, idx) => {
             const themeKey = resolvedThemes[idx] || 'GREEN';
-            const dynamicStyles = getCardThemeStyles(themeKey);
+            const dynamicStyles = getCardThemeStyles(themeKey, palette);
 
             const isDessert =
               ((r as any).categories && (

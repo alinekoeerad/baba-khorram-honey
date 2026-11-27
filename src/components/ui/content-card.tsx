@@ -18,6 +18,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { CardTheme, getCardThemeForSlug, getBalancedCardTheme, resolveItemCardTheme } from '@/lib/domain-utils';
 import { getCardThemeStyles } from '@/lib/card-theme';
+import { useCardPalette } from '@/lib/card-palette-context';
 import { DottedArrowIcon } from './dotted-arrow-icon';
 
 export interface ContentCardProps {
@@ -74,77 +75,77 @@ const THEME_STYLES: Record<
 > = {
   // Uppercase keys
   GREEN: {
-    bg: 'bg-[#4CA849]',
-    text: 'text-[#2B2017]',
-    subtext: 'text-[#2B2017]/85',
+    bg: 'bg-[#3D8B3A]',
+    text: 'text-white',
+    subtext: 'text-white/85',
     badgeBg: 'bg-black/50 text-white',
     arrowColor: 'text-white',
-    borderColor: 'border-[#3D8B3A]',
-    hex: '#4CA849',
+    borderColor: 'border-[#2E6E2B]',
+    hex: '#3D8B3A',
   },
   ORANGE: {
-    bg: 'bg-[#E08B38]',
-    text: 'text-[#2B2017]',
-    subtext: 'text-[#2B2017]/85',
+    bg: 'bg-[#D27022]',
+    text: 'text-white',
+    subtext: 'text-white/85',
     badgeBg: 'bg-black/50 text-white',
     arrowColor: 'text-white',
-    borderColor: 'border-[#C67325]',
-    hex: '#E08B38',
+    borderColor: 'border-[#B15715]',
+    hex: '#D27022',
   },
   YELLOW: {
-    bg: 'bg-[#F5A623]',
-    text: 'text-[#2B2017]',
-    subtext: 'text-[#2B2017]/85',
+    bg: 'bg-[#C87A14]',
+    text: 'text-white',
+    subtext: 'text-white/85',
     badgeBg: 'bg-black/40 text-white',
     arrowColor: 'text-white',
-    borderColor: 'border-[#D98E16]',
-    hex: '#F5A623',
+    borderColor: 'border-[#A55D08]',
+    hex: '#C87A14',
   },
   BURGUNDY: {
-    bg: 'bg-[#9E3556]',
-    text: 'text-[#2B2017]',
-    subtext: 'text-[#2B2017]/85',
+    bg: 'bg-[#8C2344]',
+    text: 'text-white',
+    subtext: 'text-white/85',
     badgeBg: 'bg-black/50 text-white',
     arrowColor: 'text-white',
-    borderColor: 'border-[#822944]',
-    hex: '#9E3556',
+    borderColor: 'border-[#6B1630]',
+    hex: '#8C2344',
   },
   // Lowercase keys
   green: {
-    bg: 'bg-[#4CA849]',
-    text: 'text-[#2B2017]',
-    subtext: 'text-[#2B2017]/85',
+    bg: 'bg-[#3D8B3A]',
+    text: 'text-white',
+    subtext: 'text-white/85',
     badgeBg: 'bg-black/50 text-white',
     arrowColor: 'text-white',
-    borderColor: 'border-[#3D8B3A]',
-    hex: '#4CA849',
+    borderColor: 'border-[#2E6E2B]',
+    hex: '#3D8B3A',
   },
   orange: {
-    bg: 'bg-[#E08B38]',
-    text: 'text-[#2B2017]',
-    subtext: 'text-[#2B2017]/85',
+    bg: 'bg-[#D27022]',
+    text: 'text-white',
+    subtext: 'text-white/85',
     badgeBg: 'bg-black/50 text-white',
     arrowColor: 'text-white',
-    borderColor: 'border-[#C67325]',
-    hex: '#E08B38',
+    borderColor: 'border-[#B15715]',
+    hex: '#D27022',
   },
   yellow: {
-    bg: 'bg-[#F5A623]',
-    text: 'text-[#2B2017]',
-    subtext: 'text-[#2B2017]/85',
+    bg: 'bg-[#C87A14]',
+    text: 'text-white',
+    subtext: 'text-white/85',
     badgeBg: 'bg-black/40 text-white',
     arrowColor: 'text-white',
-    borderColor: 'border-[#D98E16]',
-    hex: '#F5A623',
+    borderColor: 'border-[#A55D08]',
+    hex: '#C87A14',
   },
   burgundy: {
-    bg: 'bg-[#9E3556]',
-    text: 'text-[#2B2017]',
-    subtext: 'text-[#2B2017]/85',
+    bg: 'bg-[#8C2344]',
+    text: 'text-white',
+    subtext: 'text-white/85',
     badgeBg: 'bg-black/50 text-white',
     arrowColor: 'text-white',
-    borderColor: 'border-[#822944]',
-    hex: '#9E3556',
+    borderColor: 'border-[#6B1630]',
+    hex: '#8C2344',
   },
 };
 
@@ -169,6 +170,8 @@ export function ContentCard({
   itemType,
   focalPoint,
 }: ContentCardProps) {
+  const palette = useCardPalette();
+
   // Resolve card theme consistently matching detail page breadcrumbs
   const resolvedTheme: string = resolveItemCardTheme({
     cardTheme: theme,
@@ -178,7 +181,7 @@ export function ContentCard({
   });
 
   const currentTheme = THEME_STYLES[resolvedTheme] || THEME_STYLES.GREEN;
-  const dynamicStyles = getCardThemeStyles(resolvedTheme);
+  const dynamicStyles = getCardThemeStyles(resolvedTheme, palette);
   const isProduct = itemType === 'product' || (itemType === undefined && href.startsWith('/products'));
   const rawSlug = slug || href.split('/').pop() || '';
 

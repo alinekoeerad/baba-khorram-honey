@@ -12,6 +12,7 @@ import { CategoryNavItem, HamburgerDrawer } from './hamburger-drawer';
 import { Header } from './header';
 import { SearchDrawer } from './search-drawer';
 import { Footer } from './footer';
+import { CardPaletteProvider } from '@/lib/card-palette-context';
 
 interface ShellLayoutProps {
   settings: PublicSiteSettings;
@@ -37,47 +38,49 @@ export function ShellLayout({
   const hamburgerButtonRef = useRef<HTMLButtonElement>(null);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FDFBF8] text-[#2B2017]">
-      {/* Sticky Header with integrated honey.com corner Contact Tab & Logo */}
-      <Header
-        siteNameFa={settings.siteNameFa}
-        cartEnabled={settings.cartEnabled}
-        logo={settings.logo}
-        channels={contactBarChannels}
-        publishedProductSlugs={publishedProductSlugs}
-        onOpenSearch={() => setIsSearchOpen((prev) => !prev)}
-        onOpenHamburger={() => setIsHamburgerOpen(true)}
-        hamburgerButtonRef={hamburgerButtonRef}
-      />
+    <CardPaletteProvider palette={settings.cardPalette}>
+      <div className="min-h-screen flex flex-col bg-[#FDFBF8] text-[#2B2017]">
+        {/* Sticky Header with integrated honey.com corner Contact Tab & Logo */}
+        <Header
+          siteNameFa={settings.siteNameFa}
+          cartEnabled={settings.cartEnabled}
+          logo={settings.logo}
+          channels={contactBarChannels}
+          publishedProductSlugs={publishedProductSlugs}
+          onOpenSearch={() => setIsSearchOpen((prev) => !prev)}
+          onOpenHamburger={() => setIsHamburgerOpen(true)}
+          hamburgerButtonRef={hamburgerButtonRef}
+        />
 
-      {/* Search Drawer */}
-      <SearchDrawer
-        isOpen={isSearchOpen}
-        onClose={() => setIsSearchOpen(false)}
-      />
+        {/* Search Drawer */}
+        <SearchDrawer
+          isOpen={isSearchOpen}
+          onClose={() => setIsSearchOpen(false)}
+        />
 
-      {/* Hamburger Drawer (Main Navigation Menu) */}
-      <HamburgerDrawer
-        isOpen={isHamburgerOpen}
-        onClose={() => setIsHamburgerOpen(false)}
-        onOpenSearch={() => {
-          setIsHamburgerOpen(false);
-          setIsSearchOpen(true);
-        }}
-        productCategories={productCategories}
-        recipeCategories={recipeCategories}
-        triggerRef={hamburgerButtonRef}
-      />
+        {/* Hamburger Drawer (Main Navigation Menu) */}
+        <HamburgerDrawer
+          isOpen={isHamburgerOpen}
+          onClose={() => setIsHamburgerOpen(false)}
+          onOpenSearch={() => {
+            setIsHamburgerOpen(false);
+            setIsSearchOpen(true);
+          }}
+          productCategories={productCategories}
+          recipeCategories={recipeCategories}
+          triggerRef={hamburgerButtonRef}
+        />
 
-      {/* Main Content Area */}
-      <main className="flex-1 w-full">{children}</main>
+        {/* Main Content Area */}
+        <main className="flex-1 w-full">{children}</main>
 
-      {/* Authentic honey.com Footer */}
-      <Footer
-        settings={settings}
-        channels={footerChannels}
-        publishedProductSlugs={publishedProductSlugs}
-      />
-    </div>
+        {/* Authentic honey.com Footer */}
+        <Footer
+          settings={settings}
+          channels={footerChannels}
+          publishedProductSlugs={publishedProductSlugs}
+        />
+      </div>
+    </CardPaletteProvider>
   );
 }

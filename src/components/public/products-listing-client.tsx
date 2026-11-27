@@ -18,6 +18,7 @@ import { PillButton } from '@/components/ui/pill-button';
 import { loadMoreProductsAction } from '@/server/actions/listing-actions';
 import { toPersianDigits } from '@/lib/domain-utils';
 import { resolveNonAdjacentThemes } from '@/lib/card-theme';
+import { useCardPalette } from '@/lib/card-palette-context';
 import { useGridColumns } from '@/lib/use-grid-columns';
 import type { ProductCardViewModel, ProductCursor } from '@/server/queries/products';
 
@@ -225,15 +226,17 @@ export function ProductsListingClient({
     xl: 5,
   });
 
+  const palette = useCardPalette();
+
   // Desktop/Tablet multi-column non-adjacent theme resolution
   const desktopThemes = useMemo(() => {
-    return resolveNonAdjacentThemes(displayedItems, { columns: gridColumns });
-  }, [displayedItems, gridColumns]);
+    return resolveNonAdjacentThemes(displayedItems, { columns: gridColumns, palette });
+  }, [displayedItems, gridColumns, palette]);
 
   // Mobile 1-column non-adjacent theme resolution
   const mobileThemes = useMemo(() => {
-    return resolveNonAdjacentThemes(displayedItems, { columns: 1 });
-  }, [displayedItems]);
+    return resolveNonAdjacentThemes(displayedItems, { columns: 1, palette });
+  }, [displayedItems, palette]);
 
   return (
     <div className="space-y-10 sm:space-y-14">

@@ -285,6 +285,11 @@ export class SettingsService {
     try {
       (revalidateTag as any)('settings');
       revalidatePath('/', 'layout');
+      revalidatePath('/products');
+      revalidatePath('/recipes');
+      revalidatePath('/magazine');
+      revalidatePath('/contact');
+      revalidatePath('/search');
     } catch {}
 
     return updated;
@@ -368,6 +373,11 @@ export class SettingsService {
     try {
       (revalidateTag as any)('settings');
       revalidatePath('/', 'layout');
+      revalidatePath('/products');
+      revalidatePath('/recipes');
+      revalidatePath('/magazine');
+      revalidatePath('/contact');
+      revalidatePath('/search');
     } catch {}
 
     return created;
@@ -423,6 +433,11 @@ export class SettingsService {
     try {
       (revalidateTag as any)('settings');
       revalidatePath('/', 'layout');
+      revalidatePath('/products');
+      revalidatePath('/recipes');
+      revalidatePath('/magazine');
+      revalidatePath('/contact');
+      revalidatePath('/search');
     } catch {}
 
     return updated;
@@ -457,6 +472,11 @@ export class SettingsService {
     try {
       (revalidateTag as any)('settings');
       revalidatePath('/', 'layout');
+      revalidatePath('/products');
+      revalidatePath('/recipes');
+      revalidatePath('/magazine');
+      revalidatePath('/contact');
+      revalidatePath('/search');
     } catch {}
   }
 }

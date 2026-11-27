@@ -2,10 +2,10 @@
  * Card Palette & Dynamic Theme Engine
  *
  * Provides:
- * 1. Default Baba Khorram brand card palette (4 classic colors).
- * 2. Curated presets fitting the brand (sage green, pomegranate burgundy, dark amber, navy, chocolate, muted teal, warm terracotta).
- * 3. Color harmony adjustment (auto-harmonize to muted natural tones in HSL).
- * 4. WCAG-compliant automatic text, subtext, and border contrast calculator.
+ * 1. Default Baba Khorram brand card palette (4 classic colors with white text).
+ * 2. Curated presets distinctly diverse from base brand colors (Royal Navy, Cobalt Azure, Persian Teal, Forest Emerald, Velvet Eggplant, etc.).
+ * 3. Color harmony adjustment (auto-harmonize to rich natural tones in HSL).
+ * 4. All cards strictly guaranteed to have crisp, high-contrast white text (#FFFFFF).
  * 5. Dynamic non-adjacent coloring resolver using custom palettes.
  */
 
@@ -21,152 +21,168 @@ export interface CardPaletteItem {
 }
 
 /**
- * Default fallback palette matching existing brand identity
+ * Default fallback palette matching existing brand identity (with 100% white text)
  */
 export const DEFAULT_CARD_PALETTE: CardPaletteItem[] = [
   {
     id: 'GREEN',
     nameFa: 'سبز گیاهی و کوهستان',
-    bgHex: '#4CA849',
+    bgHex: '#3D8B3A',
     textHex: '#FFFFFF',
     subtextHex: '#EAF8E9',
-    borderHex: '#3D8B3A',
-    badgeBgHex: 'rgba(255, 255, 255, 0.88)',
+    borderHex: '#2E6E2B',
+    badgeBgHex: 'rgba(255, 255, 255, 0.90)',
     badgeTextHex: '#2B2017',
   },
   {
     id: 'ORANGE',
     nameFa: 'آجری و عسلی تیره',
-    bgHex: '#E08B38',
+    bgHex: '#D27022',
     textHex: '#FFFFFF',
     subtextHex: '#FDF1E6',
-    borderHex: '#C67325',
-    badgeBgHex: 'rgba(255, 255, 255, 0.88)',
+    borderHex: '#B15715',
+    badgeBgHex: 'rgba(255, 255, 255, 0.90)',
     badgeTextHex: '#2B2017',
   },
   {
     id: 'YELLOW',
     nameFa: 'طلایی و موم کهربایی',
-    bgHex: '#F5A623',
-    textHex: '#2B2017',
-    subtextHex: '#4D3823',
-    borderHex: '#D98E16',
-    badgeBgHex: 'rgba(255, 255, 255, 0.88)',
+    bgHex: '#C87A14',
+    textHex: '#FFFFFF',
+    subtextHex: '#FDF3E7',
+    borderHex: '#A55D08',
+    badgeBgHex: 'rgba(255, 255, 255, 0.90)',
     badgeTextHex: '#2B2017',
   },
   {
     id: 'BURGUNDY',
     nameFa: 'زرشکی اناری و تیره',
-    bgHex: '#9E3556',
+    bgHex: '#8C2344',
     textHex: '#FFFFFF',
     subtextHex: '#FCEEF2',
-    borderHex: '#7E2642',
+    borderHex: '#6B1630',
     badgeBgHex: 'rgba(255, 255, 255, 0.90)',
     badgeTextHex: '#2B2017',
   },
 ];
 
 /**
- * Curated brand presets harmonious with organic mountain honey branding
+ * Curated brand presets distinctly diverse from the 4 standard colors,
+ * providing rich variety while preserving high-contrast white text.
  */
 export const CURATED_BRAND_PRESETS: CardPaletteItem[] = [
   {
-    id: 'PRESET_SAGE',
-    nameFa: 'سبز مریم‌گلی و زیتونی',
-    bgHex: '#487346',
+    id: 'PRESET_ROYAL_NAVY',
+    nameFa: 'سرمه‌ای درباری عمیق',
+    bgHex: '#1E3A8A',
     textHex: '#FFFFFF',
-    subtextHex: '#EBF2EA',
-    borderHex: '#3A5C38',
-    badgeBgHex: 'rgba(255, 255, 255, 0.90)',
-    badgeTextHex: '#2B2017',
+    subtextHex: '#E0E7FF',
+    borderHex: '#172554',
+    badgeBgHex: 'rgba(255, 255, 255, 0.92)',
+    badgeTextHex: '#1E3A8A',
   },
   {
-    id: 'PRESET_AMBER',
-    nameFa: 'کهربایی شاه‌بلوطی',
-    bgHex: '#D27D2D',
+    id: 'PRESET_COBALT_AZURE',
+    nameFa: 'لاجوردی کبالت اقیانوسی',
+    bgHex: '#1D4ED8',
     textHex: '#FFFFFF',
-    subtextHex: '#FAF0E6',
-    borderHex: '#B5671E',
-    badgeBgHex: 'rgba(255, 255, 255, 0.90)',
-    badgeTextHex: '#2B2017',
+    subtextHex: '#DBEAFE',
+    borderHex: '#1E40AF',
+    badgeBgHex: 'rgba(255, 255, 255, 0.92)',
+    badgeTextHex: '#1E3A8A',
   },
   {
-    id: 'PRESET_CHOCOLATE',
-    nameFa: 'قهوه‌ای کاکائویی باوقار',
-    bgHex: '#5C3826',
+    id: 'PRESET_PERSIAN_TEAL',
+    nameFa: 'فیروزه‌ای خلیجی تیره',
+    bgHex: '#0F766E',
     textHex: '#FFFFFF',
-    subtextHex: '#EFE7E2',
-    borderHex: '#452A1C',
-    badgeBgHex: 'rgba(255, 255, 255, 0.90)',
-    badgeTextHex: '#2B2017',
+    subtextHex: '#CCFBF1',
+    borderHex: '#115E59',
+    badgeBgHex: 'rgba(255, 255, 255, 0.92)',
+    badgeTextHex: '#134E4A',
   },
   {
-    id: 'PRESET_NAVY',
-    nameFa: 'سرمه‌ای کلاسیک سلطنتی',
-    bgHex: '#2A4365',
+    id: 'PRESET_FOREST_EMERALD',
+    nameFa: 'یشمی جنگلی تیره',
+    bgHex: '#166534',
     textHex: '#FFFFFF',
-    subtextHex: '#E6ECF5',
-    borderHex: '#1E314B',
-    badgeBgHex: 'rgba(255, 255, 255, 0.90)',
-    badgeTextHex: '#2B2017',
+    subtextHex: '#DCFCE7',
+    borderHex: '#14532D',
+    badgeBgHex: 'rgba(255, 255, 255, 0.92)',
+    badgeTextHex: '#14532D',
   },
   {
-    id: 'PRESET_TEAL',
-    nameFa: 'فیروزه‌ای مات اقاقیا',
-    bgHex: '#2E7D7E',
+    id: 'PRESET_VELVET_EGGPLANT',
+    nameFa: 'بادمجانی سلطنتی مخملی',
+    bgHex: '#581C87',
     textHex: '#FFFFFF',
-    subtextHex: '#E5F3F3',
-    borderHex: '#236061',
-    badgeBgHex: 'rgba(255, 255, 255, 0.90)',
-    badgeTextHex: '#2B2017',
+    subtextHex: '#F3E8FF',
+    borderHex: '#3B0764',
+    badgeBgHex: 'rgba(255, 255, 255, 0.92)',
+    badgeTextHex: '#3B0764',
   },
   {
-    id: 'PRESET_TERRACOTTA',
-    nameFa: 'آجری ملایم ارسباران',
-    bgHex: '#C45D43',
+    id: 'PRESET_DARK_PLUM',
+    nameFa: 'یاقوتی ارغوانی تیره',
+    bgHex: '#701A75',
     textHex: '#FFFFFF',
-    subtextHex: '#F9ECE9',
-    borderHex: '#A34932',
-    badgeBgHex: 'rgba(255, 255, 255, 0.90)',
-    badgeTextHex: '#2B2017',
+    subtextHex: '#FAE8FF',
+    borderHex: '#4A044E',
+    badgeBgHex: 'rgba(255, 255, 255, 0.92)',
+    badgeTextHex: '#4A044E',
   },
   {
-    id: 'PRESET_PLUM',
-    nameFa: 'آلبالویی کوهستان',
-    bgHex: '#802B48',
+    id: 'PRESET_ROASTED_CARAMEL',
+    nameFa: 'کاراملی برشته تیره',
+    bgHex: '#78350F',
     textHex: '#FFFFFF',
-    subtextHex: '#F6E6EC',
-    borderHex: '#641F37',
-    badgeBgHex: 'rgba(255, 255, 255, 0.90)',
-    badgeTextHex: '#2B2017',
+    subtextHex: '#FEF3C7',
+    borderHex: '#451A03',
+    badgeBgHex: 'rgba(255, 255, 255, 0.92)',
+    badgeTextHex: '#451A03',
   },
   {
-    id: 'PRESET_MUSTARD',
-    nameFa: 'خردلی سنتی و مومی',
-    bgHex: '#D49B28',
-    textHex: '#2B2017',
-    subtextHex: '#453213',
-    borderHex: '#B5821E',
-    badgeBgHex: 'rgba(255, 255, 255, 0.90)',
-    badgeTextHex: '#2B2017',
+    id: 'PRESET_CHARCOAL_SLATE',
+    nameFa: 'دودی زغالی لوکس',
+    bgHex: '#334155',
+    textHex: '#FFFFFF',
+    subtextHex: '#F1F5F9',
+    borderHex: '#1E293B',
+    badgeBgHex: 'rgba(255, 255, 255, 0.92)',
+    badgeTextHex: '#0F172A',
+  },
+  {
+    id: 'PRESET_RASPBERRY_WINE',
+    nameFa: 'سرخابی تمشکی تیره',
+    bgHex: '#831843',
+    textHex: '#FFFFFF',
+    subtextHex: '#FCE7F3',
+    borderHex: '#500724',
+    badgeBgHex: 'rgba(255, 255, 255, 0.92)',
+    badgeTextHex: '#500724',
+  },
+  {
+    id: 'PRESET_MILITARY_OLIVE',
+    nameFa: 'زیتونی تیره چریکی',
+    bgHex: '#3F4A2C',
+    textHex: '#FFFFFF',
+    subtextHex: '#ECFCCB',
+    borderHex: '#28311B',
+    badgeBgHex: 'rgba(255, 255, 255, 0.92)',
+    badgeTextHex: '#28311B',
   },
 ];
 
-// --- Color Conversion & Contrast Utilities ---
-
-export interface HSL {
-  h: number; // 0-360
-  s: number; // 0-100
-  l: number; // 0-100
-}
-
-export function hexToRgb(hex: string): { r: number; g: number; b: number } {
+/**
+ * Color math helpers: Hex <-> RGB <-> HSL
+ */
+function hexToRgb(hex: string): { r: number; g: number; b: number } {
   let clean = hex.replace('#', '').trim();
   if (clean.length === 3) {
     clean = clean.split('').map((c) => c + c).join('');
   }
   const num = parseInt(clean, 16);
-  if (isNaN(num)) return { r: 76, g: 168, b: 73 };
+  if (isNaN(num)) return { r: 50, g: 50, b: 50 };
   return {
     r: (num >> 16) & 255,
     g: (num >> 8) & 255,
@@ -174,15 +190,13 @@ export function hexToRgb(hex: string): { r: number; g: number; b: number } {
   };
 }
 
-export function rgbToHex(r: number, g: number, b: number): string {
-  const toHex = (n: number) => {
-    const clamped = Math.max(0, Math.min(255, Math.round(n)));
-    return clamped.toString(16).padStart(2, '0');
-  };
+function rgbToHex(r: number, g: number, b: number): string {
+  const clamp = (v: number) => Math.max(0, Math.min(255, Math.round(v)));
+  const toHex = (v: number) => clamp(v).toString(16).padStart(2, '0');
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase();
 }
 
-export function rgbToHsl(r: number, g: number, b: number): HSL {
+function rgbToHsl(r: number, g: number, b: number): { h: number; s: number; l: number } {
   r /= 255;
   g /= 255;
   b /= 255;
@@ -216,80 +230,79 @@ export function rgbToHsl(r: number, g: number, b: number): HSL {
   };
 }
 
-export function hslToRgb(h: number, s: number, l: number): { r: number; g: number; b: number } {
-  h /= 360;
+function hslToRgb(h: number, s: number, l: number): { r: number; g: number; b: number } {
+  h = (h % 360) / 360;
   s /= 100;
   l /= 100;
-  let r: number, g: number, b: number;
 
   if (s === 0) {
-    r = g = b = l;
-  } else {
-    const hue2rgb = (p: number, q: number, t: number) => {
-      if (t < 0) t += 1;
-      if (t > 1) t -= 1;
-      if (t < 1 / 6) return p + (q - p) * 6 * t;
-      if (t < 1 / 2) return q;
-      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-      return p;
-    };
-    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-    const p = 2 * l - q;
-    r = hue2rgb(p, q, h + 1 / 3);
-    g = hue2rgb(p, q, h);
-    b = hue2rgb(p, q, h - 1 / 3);
+    const val = Math.round(l * 255);
+    return { r: val, g: val, b: val };
   }
 
-  return {
-    r: Math.round(r * 255),
-    g: Math.round(g * 255),
-    b: Math.round(b * 255),
+  const hue2rgb = (p: number, q: number, t: number) => {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+    return p;
   };
+
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+  const p = 2 * l - q;
+
+  const r = Math.round(hue2rgb(p, q, h + 1 / 3) * 255);
+  const g = Math.round(hue2rgb(p, q, h) * 255);
+  const b = Math.round(hue2rgb(p, q, h - 1 / 3) * 255);
+
+  return { r, g, b };
 }
 
-/**
- * Calculates relative luminance according to WCAG 2.1
- */
 export function getRelativeLuminance(r: number, g: number, b: number): number {
-  const [rs, gs, bs] = [r, g, b].map((c) => {
-    c /= 255;
-    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
-  });
-  return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+  const normalize = (v: number) => {
+    const s = v / 255;
+    return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+  };
+  return 0.2126 * normalize(r) + 0.7152 * normalize(g) + 0.0722 * normalize(b);
 }
 
 /**
  * Auto-harmonize a given hex color to the natural organic brand spectrum:
- * Clamps excessive neon saturation (to 35% - 65%) and luminance (to 30% - 55%)
+ * Clamps excessive neon saturation (to 38% - 70%) and restricts lightness (to 24% - 42%)
+ * so that pure white text (#FFFFFF) always renders with crisp, maximum contrast.
  */
 export function autoHarmonizeHex(rawHex: string): string {
   const { r, g, b } = hexToRgb(rawHex);
   const hsl = rgbToHsl(r, g, b);
 
-  // Natural organic bounds:
-  // Saturation clamped between 38% and 68% (no fluorescent/neon colors)
-  // Lightness clamped between 32% and 55% (no washed-out white or pitch black)
-  const harmoniousS = Math.max(38, Math.min(68, hsl.s));
-  const harmoniousL = Math.max(32, Math.min(54, hsl.l));
+  const harmoniousS = Math.max(38, Math.min(72, hsl.s));
+  // Rich, deep lightness range ensuring pure white text has exceptional readability
+  const harmoniousL = Math.max(24, Math.min(42, hsl.l));
 
   const rgb = hslToRgb(hsl.h, harmoniousS, harmoniousL);
   return rgbToHex(rgb.r, rgb.g, rgb.b);
 }
 
 /**
- * Generates optimal text, subtext, and border colors based on background luminance
+ * Generates optimal text, subtext, and border colors.
+ * Per user requirement, all card text is strictly pure white (#FFFFFF).
  */
-export function deriveContrastPalette(bgHex: string, id: string, nameFa: string): CardPaletteItem {
+export function deriveContrastPalette(
+  bgHex: string,
+  id: string,
+  nameFa: string,
+  forceWhiteText: boolean = false
+): CardPaletteItem {
   const { r, g, b } = hexToRgb(bgHex);
   const lum = getRelativeLuminance(r, g, b);
-  const isLight = lum > 0.42;
 
   // Darker border for depth
   const hsl = rgbToHsl(r, g, b);
-  const borderRgb = hslToRgb(hsl.h, hsl.s, Math.max(15, hsl.l - 12));
+  const borderRgb = hslToRgb(hsl.h, hsl.s, Math.max(12, hsl.l - 12));
   const borderHex = rgbToHex(borderRgb.r, borderRgb.g, borderRgb.b);
 
-  if (isLight) {
+  if (!forceWhiteText && lum > 0.42) {
     return {
       id,
       nameFa,
