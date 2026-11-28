@@ -165,7 +165,7 @@ export function HeaderNavDropdowns({ pathname, publishedProductSlugs }: HeaderNa
                 <div className="w-56 xl:w-60 py-2 bg-[#FFFDF9] shrink-0">
                   <div className="px-3.5 py-1.5 text-[11px] font-black text-[#B45309] flex items-center gap-1.5 border-b border-[#EFE9E0]">
                     <ShoppingBag className="w-3.5 h-3.5" />
-                    <span>محصولات زنبورستان باباخُرم</span>
+                    <span>دسته‌بندی محصولات</span>
                   </div>
 
                   <div className="py-1">
@@ -215,7 +215,7 @@ export function HeaderNavDropdowns({ pathname, publishedProductSlugs }: HeaderNa
                       onClick={closeAll}
                       className="text-[11px] font-black text-[#B45309] hover:text-[#78350F] flex items-center justify-between"
                     >
-                      <span>همه محصولات (از جمله عسل عناب)</span>
+                      <span>مشاهده همه محصولات</span>
                       <ChevronLeft className="w-3.5 h-3.5" />
                     </Link>
                   </div>
@@ -227,14 +227,14 @@ export function HeaderNavDropdowns({ pathname, publishedProductSlugs }: HeaderNa
                     <div className="flex items-center justify-between border-b border-[#EFE9E0] pb-2">
                       <span className="text-xs font-black text-[#3F2A1D] flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5 text-[#D97706]" />
-                        عسل‌های تک‌گیاه طبیعی ({toPersianDigits(visibleMonofloralLinks.length)} گونه)
+                        انواع عسل‌های تک‌گیاه
                       </span>
                       <Link
                         href="/products?category=honey-types"
                         onClick={closeAll}
                         className="text-[11px] font-black text-[#B45309] hover:underline flex items-center gap-0.5"
                       >
-                        مشاهده دسته‌بندی عسل‌ها
+                        مشاهده همه عسل‌ها
                         <ChevronLeft className="w-3 h-3" />
                       </Link>
                     </div>
@@ -316,7 +316,7 @@ export function HeaderNavDropdowns({ pathname, publishedProductSlugs }: HeaderNa
               <div className="h-1 w-full bg-[#F59E0B]" />
               <div className="px-4 py-2 text-[11px] font-black text-[#B45309] flex items-center gap-1.5 border-b border-[#EFE9E0]">
                 <BookOpen className="w-3.5 h-3.5" />
-                <span>مقالات دانشنامه عسل و کندو</span>
+                <span>دانشنامه و مقالات تخصصی</span>
               </div>
               <div className="py-1">
                 {MAGAZINE_DROPDOWN_ITEMS.map((item) => (
@@ -336,7 +336,7 @@ export function HeaderNavDropdowns({ pathname, publishedProductSlugs }: HeaderNa
                   onClick={closeAll}
                   className="text-[11px] font-black text-[#B45309] hover:underline flex items-center justify-between"
                 >
-                  <span>مشاهده صفحه اصلی مجله علمی</span>
+                  <span>مشاهده همه مقالات مجله</span>
                   <ChevronLeft className="w-3.5 h-3.5" />
                 </Link>
               </div>
@@ -388,7 +388,7 @@ export function HeaderNavDropdowns({ pathname, publishedProductSlugs }: HeaderNa
               <div className="h-1 w-full bg-[#F59E0B]" />
               <div className="px-4 py-2 text-[11px] font-black text-[#B45309] flex items-center gap-1.5 border-b border-[#EFE9E0]">
                 <HelpCircle className="w-3.5 h-3.5" />
-                <span>پرسش‌های پرتکرار عسل طبیعی</span>
+                <span>پرسش‌های پرتکرار مشتریان</span>
               </div>
               <div className="py-1">
                 {FAQ_DROPDOWN_ITEMS.map((item) => (
@@ -408,7 +408,7 @@ export function HeaderNavDropdowns({ pathname, publishedProductSlugs }: HeaderNa
                   onClick={closeAll}
                   className="text-[11px] font-black text-[#B45309] hover:underline flex items-center justify-between"
                 >
-                  <span>مشاهده همه سوالات متداول</span>
+                  <span>مشاهده همه پرسش‌ها و پاسخ‌ها</span>
                   <ChevronLeft className="w-3.5 h-3.5" />
                 </Link>
               </div>

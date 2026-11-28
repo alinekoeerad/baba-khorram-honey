@@ -136,19 +136,19 @@ export function HamburgerDrawer({
       href: '/recipes',
       label: 'دستورها و دسرها',
       icon: UtensilsCrossed,
-      description: 'ترکیبات، نوشیدنی‌ها، صبحانه‌ها و دسرهای عسلی',
+      description: 'آموزش نوشیدنی‌ها، صبحانه‌ها و دسرهای عسلی',
     },
     {
       href: '/magazine',
       label: 'مجله علمی',
       icon: BookOpen,
-      description: 'رویال ژل، گرده گل، بره‌موم، رس بستن و طبع‌شناسی',
+      description: 'ژل رویال، گرده گل، بره‌موم، رس بستن و طبع‌شناسی',
     },
     {
       href: '/faq',
       label: 'سوالات متداول',
       icon: HelpCircle,
-      description: 'تشخیص عسل اصل، طبع عسل و علت تفاوت طعم و غلظت',
+      description: 'تشخیص عسل اصل، طبع عسل، غلظت و تغییر طعم فصلی',
     },
     {
       href: '/contact',
