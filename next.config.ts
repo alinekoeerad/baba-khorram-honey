@@ -7,6 +7,8 @@ const getAllowedOrigins = (): string[] => {
   const origins = new Set<string>();
   origins.add('babakhorram.com');
   origins.add('www.babakhorram.com');
+  origins.add('localhost:3000');
+  origins.add('127.0.0.1:3000');
 
   const envUrls = [process.env.SITE_URL, process.env.NEXT_PUBLIC_SITE_URL];
   for (const urlStr of envUrls) {
@@ -64,9 +66,11 @@ const nextConfig: NextConfig = {
       "default-src 'self'",
       `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`,
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://*.tile.openstreetmap.org",
+      "img-src 'self' data: blob: https://*.tile.openstreetmap.org https://*.openstreetmap.org https://*.google.com https://*.gstatic.com https://*.googleapis.com https://*.basemaps.cartocdn.com",
       "font-src 'self' data:",
-      "connect-src 'self' https://*.tile.openstreetmap.org",
+      "connect-src 'self' https://*.tile.openstreetmap.org https://*.openstreetmap.org https://maps.google.com https://*.googleapis.com",
+      "frame-src 'self' https://www.openstreetmap.org https://maps.google.com https://*.google.com https://*.google.ir https://*.googleapis.com",
+      "child-src 'self' https://www.openstreetmap.org https://maps.google.com https://*.google.com",
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self'",

@@ -58,7 +58,7 @@ export interface ContactChannelData {
   acceptsOrders?: boolean;
 }
 
-const DEFAULT_SETTINGS: SiteSettingsData = {
+export const DEFAULT_SETTINGS: SiteSettingsData = {
   id: 1,
   siteNameFa: 'عسل باباخُرم',
   siteNameEn: 'Baba Khorram Honey',

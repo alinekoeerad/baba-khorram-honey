@@ -65,11 +65,21 @@ export async function GET(
       return new NextResponse('Forbidden', { status: 403 });
     }
 
-    if (!fs.existsSync(filePath)) {
-      return new NextResponse('File Not Found', { status: 404 });
+    if (!fs.existsSync(/*turbopackIgnore: true*/ filePath)) {
+      // Fallback check against public/uploads (e.g. seeded assets or fallback storage)
+      const publicUploadPath = path.resolve(process.cwd(), 'public', 'uploads', requestedFilename);
+      const publicBase = path.resolve(process.cwd(), 'public', 'uploads');
+      if (
+        (publicUploadPath === publicBase || publicUploadPath.startsWith(publicBase + path.sep)) &&
+        fs.existsSync(/*turbopackIgnore: true*/ publicUploadPath)
+      ) {
+        filePath = publicUploadPath;
+      } else {
+        return new NextResponse('File Not Found', { status: 404 });
+      }
     }
 
-    const fileBuffer = await fs.promises.readFile(filePath);
+    const fileBuffer = await fs.promises.readFile(/*turbopackIgnore: true*/ filePath);
 
     return new NextResponse(new Uint8Array(fileBuffer), {
       status: 200,

@@ -29,5 +29,11 @@ echo "✅ Database schema synchronized successfully."
 echo "🌱 Running idempotent database seed (Users, Products, Recipes, FAQs, Magazine, Settings)..."
 node scripts/seed-db.mjs
 
+# 3. Synchronize initial seed uploads to persistent volume if mounted
+if [ -d "/app/public/uploads" ] && [ -d "/app/uploads" ]; then
+  echo "📁 Synchronizing seeded uploads into persistent volume..."
+  cp -rn /app/public/uploads/* /app/uploads/ 2>/dev/null || true
+fi
+
 echo "🚀 Starting Next.js application server on port ${PORT:-3000}..."
 exec node server.js

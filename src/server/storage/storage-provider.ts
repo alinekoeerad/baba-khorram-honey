@@ -40,7 +40,8 @@ export class LocalDiskStorage implements StorageProvider {
    * Resolves key to absolute path and prevents path-traversal attacks.
    */
   public resolveSafePath(key: string): string {
-    const cleanKey = path.basename(key);
+    const normalized = path.normalize(key).replace(/^(\.\.(\/|\\|$))+/, '');
+    const cleanKey = normalized.replace(/^[\/\\]+/, '');
     const fullPath = path.resolve(this.baseDir, cleanKey);
 
     // Strictly ensure resolved path resides inside baseDir
@@ -54,9 +55,13 @@ export class LocalDiskStorage implements StorageProvider {
   async save(buffer: Buffer, key: string, _contentType: string): Promise<SavedFileResult> {
     this.ensureDirectory();
     const filePath = this.resolveSafePath(key);
+    const parentDir = path.dirname(filePath);
+    if (!fs.existsSync(parentDir)) {
+      await fs.promises.mkdir(parentDir, { recursive: true });
+    }
     await fs.promises.writeFile(filePath, buffer);
     return {
-      key: path.basename(key),
+      key: key.replace(/\\/g, '/').replace(/^\/+/, ''),
       url: this.getPublicUrl(key),
       bytes: buffer.length,
     };
@@ -90,8 +95,9 @@ export class LocalDiskStorage implements StorageProvider {
   }
 
   getPublicUrl(key: string): string {
-    const cleanKey = path.basename(key);
-    return `/uploads/${encodeURIComponent(cleanKey)}`;
+    const normalized = key.replace(/\\/g, '/').replace(/^\/+/, '');
+    const encodedSegments = normalized.split('/').map(encodeURIComponent).join('/');
+    return `/uploads/${encodedSegments}`;
   }
 }
 
